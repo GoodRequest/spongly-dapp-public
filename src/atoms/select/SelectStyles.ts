@@ -1,0 +1,47 @@
+import styled from 'styled-components'
+import { Select as AntdSelect } from 'antd'
+
+import { TextLGMedium } from '@/styles/typography'
+
+export const Select = styled(AntdSelect)`
+	// The reason for this is that Ant Design applies its own default styles to its components, which may have higher specificity or be applied later in the cascade than your custom styles. In order to override these default styles, you need to use the !important flag to ensure that your styles take precedence.
+	.ant-select-suffix {
+		color: ${({ theme }) => theme['color-base-content-top']} !important;
+	}
+
+	.ant-select-selector {
+		border: none !important;
+		background-color: ${({ theme }) => theme['color-base-surface-quaternary']} !important;
+		box-shadow: ${({ theme }) => theme['drop-shadow-xs']};
+		height: 60px !important;
+		display: flex !important;
+		align-items: center !important;
+		color: ${({ theme }) => theme['color-base-content-top']} !important;
+		${TextLGMedium};
+		.ant-select-selection-item {
+			color: ${({ theme }) => theme['color-base-content-top']} !important;
+		}
+	}
+`
+
+export const SelectWrapper = styled.div`
+	.ant-select {
+		width: 100%;
+	}
+
+	.ant-select-dropdown {
+		background-color: ${({ theme }) => theme['color-base-surface-secondary']};
+	}
+
+	.ant-select-item-option {
+		${TextLGMedium};
+		:hover {
+			background-color: rgba(8, 9, 15, 0.6); // #08090f; TODO placeholder color
+		}
+	}
+
+	.ant-select-item-option-selected {
+		background-color: ${({ theme }) => theme['color-base-surface-quintarny']} !important;
+		color: ${({ theme }) => theme['color-base-content-top']} !important;
+	}
+`

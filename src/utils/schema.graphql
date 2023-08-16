@@ -1,0 +1,284 @@
+type SportMarket @entity {
+  id: ID!
+  timestamp: String!
+  address: String!
+  gameId: String!
+  maturityDate: String!
+  tags: [String!]
+  isOpen: Boolean!
+  isResolved: Boolean!
+  isCanceled: Boolean!
+  finalResult: String!
+  poolSize: String!
+  numberOfParticipants: String!
+  homeTeam: String!
+  awayTeam: String!
+  homeOdds: String!
+  awayOdds: String!
+  drawOdds: String!
+  homeScore: String
+  awayScore: String
+  upAddress: String!
+  downAddress: String!
+  drawAddress: String!
+  isApex: Boolean
+  resultDetails: String
+  isPaused: Boolean!
+  leagueRaceName: String
+  qualifyingStartTime: String
+  arePostQualifyingOddsFetched: Boolean
+  betType: String
+  parentMarket: String
+  spread: String
+  total: String
+  doubleChanceMarketType: String
+}
+
+type GameIdToParentMarket @entity {
+  id: ID!
+  parentMarket: String!
+}
+
+type ParentMarketToDoubleChanceMarket @entity {
+  id: ID!
+  homeTeamNotToLoseMarket: String!
+  awayTeamNotToLoseMarket: String!
+  noDrawMarket: String!
+}
+
+enum MarketTransactionType {
+  buy
+  sell
+}
+
+type ClaimTx @entity(immutable: true) {
+  id: ID!
+  timestamp: String!
+  account: String!
+  amount: String!
+  market: SportMarket!
+  caller: String!
+}
+
+type MarketTransaction @entity {
+  id: ID!
+  hash: String!
+  timestamp: String!
+  blockNumber: String!
+  type: MarketTransactionType!
+  account: String!
+  market: String!
+  amount: String!
+  paid: String!
+  position: String!
+  wholeMarket: SportMarket!
+  positionBalance: PositionBalance!
+}
+
+enum PositionType {
+  home
+  away
+  draw
+}
+
+type Position @entity {
+  id: ID!
+  market: SportMarket!
+  side: PositionType!
+  claimable: Boolean!
+}
+
+type PositionBalance @entity {
+  id: ID!
+  firstTxHash: String!
+  account: String!
+  amount: String!
+  position: Position!
+  sUSDPaid: String!
+  claimed: Boolean!
+}
+
+type OvertimeVoucher @entity {
+  id: ID!
+  address: String!
+}
+
+type BuyTransaction @entity {
+  id: ID!
+  marketTransactionId: String!
+  positionBalanceId: String!
+}
+
+type Race @entity {
+  id: ID!
+  raceName: String!
+  startTime: String!
+  qualifyingStartTime: String!
+}
+
+type ParlayMarket @entity {
+  id: ID!
+  txHash: String!
+  sportMarkets: [SportMarket!]!
+  sportMarketsFromContract: [String!]!
+  positions: [Position!]!
+  positionsFromContract: [String!]!
+  marketQuotes: [String!]
+  account: String!
+  totalAmount: String!
+  sUSDAfterFees: String
+  sUSDPaid: String
+  totalQuote: String
+  skewImpact: String
+  timestamp: String!
+  lastGameStarts: String!
+  blockNumber: String!
+  claimed: Boolean!
+  won: Boolean!
+}
+
+type User @entity {
+  id: ID!
+  volume: String!
+  pnl: String!
+  trades: Int
+}
+
+type Vault @entity {
+  id: ID!
+  address: String!
+  round: String!
+}
+
+type VaultTransaction @entity {
+  id: ID!
+  vault: String!
+  hash: String!
+  timestamp: String!
+  blockNumber: String!
+  market: String!
+  amount: String!
+  paid: String!
+  position: String!
+  wholeMarket: SportMarket!
+  round: String!
+}
+
+type ParlayVaultTransaction @entity {
+  id: ID!
+  vault: String!
+  hash: String!
+  timestamp: String!
+  blockNumber: String!
+  market: String!
+  paid: String!
+  wholeMarket: ParlayMarket!
+  round: String!
+}
+
+type VaultPnl @entity {
+  id: ID!
+  vault: String!
+  timestamp: String!
+  round: String!
+  pnl: String!
+}
+
+enum VaultUserTransactionType {
+  deposit
+  withdrawalRequest
+  claim
+}
+
+type VaultUserTransaction @entity {
+  id: ID!
+  vault: String!
+  hash: String!
+  timestamp: String!
+  blockNumber: String!
+  account: String!
+  type: VaultUserTransactionType!
+  amount: String
+  round: String!
+}
+
+type Zebro @entity {
+  id: ID!
+  owner: String!
+  tokenId: String!
+  country: String!
+  countryName: String!
+  url: String!
+}
+
+enum AmmType {
+  single
+  parlay
+}
+
+type Referrer @entity {
+  id: ID!
+  trades: String!
+  totalVolume: String!
+  totalEarned: String!
+  timestamp: String!
+}
+
+type ReferredTrader @entity {
+  id: ID!
+  trades: String!
+  totalVolume: String!
+  totalAmount: String!
+  referrer: Referrer!
+  timestamp: String!
+}
+
+type ReferralTransaction @entity {
+  id: ID!
+  referrer: Referrer!
+  trader: ReferredTrader!
+  amount: String!
+  volume: String!
+  ammType: AmmType!
+  timestamp: String!
+}
+
+enum LiquidityPoolType {
+  single
+  parlay
+}
+
+type LiquidityPool @entity {
+  id: ID!
+  address: String!
+  round: String!
+  liquidityPoolType: LiquidityPoolType!
+}
+
+type LiquidityPoolPnl @entity {
+  id: ID!
+  liquidityPool: String!
+  timestamp: String!
+  round: String!
+  pnl: String!
+  liquidityPoolType: LiquidityPoolType!
+}
+
+enum LiquidityPoolUserTransactionType {
+  deposit
+  withdrawalRequest
+  claim
+}
+
+type LiquidityPoolUserTransaction @entity {
+  id: ID!
+  liquidityPool: String!
+  hash: String!
+  timestamp: String!
+  blockNumber: String!
+  account: String!
+  type: LiquidityPoolUserTransactionType!
+  amount: String
+  round: String!
+  liquidityPoolType: LiquidityPoolType!
+}
