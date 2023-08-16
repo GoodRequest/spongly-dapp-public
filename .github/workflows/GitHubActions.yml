@@ -1,0 +1,103 @@
+name: GitHub Actions
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      [ 'production' ]
+
+env:
+  NODE_ENV: ${{ secrets.NODE_ENV }}
+
+  SENTRY_ENV: ${{ secrets.SENTRY_ENV }}
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  SENTRY_URL: ${{ secrets.SENTRY_URL }}
+  SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+
+  REACT_APP_WALLET_CONNECT_PROJECT_ID: ${{ secrets.REACT_APP_WALLET_CONNECT_PROJECT_ID }}
+
+  IPFS_USER: ${{ secrets.IPFS_USER }}
+  IPFS_PASS: ${{ secrets.IPFS_PASS }}
+  IPNS_KEY: ${{ secrets.IPNS_KEY }}
+
+jobs:
+  Build-and-Publish:
+    if: |
+      ${{ github.event_name == 'workflow_dispatch' && github.triggering_actor == 'morrien' }} ||
+      ${{ github.event_name == 'push' && github.ref == 'refs/heads/production' }}
+
+    runs-on: ubuntu-latest
+
+    services:
+      ipfs:
+        image: 'ipfs/go-ipfs'
+        ports:
+          - 4001:4001
+          - 5001:5001
+          - 8080:8080
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with: 
+          node-version: '16.14.0'
+
+      - name: Build and Publish
+        run: |
+          npm install
+          
+          CI=false npm run build-ipfs
+
+          LATEST_VERSION=$(curl -sSL https://dist.ipfs.tech/go-ipfs/versions | tail -n 1)
+          LATEST_VERSION_NUMBER=${LATEST_VERSION#*v}
+          DOWNLOAD_URL="https://dist.ipfs.tech/go-ipfs/${LATEST_VERSION}/go-ipfs_${LATEST_VERSION}_linux-amd64.tar.gz"
+          echo "DOWNLOAD_URL=$DOWNLOAD_URL"
+          curl -sSL -o ipfs.tar.gz $DOWNLOAD_URL
+          tar -xzf ipfs.tar.gz
+          sudo cp -f ./go-ipfs/ipfs /usr/local/bin/
+          ipfs init
+
+          # `ipfs daemon` is running as a service
+
+          wget \
+            --retry-connrefused \
+            --waitretry=20 \
+            --read-timeout=20 \
+            --timeout=15 \
+            -t 10 \
+            --post-data '' \
+            "http://localhost:5001/api/v0/version"
+
+          ipfs add \
+            --progress=true \
+            --pin=true \
+            --recursive \
+            "./dist"
+
+          IPFS_CID=$(ipfs add --progress=false --pin=true --recursive --quieter ./dist)
+
+          curl \
+            --silent \
+            --request POST \
+            --user "$IPFS_USER:$IPFS_PASS" \
+            "https://ipfs.synthetix.io:5001/api/v0/pin/add?recursive=true&progress=true&arg=$IPFS_CID" \
+              | jq
+
+          curl \
+            --silent \
+            --request POST \
+            --user "$IPFS_USER:$IPFS_PASS" \
+            "https://ipfs.synthetix.io:5001/api/v0/name/publish?key=$IPNS_KEY&arg=$IPFS_CID" \
+              | jq
+
+          curl \
+            --silent \
+            --request POST \
+            --user "$IPFS_USER:$IPFS_PASS" \
+            "https://ipfs.synthetix.io/api/v0/pin/add?arg=$IPFS_CID"
