@@ -113,8 +113,6 @@ const TicketBetContainer = () => {
 		enabled: activeTicketValues?.matches?.length === 1
 	})
 
-	console.log(rolledUp)
-
 	useEffect(() => {
 		if (availablePerPositionQuery.isSuccess && availablePerPositionQuery.data) {
 			setAvailablePerPosition(availablePerPositionQuery.data)

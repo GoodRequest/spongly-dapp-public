@@ -1,1 +1,0 @@
-/Users/danielhlavaty/Documents/Projects/Spongly-Dapp-Public/styled-components-tokens/scripts/../style-dictionary.js
