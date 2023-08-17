@@ -537,8 +537,8 @@ const TicketBetContainer = () => {
 	}, [isSwitchedTicket])
 
 	return (
-		<SC.SubmittingSpinner spinning={isSubmitting} size='large' indicator={<LoadingOutlined spin />} tip={'Submitting ticket...'}>
 			<SC.TicketBetWrapper rolledUp={rolledUp}>
+				<SC.SubmittingSpinner spinning={isSubmitting} size='large' indicator={<LoadingOutlined spin />} tip={'Submitting ticket...'}>
 				<Spin spinning={isProcessing} size='small' indicator={<LoadingOutlined spin />}>
 					<HorizontalScroller
 						tickets={unsubmittedTickets ?? []}
@@ -574,8 +574,9 @@ const TicketBetContainer = () => {
 					available={available}
 					rolledUp={!isBellowOrEqualResolution(size, RESOLUTIONS.SEMIXXL) || rolledUp}
 				/>
+
+				</SC.SubmittingSpinner>
 			</SC.TicketBetWrapper>
-		</SC.SubmittingSpinner>
 	)
 }
 
