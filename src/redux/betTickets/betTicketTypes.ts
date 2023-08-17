@@ -21,7 +21,11 @@ export enum ACTIVE_TICKET_SUBMITTING {
 	SET = 'SET_ACTIVE_TICKET_SUBMITTING'
 }
 
-export type IBetTicketActions = IResetStore | ISetUnsubmittedBetTickets | ISetProcessing | ISetSubmitting
+export enum ACTIVE_TICKET_APPROVING {
+	SET = 'SET_ACTIVE_TICKET_APPROVING'
+}
+
+export type IBetTicketActions = IResetStore | ISetUnsubmittedBetTickets | ISetProcessing | ISetSubmitting | ISetApproving
 
 export interface IUnsubmittedBetTicket {
 	id?: number
@@ -81,5 +85,10 @@ export interface ISetProcessing {
 
 export interface ISetSubmitting {
 	type: ACTIVE_TICKET_SUBMITTING
+	payload: boolean
+}
+
+export interface ISetApproving {
+	type: ACTIVE_TICKET_APPROVING
 	payload: boolean
 }

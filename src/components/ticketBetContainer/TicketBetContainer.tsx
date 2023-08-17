@@ -54,7 +54,7 @@ import MobileHeader from './components/matchHeader/MobileHeader'
 
 // redux
 import { RootState } from '@/redux/rootReducer'
-import { ACTIVE_TICKET_SUBMITTING, IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
+import { ACTIVE_TICKET_APPROVING, ACTIVE_TICKET_SUBMITTING, IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 import { updateActiveTicketMatches } from '@/redux/betTickets/betTicketsActions'
 
 // styles
@@ -78,6 +78,7 @@ const TicketBetContainer = () => {
 	const size = useMedia()
 	const isProcessing = useSelector((state: RootState) => state.betTickets.isProcessing)
 	const isSubmitting = useSelector((state: RootState) => state.betTickets.isSubmitting)
+	const isApproving = useSelector((state: RootState) => state.betTickets.isApproving)
 
 	const [activeTicketID, setActiveTicketID] = useState<number>(1)
 	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
@@ -469,13 +470,19 @@ const TicketBetContainer = () => {
 				showNotifications([{ type: MSG_TYPE.SUCCESS, message: t('The ticket was successfully submitted') }], NOTIFICATION_TYPE.NOTIFICATION)
 			})
 		} catch (e) {
-			showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while submitting the ticket') }], NOTIFICATION_TYPE.NOTIFICATION)
+			const err: any = e
+				if(err?.code === 'ACTION_REJECTED') {
+					showNotifications([{ type: MSG_TYPE.INFO, message: t('User rejected transaction') }], NOTIFICATION_TYPE.NOTIFICATION)
+				} else {
+					showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while submitting the ticket') }], NOTIFICATION_TYPE.NOTIFICATION)
+				}
 		} finally {
 			dispatch({ type: ACTIVE_TICKET_SUBMITTING.SET, payload: false })
 		}
 	}
 
 	const handleApproveAllowance = async () => {
+		dispatch({ type: ACTIVE_TICKET_APPROVING.SET, payload: true })
 		const { signer, sUSDContract, parlayMarketsAMMContract, sportsAMMContract } = networkConnector
 		if (signer && sUSDContract) {
 			try {
@@ -488,11 +495,20 @@ const TicketBetContainer = () => {
 						gasLimit: chain?.id ? getMaxGasLimitForNetwork(chain?.id) : undefined
 					}
 				)) as ethers.ContractTransaction
-				await tx.wait().then(() => {
+				await tx.wait().then(async () => {
 					showNotifications([{ type: MSG_TYPE.SUCCESS, message: t('Your allowance was approved') }], NOTIFICATION_TYPE.NOTIFICATION)
+					const newAllowence = await getAllowance()
+					dispatch(change(FORM.BET_TICKET, 'allowance', newAllowence))
 				})
 			} catch (e) {
-				showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while approving') }], NOTIFICATION_TYPE.NOTIFICATION)
+				const err: any = e
+				if(err?.code === 'ACTION_REJECTED') {
+					showNotifications([{ type: MSG_TYPE.INFO, message: t('User rejected transaction') }], NOTIFICATION_TYPE.NOTIFICATION)
+				} else {
+					showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while approving') }], NOTIFICATION_TYPE.NOTIFICATION)
+				}
+			} finally {
+				dispatch({ type: ACTIVE_TICKET_APPROVING.SET, payload: false })
 			}
 		}
 	}
@@ -538,7 +554,7 @@ const TicketBetContainer = () => {
 
 	return (
 			<SC.TicketBetWrapper rolledUp={rolledUp}>
-				<SC.SubmittingSpinner spinning={isSubmitting} size='large' indicator={<LoadingOutlined spin />} tip={'Submitting ticket...'}>
+				<SC.SubmittingSpinner spinning={isSubmitting || isApproving} size='large' indicator={<LoadingOutlined spin />} tip={isApproving ? t('Approving allowance...') : t('Submitting ticket...')}>
 				<Spin spinning={isProcessing} size='small' indicator={<LoadingOutlined spin />}>
 					<HorizontalScroller
 						tickets={unsubmittedTickets ?? []}

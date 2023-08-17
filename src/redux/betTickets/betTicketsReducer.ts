@@ -1,12 +1,13 @@
 import { RESET_STORE } from '../generalTypes'
-import { ACTIVE_TICKET_PROCESSING, IBetTicketActions, IUnsubmittedBetTicketsPayload, UNSUBMITTED_BET_TICKETS, ACTIVE_TICKET_SUBMITTING } from './betTicketTypes'
+import { ACTIVE_TICKET_PROCESSING, IBetTicketActions, IUnsubmittedBetTicketsPayload, UNSUBMITTED_BET_TICKETS, ACTIVE_TICKET_SUBMITTING, ACTIVE_TICKET_APPROVING } from './betTicketTypes'
 
 export const initState = {
 	unsubmittedBetTickets: {
 		data: null
 	} as IUnsubmittedBetTicketsPayload,
 	isProcessing: false,
-	isSubmitting: false
+	isSubmitting: false,
+	isApproving: false,
 }
 
 // eslint-disable-next-line default-param-last, @typescript-eslint/default-param-last
@@ -38,6 +39,11 @@ export default (state = initState, action: IBetTicketActions) => {
 			return {
 				...state,
 				isSubmitting: action.payload
+			}
+		case ACTIVE_TICKET_APPROVING.SET:
+			return {
+				...state,
+				isApproving: action.payload
 			}
 		case RESET_STORE:
 			return initState
