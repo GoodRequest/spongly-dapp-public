@@ -556,14 +556,6 @@ const TicketBetContainer = () => {
 						activeTicket={activeTicketValues}
 					/>
 				</Spin>
-				<MobileHeader
-					rolledUp={rolledUp}
-					setRolledUp={setRolledUp}
-					tickets={unsubmittedTickets ?? []}
-					addTicket={handleAddTicket}
-					setActiveTicket={handleSetActiveTicket}
-					activeTicket={activeTicketValues}
-				/>
 				<TicketBetContainerForm
 					fetchTicketData={(activeTicketValues?.matches?.length || 0) > 1 ? fetchParleyTicketData : fetchSinglesTicketData}
 					isWalletConnected={isWalletConnected}
