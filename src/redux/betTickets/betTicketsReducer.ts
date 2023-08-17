@@ -1,5 +1,12 @@
 import { RESET_STORE } from '../generalTypes'
-import { ACTIVE_TICKET_PROCESSING, IBetTicketActions, IUnsubmittedBetTicketsPayload, UNSUBMITTED_BET_TICKETS, ACTIVE_TICKET_SUBMITTING, ACTIVE_TICKET_APPROVING } from './betTicketTypes'
+import {
+	ACTIVE_TICKET_PROCESSING,
+	IBetTicketActions,
+	IUnsubmittedBetTicketsPayload,
+	UNSUBMITTED_BET_TICKETS,
+	ACTIVE_TICKET_SUBMITTING,
+	ACTIVE_TICKET_APPROVING
+} from './betTicketTypes'
 
 export const initState = {
 	unsubmittedBetTickets: {
@@ -7,7 +14,7 @@ export const initState = {
 	} as IUnsubmittedBetTicketsPayload,
 	isProcessing: false,
 	isSubmitting: false,
-	isApproving: false,
+	isApproving: false
 }
 
 // eslint-disable-next-line default-param-last, @typescript-eslint/default-param-last

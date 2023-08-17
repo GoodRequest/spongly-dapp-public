@@ -68,42 +68,43 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, readO
 		return formatQuote(OddsType.DECIMAL, Number(match?.[getOddsPropertyFromBetOption(match.betOption)]))
 	}
 
-	const images = useMemo(() => (
-		<>
-			<SC.MatchIcon style={{ marginLeft: '0px' }}>
-				<img
-					src={teamImages.homeTeam}
-					alt={match.homeTeam}
-					onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
-						e.target.src = NO_TEAM_IMAGE_FALLBACK
-					}}
-				/>			
-			</SC.MatchIcon>
-			{!isTotalWinner && (
-				<SC.MatchIcon>
-				<img
-					src={teamImages.awayTeam}
-					alt={match.awayTeam}
-					onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
-						e.target.src = NO_TEAM_IMAGE_FALLBACK
-					}}
-				/>
-			</SC.MatchIcon>
-			)}
-		</>
-	), [isTotalWinner, match, teamImages])
+	const images = useMemo(
+		() => (
+			<>
+				<SC.MatchIcon style={{ marginLeft: '0px' }}>
+					<img
+						src={teamImages.homeTeam}
+						alt={match.homeTeam}
+						onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
+							e.target.src = NO_TEAM_IMAGE_FALLBACK
+						}}
+					/>
+				</SC.MatchIcon>
+				{!isTotalWinner && (
+					<SC.MatchIcon>
+						<img
+							src={teamImages.awayTeam}
+							alt={match.awayTeam}
+							onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
+								e.target.src = NO_TEAM_IMAGE_FALLBACK
+							}}
+						/>
+					</SC.MatchIcon>
+				)}
+			</>
+		),
+		[isTotalWinner, match, teamImages]
+	)
 
 	return (
 		<>
 			<SC.MatchRow gutter={[0, 0]} readOnly={readOnly}>
 				<Col xs={16} sm={18} md={16} xl={14}>
 					<SC.StartCenteredRow>
-						<SC.TeamImages>
-							{images}
-						</SC.TeamImages>
+						<SC.TeamImages>{images}</SC.TeamImages>
 						<SC.TeamNames>
 							<SC.TeamName>{match.homeTeam}</SC.TeamName>
-							{!isTotalWinner && (<SC.TeamName>{match.awayTeam}</SC.TeamName>)}
+							{!isTotalWinner && <SC.TeamName>{match.awayTeam}</SC.TeamName>}
 						</SC.TeamNames>
 					</SC.StartCenteredRow>
 				</Col>
@@ -162,7 +163,7 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, readO
 				</SC.ShiftedRow>
 				<SC.ShiftedRow>
 					<SCS.MatchBetOptionsWrapper>
-						<MatchListContent match={match as any}/>
+						<MatchListContent match={match as any} />
 					</SCS.MatchBetOptionsWrapper>
 				</SC.ShiftedRow>
 			</Modal>
