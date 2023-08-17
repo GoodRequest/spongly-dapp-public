@@ -1,0 +1,7 @@
+sentry.client.config.js
+sentry.server.config.js
+sentry.edge.config.js
+next-i18next.config.js
+next.config.js
+server.js
+i18n/index.js

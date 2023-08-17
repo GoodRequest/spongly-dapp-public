@@ -1,6 +1,6 @@
 import { IShareTags } from '@/atoms/SEOHelmet'
 import { CLOSED_TICKET_TYPE, MSG_TYPE, ORDER_DIRECTION, PositionNumber, TICKET_TYPE } from '@/utils/constants'
-import { SportMarket, ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
+import { SportMarket, ParlayMarket, PositionBalance, Position } from '@/__generated__/resolvers-types'
 import { BetType, DoubleChanceMarketType } from '@/utils/tags'
 import { WALLET_TICKETS } from '@/utils/enums'
 
@@ -75,7 +75,7 @@ export type GameDetails = {
 	gameId: string
 	gameLabel: string
 }
-
+export type AvailablePerPosition = Record<PositionNumber, { available?: number; buyBonus?: number }>
 export interface Sorter {
 	property?: string
 	direction?: ORDER_DIRECTION
@@ -211,4 +211,12 @@ export type User = {
 export type UserStatistic = {
 	user: User
 	tickets: UserTicket[]
+}
+
+export interface IMatch extends SportMarket {
+	winnerTypeMatch?: SportMarket
+	doubleChanceTypeMatches?: SportMarket[]
+	spreadTypeMatch?: SportMarket
+	totalTypeMatch?: SportMarket
+	betOption?: any
 }
