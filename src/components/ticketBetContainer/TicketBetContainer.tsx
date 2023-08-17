@@ -12,8 +12,8 @@ import { LoadingOutlined } from '@ant-design/icons'
 import useParlayAmmDataQuery from '@/hooks/useParlayAmmDataQuery'
 import useMultipleCollateralBalanceQuery from '@/hooks/useMultipleCollateralBalanceQuery'
 import { useIsMounted } from '@/hooks/useIsMounted'
-import usePositionPriceDetailsQuery from '@/hooks/usePositionPriceDetailsQuery'
 import { useMedia } from '@/hooks/useMedia'
+import useAvailablePerPositionQuery from '@/hooks/useAvailablePerPositionQuery'
 
 // utils
 import { BET_OPTIONS, DoubleChanceMarketType, FORM, RESOLUTIONS } from '@/utils/enums'
@@ -26,25 +26,29 @@ import {
 	NETWORK_IDS,
 	NOTIFICATION_TYPE,
 	OddsType,
+	PositionNumber,
 	REFERRER_WALLET,
 	STABLE_COIN,
 	ZERO_ADDRESS
 } from '@/utils/constants'
-import networkConnector, { NetworkId } from '@/utils/networkConnector'
+import networkConnector from '@/utils/networkConnector'
 import { getParlayMarketsAMMQuoteMethod } from '@/utils/parlayAmm'
 import { floorNumberToDecimals, formatPercentage, roundNumberToDecimals } from '@/utils/formatters/number'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
-import { formatCurrency, formatQuote, getBetOptionAndAddressFromMatch, isBellowOrEqualResolution, updateUnsubmittedTicketMatches } from '@/utils/helpers'
+import {
+	formatCurrency,
+	formatQuote,
+	getBetOptionAndAddressFromMatch,
+	getBetOptionFromMatchBetOption,
+	getOddFromByBetType,
+	getSelectedCoinIndex,
+	getStablecoinDecimals,
+	isBellowOrEqualResolution,
+	updateUnsubmittedTicketMatches
+} from '@/utils/helpers'
 import { getSportsAMMQuoteMethod } from '@/utils/amm'
 import { fetchAmountOfTokensForXsUSDAmount } from '@/utils/skewCalculator'
-import {
-	getBonusPropertyFromBetOption,
-	getMatchByBetOption,
-	getOddsPropertyFromBetOption,
-	getPositionFromBetOption,
-	getPositionOdds,
-	isMarketAvailable
-} from '@/utils/markets'
+import { getBonusPropertyFromBetOption, getMatchByBetOption, getOddsPropertyFromBetOption, getPositionFromBetOption, isMarketAvailable } from '@/utils/markets'
 import { showNotifications } from '@/utils/tsxHelpers'
 
 // components
@@ -77,6 +81,18 @@ const TicketBetContainer = () => {
 	const [isSwitchedTicket, setIsSwitchedTicket] = useState(false)
 	const size = useMedia()
 	const isProcessing = useSelector((state: RootState) => state.betTickets.isProcessing)
+
+	const [availablePerPosition, setAvailablePerPosition] = useState<any>({
+		[PositionNumber.HOME]: {
+			available: 0
+		},
+		[PositionNumber.AWAY]: {
+			available: 0
+		},
+		[PositionNumber.DRAW]: {
+			available: 0
+		}
+	})
 	const isSubmitting = useSelector((state: RootState) => state.betTickets.isSubmitting)
 
 	const [activeTicketID, setActiveTicketID] = useState<number>(1)
@@ -86,13 +102,15 @@ const TicketBetContainer = () => {
 	const parlayAmmDataQuery = useParlayAmmDataQuery(chain?.id || NETWORK_IDS.OPTIMISM)
 	const available = multipleCollateralBalance?.[(activeTicketValues?.selectedStablecoin as keyof typeof multipleCollateralBalance) ?? STABLE_COIN.S_USD] ?? 0
 
-	const positionPriceDetailsQuery = usePositionPriceDetailsQuery(
-		activeTicketValues?.matches?.[0]?.address || '',
-		Number(activeTicketValues?.matches?.[0]?.betType) || 0,
-		activeTicketValues?.buyIn || 0,
-		0 /*  TODO: Colateral */,
-		(chain?.id || NETWORK_IDS.OPTIMISM) as NetworkId
-	)
+	const availablePerPositionQuery = useAvailablePerPositionQuery(getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses[0], {
+		enabled: activeTicketValues?.matches?.length === 1
+	})
+
+	useEffect(() => {
+		if (availablePerPositionQuery.isSuccess && availablePerPositionQuery.data) {
+			setAvailablePerPosition(availablePerPositionQuery.data)
+		}
+	}, [availablePerPositionQuery.isSuccess, availablePerPositionQuery.data])
 
 	const isWalletConnected = isMounted && address && chain
 
@@ -158,6 +176,7 @@ const TicketBetContainer = () => {
 			if (parlayMarketsAMMContract && parlayAmmData?.minUsdAmount) {
 				const marketsAddresses = activeTicketValues?.matches?.map((market) => market.address)
 				const betOptions = activeTicketValues?.matches?.map((market) => getPositionFromBetOption(market.betOption))
+
 				const minUsdAmount =
 					susdAmountForQuote < parlayAmmData?.minUsdAmount
 						? parlayAmmData?.minUsdAmount // deafult value for qoute info
@@ -198,26 +217,25 @@ const TicketBetContainer = () => {
 		async (susdAmountForQuote: number) => {
 			const { sportsAMMContract } = networkConnector
 			if (activeTicketValues?.matches?.length === 1) {
-				if (sportsAMMContract && parlayAmmData?.minUsdAmount) {
-					const marketAdress = activeTicketValues?.matches[0]?.address
-					const selectBetOption = getPositionFromBetOption(activeTicketValues?.matches[0].betOption)
-					const minUsdAmount =
-						susdAmountForQuote < parlayAmmData?.minUsdAmount
-							? parlayAmmData?.minUsdAmount // deafult value for qoute info
-							: susdAmountForQuote
-					const susdPaid = ethers.utils.parseUnits(roundNumberToDecimals(minUsdAmount).toString())
+				if (sportsAMMContract && parlayAmmData?.minUsdAmount && susdAmountForQuote) {
+					const parsedAmount = ethers.utils.parseEther(roundNumberToDecimals(susdAmountForQuote).toString())
+
+					const marketAdress = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses[0]
+					const selectBetOption = getBetOptionFromMatchBetOption(activeTicketValues?.matches[0].betOption)
 
 					try {
 						const sportsAmmQuote = await getSportsAMMQuoteMethod(
-							activeTicketValues.selectedStablecoin,
+							getSelectedCoinIndex(activeTicketValues.selectedStablecoin),
 							chain?.id || NETWORK_IDS.OPTIMISM,
 							sportsAMMContract,
 							marketAdress,
 							selectBetOption,
-							susdPaid
+							parsedAmount
 						)
 						return sportsAmmQuote
 					} catch (err) {
+						// eslint-disable-next-line no-console
+						console.error('An error occurred while SingleAMMQuote fetch', err)
 						showNotifications(
 							[{ type: MSG_TYPE.ERROR, message: t('An error occurred while SingleAMMQuote fetch') }],
 							NOTIFICATION_TYPE.NOTIFICATION
@@ -307,36 +325,31 @@ const TicketBetContainer = () => {
 			throw new Error('Failed to fetch parley ticket data', { cause: err })
 		}
 	}
-
 	const fetchSinglesTicketData = async () => {
 		try {
 			const { signer, sportsAMMContract } = networkConnector
-			const divider = 1e18 // TODO: change divider for currency, now is 1e18 as optimism
+			const divider = Number(`1e${getStablecoinDecimals(chain?.id || NETWORK_IDS.OPTIMISM, getSelectedCoinIndex(activeTicketValues.selectedStablecoin))}`)
 			if (!activeTicketValues?.buyIn || activeTicketValues?.matches?.length === 0 || !signer)
 				return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0 }
-
-			const contract = new ethers.Contract(activeTicketValues?.matches?.[0]?.address || '', sportsMarketContract.abi, signer)
-
+			const currentAddress = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses[0]
+			// TODO: find out which address to send here, whether it is the current address
+			const contract = new ethers.Contract(currentAddress || '', sportsMarketContract.abi, signer)
 			const ammBalances = await contract.balancesOf(sportsAMMContract?.address)
 			const ammBalanceForSelectedPosition = ammBalances[getBetOptionAndAddressFromMatch(activeTicketValues.matches).betTypes[0]]
-
-			const singlesAmmMaximumUSDAmountQuote = await fetchSinglesAmmQuote(positionPriceDetailsQuery?.data?.available || 0)
+			const roundedMaxAmount = floorNumberToDecimals(
+				availablePerPosition[getBetOptionFromMatchBetOption(activeTicketValues?.matches?.[0].betOption as any)].available || 0
+			)
+			const singlesAmmMaximumUSDAmountQuote = await fetchSinglesAmmQuote(roundedMaxAmount)
 			const singlesAmmQuote = await fetchSinglesAmmQuote(activeTicketValues?.buyIn)
-
 			if (singlesAmmQuote !== null) {
 				const amountOfTokens =
 					fetchAmountOfTokensForXsUSDAmount(
 						Number(activeTicketValues?.buyIn),
-						getPositionOdds({
-							...activeTicketValues?.matches?.[0],
-							position: getBetOptionAndAddressFromMatch(activeTicketValues.matches).betTypes[0]
-						}),
-						// TODO: why singlesAmmMaximumUSDAmountQuote is 0 for some matches? Fallback 500 as maximum amout user can bet for now
-						bigNumberFormatter(singlesAmmMaximumUSDAmountQuote) > 0 ? bigNumberFormatter(singlesAmmMaximumUSDAmountQuote) : 500,
-						positionPriceDetailsQuery?.data?.available || 0,
+						getOddFromByBetType(activeTicketValues?.matches?.[0] as any, activeTicketValues.copied || false) as any,
+						singlesAmmMaximumUSDAmountQuote / divider,
+						availablePerPosition[getBetOptionFromMatchBetOption(activeTicketValues?.matches?.[0].betOption as any)].available || 0,
 						bigNumberFormatter(ammBalanceForSelectedPosition)
 					) || 0
-
 				const flooredAmountOfTokens = floorNumberToDecimals(amountOfTokens)
 				const parsedQuote = singlesAmmQuote / divider
 				const recalculatedTokenAmount = roundNumberToDecimals((amountOfTokens * Number(activeTicketValues?.buyIn)) / parsedQuote)
@@ -396,6 +409,7 @@ const TicketBetContainer = () => {
 			}
 			return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0 }
 		} catch (err) {
+			console.error('Failed to fetch single ticket data', err)
 			showNotifications([{ type: MSG_TYPE.ERROR, message: t('Something happened while processing the ticket') }], NOTIFICATION_TYPE.NOTIFICATION)
 			throw new Error('Failed to fetch single ticket data', { cause: err })
 		}
@@ -417,27 +431,20 @@ const TicketBetContainer = () => {
 				getBetOptionAndAddressFromMatch(values?.matches).addresses.length === 1 &&
 				getBetOptionAndAddressFromMatch(values?.matches).betTypes?.length === 1
 			) {
-				const estimationGas = await sportsMarketsAMMContractWithSigner?.estimateGas.buyFromAMMWithReferrer(
+				const reqData = [
 					getBetOptionAndAddressFromMatch(values?.matches).addresses[0],
 					getBetOptionAndAddressFromMatch(values?.matches).betTypes[0],
-					sUSDPaid,
 					expectedPayout,
+					sUSDPaid,
 					additionalSlippage,
 					REFERRER_WALLET
-				)
+				]
+				const estimationGas = await sportsMarketsAMMContractWithSigner?.estimateGas.buyFromAMMWithReferrer(...reqData)
 
 				const finalEstimation = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
-				data = (await sportsMarketsAMMContractWithSigner?.buyFromAMMWithReferrer(
-					getBetOptionAndAddressFromMatch(values?.matches).addresses[0],
-					getBetOptionAndAddressFromMatch(values?.matches).betTypes[0],
-					sUSDPaid,
-					expectedPayout,
-					additionalSlippage,
-					REFERRER_WALLET,
-					{
-						gasLimit: chain?.id ? finalEstimation : undefined
-					}
-				)) as ethers.ContractTransaction
+				data = (await sportsMarketsAMMContractWithSigner?.buyFromAMMWithReferrer(...reqData, {
+					gasLimit: chain?.id ? finalEstimation : undefined
+				})) as ethers.ContractTransaction
 			} else {
 				const estimationGas = await parlayMarketsAMMContractWithSigner?.estimateGas.buyFromParlayWithReferrer(
 					getBetOptionAndAddressFromMatch(values?.matches).addresses,

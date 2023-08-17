@@ -87,8 +87,8 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 
 		const data = unsubmittedTickets
 			? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			  [...unsubmittedTickets, { id: (largestId || 1) + 1, matches }]
-			: [{ id: 1, matches }]
+			  [...unsubmittedTickets, { id: (largestId || 1) + 1, matches, copied: true }]
+			: [{ id: 1, matches, copied: true }]
 
 		dispatch({
 			type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_UPDATE,
@@ -101,8 +101,10 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 	}
 
 	const handleCopyTicket = async () => {
-		updateUnsubmittedTicketMatches(activeMatches as any, unsubmittedTickets, dispatch, activeTicketValues.id)
+		updateUnsubmittedTicketMatches(activeMatches as any, unsubmittedTickets, dispatch, activeTicketValues.id, true)
 		dispatch(change(FORM.BET_TICKET, 'matches', activeMatches))
+		// helper variable which says that ticket has matches which were copied
+		dispatch(change(FORM.BET_TICKET, 'copied', true))
 	}
 
 	const handleCollapseChange = (e: any) => {

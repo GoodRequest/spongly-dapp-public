@@ -32,14 +32,18 @@ import {
 	ORDER_DIRECTION,
 	TOTAL_WINNER_TAGS,
 	SGPCombinationsFromContractOrderMapping,
-	OPTIMISM_DIVISOR
+	OPTIMISM_DIVISOR,
+	STABLE_COIN,
+	Network,
+	STABLE_DECIMALS,
+	COLLATERALS
 } from './constants'
 import { BET_OPTIONS, ContractSGPOrder, DoubleChanceMarketType, LIST_TYPE, MARKET_PROPERTY, MATCHES, RESOLUTIONS, WALLET_TICKETS } from './enums'
 import { ParlayMarket, Position, PositionBalance, PositionType } from '@/__generated__/resolvers-types'
 
 import OptimismIcon from '@/assets/icons/optimism-icon.svg'
 import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
-import { ITicket, SGPContractData, SGPItem, Sorter, SportMarketInfo, UserTicket } from '@/typescript/types'
+import { IMatch, ITicket, SGPContractData, SGPItem, Sorter, SportMarketInfo, UserTicket } from '@/typescript/types'
 import { IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 import { NetworkId } from './networkConnector'
 import { bigNumberFormatter, bigNumberFormmaterWithDecimals } from '@/utils/formatters/ethers'
@@ -562,8 +566,10 @@ export const updateUnsubmittedTicketMatches = (
 	matches: TicketPosition[] | undefined,
 	unsubmittedTickets: IUnsubmittedBetTicket[] | null,
 	dispatch: Dispatch<AnyAction>,
-	activeTicketID?: number
+	activeTicketID?: number,
+	copied = false
 ) => {
+	// TODO: copied does not work if user switching between ticket that is copied and then modified by match and switched in tab (corner case will be fixed in separated TASK)
 	const data = unsubmittedTickets?.map((ticket) => {
 		if (ticket.id === activeTicketID) {
 			return {
@@ -571,7 +577,7 @@ export const updateUnsubmittedTicketMatches = (
 				matches
 			}
 		}
-		return ticket
+		return { ...ticket, copied }
 	})
 	dispatch({
 		type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_UPDATE,
@@ -835,6 +841,58 @@ export const formatMatchCombinedPositionsQuote = (position1: number, position2: 
 	return oddWithFee
 }
 
+export const getSelectedCoinIndex = (selectedCoin?: string): number => {
+	switch (selectedCoin) {
+		case STABLE_COIN.S_USD:
+			return 0
+		case STABLE_COIN.DAI:
+			return 1
+		case STABLE_COIN.USDC:
+			return 2
+		case STABLE_COIN.USDT:
+			return 3
+		default:
+			throw new Error('Invalid stable coin')
+	}
+}
+
+export const getOddFromByBetType = (market: IMatch, copied: boolean) => {
+	switch (market.betOption) {
+		// 1, 2, X
+		case BET_OPTIONS.WINNER_HOME:
+			return market.homeOdds
+		case BET_OPTIONS.WINNER_AWAY:
+			return market.awayOdds
+		case BET_OPTIONS.WINNER_DRAW:
+			return market.drawOdds
+		// H1, H2
+		case BET_OPTIONS.HANDICAP_HOME:
+			return copied ? market.homeOdds : market.spreadTypeMatch?.homeOdds
+		case BET_OPTIONS.HANDICAP_AWAY:
+			return copied ? market.awayOdds : market.spreadTypeMatch?.awayOdds
+		// O, U
+		case BET_OPTIONS.TOTAL_OVER:
+			return copied ? market.homeOdds : market.totalTypeMatch?.homeOdds
+		case BET_OPTIONS.TOTAL_UNDER:
+			return copied ? market.awayOdds : market.totalTypeMatch?.awayOdds
+		// X1, X2, 12
+		case BET_OPTIONS.DOUBLE_CHANCE_HOME:
+			return copied
+				? market.homeOdds
+				: market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)?.homeOdds
+		case BET_OPTIONS.DOUBLE_CHANCE_AWAY:
+			return copied
+				? market.homeOdds
+				: market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)?.homeOdds
+		case BET_OPTIONS.DOUBLE_CHANCE_DRAW:
+			return copied
+				? market.homeOdds
+				: market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeOdds
+		// TODO: combinated
+		default:
+			return undefined
+	}
+}
 export const isAboveOrEqualResolution = (currentResolution: RESOLUTIONS, resolution: RESOLUTIONS) => {
 	switch (resolution) {
 		case RESOLUTIONS.XXL:
@@ -906,6 +964,9 @@ export const isBellowOrEqualResolution = (currentResolution: RESOLUTIONS, resolu
 			return true
 	}
 }
+export const getCollateral = (networkId: Network, index: number) => COLLATERALS[networkId][index]
+
+export const getStablecoinDecimals = (networkId: Network, stableIndex: number) => STABLE_DECIMALS[getCollateral(networkId, stableIndex)]
 
 // export const getMatchHint = (match: TicketPosition) => {
 // TODO: tu budu texty pre hinty pre zapasy na zaklade ich betOption

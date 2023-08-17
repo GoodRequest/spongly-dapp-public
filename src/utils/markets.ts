@@ -213,17 +213,6 @@ export const formatMarketOdds = (oddsType: OddsType, market?: SportMarketInfo) =
 	}
 }
 
-export const getPositionOdds = (market: any) => {
-	// eslint-disable-next-line no-nested-ternary
-	return market.position === PositionNumber.HOME
-		? market.homeOdds
-		: market.position === PositionNumber.AWAY
-		? market.awayOdds
-		: market.drawOdds
-		? market.drawOdds
-		: 0
-}
-
 export const convertPriceImpactToBonus = (priceImpact: number): number => -((priceImpact / (1 + priceImpact)) * 100)
 
 export const getMarketOddsFromContract = async (markets: SportMarket[]) => {
