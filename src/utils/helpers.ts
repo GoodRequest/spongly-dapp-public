@@ -755,7 +755,7 @@ export const formatParlayQuote = (quote: number | undefined) => {
 }
 
 export const formatPositionOdds = (match: Position) => {
-	switch (match) {
+	switch (match.side) {
 		case PositionType.Away: {
 			const ammOdds = Number(match.market.awayOdds) / OPTIMISM_DIVISOR
 			return formatQuote(OddsType.DECIMAL, Number(ammOdds))
