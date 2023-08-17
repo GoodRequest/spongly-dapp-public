@@ -240,7 +240,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 						</Col>
 						<Col span={12} style={{ textAlign: 'end' }}>
 							<SC.AvailableBalanceTitle>{t('Allowance')}: </SC.AvailableBalanceTitle>
-							<SC.AvailableBalance value={formValues?.allowance}>
+							<SC.AvailableBalance value={formValues?.allowance ? round(formValues?.allowance, 2) : 0}>
 								{formValues?.allowance ? round(formValues?.allowance, 2) : 0} {formValues?.selectedStablecoin}
 							</SC.AvailableBalance>
 						</Col>
