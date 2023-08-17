@@ -566,8 +566,13 @@ const TicketBetContainer = () => {
 	}, [isSwitchedTicket])
 
 	return (
-		<SC.SubmittingSpinner spinning={isSubmitting} size='large' indicator={<LoadingOutlined spin />} tip={'Submitting ticket...'}>
-			<SC.TicketBetWrapper rolledUp={rolledUp}>
+		<SC.TicketBetWrapper rolledUp={rolledUp}>
+			<SC.SubmittingSpinner
+				spinning={isSubmitting || isApproving}
+				size='large'
+				indicator={<LoadingOutlined spin />}
+				tip={isApproving ? t('Approving allowance..') : t('Submitting ticket...')}
+			>
 				<Spin spinning={isProcessing} size='small' indicator={<LoadingOutlined spin />}>
 					<HorizontalScroller
 						tickets={unsubmittedTickets ?? []}
@@ -585,14 +590,6 @@ const TicketBetContainer = () => {
 						activeTicket={activeTicketValues}
 					/>
 				</Spin>
-				<MobileHeader
-					rolledUp={rolledUp}
-					setRolledUp={setRolledUp}
-					tickets={unsubmittedTickets ?? []}
-					addTicket={handleAddTicket}
-					setActiveTicket={handleSetActiveTicket}
-					activeTicket={activeTicketValues}
-				/>
 				<TicketBetContainerForm
 					fetchTicketData={(activeTicketValues?.matches?.length || 0) > 1 ? fetchParleyTicketData : fetchSinglesTicketData}
 					isWalletConnected={isWalletConnected}
@@ -603,8 +600,8 @@ const TicketBetContainer = () => {
 					available={available}
 					rolledUp={!isBellowOrEqualResolution(size, RESOLUTIONS.SEMIXXL) || rolledUp}
 				/>
-			</SC.TicketBetWrapper>
-		</SC.SubmittingSpinner>
+			</SC.SubmittingSpinner>
+		</SC.TicketBetWrapper>
 	)
 }
 
