@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux'
 import { Col, Select, Tooltip } from 'antd'
 import { useTranslation } from 'next-export-i18n'
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { toNumber } from 'lodash'
 
 // components
@@ -11,7 +11,7 @@ import { Select as SelectField } from '@/atoms/form/selectField/SelectField'
 import { getTeamImageSource } from '@/utils/images'
 import { BET_OPTIONS, DoubleChanceMarketType } from '@/utils/enums'
 import { formatQuote } from '@/utils/helpers'
-import { NO_TEAM_IMAGE_FALLBACK, OddsType } from '@/utils/constants'
+import { NO_TEAM_IMAGE_FALLBACK, OddsType, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { getMatchByBetOption, getOddsPropertyFromBetOption, getPossibleBetOptions } from '@/utils/markets'
 
 // redux
@@ -40,6 +40,7 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, readO
 	const dispatch = useDispatch()
 	const [modalOpen, setModalOpen] = useState(false)
 	const [selectedMatch, setSelectedMatch] = useState(getMatchByBetOption(match.betOption, match))
+	const isTotalWinner = TOTAL_WINNER_TAGS.includes(match?.winnerTypeMatch?.tags[0] as any)
 
 	const [teamImages] = useState({
 		awayTeam: getTeamImageSource(match?.awayTeam || '', toNumber(match?.tags?.[0])),
@@ -67,34 +68,42 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, readO
 		return formatQuote(OddsType.DECIMAL, Number(match?.[getOddsPropertyFromBetOption(match.betOption)]))
 	}
 
+	const images = useMemo(() => (
+		<>
+			<SC.MatchIcon style={{ marginLeft: '0px' }}>
+				<img
+					src={teamImages.homeTeam}
+					alt={match.homeTeam}
+					onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
+						e.target.src = NO_TEAM_IMAGE_FALLBACK
+					}}
+				/>			
+			</SC.MatchIcon>
+			{!isTotalWinner && (
+				<SC.MatchIcon>
+				<img
+					src={teamImages.awayTeam}
+					alt={match.awayTeam}
+					onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
+						e.target.src = NO_TEAM_IMAGE_FALLBACK
+					}}
+				/>
+			</SC.MatchIcon>
+			)}
+		</>
+	), [isTotalWinner, match, teamImages])
+
 	return (
 		<>
 			<SC.MatchRow gutter={[0, 0]} readOnly={readOnly}>
 				<Col xs={16} sm={18} md={16} xl={14}>
 					<SC.StartCenteredRow>
 						<SC.TeamImages>
-							<SC.MatchIcon style={{ marginLeft: '0px' }}>
-								<img
-									src={teamImages.homeTeam}
-									alt={match.homeTeam}
-									onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
-										e.target.src = NO_TEAM_IMAGE_FALLBACK
-									}}
-								/>
-							</SC.MatchIcon>
-							<SC.MatchIcon>
-								<img
-									src={teamImages.awayTeam}
-									alt={match.awayTeam}
-									onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
-										e.target.src = NO_TEAM_IMAGE_FALLBACK
-									}}
-								/>
-							</SC.MatchIcon>
+							{images}
 						</SC.TeamImages>
 						<SC.TeamNames>
 							<SC.TeamName>{match.homeTeam}</SC.TeamName>
-							<SC.TeamName>{match.awayTeam}</SC.TeamName>
+							{!isTotalWinner && (<SC.TeamName>{match.awayTeam}</SC.TeamName>)}
 						</SC.TeamNames>
 					</SC.StartCenteredRow>
 				</Col>
@@ -112,8 +121,8 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, readO
 						disabled={getPossibleBetOptions(match)?.length <= 1} // NOTE: if has 1 option, it does not need to be active ( total winner )
 						options={
 							getPossibleBetOptions(match)?.map((betOption, key) => (
-								<Option key={`option-${key}`} value={betOption} label={betOption}>
-									{betOption}
+								<Option key={`option-${key}`} value={betOption} label={isTotalWinner ? t('YES') : betOption}>
+									{isTotalWinner ? t('YES') : betOption}
 								</Option>
 							)) as any
 						}
@@ -153,7 +162,7 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, readO
 				</SC.ShiftedRow>
 				<SC.ShiftedRow>
 					<SCS.MatchBetOptionsWrapper>
-						<MatchListContent match={match as any} />
+						<MatchListContent match={match as any}/>
 					</SCS.MatchBetOptionsWrapper>
 				</SC.ShiftedRow>
 			</Modal>
