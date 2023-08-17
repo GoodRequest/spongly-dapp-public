@@ -246,6 +246,7 @@ const TicketBetContainer = () => {
 			}
 			return undefined
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[chain?.id, activeTicketValues?.selectedStablecoin, activeTicketValues?.matches, activeTicketValues?.buyIn]
 	)
 
@@ -279,7 +280,6 @@ const TicketBetContainer = () => {
 			}
 			return 0
 		} catch (e) {
-			console.error('An error occurred while getting the allowance', { e })
 			showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while getting the allowance') }], NOTIFICATION_TYPE.NOTIFICATION)
 			return 0
 		}
