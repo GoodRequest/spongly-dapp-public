@@ -33,7 +33,8 @@ export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
 		@media (min-width: ${breakpoints.md}px) and (max-width: ${breakpoints.semixxl}px) {
 			border-radius: 12px 12px 0px 0px;
 			right: 60px;
-			height: auto;
+			overflow: hidden;
+			height: ${({ rolledUp }) => (rolledUp ? 'auto' : '80px')};
 			width: 440px;
 			box-shadow: ${({ rolledUp }) =>
 				rolledUp ? '0px -15px 30px -6px rgba(102, 116, 255, 0.04), 0px -25px 50px -12px rgba(102, 116, 255, 0.25);' : 'none'};
