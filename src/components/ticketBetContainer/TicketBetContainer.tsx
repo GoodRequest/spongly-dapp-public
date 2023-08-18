@@ -21,7 +21,8 @@ import { getMaxGasLimitForNetwork } from '@/utils/network'
 import { sportsMarketContract } from '@/utils/contracts/sportsMarketContract'
 import {
 	ADDITIONAL_SLIPPAGE,
-	GAS_ESTIMATION_BUFFER,
+	GAS_ESTIMATION_BUFFER, MAX_BUY_IN,
+	MIN_BUY_IN,
 	MSG_TYPE,
 	NETWORK_IDS,
 	NOTIFICATION_TYPE,
@@ -161,11 +162,11 @@ const TicketBetContainer = () => {
 					multipleCollateralBalance?.[(newActiveTicket?.selectedStablecoin as keyof typeof multipleCollateralBalance) ?? STABLE_COIN.S_USD] ?? 0,
 				totalQuote: 0,
 				maxTotalQuote: parlayAmmData?.maxSupportedOdds,
-				maxBuyIn: parlayAmmData?.maxSupportedAmount,
-				minBuyIn: parlayAmmData?.minUsdAmount,
+				maxBuyIn: parlayAmmData?.maxSupportedAmount || MAX_BUY_IN,
+				minBuyIn: parlayAmmData?.minUsdAmount || MIN_BUY_IN,
 				totalBonus: 0,
 				payout: 0,
-				buyIn: newActiveTicket?.buyIn || parlayAmmData?.minUsdAmount || 0,
+				buyIn: newActiveTicket?.buyIn || parlayAmmData?.minUsdAmount || MIN_BUY_IN,
 				potentionalProfit: 0,
 				fees: {
 					parlay: parlayAmmData?.parlayAmmFee ? parlayAmmData.parlayAmmFee * 100 : '-',

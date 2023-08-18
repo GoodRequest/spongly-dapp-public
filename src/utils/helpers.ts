@@ -3,7 +3,7 @@ import { notification } from 'antd'
 import numbro from 'numbro'
 import Router from 'next/router'
 
-import { toNumber } from 'lodash'
+import { floor, toNumber } from 'lodash'
 import { AnyAction, Dispatch } from 'redux'
 
 import {
@@ -53,13 +53,13 @@ export const roundPrice = (price: number | undefined | null, includeDollarSign?:
 		return 0
 	}
 
-	const roundedPrice = (price / OPTIMISM_DIVISOR).toFixed(2)
+	const roundedPrice = floor(price / OPTIMISM_DIVISOR, 2).toFixed(2)
 	if (!includeDollarSign) return roundedPrice
 	return `${roundedPrice} $`
 }
 
 export const roundETH = (value: string) => {
-	return Number(value).toFixed(2)
+	return floor(Number(value), 2).toFixed(2)
 }
 
 export const formatDateTime = (dateTime: number) => {
@@ -465,8 +465,8 @@ export const getSuccessRateForTickets = (tickets: Array<ParlayMarket | PositionB
 		return positions.every((position) => position.market.isResolved)
 	})
 	const winningTickets = resolvedTickets.filter((ticket) => isWinningTicket(ticket)) // pri singles je to claimable
-	if (!resolvedTickets.length) return (0).toFixed(2)
-	return ((winningTickets.length / resolvedTickets.length) * 100).toFixed(2)
+	if (!resolvedTickets.length) return '0.00'
+	return floor((winningTickets.length / resolvedTickets.length) * 100, 2).toFixed(2)
 }
 
 export const addDaysToEnteredTimestamp = (numberOfDays: number, timestamp: string) => {
@@ -786,7 +786,7 @@ export const getCanceledClaimAmount = (ticket: UserTicket) => {
 			}
 		})
 
-		return totalAmount.toFixed(2)
+		return floor(totalAmount, 2).toFixed(2)
 	}
 
 	// single ticket
@@ -812,7 +812,7 @@ export const getCanceledClaimAmount = (ticket: UserTicket) => {
 				claimAmount += 0
 		}
 	}
-	return claimAmount.toFixed(2)
+	return floor(claimAmount, 2).toFixed(2)
 }
 
 export const convertSGPContractDataToSGPItemType = (sgpContractData: SGPContractData): SGPItem[] => {
@@ -837,7 +837,7 @@ export const convertSGPContractDataToSGPItemType = (sgpContractData: SGPContract
 
 export const formatMatchCombinedPositionsQuote = (position1: number, position2: number, SGPFee: number) => {
 	const odd = formatQuote(OddsType.DECIMAL, position1 * position2)
-	const oddWithFee = (Number(odd) * SGPFee).toFixed(2)
+	const oddWithFee = floor(Number(odd) * SGPFee, 2).toFixed(2)
 	return oddWithFee
 }
 
