@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 import { Row, Col, Skeleton, Collapse } from 'antd'
 import { HeadingSMMedium, HeadingXSMedium, HeadingXXSMedium, TextLGMedium, TextMDMedium, TextMDRegular, TextSMMedium, TextXSMedium } from '@/styles/typography'
 import Ticket from '@/assets/images/empty_state_ticket.png'
@@ -211,6 +211,21 @@ export const ModalDescription = styled(Col)`
 	text-align: center;
 	margin-bottom: 32px;
 	color: ${({ theme }) => theme['color-base-content-tertiary']};
+`
+const flicker = keyframes`
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+`
+export const ModalDescriptionWarning = styled(Col)`
+	${TextMDMedium};
+	text-align: center;
+	margin-bottom: 32px;
+	animation: ${flicker} 1s infinite;
+	color: ${({ theme }) => theme['color-base-state-warning-fg']};
 `
 export const ModalTitle = styled(Col)`
 	${HeadingSMMedium};
