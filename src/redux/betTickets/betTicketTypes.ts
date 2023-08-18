@@ -29,6 +29,7 @@ export type IBetTicketActions = IResetStore | ISetUnsubmittedBetTickets | ISetPr
 
 export interface IUnsubmittedBetTicket {
 	id?: number
+	ticketId?: string
 	allowance?: number
 	copied?: boolean
 	matches?: TicketPosition[]

@@ -105,6 +105,8 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 		dispatch(change(FORM.BET_TICKET, 'matches', activeMatches))
 		// helper variable which says that ticket has matches which were copied
 		dispatch(change(FORM.BET_TICKET, 'copied', true))
+		// Ticket id which will be sent to submit if ticket was copied
+		dispatch(change(FORM.BET_TICKET, 'ticketId', ticket.id))
 	}
 
 	const handleCollapseChange = (e: any) => {

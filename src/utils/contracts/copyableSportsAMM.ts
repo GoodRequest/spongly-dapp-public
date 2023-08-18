@@ -5,7 +5,7 @@ const copyableParlayAMM = {
 		5: '',
 		10: '',
 		42: '',
-		[Network.OptimismGoerli]: '0x7A5be4Ff6d68fEEB82D1cA72e2A5083e62A8cC43',
+		[Network.OptimismGoerli]: '0xE3cfdCB451ceC026CE2e9F93bd671801E5BB5FFb',
 		42161: ''
 	},
 	abi: [
@@ -15,7 +15,7 @@ const copyableParlayAMM = {
 				{
 					indexed: false,
 					internalType: 'address',
-					name: '_parlayMarketsAMM',
+					name: 'sportsAMMAddress',
 					type: 'address'
 				}
 			],
@@ -76,6 +76,25 @@ const copyableParlayAMM = {
 			anonymous: false,
 			inputs: [
 				{
+					indexed: true,
+					internalType: 'string',
+					name: 'marketID',
+					type: 'string'
+				},
+				{
+					indexed: true,
+					internalType: 'address',
+					name: 'walletAddress',
+					type: 'address'
+				}
+			],
+			name: 'MarketCopied',
+			type: 'event'
+		},
+		{
+			anonymous: false,
+			inputs: [
+				{
 					indexed: false,
 					internalType: 'address',
 					name: 'oldOwner',
@@ -108,25 +127,6 @@ const copyableParlayAMM = {
 			anonymous: false,
 			inputs: [
 				{
-					indexed: true,
-					internalType: 'address',
-					name: 'parlayAddress',
-					type: 'address'
-				},
-				{
-					indexed: true,
-					internalType: 'address',
-					name: 'walletAddress',
-					type: 'address'
-				}
-			],
-			name: 'ParlayCopied',
-			type: 'event'
-		},
-		{
-			anonymous: false,
-			inputs: [
-				{
 					indexed: false,
 					internalType: 'bool',
 					name: 'isPaused',
@@ -146,14 +146,14 @@ const copyableParlayAMM = {
 		{
 			inputs: [
 				{
-					internalType: 'address[]',
-					name: '_sportMarkets',
-					type: 'address[]'
+					internalType: 'address',
+					name: '_sportMarket',
+					type: 'address'
 				},
 				{
-					internalType: 'uint256[]',
-					name: '_positions',
-					type: 'uint256[]'
+					internalType: 'enum ISportsAMM.Position',
+					name: '_position',
+					type: 'uint8'
 				},
 				{
 					internalType: 'uint256',
@@ -172,26 +172,16 @@ const copyableParlayAMM = {
 				},
 				{
 					internalType: 'address',
-					name: '_differentRecepient',
-					type: 'address'
-				},
-				{
-					internalType: 'address',
 					name: '_refferer',
 					type: 'address'
 				},
 				{
-					internalType: 'address',
-					name: '_copiedFromParlay',
-					type: 'address'
-				},
-				{
-					internalType: 'bool',
-					name: '_modified',
-					type: 'bool'
+					internalType: 'string',
+					name: '_copiedFromMarket',
+					type: 'string'
 				}
 			],
-			name: 'buyFromParlayWithCopy',
+			name: 'buyFromAMMWithCopy',
 			outputs: [],
 			stateMutability: 'nonpayable',
 			type: 'function'
@@ -199,14 +189,14 @@ const copyableParlayAMM = {
 		{
 			inputs: [
 				{
-					internalType: 'address[]',
-					name: '_sportMarkets',
-					type: 'address[]'
+					internalType: 'address',
+					name: '_sportMarket',
+					type: 'address'
 				},
 				{
-					internalType: 'uint256[]',
-					name: '_positions',
-					type: 'uint256[]'
+					internalType: 'enum ISportsAMM.Position',
+					name: '_position',
+					type: 'uint8'
 				},
 				{
 					internalType: 'uint256',
@@ -234,14 +224,9 @@ const copyableParlayAMM = {
 					type: 'address'
 				},
 				{
-					internalType: 'address',
-					name: '_copiedFromParlay',
-					type: 'address'
-				},
-				{
-					internalType: 'bool',
-					name: '_modified',
-					type: 'bool'
+					internalType: 'string',
+					name: '_copiedFromMarket',
+					type: 'string'
 				}
 			],
 			name: 'buyFromParlayWithCopyAndDifferentCollateral',
@@ -291,12 +276,12 @@ const copyableParlayAMM = {
 		{
 			inputs: [
 				{
-					internalType: 'address',
-					name: '_parlayAddress',
-					type: 'address'
+					internalType: 'string',
+					name: '_marketAddress',
+					type: 'string'
 				}
 			],
-			name: 'getCopiedParlayDetails',
+			name: 'getCopiedMarketDetails',
 			outputs: [
 				{
 					components: [
@@ -312,16 +297,11 @@ const copyableParlayAMM = {
 						},
 						{
 							internalType: 'uint256',
-							name: 'modifiedCount',
-							type: 'uint256'
-						},
-						{
-							internalType: 'uint256',
 							name: 'lastCopiedTime',
 							type: 'uint256'
 						}
 					],
-					internalType: 'struct CopyableParlayAMM.CopiedParlayDetails',
+					internalType: 'struct CopyableSportsAMM.CopiedMarketDetails',
 					name: '',
 					type: 'tuple'
 				}
@@ -332,17 +312,17 @@ const copyableParlayAMM = {
 		{
 			inputs: [
 				{
-					internalType: 'address',
-					name: '_parlayAddress',
-					type: 'address'
+					internalType: 'string',
+					name: '_marketAddress',
+					type: 'string'
 				}
 			],
-			name: 'getParlayCopiedCount',
+			name: 'getMarketCopiedCount',
 			outputs: [
 				{
-					internalType: 'uint256[2]',
+					internalType: 'uint256',
 					name: '',
-					type: 'uint256[2]'
+					type: 'uint256'
 				}
 			],
 			stateMutability: 'view',
@@ -351,12 +331,12 @@ const copyableParlayAMM = {
 		{
 			inputs: [
 				{
-					internalType: 'address',
-					name: '_parlayAddress',
-					type: 'address'
+					internalType: 'string',
+					name: '_marketAddress',
+					type: 'string'
 				}
 			],
-			name: 'getParlayWallets',
+			name: 'getMarketWallets',
 			outputs: [
 				{
 					internalType: 'address[]',
@@ -375,12 +355,12 @@ const copyableParlayAMM = {
 					type: 'address'
 				}
 			],
-			name: 'getWalletParlays',
+			name: 'getWalletMarkets',
 			outputs: [
 				{
-					internalType: 'address[]',
+					internalType: 'string[]',
 					name: '',
-					type: 'address[]'
+					type: 'string[]'
 				}
 			],
 			stateMutability: 'view',
@@ -402,7 +382,7 @@ const copyableParlayAMM = {
 				},
 				{
 					internalType: 'address',
-					name: '_parlayMarketsAMMAddress',
+					name: '_sportsAMMAddress',
 					type: 'address'
 				},
 				{
@@ -516,7 +496,7 @@ const copyableParlayAMM = {
 			inputs: [
 				{
 					internalType: 'address',
-					name: '_parlayMarketsAMM',
+					name: '_sportsAMMAddress',
 					type: 'address'
 				}
 			],

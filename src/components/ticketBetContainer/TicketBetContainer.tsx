@@ -22,6 +22,7 @@ import { sportsMarketContract } from '@/utils/contracts/sportsMarketContract'
 import {
 	ADDITIONAL_SLIPPAGE,
 	GAS_ESTIMATION_BUFFER,
+	MIN_BUY_IN,
 	MSG_TYPE,
 	NETWORK_IDS,
 	NOTIFICATION_TYPE,
@@ -165,7 +166,7 @@ const TicketBetContainer = () => {
 				minBuyIn: parlayAmmData?.minUsdAmount,
 				totalBonus: 0,
 				payout: 0,
-				buyIn: newActiveTicket?.buyIn || parlayAmmData?.minUsdAmount || 0,
+				buyIn: newActiveTicket?.buyIn || parlayAmmData?.minUsdAmount || MIN_BUY_IN,
 				potentionalProfit: 0,
 				fees: {
 					parlay: parlayAmmData?.parlayAmmFee ? parlayAmmData.parlayAmmFee * 100 : '-',
@@ -270,7 +271,7 @@ const TicketBetContainer = () => {
 	}, [activeTicketValues?.matches])
 
 	const getAllowance = async () => {
-		const { signer, sUSDContract, parlayMarketsAMMContract, sportsAMMContract } = networkConnector
+		const { signer, sUSDContract, copyableSportsAMM, copyableParlayAMM } = networkConnector
 		try {
 			if (signer && sUSDContract && isWalletConnected) {
 				const sUSDContractWithSigner = sUSDContract?.connect(signer)
@@ -279,9 +280,9 @@ const TicketBetContainer = () => {
 				if (activeTicketMatchesCount === 0) {
 					allowance = 0
 				} else if (activeTicketMatchesCount === 1) {
-					allowance = await sUSDContractWithSigner.allowance(address, sportsAMMContract?.address)
+					allowance = await sUSDContractWithSigner.allowance(address, copyableSportsAMM?.address)
 				} else if (activeTicketMatchesCount > 1) {
-					allowance = await sUSDContractWithSigner.allowance(address, parlayMarketsAMMContract?.address)
+					allowance = await sUSDContractWithSigner.allowance(address, copyableParlayAMM?.address)
 				}
 				return Number(ethers.utils.formatEther(allowance))
 			}
@@ -291,7 +292,37 @@ const TicketBetContainer = () => {
 			return 0
 		}
 	}
-
+	const handleApproveAllowance = async () => {
+		dispatch({ type: ACTIVE_TICKET_APPROVING.SET, payload: true })
+		const { signer, sUSDContract, copyableSportsAMM, copyableParlayAMM } = networkConnector
+		if (signer && sUSDContract) {
+			try {
+				const sUSDContractWithSigner = sUSDContract.connect(signer)
+				const approveAmount = ethers.utils.parseEther(roundNumberToDecimals(Number(activeTicketValues.buyIn)).toString())
+				const tx = (await sUSDContractWithSigner.approve(
+					activeTicketMatchesCount === 1 ? copyableSportsAMM?.address : copyableParlayAMM?.address,
+					approveAmount,
+					{
+						gasLimit: chain?.id ? getMaxGasLimitForNetwork(chain?.id) : undefined
+					}
+				)) as ethers.ContractTransaction
+				await tx.wait().then(async () => {
+					showNotifications([{ type: MSG_TYPE.SUCCESS, message: t('Your allowance was approved') }], NOTIFICATION_TYPE.NOTIFICATION)
+					const newAllowance = await getAllowance()
+					dispatch(change(FORM.BET_TICKET, 'allowance', newAllowance))
+				})
+			} catch (e) {
+				const err: any = e
+				if (err?.code === 'ACTION_REJECTED') {
+					showNotifications([{ type: MSG_TYPE.INFO, message: t('User rejected transaction') }], NOTIFICATION_TYPE.NOTIFICATION)
+				} else {
+					showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while approving') }], NOTIFICATION_TYPE.NOTIFICATION)
+				}
+			} finally {
+				dispatch({ type: ACTIVE_TICKET_APPROVING.SET, payload: false })
+			}
+		}
+	}
 	const fetchParleyTicketData = async () => {
 		if (!activeTicketValues?.buyIn) return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0 }
 
@@ -423,106 +454,86 @@ const TicketBetContainer = () => {
 	}
 
 	const handleConfirmTicket = async (values: IUnsubmittedBetTicket) => {
+		const { signer, copyableSportsAMM, copyableParlayAMM } = networkConnector
+		console.log('values form', values)
 		try {
-			// TODO: if the currency changes from USD to another, buyFromParlayWithDifferentCollateral is called
-			dispatch({ type: ACTIVE_TICKET_SUBMITTING.SET, payload: true })
-			const { parlayMarketsAMMContract, signer, sportsAMMContract } = networkConnector
-			const parlayMarketsAMMContractWithSigner = parlayMarketsAMMContract?.connect(signer as any)
-			const sportsMarketsAMMContractWithSigner = sportsAMMContract?.connect(signer as any)
+			if (signer) {
+				// TODO: if the currency changes from USD to another, buyFromParlayWithDifferentCollateral is called
+				dispatch({ type: ACTIVE_TICKET_SUBMITTING.SET, payload: true })
+				const copyableParlayAMMContractWithSigner = copyableParlayAMM?.connect(signer)
+				const copyableSportsAMMContractWithSigner = copyableSportsAMM?.connect(signer)
 
-			const sUSDPaid = ethers.utils.parseUnits((values.buyIn || 0).toString(), 'ether')
-			const additionalSlippage = ethers.utils.parseEther(ADDITIONAL_SLIPPAGE)
-			const expectedPayout = ethers.utils.parseEther(roundNumberToDecimals(Number(activeTicketValues.payout)).toString()) // TODO: treba vyratavat totalQuote z activeTicketValues
-			let data
-			if (
-				getBetOptionAndAddressFromMatch(values?.matches).addresses.length === 1 &&
-				getBetOptionAndAddressFromMatch(values?.matches).betTypes?.length === 1
-			) {
-				const reqData = [
-					getBetOptionAndAddressFromMatch(values?.matches).addresses[0],
-					getBetOptionAndAddressFromMatch(values?.matches).betTypes[0],
-					expectedPayout,
-					sUSDPaid,
-					additionalSlippage,
-					REFERRER_WALLET
-				]
-				const estimationGas = await sportsMarketsAMMContractWithSigner?.estimateGas.buyFromAMMWithReferrer(...reqData)
+				const sUSDPaid = ethers.utils.parseUnits((values.buyIn || 0).toString(), 'ether')
+				const additionalSlippage = ethers.utils.parseEther(ADDITIONAL_SLIPPAGE)
+				const expectedPayout = ethers.utils.parseEther(roundNumberToDecimals(Number(activeTicketValues.payout)).toString()) // TODO: treba vyratavat totalQuote z activeTicketValues
+				let data
+				if (
+					getBetOptionAndAddressFromMatch(values?.matches).addresses.length === 1 &&
+					getBetOptionAndAddressFromMatch(values?.matches).betTypes?.length === 1
+				) {
+					const reqData = [
+						getBetOptionAndAddressFromMatch(values?.matches).addresses[0],
+						getBetOptionAndAddressFromMatch(values?.matches).betTypes[0],
+						expectedPayout, // NOTE: expectedPayout is sUSDPaid in this case (totalBuyAmount = payout + buyIn) - payout is calculated in fetchParleyTicketData
+						additionalSlippage,
+						sUSDPaid,
+						REFERRER_WALLET,
+						activeTicketValues.ticketId || ''
+						// TODO: there will be 8th parameter modified in singles also
+					]
+					console.log('values', reqData)
+					const estimationGas = await copyableSportsAMMContractWithSigner?.estimateGas.buyFromAMMWithCopy(...reqData)
 
-				const finalEstimation = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
-				data = (await sportsMarketsAMMContractWithSigner?.buyFromAMMWithReferrer(...reqData, {
-					gasLimit: chain?.id ? finalEstimation : undefined
-				})) as ethers.ContractTransaction
-			} else {
-				const estimationGas = await parlayMarketsAMMContractWithSigner?.estimateGas.buyFromParlayWithReferrer(
-					getBetOptionAndAddressFromMatch(values?.matches).addresses,
-					getBetOptionAndAddressFromMatch(values?.matches).betTypes,
-					sUSDPaid,
-					additionalSlippage,
-					expectedPayout,
-					ZERO_ADDRESS,
-					REFERRER_WALLET
-				)
+					const finalEstimation = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
 
-				const finalEstimation = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
+					data = (await copyableSportsAMMContractWithSigner?.buyFromAMMWithCopy(...reqData, {
+						gasLimit: chain?.id ? finalEstimation : undefined
+					})) as ethers.ContractTransaction
+				} else {
+					const reqData = [
+						getBetOptionAndAddressFromMatch(values?.matches).addresses,
+						getBetOptionAndAddressFromMatch(values?.matches).betTypes,
+						sUSDPaid,
+						additionalSlippage,
+						expectedPayout,
+						ZERO_ADDRESS,
+						REFERRER_WALLET,
+						activeTicketValues.ticketId || ZERO_ADDRESS,
+						!activeTicketValues.copied
+					]
+					console.log('reqData', reqData)
+					const estimationGas = await copyableParlayAMMContractWithSigner?.estimateGas.buyFromParlayWithCopy(...reqData)
 
-				data = (await parlayMarketsAMMContractWithSigner?.buyFromParlayWithReferrer(
-					getBetOptionAndAddressFromMatch(values?.matches).addresses,
-					getBetOptionAndAddressFromMatch(values?.matches).betTypes,
-					sUSDPaid,
-					additionalSlippage,
-					expectedPayout,
-					ZERO_ADDRESS,
-					REFERRER_WALLET,
-					{
+					const finalEstimation = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
+
+					data = (await copyableParlayAMMContractWithSigner?.buyFromParlayWithCopy(...reqData, {
 						gasLimit: finalEstimation
-					}
-				)) as ethers.ContractTransaction
+					})) as ethers.ContractTransaction
+				}
+				console.log('data', data)
+				await data?.wait().then(() => {
+					dispatch(change(FORM.BET_TICKET, 'matches', []))
+					showNotifications(
+						[
+							{
+								type: MSG_TYPE.SUCCESS,
+								message: t('The ticket was successfully submitted')
+							}
+						],
+						NOTIFICATION_TYPE.NOTIFICATION
+					)
+				})
 			}
-			await data?.wait().then(() => {
-				dispatch(change(FORM.BET_TICKET, 'matches', []))
-				showNotifications([{ type: MSG_TYPE.SUCCESS, message: t('The ticket was successfully submitted') }], NOTIFICATION_TYPE.NOTIFICATION)
-			})
 		} catch (e) {
 			const err: any = e
 			if (err?.code === 'ACTION_REJECTED') {
 				showNotifications([{ type: MSG_TYPE.INFO, message: t('User rejected transaction') }], NOTIFICATION_TYPE.NOTIFICATION)
 			} else {
+				console.error({ e })
 				showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while submitting the ticket') }], NOTIFICATION_TYPE.NOTIFICATION)
 			}
 		} finally {
 			dispatch({ type: ACTIVE_TICKET_SUBMITTING.SET, payload: false })
-		}
-	}
-
-	const handleApproveAllowance = async () => {
-		dispatch({ type: ACTIVE_TICKET_APPROVING.SET, payload: true })
-		const { signer, sUSDContract, parlayMarketsAMMContract, sportsAMMContract } = networkConnector
-		if (signer && sUSDContract) {
-			try {
-				const sUSDContractWithSigner = sUSDContract.connect(signer)
-				const approveAmount = ethers.utils.parseEther(roundNumberToDecimals(Number(activeTicketValues.buyIn)).toString())
-				const tx = (await sUSDContractWithSigner.approve(
-					activeTicketMatchesCount === 1 ? sportsAMMContract?.address : parlayMarketsAMMContract?.address,
-					approveAmount,
-					{
-						gasLimit: chain?.id ? getMaxGasLimitForNetwork(chain?.id) : undefined
-					}
-				)) as ethers.ContractTransaction
-				await tx.wait().then(async () => {
-					showNotifications([{ type: MSG_TYPE.SUCCESS, message: t('Your allowance was approved') }], NOTIFICATION_TYPE.NOTIFICATION)
-					const newAllowence = await getAllowance()
-					dispatch(change(FORM.BET_TICKET, 'allowance', newAllowence))
-				})
-			} catch (e) {
-				const err: any = e
-				if (err?.code === 'ACTION_REJECTED') {
-					showNotifications([{ type: MSG_TYPE.INFO, message: t('User rejected transaction') }], NOTIFICATION_TYPE.NOTIFICATION)
-				} else {
-					showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while approving') }], NOTIFICATION_TYPE.NOTIFICATION)
-				}
-			} finally {
-				dispatch({ type: ACTIVE_TICKET_APPROVING.SET, payload: false })
-			}
 		}
 	}
 
