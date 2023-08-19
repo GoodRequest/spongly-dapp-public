@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 
-import { floor } from 'lodash'
+import { round } from 'lodash'
 import { RootState } from '@/redux/rootReducer'
 
 // components
@@ -55,11 +55,11 @@ const TicketListItemHeader: FC<ITicketContent> = ({ ticket }) => {
 			{/* Row 2 */}
 			<SC.TicketItemCol $customOrder={3} md={3} span={8}>
 				<SC.ColHeader>{t('Buy-In')}</SC.ColHeader>
-				<SC.ColContent>{`${floor(buyIn, 2).toFixed(2)} $`}</SC.ColContent>
+				<SC.ColContent>{`${round(buyIn, 2).toFixed(2)} $`}</SC.ColContent>
 			</SC.TicketItemCol>
 			<SC.TicketItemCol $customOrder={3} md={3} span={8}>
 				<SC.ColHeader>{t('Quote')}</SC.ColHeader>
-				<SC.ColContent>{floor(totalTicketQuote, 2).toFixed(2)}</SC.ColContent>
+				<SC.ColContent>{round(totalTicketQuote, 2).toFixed(2)}</SC.ColContent>
 			</SC.TicketItemCol>
 			<SC.TicketItemCol $customOrder={3} md={3} span={8}>
 				<SC.ColHeader>{t('Matches')}</SC.ColHeader>

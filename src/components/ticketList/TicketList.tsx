@@ -14,7 +14,6 @@ import ArrowIcon from '@/assets/icons/arrow-down.svg'
 // utils
 import { TICKET_SORTING, TICKET_TYPE } from '@/utils/constants'
 import { getTicketsTypeName } from '@/utils/helpers'
-import { RESOLUTIONS } from '@/utils/enums'
 
 // styles
 import * as SC from './TicketListStyles'
@@ -82,7 +81,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 									<Sorter title={t('Success rate')} name={TICKET_SORTING.SUCCESS_RATE} />
 								</Col>
 								<Col md={3} span={6}>
-									<Sorter title={t('Buy in')} name={TICKET_SORTING.BUY_IN} />
+									<Sorter title={t('Buy-in')} name={TICKET_SORTING.BUY_IN} />
 								</Col>
 								<Col md={3} span={6}>
 									<Sorter title={t('Quote')} name={TICKET_SORTING.TOTAL_TICKET_QUOTE} />

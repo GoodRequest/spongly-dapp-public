@@ -3,7 +3,7 @@ import { notification } from 'antd'
 import numbro from 'numbro'
 import Router from 'next/router'
 
-import { floor, toNumber } from 'lodash'
+import { floor, round, toNumber } from 'lodash'
 import { AnyAction, Dispatch } from 'redux'
 
 import {
@@ -52,8 +52,8 @@ export const roundPrice = (price: number | undefined | null, includeDollarSign?:
 	if (!price) {
 		return 0
 	}
-
-	const roundedPrice = floor(price / OPTIMISM_DIVISOR, 2).toFixed(2)
+	// TODO: OPTIMISM_DIVISOR is only for Optimism add helper getStablecoinDecimals() task: CH-315
+	const roundedPrice = round(price / OPTIMISM_DIVISOR, 2).toFixed(2)
 	if (!includeDollarSign) return roundedPrice
 	return `${roundedPrice} $`
 }

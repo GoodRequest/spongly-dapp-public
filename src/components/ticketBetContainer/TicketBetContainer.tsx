@@ -21,7 +21,8 @@ import { getMaxGasLimitForNetwork } from '@/utils/network'
 import { sportsMarketContract } from '@/utils/contracts/sportsMarketContract'
 import {
 	ADDITIONAL_SLIPPAGE,
-	GAS_ESTIMATION_BUFFER, MAX_BUY_IN,
+	GAS_ESTIMATION_BUFFER,
+	MAX_BUY_IN,
 	MIN_BUY_IN,
 	MSG_TYPE,
 	NETWORK_IDS,
@@ -417,7 +418,6 @@ const TicketBetContainer = () => {
 			}
 			return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0 }
 		} catch (err) {
-			console.error('Failed to fetch single ticket data', err)
 			showNotifications([{ type: MSG_TYPE.ERROR, message: t('Something happened while processing the ticket') }], NOTIFICATION_TYPE.NOTIFICATION)
 			throw new Error('Failed to fetch single ticket data', { cause: err })
 		}

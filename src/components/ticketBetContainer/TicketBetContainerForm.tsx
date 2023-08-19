@@ -64,12 +64,11 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	const matches = formValues?.matches ?? []
 	const hasAtLeastOneMatch = matches.length > 0
 	const { openConnectModal } = useConnectModal()
-	// TODO: round alebo floor?
+
 	const allowance = Number(round(Number(formValues?.allowance), 2).toFixed(2))
 	const buyIn = Number(round(Number(formValues?.buyIn), 2).toFixed(2))
-	const availableBalance = Number(round(Number(formValues?.available), 2).toFixed(2))
-	console.log('buyIn', buyIn)
-	console.log('allowance', allowance)
+	const availableBalance = Number(round(Number(available), 2).toFixed(2))
+
 	const payWithOptions = [
 		{
 			label: (
@@ -241,8 +240,8 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 					<Row>
 						<Col span={12}>
 							<SC.AvailableBalanceTitle>{t('Available')}: </SC.AvailableBalanceTitle>
-							<SC.AvailableBalance value={available}>
-								{available ? round(available, 2) : 0} {formValues?.selectedStablecoin}
+							<SC.AvailableBalance value={availableBalance || 0}>
+								{availableBalance || 0} {formValues?.selectedStablecoin}
 							</SC.AvailableBalance>
 						</Col>
 						<Col span={12} style={{ textAlign: 'end' }}>

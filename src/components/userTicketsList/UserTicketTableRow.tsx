@@ -20,7 +20,6 @@ import { USER_TICKET_TYPE, NOTIFICATION_TYPE, MSG_TYPE } from '@/utils/constants
 import networkConnector, { NetworkId } from '@/utils/networkConnector'
 import { getMaxGasLimitForNetwork } from '@/utils/network'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
-import { RESOLUTIONS } from '@/utils/enums'
 import { UserTicket } from '@/typescript/types'
 
 import Button from '@/atoms/button/Button'

@@ -61,7 +61,7 @@ const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, 
 					) : (
 						<>
 							<SC.ColumnNameText>{t('Buy-in')}</SC.ColumnNameText>
-							<SC.ParlayLeaderboardTableText>{paid}$</SC.ParlayLeaderboardTableText>
+							<SC.ParlayLeaderboardTableText>{paid} $</SC.ParlayLeaderboardTableText>
 						</>
 					)}
 				</SC.CenterRowContent>
