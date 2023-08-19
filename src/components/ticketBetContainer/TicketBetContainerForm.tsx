@@ -69,7 +69,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	const buyIn = Number(round(Number(formValues?.buyIn), 2).toFixed(2))
 	const availableBalance = Number(round(Number(formValues?.available), 2).toFixed(2))
 	console.log('buyIn', buyIn)
-	console.log('maxBuyIn', formValues?.maxBuyIn)
+	console.log('allowance', allowance)
 	const payWithOptions = [
 		{
 			label: (
@@ -135,7 +135,15 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 			))
 			return
 		}
-		// TODO: validation for max profit
+		if (allowance < buyIn) {
+			setError(() => (
+				<span>
+					{t('You dont have enough allowance for')} <SC.Highlight>{formValues?.selectedStablecoin}</SC.Highlight> {t('to continue')}
+				</span>
+			))
+			return
+		}
+
 		if (availableBalance < buyIn) {
 			setError(() => (
 				<span>
@@ -147,15 +155,6 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 					<SC.Highlight>
 						{buyIn} {formValues?.selectedStablecoin}
 					</SC.Highlight>
-				</span>
-			))
-			return
-		}
-
-		if (allowance < buyIn) {
-			setError(() => (
-				<span>
-					{t('You dont have enough allowance for')} <SC.Highlight>{formValues?.selectedStablecoin}</SC.Highlight> {t('to continue')}
 				</span>
 			))
 			return
@@ -248,8 +247,8 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 						</Col>
 						<Col span={12} style={{ textAlign: 'end' }}>
 							<SC.AvailableBalanceTitle>{t('Allowance')}: </SC.AvailableBalanceTitle>
-							<SC.AvailableBalance value={formValues?.allowance ? round(formValues?.allowance, 2) : 0}>
-								{formValues?.allowance ? round(formValues?.allowance, 2) : 0} {formValues?.selectedStablecoin}
+							<SC.AvailableBalance value={allowance || 0}>
+								{allowance || 0} {formValues?.selectedStablecoin}
 							</SC.AvailableBalance>
 						</Col>
 					</Row>
@@ -258,7 +257,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 					<>
 						<Col span={24}>
 							<Field
-								// TODO: refactor to NumberInputField instead of InputField
+								// TODO: refactor to NumberInputField instead of InputField (disable negative numbers, added format logic from notino project)
 								component={InputField}
 								type={'number'}
 								name={'buyIn'}
@@ -316,15 +315,9 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 								type={'primary'}
 								size={'large'}
 								className={`make-bet-button ${isProcessing && 'isProcessing'}`}
-								disabled={Number(formValues?.allowance) > Number(formValues?.buyIn) ? !!error : false}
-								onClick={Number(formValues?.allowance) > Number(formValues?.buyIn) ? handleSubmit : handleApprove}
-								content={
-									Number(formValues?.allowance) > Number(formValues?.buyIn) ? (
-										<span>{t('Submit')}</span>
-									) : (
-										<span>{t('Approve allowance')}</span>
-									)
-								}
+								disabled={allowance >= buyIn ? !!error : false}
+								onClick={allowance >= buyIn ? handleSubmit : handleApprove}
+								content={allowance >= buyIn ? <span>{t('Submit')}</span> : <span>{t('Approve allowance')}</span>}
 							/>
 						)}
 
