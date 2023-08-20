@@ -25,6 +25,15 @@ export const Select = styled(AntdSelect)`
 			color: ${({ theme }) => theme['color-base-content-top']} !important;
 		}
 	}
+	.ant-select-clear {
+		width: 16px;
+		height: 16px;
+		background: none;
+		background: ${({ theme }) => theme['color-base-surface-top']};
+		border-radius: 999px;
+		padding: 2px;
+		margin-top: -8px;
+	}
 `
 
 export const SelectWrapper = styled.div`

@@ -1,6 +1,7 @@
 import { Select as AntdSelect, SelectProps } from 'antd'
 
 import * as SC from './SelectStyles'
+import ClearIcon from '@/assets/icons/x-close.svg'
 
 type Props = SelectProps & {
 	onChange?: (value: any) => void
@@ -40,6 +41,7 @@ const Select = ({
 				className={className}
 				defaultValue={defaultValue}
 				allowClear={allowClear}
+				clearIcon={<img src={ClearIcon} width={16} height={16} alt='clear' />}
 				placement={placement || 'bottomRight'}
 				popupClassName={popUpClassName}
 				getPopupContainer={() => (useSelectContainer ? document.getElementById(`select-container`) || document.body : document.body)}

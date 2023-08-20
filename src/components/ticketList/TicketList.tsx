@@ -93,8 +93,13 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 	]
 
 	const handleSubmitSort = (value: string) => {
-		const [property, direction] = value.split(':')
-		setSort(property, direction as ORDER_DIRECTION)
+		if (!value) {
+			// clear sort
+			setSort(undefined)
+		} else {
+			const [property, direction] = value.split(':')
+			setSort(property, direction as ORDER_DIRECTION)
+		}
 	}
 
 	return (
@@ -141,6 +146,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 												{t('Sort by')}
 											</SC.SelectTitle>
 										}
+										allowClear
 										options={sortOptions}
 										placeholder={t('Sort by')}
 										onChange={handleSubmitSort}
