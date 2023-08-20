@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Select as AntdSelect } from 'antd'
 
-import { TextLGMedium } from '@/styles/typography'
+import { TextLGMedium, TextSMMedium } from '@/styles/typography'
 
 export const Select = styled(AntdSelect)`
 	// The reason for this is that Ant Design applies its own default styles to its components, which may have higher specificity or be applied later in the cascade than your custom styles. In order to override these default styles, you need to use the !important flag to ensure that your styles take precedence.
@@ -18,6 +18,9 @@ export const Select = styled(AntdSelect)`
 		align-items: center !important;
 		color: ${({ theme }) => theme['color-base-content-top']} !important;
 		${TextLGMedium};
+		.ant-select-selection-placeholder {
+			color: ${({ theme }) => theme['color-base-content-top']} !important;
+		}
 		.ant-select-selection-item {
 			color: ${({ theme }) => theme['color-base-content-top']} !important;
 		}
@@ -25,6 +28,7 @@ export const Select = styled(AntdSelect)`
 `
 
 export const SelectWrapper = styled.div`
+	width: 100%;
 	.ant-select {
 		width: 100%;
 	}
@@ -44,4 +48,13 @@ export const SelectWrapper = styled.div`
 		background-color: ${({ theme }) => theme['color-base-surface-quintarny']} !important;
 		color: ${({ theme }) => theme['color-base-content-top']} !important;
 	}
+`
+export const SelectLabel = styled.div`
+	display: flex;
+	align-items: center;
+`
+
+export const Title = styled.div`
+	${TextSMMedium};
+	margin-bottom: 4px;
 `

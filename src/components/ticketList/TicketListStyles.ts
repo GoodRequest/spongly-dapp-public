@@ -9,7 +9,6 @@ const { Panel } = Collapse
 
 export const TicketListWrapper = styled.div`
 	border-radius: 12px;
-	padding-top: 24px;
 	min-height: 437px;
 	margin-bottom: 40px;
 	${HeadingSMMedium}
@@ -314,5 +313,29 @@ export const PCRow = styled(Row)`
 
 	@media (max-width: ${breakpoints.md}px) {
 		display: none;
+	}
+`
+export const HorizontalSorters = styled.div`
+	display: flex;
+	width: 100%;
+	@media (max-width: ${breakpoints.md}px) {
+		display: none;
+	}
+`
+
+export const SelectSorters = styled.div`
+	display: none;
+	@media (max-width: ${breakpoints.md}px) {
+		width: 100%;
+		display: flex;
+	}
+`
+export const SelectTitle = styled.div`
+	display: flex;
+	align-items: center;
+	img {
+		margin-right: 8px;
+		width: 16px;
+		height: 16px;
 	}
 `
