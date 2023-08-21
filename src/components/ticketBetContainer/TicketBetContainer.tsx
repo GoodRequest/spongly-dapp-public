@@ -44,6 +44,7 @@ import {
 	getSelectedCoinIndex,
 	getStablecoinDecimals,
 	isBellowOrEqualResolution,
+	isCombined,
 	updateUnsubmittedTicketMatches
 } from '@/utils/helpers'
 import { getSportsAMMQuoteMethod } from '@/utils/amm'
@@ -183,13 +184,21 @@ const TicketBetContainer = () => {
 			if (parlayMarketsAMMContract && parlayAmmData?.minUsdAmount) {
 				const marketsAddresses = activeTicketValues?.matches?.map((market) => market.address)
 				const betOptions = activeTicketValues?.matches?.map((market) => getPositionFromBetOption(market.betOption))
-
+				console.log('add')
 				const minUsdAmount =
 					susdAmountForQuote < parlayAmmData?.minUsdAmount
 						? parlayAmmData?.minUsdAmount // deafult value for qoute info
 						: susdAmountForQuote
 				const susdPaid = ethers.utils.parseUnits(roundNumberToDecimals(minUsdAmount).toString())
 				try {
+					console.log('values parlay', [
+						activeTicketValues.selectedStablecoin,
+						chain?.id || NETWORK_IDS.OPTIMISM,
+						parlayMarketsAMMContract,
+						marketsAddresses,
+						betOptions,
+						susdPaid
+					])
 					const parlayAmmQuote = await getParlayMarketsAMMQuoteMethod(
 						activeTicketValues.selectedStablecoin,
 						chain?.id || NETWORK_IDS.OPTIMISM,
@@ -198,7 +207,6 @@ const TicketBetContainer = () => {
 						betOptions,
 						susdPaid
 					)
-
 					return parlayAmmQuote
 				} catch (e: any) {
 					showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while ParlayAmmQuote fetch') }], NOTIFICATION_TYPE.NOTIFICATION)
@@ -421,7 +429,7 @@ const TicketBetContainer = () => {
 			throw new Error('Failed to fetch single ticket data', { cause: err })
 		}
 	}
-
+	console.log('isSingle', activeTicketValues?.matches?.length && isCombined(activeTicketValues?.matches[0].betOption))
 	const handleConfirmTicket = async (values: IUnsubmittedBetTicket) => {
 		try {
 			// TODO: if the currency changes from USD to another, buyFromParlayWithDifferentCollateral is called
@@ -591,7 +599,11 @@ const TicketBetContainer = () => {
 					/>
 				</Spin>
 				<TicketBetContainerForm
-					fetchTicketData={(activeTicketValues?.matches?.length || 0) > 1 ? fetchParleyTicketData : fetchSinglesTicketData}
+					fetchTicketData={
+						(activeTicketValues?.matches?.length || 0) === 1 && !isCombined(activeTicketValues?.matches?.[0].betOption)
+							? fetchSinglesTicketData
+							: fetchParleyTicketData
+					}
 					isWalletConnected={isWalletConnected}
 					handleApprove={handleApproveAllowance}
 					onSubmit={handleConfirmTicket}

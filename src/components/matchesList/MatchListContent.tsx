@@ -460,8 +460,6 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 							{formattedCombinedTypeMatch[BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER] > MIN_ODD_TRESHOLD && (
 								<SC.OddButton
 									isMobilePanel={true}
-									// TODO: undisabled when CH-276 fixed
-									disabled={true}
 									value={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER}
 									active={isMatchInActiveTicket?.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER}
 									onClick={() => {
@@ -484,8 +482,6 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 							{/* // 1U */}
 							{formattedCombinedTypeMatch[BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER] > MIN_ODD_TRESHOLD && (
 								<SC.OddButton
-									// TODO: undisabled when CH-276 fixed
-									disabled={true}
 									isMobilePanel={true}
 									value={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER}
 									active={isMatchInActiveTicket?.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER}
@@ -509,8 +505,6 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 							{/* // 2O */}
 							{formattedCombinedTypeMatch[BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER] > MIN_ODD_TRESHOLD && (
 								<SC.OddButton
-									// TODO: undisabled when CH-276 fixed
-									disabled={true}
 									isMobilePanel={true}
 									value={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER}
 									active={isMatchInActiveTicket?.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER}
@@ -534,8 +528,6 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 							{/* // 2U */}
 							{formattedCombinedTypeMatch[BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER] > MIN_ODD_TRESHOLD && (
 								<SC.OddButton
-									// TODO: undisabled when CH-276 fixed
-									disabled={true}
 									isMobilePanel={true}
 									value={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER}
 									active={isMatchInActiveTicket?.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER}
@@ -920,8 +912,6 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 									<SC.ExtendedMatchContentOddButton
 										value={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER}
 										active={isMatchInActiveTicket?.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER}
-										// TODO: undisabled when CH-276 fixed
-										disabled={true}
 										onClick={() => {
 											const matches = dispatch(
 												updateActiveTicketMatches(
@@ -944,8 +934,6 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 									<SC.ExtendedMatchContentOddButton
 										value={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER}
 										active={isMatchInActiveTicket?.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER}
-										// TODO: undisabled when CH-276 fixed
-										disabled={true}
 										onClick={() => {
 											const matches = dispatch(
 												updateActiveTicketMatches(
@@ -968,8 +956,6 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 									<SC.ExtendedMatchContentOddButton
 										value={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER}
 										active={isMatchInActiveTicket?.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER}
-										// TODO: undisabled when CH-276 fixed
-										disabled={true}
 										onClick={() => {
 											const matches = dispatch(
 												updateActiveTicketMatches(
@@ -992,8 +978,6 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 									<SC.ExtendedMatchContentOddButton
 										value={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER}
 										active={isMatchInActiveTicket?.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER}
-										// TODO: undisabled when CH-276 fixed
-										disabled={true}
 										onClick={() => {
 											const matches = dispatch(
 												updateActiveTicketMatches(

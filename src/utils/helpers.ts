@@ -38,7 +38,17 @@ import {
 	STABLE_DECIMALS,
 	COLLATERALS
 } from './constants'
-import { BET_OPTIONS, ContractSGPOrder, DoubleChanceMarketType, LIST_TYPE, MARKET_PROPERTY, MATCHES, RESOLUTIONS, WALLET_TICKETS } from './enums'
+import {
+	BET_OPTIONS,
+	COMBINED_BET_OPTIONS,
+	ContractSGPOrder,
+	DoubleChanceMarketType,
+	LIST_TYPE,
+	MARKET_PROPERTY,
+	MATCHES,
+	RESOLUTIONS,
+	WALLET_TICKETS
+} from './enums'
 import { ParlayMarket, Position, PositionBalance, PositionType } from '@/__generated__/resolvers-types'
 
 import OptimismIcon from '@/assets/icons/optimism-icon.svg'
@@ -634,11 +644,27 @@ export const getBetOptionFromMatchBetOption = (matchBetOption: BET_OPTIONS): 0 |
 	) {
 		return 0
 	}
+	// TODO: asi nebude treba sem
+	// Combined (1&O, 1&U, 2&O, 2&U)
+	if (
+		matchBetOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER ||
+		matchBetOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER ||
+		matchBetOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER ||
+		matchBetOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER
+	) {
+		// 1&O | 2&O
+		if (matchBetOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER || matchBetOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER) {
+			return 0
+		}
+		// 1&U | 2&U
+		return 1
+	}
 	// Default state pre lepsi debug ak by nastala chyba
 	return 'ERROR in getBetOptionFromMatchBetOption() function'
 }
 
 export const getBetOptionAndAddressFromMatch = (matches: TicketPosition[] | undefined) => {
+	// console.log('matches', matches)
 	const result: { addresses: any[]; betTypes: any[] } = {
 		addresses: [],
 		betTypes: []
@@ -659,14 +685,33 @@ export const getBetOptionAndAddressFromMatch = (matches: TicketPosition[] | unde
 		else if (match.betOption === BET_OPTIONS.HANDICAP_HOME || match.betOption === BET_OPTIONS.HANDICAP_AWAY) {
 			result.addresses.push((match.spreadTypeMatch?.address as string) || match.address)
 			result.betTypes.push(getBetOptionFromMatchBetOption(match.betOption))
-			// Double chances (X1, X2, 12)
-		} else if (
+		}
+		// Double chances (X1, X2, 12)
+		else if (
 			match.betOption === BET_OPTIONS.DOUBLE_CHANCE_AWAY ||
 			match.betOption === BET_OPTIONS.DOUBLE_CHANCE_HOME ||
 			match.betOption === BET_OPTIONS.DOUBLE_CHANCE_DRAW
 		) {
 			result.addresses.push(match.doubleChanceTypeMatches ? getDoubleChanceAddress(match.doubleChanceTypeMatches, match.betOption) : match.address)
 			result.betTypes.push(getBetOptionFromMatchBetOption(match.betOption))
+		}
+		// Combined (1&O, 1&U, 2&O, 2&U)
+		else if (
+			match.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER ||
+			match.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER ||
+			match.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER ||
+			match.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER
+		) {
+			result.addresses.push([match.winnerTypeMatch?.address, match.totalTypeMatch?.address])
+			if (match.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER) {
+				result.betTypes.push(0, 0)
+			} else if (match.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER) {
+				result.betTypes.push(0, 1)
+			} else if (match.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER) {
+				result.betTypes.push(1, 0)
+			} else {
+				result.betTypes.push(1, 1)
+			}
 		}
 		// Winner (1 / 2 / X)
 		else if (match.betType === null) {
@@ -676,7 +721,7 @@ export const getBetOptionAndAddressFromMatch = (matches: TicketPosition[] | unde
 		// Default state pre lepsi debug ak by nastala chyba
 		return 'ERROR in getBetOptionAndAddressFromMatch() function'
 	})
-
+	console.log('result', result)
 	return result
 }
 
@@ -706,6 +751,9 @@ export const isClaimableUntil = (date: number) => {
 		return `${hours}h:${dateDiff}m`
 	}
 	return `${dateDiff}m`
+}
+export const isCombined = (betOption: any) => {
+	return Object.values(COMBINED_BET_OPTIONS).includes(betOption)
 }
 
 export const orderPositionsAsSportMarkets = (ticket: UserTicket | ITicket) => {
@@ -857,6 +905,7 @@ export const getSelectedCoinIndex = (selectedCoin?: string): number => {
 }
 
 export const getOddFromByBetType = (market: IMatch, copied: boolean) => {
+	console.log('market', market)
 	switch (market.betOption) {
 		// 1, 2, X
 		case BET_OPTIONS.WINNER_HOME:
