@@ -254,12 +254,15 @@ export const decodeSorter = (): Sorter => {
 	}
 }
 
-export const setSort = (property: string) => {
+export const setSort = (property?: string, customDirection?: ORDER_DIRECTION) => {
 	const currentSorter = Router.router?.query.sorter
 	let direction: ORDER_DIRECTION | undefined = ORDER_DIRECTION.ASCENDENT
-
+	// If custom direction is set, use it instead of the current sorter direction
+	if (customDirection) {
+		direction = customDirection
+	}
 	// Check if the current sorter is already set and extract the direction
-	if (currentSorter) {
+	if (currentSorter && !customDirection) {
 		const [currentProperty, currentDirection] = (currentSorter as string).split(':')
 		if (currentProperty === property) {
 			if (currentDirection === ORDER_DIRECTION.ASCENDENT) {
@@ -276,7 +279,7 @@ export const setSort = (property: string) => {
 			pathname: Router?.router.pathname,
 			query: {
 				...Router?.router.query,
-				sorter: direction ? `${property}:${direction}` : undefined // Update the sorter query parameter or remove it if direction is empty
+				sorter: direction && property ? `${property}:${direction}` : undefined // Update the sorter query parameter or remove it if direction is empty
 			}
 		},
 		undefined,
