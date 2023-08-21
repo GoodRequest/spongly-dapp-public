@@ -129,7 +129,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 					</SC.ModalDescription>
 				</>
 			)}
-			<SC.ModalDescription>{t('Odds might slighly differ')}</SC.ModalDescription>
+			<SC.ModalDescriptionWarning>{t('Odds might slightly differ')}</SC.ModalDescriptionWarning>
 			<Row>
 				<SC.MatchContainerRow span={24}>
 					{tempMatches?.map((match: any, key: any) => (
