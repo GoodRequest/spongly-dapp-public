@@ -20,7 +20,6 @@ import { USER_TICKET_TYPE, NOTIFICATION_TYPE, MSG_TYPE } from '@/utils/constants
 import networkConnector, { NetworkId } from '@/utils/networkConnector'
 import { getMaxGasLimitForNetwork } from '@/utils/network'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
-import { RESOLUTIONS } from '@/utils/enums'
 import { UserTicket } from '@/typescript/types'
 
 import Button from '@/atoms/button/Button'
@@ -168,11 +167,14 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 
 			<SC.CenterRowContent md={{ span: 5, order: 4 }} xs={{ span: 12, order: 4 }}>
 				{isClaimed ? (
-					<SC.ClaimValueText userTicketType={userTicketType}>{t('Claimed')}</SC.ClaimValueText>
+					<>
+						<SC.ClaimValueText userTicketType={userTicketType}>{getClaimValue()}</SC.ClaimValueText>
+						<SC.ClaimValueText userTicketType={userTicketType}>{t('Claimed')}</SC.ClaimValueText>
+					</>
 				) : (
 					<>
 						<SC.ClaimValueText userTicketType={userTicketType}>{getClaimValue()}</SC.ClaimValueText>
-						<SC.ColumnNameText>{t('Claim')}</SC.ColumnNameText>
+						{userTicketType !== USER_TICKET_TYPE.MISS && <SC.ColumnNameText>{t('Claim')}</SC.ColumnNameText>}
 					</>
 				)}
 			</SC.CenterRowContent>
