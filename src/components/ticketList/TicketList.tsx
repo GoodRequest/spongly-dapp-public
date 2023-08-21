@@ -14,7 +14,6 @@ import ArrowIcon from '@/assets/icons/arrow-down.svg'
 // utils
 import { TICKET_SORTING, TICKET_TYPE } from '@/utils/constants'
 import { getTicketsTypeName } from '@/utils/helpers'
-import { RESOLUTIONS } from '@/utils/enums'
 
 // styles
 import * as SC from './TicketListStyles'
