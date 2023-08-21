@@ -1,6 +1,6 @@
 import { IShareTags } from '@/atoms/SEOHelmet'
 import { CLOSED_TICKET_TYPE, MSG_TYPE, ORDER_DIRECTION, PositionNumber, TICKET_TYPE } from '@/utils/constants'
-import { SportMarket, ParlayMarket, PositionBalance, Position } from '@/__generated__/resolvers-types'
+import { SportMarket, ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
 import { BetType, DoubleChanceMarketType } from '@/utils/tags'
 import { WALLET_TICKETS } from '@/utils/enums'
 
@@ -56,9 +56,9 @@ export type ParlayLeaderboardTableItem = {
 	rank: number
 	address: string
 	position: number
-	quote: number
-	paid: number
-	won: number
+	quote: string | number
+	paid: string | number
+	won: string | number
 	reward?: {
 		iconUrl: any
 		value: number

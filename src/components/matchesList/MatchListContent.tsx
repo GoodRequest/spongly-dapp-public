@@ -14,7 +14,7 @@ import { formatMarketOdds, getFormattedBonus } from '@/utils/markets'
 import { SGPItem, SportMarketInfo } from '@/typescript/types'
 import { DoubleChanceMarketType } from '@/utils/tags'
 import { MIN_ODD_TRESHOLD, NETWORK_IDS, OddsType, TOTAL_WINNER_TAGS } from '@/utils/constants'
-import { BET_OPTIONS, FORM, RESOLUTIONS } from '@/utils/enums'
+import { BET_OPTIONS, FORM } from '@/utils/enums'
 
 // redux
 import { updateActiveTicketMatches } from '@/redux/betTickets/betTicketsActions'

@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 
+import { round } from 'lodash'
 import { RootState } from '@/redux/rootReducer'
 
 // components
@@ -19,7 +20,7 @@ import { getWalletImage } from '@/utils/images'
 const TicketListItemHeader: FC<ITicketContent> = ({ ticket }) => {
 	const { t } = useTranslation()
 	const { isLoading } = useSelector((state: RootState) => state.tickets.ticketList)
-	const { account, positions, ticketType, closedTicketType, buyIn, position } = ticket
+	const { account, positions, ticketType, closedTicketType, buyIn, position, totalTicketQuote } = ticket
 
 	return (
 		<SC.TicketItemRow>
@@ -54,11 +55,11 @@ const TicketListItemHeader: FC<ITicketContent> = ({ ticket }) => {
 			{/* Row 2 */}
 			<SC.TicketItemCol $customOrder={3} md={3} span={8}>
 				<SC.ColHeader>{t('Buy-In')}</SC.ColHeader>
-				<SC.ColContent>{`${buyIn.toFixed(2)} $`}</SC.ColContent>
+				<SC.ColContent>{`${round(buyIn, 2).toFixed(2)} $`}</SC.ColContent>
 			</SC.TicketItemCol>
 			<SC.TicketItemCol $customOrder={3} md={3} span={8}>
 				<SC.ColHeader>{t('Quote')}</SC.ColHeader>
-				<SC.ColContent>{ticket.totalTicketQuote.toFixed(2)}</SC.ColContent>
+				<SC.ColContent>{round(totalTicketQuote, 2).toFixed(2)}</SC.ColContent>
 			</SC.TicketItemCol>
 			<SC.TicketItemCol $customOrder={3} md={3} span={8}>
 				<SC.ColHeader>{t('Matches')}</SC.ColHeader>

@@ -65,6 +65,10 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	const hasAtLeastOneMatch = matches.length > 0
 	const { openConnectModal } = useConnectModal()
 
+	const allowance = Number(round(Number(formValues?.allowance), 2).toFixed(2))
+	const buyIn = Number(round(Number(formValues?.buyIn), 2).toFixed(2))
+	const availableBalance = Number(round(Number(available), 2).toFixed(2))
+
 	const payWithOptions = [
 		{
 			label: (
@@ -111,7 +115,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 			setError(() => <span>{t('Please connect your wallet')}</span>)
 			return
 		}
-		if (Number(formValues?.buyIn) < MIN_BUY_IN) {
+		if (buyIn < MIN_BUY_IN) {
 			setError(() => (
 				<span>
 					{t('Minimum buy-in is')}{' '}
@@ -122,30 +126,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 			))
 			return
 		}
-		if (Number(available) < Number(formValues?.buyIn)) {
-			setError(() => (
-				<span>
-					{t('Available balance is')}{' '}
-					<SC.Highlight>
-						{available?.toFixed(2)} {formValues?.selectedStablecoin}
-					</SC.Highlight>{' '}
-					{t('but you are trying to bet')}{' '}
-					<SC.Highlight>
-						{formValues?.buyIn} {formValues?.selectedStablecoin}
-					</SC.Highlight>
-				</span>
-			))
-			return
-		}
-		if (Number(formValues?.allowance) < Number(formValues?.buyIn)) {
-			setError(() => (
-				<span>
-					{t('You dont have enough allowance for')} <SC.Highlight>{formValues?.selectedStablecoin}</SC.Highlight> {t('to continue')}
-				</span>
-			))
-			return
-		}
-		if (!Number(formValues?.allowance)) {
+		if (!allowance) {
 			setError(() => (
 				<span>
 					{t('You need to approve allowance for')} <SC.Highlight>{formValues?.selectedStablecoin}</SC.Highlight> {t('to continue')}
@@ -153,6 +134,31 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 			))
 			return
 		}
+		if (allowance < buyIn) {
+			setError(() => (
+				<span>
+					{t('You dont have enough allowance for')} <SC.Highlight>{formValues?.selectedStablecoin}</SC.Highlight> {t('to continue')}
+				</span>
+			))
+			return
+		}
+
+		if (availableBalance < buyIn) {
+			setError(() => (
+				<span>
+					{t('Available balance is')}{' '}
+					<SC.Highlight>
+						{availableBalance} {formValues?.selectedStablecoin}
+					</SC.Highlight>{' '}
+					{t('but you are trying to bet')}{' '}
+					<SC.Highlight>
+						{buyIn} {formValues?.selectedStablecoin}
+					</SC.Highlight>
+				</span>
+			))
+			return
+		}
+
 		if (toNumber(formValues?.totalQuote) > MAX_TOTAL_QUOTE) {
 			setError(() => (
 				<span>
@@ -161,7 +167,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 			))
 			return
 		}
-		if (toNumber(formValues?.maxBuyIn) < toNumber(formValues?.buyIn)) {
+		if (Number(formValues?.maxBuyIn) < buyIn) {
 			setError(() => (
 				<span>
 					{t('Maximum buy-in supported is')} <SC.Highlight>{formValues?.maxBuyIn}</SC.Highlight>
@@ -234,14 +240,14 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 					<Row>
 						<Col span={12}>
 							<SC.AvailableBalanceTitle>{t('Available')}: </SC.AvailableBalanceTitle>
-							<SC.AvailableBalance value={available}>
-								{available ? round(available, 2) : 0} {formValues?.selectedStablecoin}
+							<SC.AvailableBalance value={availableBalance || 0}>
+								{availableBalance || 0} {formValues?.selectedStablecoin}
 							</SC.AvailableBalance>
 						</Col>
 						<Col span={12} style={{ textAlign: 'end' }}>
 							<SC.AvailableBalanceTitle>{t('Allowance')}: </SC.AvailableBalanceTitle>
-							<SC.AvailableBalance value={formValues?.allowance ? round(formValues?.allowance, 2) : 0}>
-								{formValues?.allowance ? round(formValues?.allowance, 2) : 0} {formValues?.selectedStablecoin}
+							<SC.AvailableBalance value={allowance || 0}>
+								{allowance || 0} {formValues?.selectedStablecoin}
 							</SC.AvailableBalance>
 						</Col>
 					</Row>
@@ -250,6 +256,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 					<>
 						<Col span={24}>
 							<Field
+								// TODO: refactor to NumberInputField instead of InputField (disable negative numbers, added format logic from notino project)
 								component={InputField}
 								type={'number'}
 								name={'buyIn'}
@@ -307,15 +314,9 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 								type={'primary'}
 								size={'large'}
 								className={`make-bet-button ${isProcessing && 'isProcessing'}`}
-								disabled={Number(formValues?.allowance) > Number(formValues?.buyIn) ? !!error : false}
-								onClick={Number(formValues?.allowance) > Number(formValues?.buyIn) ? handleSubmit : handleApprove}
-								content={
-									Number(formValues?.allowance) > Number(formValues?.buyIn) ? (
-										<span>{t('Submit')}</span>
-									) : (
-										<span>{t('Approve allowance')}</span>
-									)
-								}
+								disabled={allowance >= buyIn ? !!error : false}
+								onClick={allowance >= buyIn ? handleSubmit : handleApprove}
+								content={allowance >= buyIn ? <span>{t('Submit')}</span> : <span>{t('Approve allowance')}</span>}
 							/>
 						)}
 
