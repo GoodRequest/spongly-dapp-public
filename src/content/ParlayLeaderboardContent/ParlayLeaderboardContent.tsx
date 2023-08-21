@@ -2,7 +2,7 @@ import { Col, Row } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import { useEffect, useState } from 'react'
 import { useAccount, useNetwork } from 'wagmi'
-import { orderBy } from 'lodash'
+import { orderBy, round } from 'lodash'
 import { useRouter } from 'next-translate-routes'
 
 import BackButton from '@/atoms/backButton/BackButton'
@@ -174,7 +174,6 @@ const ParlayLeaderboardContent = () => {
 		}
 		return <SC.ButtonIcon src={SortIcon} />
 	}
-
 	const parlayLeaderBoard = () => {
 		if (isLoading) {
 			const props = { rank: 1, address: '', paid: 1, quote: 1, won: 1, position: 1, reward: undefined }
@@ -219,9 +218,9 @@ const ParlayLeaderboardContent = () => {
 					rank={data.rank}
 					address={data.address}
 					position={data.position}
-					paid={data.paid ? (data?.paid?.toFixed(2) as any) : 0}
-					quote={data.quote ? (data?.quote?.toFixed(2) as any) : 0}
-					won={data.won ? (data?.won?.toFixed(2) as any) : 0}
+					paid={data.paid ? round(Number(data?.paid), 2).toFixed(2) : 0}
+					quote={data.quote ? round(Number(data?.quote), 2).toFixed(2) : 0}
+					won={data.won ? round(Number(data?.won), 2).toFixed(2) : 0}
 					reward={getReward(data?.rank ? data.rank - 1 : undefined, chain?.id)}
 				/>
 			))
