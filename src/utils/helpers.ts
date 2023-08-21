@@ -647,22 +647,6 @@ export const getBetOptionFromMatchBetOption = (matchBetOption: BET_OPTIONS): 0 |
 	) {
 		return 0
 	}
-	// TODO: asi nebude treba sem
-	// Combined (1&O, 1&U, 2&O, 2&U)
-	if (
-		matchBetOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER ||
-		matchBetOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER ||
-		matchBetOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER ||
-		matchBetOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER
-	) {
-		// 1&O | 2&O
-		if (matchBetOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER || matchBetOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER) {
-			return 0
-		}
-		// 1&U | 2&U
-		return 1
-	}
-	// Default state pre lepsi debug ak by nastala chyba
 	return 'ERROR in getBetOptionFromMatchBetOption() function'
 }
 
@@ -705,7 +689,7 @@ export const getBetOptionAndAddressFromMatch = (matches: TicketPosition[] | unde
 			match.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER ||
 			match.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER
 		) {
-			result.addresses.push([match.winnerTypeMatch?.address, match.totalTypeMatch?.address])
+			result.addresses.push(match.winnerTypeMatch?.address, match.totalTypeMatch?.address)
 			if (match.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER) {
 				result.betTypes.push(0, 0)
 			} else if (match.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER) {
@@ -724,7 +708,6 @@ export const getBetOptionAndAddressFromMatch = (matches: TicketPosition[] | unde
 		// Default state pre lepsi debug ak by nastala chyba
 		return 'ERROR in getBetOptionAndAddressFromMatch() function'
 	})
-	console.log('result', result)
 	return result
 }
 
@@ -908,7 +891,6 @@ export const getSelectedCoinIndex = (selectedCoin?: string): number => {
 }
 
 export const getOddFromByBetType = (market: IMatch, copied: boolean) => {
-	console.log('market', market)
 	switch (market.betOption) {
 		// 1, 2, X
 		case BET_OPTIONS.WINNER_HOME:

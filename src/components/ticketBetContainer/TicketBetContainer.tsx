@@ -180,22 +180,13 @@ const TicketBetContainer = () => {
 			const { parlayMarketsAMMContract } = networkConnector
 			if (parlayMarketsAMMContract && parlayAmmData?.minUsdAmount) {
 				const marketsAddresses = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses
-				const betOptions = activeTicketValues?.matches?.map((market) => getPositionFromBetOption(market.betOption))
-				console.log('add')
+				const betOptions = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).betTypes
 				const minUsdAmount =
 					susdAmountForQuote < parlayAmmData?.minUsdAmount
 						? parlayAmmData?.minUsdAmount // deafult value for qoute info
 						: susdAmountForQuote
 				const susdPaid = ethers.utils.parseUnits(roundNumberToDecimals(minUsdAmount).toString())
 				try {
-					console.log('values parlay', [
-						activeTicketValues.selectedStablecoin,
-						chain?.id || NETWORK_IDS.OPTIMISM,
-						parlayMarketsAMMContract,
-						marketsAddresses,
-						betOptions,
-						susdPaid
-					])
 					const parlayAmmQuote = await getParlayMarketsAMMQuoteMethod(
 						getSelectedCoinIndex(activeTicketValues.selectedStablecoin),
 						chain?.id || NETWORK_IDS.OPTIMISM,
@@ -423,7 +414,6 @@ const TicketBetContainer = () => {
 			throw new Error('Failed to fetch single ticket data', { cause: err })
 		}
 	}
-	console.log('isSingle', activeTicketValues?.matches?.length && isCombined(activeTicketValues?.matches[0].betOption))
 	const handleConfirmTicket = async (values: IUnsubmittedBetTicket) => {
 		try {
 			// TODO: if the currency changes from USD to another, buyFromParlayWithDifferentCollateral is called
