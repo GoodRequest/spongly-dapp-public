@@ -142,7 +142,7 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 	}
 
 	const ticketHeader = (
-		<SC.UserTicketTableRow show={ticket.isClaimable} align={'middle'} gutter={[16, 16]} onClick={() => console.log(ticket)}>
+		<SC.UserTicketTableRow show={ticket.isClaimable} align={'middle'} gutter={[16, 16]}>
 			<SC.TxCol md={{ span: 6, order: 1 }} xs={{ span: 24, order: 2 }}>
 				<Button
 					btnStyle={'secondary'}
