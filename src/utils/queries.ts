@@ -64,6 +64,7 @@ export const GET_USERS_STATISTICS = gql`
 					awayOdds
 					awayScore
 					awayTeam
+					drawOdds
 					betType
 					finalResult
 					isCanceled
@@ -100,6 +101,7 @@ export const GET_USERS_STATISTICS = gql`
 					gameId
 					awayOdds
 					awayScore
+					drawOdds
 					awayTeam
 					betType
 					finalResult

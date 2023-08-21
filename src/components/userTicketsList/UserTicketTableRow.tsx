@@ -20,7 +20,6 @@ import { USER_TICKET_TYPE, NOTIFICATION_TYPE, MSG_TYPE } from '@/utils/constants
 import networkConnector, { NetworkId } from '@/utils/networkConnector'
 import { getMaxGasLimitForNetwork } from '@/utils/network'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
-import { RESOLUTIONS } from '@/utils/enums'
 import { UserTicket } from '@/typescript/types'
 
 import Button from '@/atoms/button/Button'
@@ -143,7 +142,7 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 	}
 
 	const ticketHeader = (
-		<SC.UserTicketTableRow show={ticket.isClaimable} align={'middle'} gutter={[16, 16]}>
+		<SC.UserTicketTableRow show={ticket.isClaimable} align={'middle'} gutter={[16, 16]} onClick={() => console.log(ticket)}>
 			<SC.TxCol md={{ span: 6, order: 1 }} xs={{ span: 24, order: 2 }}>
 				<Button
 					btnStyle={'secondary'}
