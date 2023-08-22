@@ -346,7 +346,7 @@ const TicketBetContainer = () => {
 				const amountOfTokens =
 					fetchAmountOfTokensForXsUSDAmount(
 						Number(activeTicketValues?.buyIn),
-						getOddFromByBetType(activeTicketValues?.matches?.[0] as any, activeTicketValues.copied || false) as any,
+						getOddFromByBetType(activeTicketValues?.matches?.[0] as any, activeTicketValues.copied || false).rawOdd as any,
 						singlesAmmMaximumUSDAmountQuote / divider,
 						availablePerPosition[getBetOptionFromMatchBetOption(activeTicketValues?.matches?.[0].betOption as any)].available || 0,
 						bigNumberFormatter(ammBalanceForSelectedPosition)

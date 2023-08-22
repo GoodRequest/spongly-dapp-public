@@ -48,8 +48,7 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, readO
 		awayTeam: getTeamImageSource(match?.awayTeam || '', toNumber(match?.tags?.[0])),
 		homeTeam: getTeamImageSource(match?.homeTeam || '', toNumber(match?.tags?.[0]))
 	})
-	console.log('formattedCombinedTypeMatch')
-	console.log('quote', formatQuote(OddsType.DECIMAL, getOddFromByBetType(match as any, !!formValues.copied)))
+
 	const handleChangeBetType = (betOption: BET_OPTIONS) => {
 		// TODO: updatnut este unsubmitted matches s ovym bet opotionom
 		dispatch(updateActiveTicketMatches({ ...match, betOption }, allTicketMatches))
@@ -117,7 +116,7 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, readO
 					/>
 				</Col>
 				<Col xs={3} sm={2} md={2} xl={4} style={{ display: 'flex', justifyContent: 'center' }}>
-					<SC.MatchOdd>{formatQuote(OddsType.DECIMAL, getOddFromByBetType(match as any, !!formValues.copied))}</SC.MatchOdd>
+					<SC.MatchOdd>{getOddFromByBetType(match as any, !!formValues.copied).formattedOdd}</SC.MatchOdd>
 				</Col>
 				{deleteHandler && (
 					<SC.RemoveButtonWrapper>
