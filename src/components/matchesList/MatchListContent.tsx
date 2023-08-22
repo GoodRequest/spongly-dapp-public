@@ -7,11 +7,10 @@ import { useTranslation } from 'next-export-i18n'
 import { useDispatch, useSelector } from 'react-redux'
 
 // types
-import { SportMarket } from '@/__generated__/resolvers-types'
+import { SportMarketInfo } from '@/typescript/types'
 
 // utils
 import { formatMarketOdds, getFormattedBonus } from '@/utils/markets'
-import { SGPItem, SportMarketInfo } from '@/typescript/types'
 import { DoubleChanceMarketType } from '@/utils/tags'
 import { MIN_ODD_TRESHOLD, NETWORK_IDS, OddsType, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { BET_OPTIONS, FORM } from '@/utils/enums'
@@ -51,8 +50,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(winnerTypeMatch?.tags[0] as any)
 	const [visibleTotalWinnerModal, setVisibleTotalWinnerModal] = useState(false)
 	const formattedWinnerTypeMatch = formatMarketOdds(OddsType.DECIMAL, winnerTypeMatch)
-	console.log('formattedWinnerTypeMatch', formattedWinnerTypeMatch)
-	console.log('formated', getOddByBetType(match as any, false, BET_OPTIONS.WINNER_HOME).formattedOdd)
+
 	const formattedDoubleChanceTypeMatches = doubleChanceTypeMatches
 		? Object.assign(
 				{},
@@ -622,6 +620,11 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 					<SC.ExtendedMatchContentItemCol>
 						<SC.ExtendedMatchContentItemHeader>{t('Double chance')}</SC.ExtendedMatchContentItemHeader>
 						<SC.ExtendedRowItemContent>
+							{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd === '0' &&
+								getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_AWAY).formattedOdd === '0' &&
+								getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_DRAW).formattedOdd === '0' && (
+									<SC.WarningText>{t('Coming soon')}</SC.WarningText>
+								)}
 							<SC.ExtendedMatchContentRadioButtonGroup>
 								<OddButton match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_HOME} oddName={BET_OPTIONS.DOUBLE_CHANCE_HOME} />
 								<OddButton match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_DRAW} oddName={BET_OPTIONS.DOUBLE_CHANCE_DRAW} />

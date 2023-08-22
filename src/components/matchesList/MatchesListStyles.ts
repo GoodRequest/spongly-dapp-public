@@ -155,7 +155,9 @@ export const ExtendedMatchContentItemCol = styled.div`
 	background: ${({ theme }) => theme['color-base-surface-quaternary']};
 	border-radius: 15px;
 `
-
+export const WarningText = styled.div`
+	color: ${({ theme }) => theme['color-base-state-warning-fg']};
+`
 export const ExtendedMatchContentItemHeader = styled.div`
 	${TextMDMedium}
 `
