@@ -1,23 +1,26 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Col, Select, Tooltip } from 'antd'
 import { useTranslation } from 'next-export-i18n'
-import { FC, useEffect, useMemo, useState } from 'react'
+import { FC, useMemo, useState } from 'react'
 import { toNumber } from 'lodash'
+import { getFormValues } from 'redux-form'
 
 // components
-import { getFormValues } from 'redux-form'
 import { Select as SelectField } from '@/atoms/form/selectField/SelectField'
+import Modal from '../../../modal/Modal'
+import MatchListContent from '../../../matchesList/MatchListContent'
 
 // utils
 import { getTeamImageSource } from '@/utils/images'
-import { BET_OPTIONS, DoubleChanceMarketType, FORM } from '@/utils/enums'
-import { formatQuote, formattedCombinedTypeMatch, getOddFromByBetType } from '@/utils/helpers'
-import { NO_TEAM_IMAGE_FALLBACK, OddsType, TOTAL_WINNER_TAGS } from '@/utils/constants'
-import { getMatchByBetOption, getOddsPropertyFromBetOption, getPossibleBetOptions } from '@/utils/markets'
+import { BET_OPTIONS, FORM } from '@/utils/enums'
+import { getOddFromByBetType, updateUnsubmittedTicketMatches } from '@/utils/helpers'
+import { NO_TEAM_IMAGE_FALLBACK, TOTAL_WINNER_TAGS } from '@/utils/constants'
+import { getPossibleBetOptions } from '@/utils/markets'
 
 // redux
 import { updateActiveTicketMatches } from '@/redux/betTickets/betTicketsActions'
 import { IUnsubmittedBetTicket, TicketPosition } from '@/redux/betTickets/betTicketTypes'
+import { RootState } from '@/redux/rootReducer'
 
 // styles
 import * as SC from './MatchRowStyles'
@@ -25,9 +28,6 @@ import * as SCS from '../../TicketBetContainerStyles'
 
 // icons
 import TrashIcon from '@/assets/icons/close-circle.svg'
-import Modal from '../../../modal/Modal'
-import MatchListContent from '../../../matchesList/MatchListContent'
-import { IMatch } from '@/typescript/types'
 
 const { Option } = Select
 interface IMatchRow {
@@ -43,6 +43,7 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, readO
 	const [modalOpen, setModalOpen] = useState(false)
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(match?.winnerTypeMatch?.tags[0] as any)
 	const formValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
+	const unsubmittedTickets = useSelector((state: RootState) => state.betTickets.unsubmittedBetTickets.data)
 
 	const [teamImages] = useState({
 		awayTeam: getTeamImageSource(match?.awayTeam || '', toNumber(match?.tags?.[0])),
@@ -50,7 +51,8 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, readO
 	})
 
 	const handleChangeBetType = (betOption: BET_OPTIONS) => {
-		// TODO: updatnut este unsubmitted matches s ovym bet opotionom
+		const updatedMatches = allTicketMatches?.map((item) => (item.id === match.id ? { ...match, betOption } : item))
+		updateUnsubmittedTicketMatches(updatedMatches, unsubmittedTickets, dispatch, formValues.id)
 		dispatch(updateActiveTicketMatches({ ...match, betOption }, allTicketMatches))
 	}
 
