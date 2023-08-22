@@ -1,7 +1,7 @@
 import { Col, Row } from 'antd'
 import styled from 'styled-components'
 
-import { TextMDMedium, TextXSMedium } from '@/styles/typography'
+import { TextMDMedium, TextXLMedium, TextXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
 export const FlexCenterDiv = styled.div`
@@ -109,4 +109,36 @@ export const AccountModalButton = styled(Col)`
 	@media (max-width: ${breakpoints.md}px) {
 		display: none;
 	}
+`
+
+export const NetworkIcon = styled.i`
+	font-size: 24px;
+	color: red;
+	&.icon--arb {
+		position: relative;
+		left: -2px;
+	}
+`
+export const ChainOptions = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+`
+
+export const ChainRow = styled(Row)`
+	padding: 12px;
+	align-items: center;
+	background: ${({ theme }) => theme['color-base-action-secondary-default']};
+	border-radius: 8px;
+	:hover {
+		background: ${({ theme }) => theme['color-base-action-secondary-hover']};
+	}
+`
+
+export const ChainName = styled.span`
+	${TextXLMedium};
+`
+
+export const Connected = styled.span`
+	${TextMDMedium};
 `
