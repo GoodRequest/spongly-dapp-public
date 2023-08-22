@@ -109,7 +109,7 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 				const finalEstimationGas = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
 
 				const tx = await parlayMarketsAMMContractWithSigner?.exerciseParlay(ticket.id, {
-					gasLimit: finalEstimationGas
+					gasLimit: chain?.id ? finalEstimationGas : undefined
 				})
 				const txResult = await tx.wait()
 
@@ -125,9 +125,13 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 		} else if (ticket.positions?.[0].market.address && signer) {
 			const contract = new ethers.Contract(ticket.positions?.[0].market.address, sportsMarketContract.abi, signer)
 			contract.connect(signer)
+
+			const estimationGas = await contract?.estimateGas.exerciseOptions({})
+			const finalEstimationGas = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
+
 			try {
 				const tx = await contract.exerciseOptions({
-					gasLimit: getMaxGasLimitForNetwork(chain?.id as NetworkId)
+					gasLimit: chain?.id ? finalEstimationGas : undefined
 				})
 
 				const txResult = await tx.wait()
