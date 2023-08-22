@@ -16,7 +16,7 @@ import {
 	orderPositionsAsSportMarkets,
 	roundPrice
 } from '@/utils/helpers'
-import { USER_TICKET_TYPE, NOTIFICATION_TYPE, MSG_TYPE } from '@/utils/constants'
+import { USER_TICKET_TYPE, NOTIFICATION_TYPE, MSG_TYPE, GAS_ESTIMATION_BUFFER } from '@/utils/constants'
 import networkConnector, { NetworkId } from '@/utils/networkConnector'
 import { getMaxGasLimitForNetwork } from '@/utils/network'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
@@ -105,8 +105,11 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 			try {
 				const parlayMarketsAMMContractWithSigner = parlayMarketsAMMContract.connect(signer)
 
+				const estimationGas = await parlayMarketsAMMContractWithSigner?.estimateGas.exerciseParlay(ticket.id)
+				const finalEstimationGas = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
+
 				const tx = await parlayMarketsAMMContractWithSigner?.exerciseParlay(ticket.id, {
-					gasLimit: getMaxGasLimitForNetwork(chain?.id as NetworkId)
+					gasLimit: finalEstimationGas
 				})
 				const txResult = await tx.wait()
 
