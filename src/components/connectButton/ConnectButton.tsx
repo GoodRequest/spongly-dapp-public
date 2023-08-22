@@ -6,10 +6,11 @@ import { useEffect, useState } from 'react'
 
 // utils
 import { formatAddress } from '@/utils/helpers'
-import { NETWORK_IDS } from '@/utils/constants'
+import { MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE } from '@/utils/constants'
 import { getWalletImage } from '@/utils/images'
 import { hasEthereumInjected, NETWORK_SWITCHER_SUPPORTED_NETWORKS, SUPPORTED_NETWORKS_DESCRIPTIONS } from '@/utils/network'
 import networkConnector, { NetworkId } from '@/utils/networkConnector'
+import { showNotifications } from '@/utils/tsxHelpers'
 
 import Modal from '@/components/modal/Modal'
 
@@ -56,8 +57,6 @@ const ConnectButton = () => {
 					switchNetwork?.(network.networkId)
 					setIsModalVisible(false)
 				} catch (switchError: any) {
-					// eslint-disable-next-line no-console
-					console.log(switchError)
 					if (switchError.code === 4902) {
 						try {
 							await (window.ethereum as any).request({
@@ -71,7 +70,18 @@ const ConnectButton = () => {
 						} catch (addError) {
 							// eslint-disable-next-line no-console
 							console.log(addError)
+							showNotifications(
+								[{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to connect your wallet') }],
+								NOTIFICATION_TYPE.NOTIFICATION
+							)
 						}
+					} else {
+						// eslint-disable-next-line no-console
+						console.log(switchError)
+						showNotifications(
+							[{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to connect your wallet') }],
+							NOTIFICATION_TYPE.NOTIFICATION
+						)
 					}
 				}
 			} else {
