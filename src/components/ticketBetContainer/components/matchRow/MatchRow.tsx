@@ -1,22 +1,23 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Col, Select, Tooltip } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import { FC, useEffect, useMemo, useState } from 'react'
 import { toNumber } from 'lodash'
 
 // components
+import { getFormValues } from 'redux-form'
 import { Select as SelectField } from '@/atoms/form/selectField/SelectField'
 
 // utils
 import { getTeamImageSource } from '@/utils/images'
-import { BET_OPTIONS, DoubleChanceMarketType } from '@/utils/enums'
-import { formatQuote } from '@/utils/helpers'
+import { BET_OPTIONS, DoubleChanceMarketType, FORM } from '@/utils/enums'
+import { formatQuote, formattedCombinedTypeMatch, getOddFromByBetType } from '@/utils/helpers'
 import { NO_TEAM_IMAGE_FALLBACK, OddsType, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { getMatchByBetOption, getOddsPropertyFromBetOption, getPossibleBetOptions } from '@/utils/markets'
 
 // redux
 import { updateActiveTicketMatches } from '@/redux/betTickets/betTicketsActions'
-import { TicketPosition } from '@/redux/betTickets/betTicketTypes'
+import { IUnsubmittedBetTicket, TicketPosition } from '@/redux/betTickets/betTicketTypes'
 
 // styles
 import * as SC from './MatchRowStyles'
@@ -26,10 +27,11 @@ import * as SCS from '../../TicketBetContainerStyles'
 import TrashIcon from '@/assets/icons/close-circle.svg'
 import Modal from '../../../modal/Modal'
 import MatchListContent from '../../../matchesList/MatchListContent'
+import { IMatch } from '@/typescript/types'
 
 const { Option } = Select
 interface IMatchRow {
-	match: TicketPosition
+	match: TicketPosition // TODO: change to IMatch type and remove TicketPosition type accross the app
 	readOnly?: boolean
 	allTicketMatches?: TicketPosition[]
 	deleteHandler?: (position: TicketPosition) => void
@@ -39,33 +41,18 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, readO
 	const { t } = useTranslation()
 	const dispatch = useDispatch()
 	const [modalOpen, setModalOpen] = useState(false)
-	const [selectedMatch, setSelectedMatch] = useState(getMatchByBetOption(match.betOption, match))
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(match?.winnerTypeMatch?.tags[0] as any)
+	const formValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
 
 	const [teamImages] = useState({
 		awayTeam: getTeamImageSource(match?.awayTeam || '', toNumber(match?.tags?.[0])),
 		homeTeam: getTeamImageSource(match?.homeTeam || '', toNumber(match?.tags?.[0]))
 	})
+	console.log('formattedCombinedTypeMatch')
+	console.log('quote', formatQuote(OddsType.DECIMAL, getOddFromByBetType(match as any, !!formValues.copied)))
 	const handleChangeBetType = (betOption: BET_OPTIONS) => {
-		const selectedBetTypeMarket = getMatchByBetOption(betOption, match)
+		// TODO: updatnut este unsubmitted matches s ovym bet opotionom
 		dispatch(updateActiveTicketMatches({ ...match, betOption }, allTicketMatches))
-		setSelectedMatch(selectedBetTypeMarket)
-	}
-
-	useEffect(() => {
-		const selectedBetTypeMarket = getMatchByBetOption(match.betOption, match)
-		setSelectedMatch(selectedBetTypeMarket)
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [match.betOption])
-
-	const getOdds = () => {
-		if (selectedMatch) {
-			if (selectedMatch?.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW) {
-				return formatQuote(OddsType.DECIMAL, selectedMatch.homeOdds)
-			}
-			return formatQuote(OddsType.DECIMAL, selectedMatch?.[getOddsPropertyFromBetOption(match.betOption)])
-		}
-		return formatQuote(OddsType.DECIMAL, Number(match?.[getOddsPropertyFromBetOption(match.betOption)]))
 	}
 
 	const images = useMemo(
@@ -130,7 +117,7 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, readO
 					/>
 				</Col>
 				<Col xs={3} sm={2} md={2} xl={4} style={{ display: 'flex', justifyContent: 'center' }}>
-					<SC.MatchOdd>{getOdds()}</SC.MatchOdd>
+					<SC.MatchOdd>{formatQuote(OddsType.DECIMAL, getOddFromByBetType(match as any, !!formValues.copied))}</SC.MatchOdd>
 				</Col>
 				{deleteHandler && (
 					<SC.RemoveButtonWrapper>

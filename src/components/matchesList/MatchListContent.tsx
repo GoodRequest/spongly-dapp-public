@@ -25,8 +25,9 @@ import * as SC from './MatchesListStyles'
 
 import { RootState } from '@/redux/rootReducer'
 import {
-	formatMatchCombinedPositionsQuote,
 	checkTotalWinnerBetExist,
+	formatMatchCombinedPositionsQuote,
+	formatQuote,
 	getHandicapValue,
 	roundToTwoDecimals,
 	updateUnsubmittedTicketMatches
@@ -66,25 +67,37 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 	const formattedTotalTypeMatch = formatMarketOdds(OddsType.DECIMAL, totalTypeMatch)
 
 	const formattedCombinedTypeMatch = {
-		[BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER]: formatMatchCombinedPositionsQuote(
-			Number(match.winnerTypeMatch?.homeOdds),
-			Number(match.totalTypeMatch?.homeOdds),
-			Number(combinedTypeMatch?.SGPFee)
+		[BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER]: formatQuote(
+			OddsType.DECIMAL,
+			formatMatchCombinedPositionsQuote(
+				Number(match.winnerTypeMatch?.homeOdds),
+				Number(match.totalTypeMatch?.homeOdds),
+				Number(combinedTypeMatch?.SGPFee)
+			)
 		),
-		[BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER]: formatMatchCombinedPositionsQuote(
-			Number(match.winnerTypeMatch?.homeOdds),
-			Number(match.totalTypeMatch?.awayOdds),
-			Number(combinedTypeMatch?.SGPFee)
+		[BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER]: formatQuote(
+			OddsType.DECIMAL,
+			formatMatchCombinedPositionsQuote(
+				Number(match.winnerTypeMatch?.homeOdds),
+				Number(match.totalTypeMatch?.awayOdds),
+				Number(combinedTypeMatch?.SGPFee)
+			)
 		),
-		[BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER]: formatMatchCombinedPositionsQuote(
-			Number(match.winnerTypeMatch?.awayOdds),
-			Number(match.totalTypeMatch?.homeOdds),
-			Number(combinedTypeMatch?.SGPFee)
+		[BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER]: formatQuote(
+			OddsType.DECIMAL,
+			formatMatchCombinedPositionsQuote(
+				Number(match.winnerTypeMatch?.awayOdds),
+				Number(match.totalTypeMatch?.homeOdds),
+				Number(combinedTypeMatch?.SGPFee)
+			)
 		),
-		[BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER]: formatMatchCombinedPositionsQuote(
-			Number(match.winnerTypeMatch?.awayOdds),
-			Number(match.totalTypeMatch?.awayOdds),
-			Number(combinedTypeMatch?.SGPFee)
+		[BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER]: formatQuote(
+			OddsType.DECIMAL,
+			formatMatchCombinedPositionsQuote(
+				Number(match.winnerTypeMatch?.awayOdds),
+				Number(match.totalTypeMatch?.awayOdds),
+				Number(combinedTypeMatch?.SGPFee)
+			)
 		)
 	}
 	const isMatchInActiveTicket = matchesInActiveTicket?.find((m) => m.gameId === match.gameId)
