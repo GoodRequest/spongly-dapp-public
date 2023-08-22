@@ -13,7 +13,7 @@ import MatchListContent from '../../../matchesList/MatchListContent'
 // utils
 import { getTeamImageSource } from '@/utils/images'
 import { BET_OPTIONS, FORM } from '@/utils/enums'
-import { getOddFromByBetType, updateUnsubmittedTicketMatches } from '@/utils/helpers'
+import { getOddByBetType, updateUnsubmittedTicketMatches } from '@/utils/helpers'
 import { NO_TEAM_IMAGE_FALLBACK, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { getPossibleBetOptions } from '@/utils/markets'
 
@@ -118,7 +118,7 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, readO
 					/>
 				</Col>
 				<Col xs={3} sm={2} md={2} xl={4} style={{ display: 'flex', justifyContent: 'center' }}>
-					<SC.MatchOdd>{getOddFromByBetType(match as any, !!formValues.copied).formattedOdd}</SC.MatchOdd>
+					<SC.MatchOdd>{getOddByBetType(match as any, !!formValues.copied).formattedOdd}</SC.MatchOdd>
 				</Col>
 				{deleteHandler && (
 					<SC.RemoveButtonWrapper>

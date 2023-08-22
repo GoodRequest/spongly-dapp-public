@@ -875,22 +875,23 @@ export const formatMatchCombinedPositionsQuote = (position1: number, position2: 
 	return oddWithFee
 }
 
-export const formattedCombinedTypeMatch = (match: IMatch) => {
-	if (match.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER) {
+export const formattedCombinedTypeMatch = (match: IMatch, customBetOption?: BET_OPTIONS) => {
+	const betOption = customBetOption || match.betOption
+	if (betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER) {
 		return formatMatchCombinedPositionsQuote(
 			Number(match.winnerTypeMatch?.homeOdds),
 			Number(match.totalTypeMatch?.homeOdds),
 			Number(match.combinedTypeMatch?.SGPFee)
 		)
 	}
-	if (match.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER) {
+	if (betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER) {
 		return formatMatchCombinedPositionsQuote(
 			Number(match.winnerTypeMatch?.homeOdds),
 			Number(match.totalTypeMatch?.awayOdds),
 			Number(match.combinedTypeMatch?.SGPFee)
 		)
 	}
-	if (match.betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER) {
+	if (betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER) {
 		return formatMatchCombinedPositionsQuote(
 			Number(match.winnerTypeMatch?.awayOdds),
 			Number(match.totalTypeMatch?.homeOdds),
@@ -902,27 +903,6 @@ export const formattedCombinedTypeMatch = (match: IMatch) => {
 		Number(match.totalTypeMatch?.awayOdds),
 		Number(match.combinedTypeMatch?.SGPFee)
 	)
-
-	// [BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER]: formatMatchCombinedPositionsQuote(
-	// 	Number(match.winnerTypeMatch?.homeOdds),
-	// 	Number(match.totalTypeMatch?.homeOdds),
-	// 	Number(match.combinedTypeMatch?.SGPFee)
-	// ),
-	// [BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER]: formatMatchCombinedPositionsQuote(
-	// 	Number(match.winnerTypeMatch?.homeOdds),
-	// 	Number(match.totalTypeMatch?.awayOdds),
-	// 	Number(match.combinedTypeMatch?.SGPFee)
-	// ),
-	// [BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER]: formatMatchCombinedPositionsQuote(
-	// 	Number(match.winnerTypeMatch?.awayOdds),
-	// 	Number(match.totalTypeMatch?.homeOdds),
-	// 	Number(match.combinedTypeMatch?.SGPFee)
-	// ),
-	// [BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER]: formatMatchCombinedPositionsQuote(
-	// 	Number(match.winnerTypeMatch?.awayOdds),
-	// 	Number(match.totalTypeMatch?.awayOdds),
-	// 	Number(match.combinedTypeMatch?.SGPFee)
-	// )
 }
 
 export const getSelectedCoinIndex = (selectedCoin?: string): number => {
@@ -940,9 +920,10 @@ export const getSelectedCoinIndex = (selectedCoin?: string): number => {
 	}
 }
 
-export const getOddFromByBetType = (market: IMatch, copied: boolean, customBetOption?: BET_OPTIONS) => {
+export const getOddByBetType = (market: IMatch, copied: boolean, customBetOption?: BET_OPTIONS) => {
 	// customBetOption is used for override match betOption (using in MatchListContent where we need to return odds based on type of odds in dropdown)
-	const betOption = market.betOption || customBetOption
+	// TODO: add logic for bonuses or create new function for bonuses
+	const betOption = customBetOption || market.betOption
 	switch (betOption) {
 		// 1, 2, X
 		case BET_OPTIONS.WINNER_HOME:
@@ -1010,8 +991,8 @@ export const getOddFromByBetType = (market: IMatch, copied: boolean, customBetOp
 		case BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER:
 		case BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER:
 			return {
-				formattedOdd: formattedCombinedTypeMatch(market),
-				rawOdd: formattedCombinedTypeMatch(market)
+				formattedOdd: formattedCombinedTypeMatch(market, betOption),
+				rawOdd: formattedCombinedTypeMatch(market, betOption)
 			}
 		default:
 			return {
