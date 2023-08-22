@@ -328,7 +328,14 @@ export const getUserTicketType = (ticket: UserTicket) => {
 
 	const ongoing = ticket?.positions?.find((item) => !item.isResolved && !item.isCanceled && !item.isOpen)
 
-	if (ongoing) {
+	const now = dayjs()
+	const playingRightNow = ticket?.positions.filter((item) => {
+		const maturityDate = dayjs(Number(item.market.maturityDate) * 1000)
+		if (maturityDate.isAfter(now)) return false
+		return true
+	})
+
+	if (ongoing || playingRightNow.length !== 0) {
 		return USER_TICKET_TYPE.ONGOING
 	}
 
@@ -506,7 +513,14 @@ export const isTicketOpen = (market: ParlayMarket | PositionBalance) => {
 	const positions = getPositions(market)
 	const opened = positions.filter((position) => position.market?.isOpen)
 
-	return positions?.length === opened?.length
+	const now = dayjs()
+	const playingRightNow = positions.filter((item) => {
+		const maturityDate = dayjs(Number(item.market.maturityDate) * 1000)
+		if (maturityDate.isAfter(now)) return false
+		return true
+	})
+
+	return positions?.length === opened?.length && playingRightNow.length === 0
 }
 
 export const isTicketClosed = (market: ParlayMarket | PositionBalance) => {
