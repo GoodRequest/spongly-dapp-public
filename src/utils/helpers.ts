@@ -3,7 +3,7 @@ import { notification } from 'antd'
 import numbro from 'numbro'
 import Router from 'next/router'
 
-import { toNumber } from 'lodash'
+import { floor, round, toNumber } from 'lodash'
 import { AnyAction, Dispatch } from 'redux'
 
 import {
@@ -52,14 +52,14 @@ export const roundPrice = (price: number | undefined | null, includeDollarSign?:
 	if (!price) {
 		return 0
 	}
-
-	const roundedPrice = (price / OPTIMISM_DIVISOR).toFixed(2)
+	// TODO: OPTIMISM_DIVISOR is only for Optimism add helper getStablecoinDecimals() task: CH-315
+	const roundedPrice = round(price / OPTIMISM_DIVISOR, 2).toFixed(2)
 	if (!includeDollarSign) return roundedPrice
 	return `${roundedPrice} $`
 }
 
 export const roundETH = (value: string) => {
-	return Number(value).toFixed(2)
+	return floor(Number(value), 2).toFixed(2)
 }
 
 export const formatDateTime = (dateTime: number) => {
@@ -254,12 +254,15 @@ export const decodeSorter = (): Sorter => {
 	}
 }
 
-export const setSort = (property: string) => {
+export const setSort = (property?: string, customDirection?: ORDER_DIRECTION) => {
 	const currentSorter = Router.router?.query.sorter
 	let direction: ORDER_DIRECTION | undefined = ORDER_DIRECTION.ASCENDENT
-
+	// If custom direction is set, use it instead of the current sorter direction
+	if (customDirection) {
+		direction = customDirection
+	}
 	// Check if the current sorter is already set and extract the direction
-	if (currentSorter) {
+	if (currentSorter && !customDirection) {
 		const [currentProperty, currentDirection] = (currentSorter as string).split(':')
 		if (currentProperty === property) {
 			if (currentDirection === ORDER_DIRECTION.ASCENDENT) {
@@ -276,7 +279,7 @@ export const setSort = (property: string) => {
 			pathname: Router?.router.pathname,
 			query: {
 				...Router?.router.query,
-				sorter: direction ? `${property}:${direction}` : undefined // Update the sorter query parameter or remove it if direction is empty
+				sorter: direction && property ? `${property}:${direction}` : undefined // Update the sorter query parameter or remove it if direction is empty
 			}
 		},
 		undefined,
@@ -311,6 +314,10 @@ export const getUserTicketType = (ticket: UserTicket) => {
 			return USER_TICKET_TYPE.SUCCESS
 		}
 		return USER_TICKET_TYPE.MISS
+	}
+	if (finished?.length > 0) {
+		const lossMatch = finished?.filter((item) => !item?.claimable)
+		if (lossMatch) return USER_TICKET_TYPE.MISS
 	}
 
 	const paused = ticket?.positions?.filter((item) => item.isPaused)
@@ -465,8 +472,8 @@ export const getSuccessRateForTickets = (tickets: Array<ParlayMarket | PositionB
 		return positions.every((position) => position.market.isResolved)
 	})
 	const winningTickets = resolvedTickets.filter((ticket) => isWinningTicket(ticket)) // pri singles je to claimable
-	if (!resolvedTickets.length) return (0).toFixed(2)
-	return ((winningTickets.length / resolvedTickets.length) * 100).toFixed(2)
+	if (!resolvedTickets.length) return '0.00'
+	return floor((winningTickets.length / resolvedTickets.length) * 100, 2).toFixed(2)
 }
 
 export const addDaysToEnteredTimestamp = (numberOfDays: number, timestamp: string) => {
@@ -786,7 +793,7 @@ export const getCanceledClaimAmount = (ticket: UserTicket) => {
 			}
 		})
 
-		return totalAmount.toFixed(2)
+		return floor(totalAmount, 2).toFixed(2)
 	}
 
 	// single ticket
@@ -812,7 +819,7 @@ export const getCanceledClaimAmount = (ticket: UserTicket) => {
 				claimAmount += 0
 		}
 	}
-	return claimAmount.toFixed(2)
+	return floor(claimAmount, 2).toFixed(2)
 }
 
 export const convertSGPContractDataToSGPItemType = (sgpContractData: SGPContractData): SGPItem[] => {
@@ -837,7 +844,7 @@ export const convertSGPContractDataToSGPItemType = (sgpContractData: SGPContract
 
 export const formatMatchCombinedPositionsQuote = (position1: number, position2: number, SGPFee: number) => {
 	const odd = formatQuote(OddsType.DECIMAL, position1 * position2)
-	const oddWithFee = (Number(odd) * SGPFee).toFixed(2)
+	const oddWithFee = floor(Number(odd) * SGPFee, 2).toFixed(2)
 	return oddWithFee
 }
 

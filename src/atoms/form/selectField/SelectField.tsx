@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Select as AntdSelect, SelectProps } from 'antd'
 import { WrappedFieldProps } from 'redux-form'
 import { get, isArray, isObject, map } from 'lodash'
@@ -51,6 +51,7 @@ export const Select = React.forwardRef(
 		ref?: React.ForwardedRef<typeof AntdSelect>
 	) => {
 		const v = value === null || value === '' ? undefined : value
+		const [isOpen, setIsOpen] = useState(false)
 
 		const normalizeValue = (valueArg: any) => {
 			let normalizedValue
@@ -78,14 +79,30 @@ export const Select = React.forwardRef(
 				}
 
 				onChange(val)
+				setIsOpen(false)
 			}
 		}
 
 		const handleOnBlur = (e: any) => {
 			e.preventDefault()
 			e.stopPropagation()
+			setIsOpen(false)
 			onBlur()
 		}
+
+		const onScroll = () => {
+			if (isOpen) {
+				setIsOpen(false)
+				onBlur()
+			}
+		}
+
+		useEffect(() => {
+			window.addEventListener('scroll', onScroll)
+			return () => {
+				window.removeEventListener('scroll', onScroll)
+			}
+		}, [isOpen])
 
 		const renderPlaceholder = (omittedValues: any[] = []) => <p>{`+ ${omittedValues.length}`}</p>
 		return (
@@ -101,7 +118,9 @@ export const Select = React.forwardRef(
 					disabled={disabled}
 					onChange={onInputChange}
 					onBlur={handleOnBlur}
+					onClick={() => setIsOpen((current) => !current)}
 					onFocus={onFocus}
+					open={isOpen}
 					optionLabelProp={optionLabelProp}
 					className={customClass}
 					maxTagCount={1}

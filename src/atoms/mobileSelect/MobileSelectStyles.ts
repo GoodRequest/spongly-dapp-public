@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Select as AntdSelect } from 'antd'
 
-import { TextLGMedium } from '@/styles/typography'
+import { TextLGMedium, TextSMMedium } from '@/styles/typography'
 
 export const MobileSelect = styled(AntdSelect)`
 	//The reason for this is that Ant Design applies its own default styles to its components, which may have higher specificity or be applied later in the cascade than your custom styles. In order to override these default styles, you need to use the !important flag to ensure that your styles take precedence.
@@ -63,9 +63,6 @@ export const MobileSelectWrapper = styled.div`
 `
 
 export const Title = styled.div`
-	color: ${({ theme }) => theme['color-base-content-primary']} !important;
-	font-weight: 500;
-	font-size: 15px;
-	line-height: 20px;
+	${TextSMMedium};
 	margin-bottom: 4px;
 `

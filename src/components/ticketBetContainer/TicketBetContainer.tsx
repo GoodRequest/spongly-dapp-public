@@ -22,6 +22,8 @@ import { sportsMarketContract } from '@/utils/contracts/sportsMarketContract'
 import {
 	ADDITIONAL_SLIPPAGE,
 	GAS_ESTIMATION_BUFFER,
+	MAX_BUY_IN,
+	MIN_BUY_IN,
 	MSG_TYPE,
 	NETWORK_IDS,
 	NOTIFICATION_TYPE,
@@ -70,12 +72,6 @@ import { updateActiveTicketMatches } from '@/redux/betTickets/betTicketsActions'
 // styles
 import * as SC from './TicketBetContainerStyles'
 
-export type AMMPosition = {
-	available: number
-	quote: number
-	priceImpact: number
-}
-
 const TicketBetContainer = () => {
 	const dispatch = useDispatch()
 	const { t } = useTranslation()
@@ -99,6 +95,7 @@ const TicketBetContainer = () => {
 			available: 0
 		}
 	})
+
 	const isSubmitting = useSelector((state: RootState) => state.betTickets.isSubmitting)
 	const isApproving = useSelector((state: RootState) => state.betTickets.isApproving)
 
@@ -161,11 +158,11 @@ const TicketBetContainer = () => {
 					multipleCollateralBalance?.[(newActiveTicket?.selectedStablecoin as keyof typeof multipleCollateralBalance) ?? STABLE_COIN.S_USD] ?? 0,
 				totalQuote: 0,
 				maxTotalQuote: parlayAmmData?.maxSupportedOdds,
-				maxBuyIn: parlayAmmData?.maxSupportedAmount,
-				minBuyIn: parlayAmmData?.minUsdAmount,
+				maxBuyIn: parlayAmmData?.maxSupportedAmount || MAX_BUY_IN,
+				minBuyIn: parlayAmmData?.minUsdAmount || MIN_BUY_IN,
 				totalBonus: 0,
 				payout: 0,
-				buyIn: newActiveTicket?.buyIn || parlayAmmData?.minUsdAmount || 0,
+				buyIn: newActiveTicket?.buyIn || parlayAmmData?.minUsdAmount || MIN_BUY_IN,
 				potentionalProfit: 0,
 				fees: {
 					parlay: parlayAmmData?.parlayAmmFee ? parlayAmmData.parlayAmmFee * 100 : '-',
@@ -181,7 +178,7 @@ const TicketBetContainer = () => {
 		async (susdAmountForQuote: number) => {
 			const { parlayMarketsAMMContract } = networkConnector
 			if (parlayMarketsAMMContract && parlayAmmData?.minUsdAmount) {
-				const marketsAddresses = activeTicketValues?.matches?.map((market) => market.address)
+				const marketsAddresses = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses
 				const betOptions = activeTicketValues?.matches?.map((market) => getPositionFromBetOption(market.betOption))
 
 				const minUsdAmount =
@@ -191,14 +188,13 @@ const TicketBetContainer = () => {
 				const susdPaid = ethers.utils.parseUnits(roundNumberToDecimals(minUsdAmount).toString())
 				try {
 					const parlayAmmQuote = await getParlayMarketsAMMQuoteMethod(
-						activeTicketValues.selectedStablecoin,
+						getSelectedCoinIndex(activeTicketValues.selectedStablecoin),
 						chain?.id || NETWORK_IDS.OPTIMISM,
 						parlayMarketsAMMContract,
 						marketsAddresses,
 						betOptions,
 						susdPaid
 					)
-
 					return parlayAmmQuote
 				} catch (e: any) {
 					showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while ParlayAmmQuote fetch') }], NOTIFICATION_TYPE.NOTIFICATION)
@@ -227,7 +223,7 @@ const TicketBetContainer = () => {
 				if (sportsAMMContract && parlayAmmData?.minUsdAmount && susdAmountForQuote) {
 					const parsedAmount = ethers.utils.parseEther(roundNumberToDecimals(susdAmountForQuote).toString())
 
-					const marketAdress = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses[0]
+					const marketAddress = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses[0]
 					const selectBetOption = getBetOptionFromMatchBetOption(activeTicketValues?.matches[0].betOption)
 
 					try {
@@ -235,14 +231,12 @@ const TicketBetContainer = () => {
 							getSelectedCoinIndex(activeTicketValues.selectedStablecoin),
 							chain?.id || NETWORK_IDS.OPTIMISM,
 							sportsAMMContract,
-							marketAdress,
+							marketAddress,
 							selectBetOption,
 							parsedAmount
 						)
 						return sportsAmmQuote
 					} catch (err) {
-						// eslint-disable-next-line no-console
-						console.error('An error occurred while SingleAMMQuote fetch', err)
 						showNotifications(
 							[{ type: MSG_TYPE.ERROR, message: t('An error occurred while SingleAMMQuote fetch') }],
 							NOTIFICATION_TYPE.NOTIFICATION
@@ -416,7 +410,6 @@ const TicketBetContainer = () => {
 			}
 			return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0 }
 		} catch (err) {
-			console.error('Failed to fetch single ticket data', err)
 			showNotifications([{ type: MSG_TYPE.ERROR, message: t('Something happened while processing the ticket') }], NOTIFICATION_TYPE.NOTIFICATION)
 			throw new Error('Failed to fetch single ticket data', { cause: err })
 		}

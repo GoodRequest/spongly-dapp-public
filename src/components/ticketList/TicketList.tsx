@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { Col, Row } from 'antd'
 import { map, slice } from 'lodash'
 import { useTranslation } from 'next-export-i18n'
@@ -7,14 +7,15 @@ import { useTranslation } from 'next-export-i18n'
 import { ITicketContent } from '@/content/ticketsContent/TicketsContent'
 import TicketListItem from '@/components/ticketList/TicketListItem'
 import Sorter from '@/components/Sorter'
+import Select from '@/atoms/select/Select'
 
 // assets
 import ArrowIcon from '@/assets/icons/arrow-down.svg'
+import SortIcon from '@/assets/icons/sort-icon.svg'
 
 // utils
-import { TICKET_SORTING, TICKET_TYPE } from '@/utils/constants'
-import { getTicketsTypeName } from '@/utils/helpers'
-import { RESOLUTIONS } from '@/utils/enums'
+import { ORDER_DIRECTION, TICKET_SORTING, TICKET_TYPE } from '@/utils/constants'
+import { getTicketsTypeName, setSort } from '@/utils/helpers'
 
 // styles
 import * as SC from './TicketListStyles'
@@ -55,6 +56,50 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 			}
 		}
 	}
+	const sortOptions = [
+		{
+			label: t('The highest success rate'),
+			value: `${TICKET_SORTING.SUCCESS_RATE}:${ORDER_DIRECTION.DESCENDENT}`
+		},
+		{
+			label: t('The lowest success rate'),
+			value: `${TICKET_SORTING.SUCCESS_RATE}:${ORDER_DIRECTION.ASCENDENT}`
+		},
+		{
+			label: t('The highest buy-in'),
+			value: `${TICKET_SORTING.BUY_IN}:${ORDER_DIRECTION.DESCENDENT}`
+		},
+		{
+			label: t('The lowest buy-in'),
+			value: `${TICKET_SORTING.BUY_IN}:${ORDER_DIRECTION.ASCENDENT}`
+		},
+		{
+			label: t('The highest quote'),
+			value: `${TICKET_SORTING.TOTAL_TICKET_QUOTE}:${ORDER_DIRECTION.DESCENDENT}`
+		},
+		{
+			label: t('The lowest quote'),
+			value: `${TICKET_SORTING.TOTAL_TICKET_QUOTE}:${ORDER_DIRECTION.ASCENDENT}`
+		},
+		{
+			label: t('The most matches'),
+			value: `${TICKET_SORTING.MATCHES}:${ORDER_DIRECTION.DESCENDENT}`
+		},
+		{
+			label: t('The least matches'),
+			value: `${TICKET_SORTING.MATCHES}:${ORDER_DIRECTION.ASCENDENT}`
+		}
+	]
+
+	const handleSubmitSort = (value: string) => {
+		if (!value) {
+			// clear sort
+			setSort(undefined)
+		} else {
+			const [property, direction] = value.split(':')
+			setSort(property, direction as ORDER_DIRECTION)
+		}
+	}
 
 	return (
 		<SC.TicketListWrapper>
@@ -75,21 +120,37 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 					) : (
 						<>
 							<SCS.SorterRow>
-								<Col md={5} span={0}>
-									<Sorter title={t('Wallet')} />
-								</Col>
-								<Col md={7} span={6}>
-									<Sorter title={t('Success rate')} name={TICKET_SORTING.SUCCESS_RATE} />
-								</Col>
-								<Col md={3} span={6}>
-									<Sorter title={t('Buy in')} name={TICKET_SORTING.BUY_IN} />
-								</Col>
-								<Col md={3} span={6}>
-									<Sorter title={t('Quote')} name={TICKET_SORTING.TOTAL_TICKET_QUOTE} />
-								</Col>
-								<Col md={6} span={6}>
-									<Sorter title={t('Matches')} name={TICKET_SORTING.MATCHES} />
-								</Col>
+								<SC.HorizontalSorters>
+									<Col md={5} span={0}>
+										<Sorter title={t('Wallet')} />
+									</Col>
+									<Col md={7} span={6}>
+										<Sorter title={t('Success rate')} name={TICKET_SORTING.SUCCESS_RATE} />
+									</Col>
+									<Col md={3} span={6}>
+										<Sorter title={t('Buy in')} name={TICKET_SORTING.BUY_IN} />
+									</Col>
+									<Col md={3} span={6}>
+										<Sorter title={t('Quote')} name={TICKET_SORTING.TOTAL_TICKET_QUOTE} />
+									</Col>
+									<Col md={6} span={6}>
+										<Sorter title={t('Matches')} name={TICKET_SORTING.MATCHES} />
+									</Col>
+								</SC.HorizontalSorters>
+								<SC.SelectSorters>
+									<Select
+										title={
+											<SC.SelectTitle>
+												<img src={SortIcon} alt={'Sorter'} />
+												{t('Sort by')}
+											</SC.SelectTitle>
+										}
+										allowClear
+										options={sortOptions}
+										placeholder={t('Sort by')}
+										onChange={handleSubmitSort}
+									/>
+								</SC.SelectSorters>
 							</SCS.SorterRow>
 							{renderList.length > 0 ? (
 								map(renderList, (item: ITicketContent, index: any) => (

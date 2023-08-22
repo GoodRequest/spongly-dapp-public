@@ -32,9 +32,6 @@ const Header = () => {
 				<SC.MenuItem key={PAGES.DASHBOARD}>{t('Dashboard')}</SC.MenuItem>
 				<SC.MenuItem key={PAGES.TICKETS}>{t('Tickets')}</SC.MenuItem>
 				<SC.MenuItem key={PAGES.MATCHES}>{t('Matches')}</SC.MenuItem>
-				{isMounted && (!isAboveOrEqualResolution(size, RESOLUTIONS.XXL) || router.pathname !== `/${PAGES.DASHBOARD}`) && (
-					<SC.MenuItem key={PAGES.PARLAY_LEADERBOARD}>{t('Parlay Leaderboard')}</SC.MenuItem>
-				)}
 				{isMounted && chain?.id && <SC.MenuItem key={PAGES.MY_WALLET}>{t('My wallet')}</SC.MenuItem>}
 			</>
 		),
