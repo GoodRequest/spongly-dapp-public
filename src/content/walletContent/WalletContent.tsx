@@ -71,8 +71,7 @@ const MyWalletContent = () => {
 	const fetchStatistics = () => {
 		setIsLoading(true)
 		setTimeout(() => {
-			// fetchUserStatistic({ variables: { id: address?.toLocaleLowerCase() || '' }, context: { chainId: chain?.id } })
-			fetchUserStatistic({ variables: { id: '0xbB3d0C6168ef0056ed6586bFCf5717A7db0c866f' }, context: { chainId: chain?.id } })
+			fetchUserStatistic({ variables: { id: address?.toLocaleLowerCase() || '' }, context: { chainId: chain?.id } })
 				.then(async (values) => {
 					const parlayData = values?.data?.parlayMarkets
 					const positions = values?.data?.positionBalances
