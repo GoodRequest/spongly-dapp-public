@@ -315,6 +315,10 @@ export const getUserTicketType = (ticket: UserTicket) => {
 		}
 		return USER_TICKET_TYPE.MISS
 	}
+	if (finished?.length > 0) {
+		const lossMatch = finished?.filter((item) => !item?.claimable)
+		if (lossMatch) return USER_TICKET_TYPE.MISS
+	}
 
 	const paused = ticket?.positions?.filter((item) => item.isPaused)
 
