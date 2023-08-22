@@ -102,7 +102,7 @@ const TicketsContent = () => {
 
 	const [filteredTickets, setFilteredTickets] = useState<ITicketContent[]>(filterTickets(filter))
 	const [resultsCount, setResultsCount] = useState<number>(filteredTickets.length)
-	const handleSubmit = (value: TICKET_TYPE | undefined) => {
+	const handleSubmit = (value?: TICKET_TYPE) => {
 		setFilter((currentFilter: any) => ({ ...currentFilter, status: value }))
 	}
 

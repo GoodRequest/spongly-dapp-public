@@ -47,24 +47,33 @@ jobs:
         uses: actions/setup-node@v3
         with: 
           node-version: '16.14.0'
+          cache: 'npm'
 
-      - name: Build and Publish
+      - name: Install node_modules
         run: |
-          npm install --legacy-peer-deps
-          
+          npm install
+
+      - name: Build Next.js for IPFS
+        run: |
           CI=false npm run build-ipfs
 
+      - name: Install IPFS
+        run: |
           LATEST_VERSION=$(curl -sSL https://dist.ipfs.tech/go-ipfs/versions | tail -n 1)
           LATEST_VERSION_NUMBER=${LATEST_VERSION#*v}
+          
           DOWNLOAD_URL="https://dist.ipfs.tech/go-ipfs/${LATEST_VERSION}/go-ipfs_${LATEST_VERSION}_linux-amd64.tar.gz"
           echo "DOWNLOAD_URL=$DOWNLOAD_URL"
+          
           curl -sSL -o ipfs.tar.gz $DOWNLOAD_URL
           tar -xzf ipfs.tar.gz
-          sudo cp -f ./go-ipfs/ipfs /usr/local/bin/
+          cp -f ./go-ipfs/ipfs /usr/local/bin/
           ipfs init
 
-          # `ipfs daemon` is running as a service
+      # IPFS daemon is running as a containerized service
 
+      - name: Wait for daemon to start
+        run: |
           wget \
             --retry-connrefused \
             --waitretry=20 \
@@ -74,14 +83,20 @@ jobs:
             --post-data '' \
             "http://localhost:5001/api/v0/version"
 
+      - name: Add files to IPFS
+        run: |
           ipfs add \
             --progress=true \
             --pin=true \
             --recursive \
             "./dist"
 
-          IPFS_CID=$(ipfs add --progress=false --pin=true --recursive --quieter ./dist)
+      - name: Set IPFS hash for projet folder to env
+        run: |
+          echo "IPFS_CID=$(ipfs add --progress=false --pin=true --recursive --quieter ./dist)" >> $GITHUB_ENV
 
+      - name: Pin to remote IPFS node (from local to global IPFS cluster)
+        run: |
           curl \
             --silent \
             --request POST \
@@ -89,6 +104,8 @@ jobs:
             "https://ipfs.synthetix.io:5001/api/v0/pin/add?recursive=true&progress=true&arg=$IPFS_CID" \
               | jq
 
+      - name: Map IPFS hash to IPNS
+        run: |
           curl \
             --silent \
             --request POST \
@@ -96,6 +113,8 @@ jobs:
             "https://ipfs.synthetix.io:5001/api/v0/name/publish?key=$IPNS_KEY&arg=$IPFS_CID" \
               | jq
 
+      - name: Publish to synthetix IPNS cluster
+        run: |
           curl \
             --silent \
             --request POST \

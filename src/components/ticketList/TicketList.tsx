@@ -20,7 +20,6 @@ import { getTicketsTypeName, setSort } from '@/utils/helpers'
 // styles
 import * as SC from './TicketListStyles'
 import * as SCS from '@/styles/GlobalStyles'
-import { SelectTitle } from './TicketListStyles'
 
 interface ITicketList {
 	type: string
