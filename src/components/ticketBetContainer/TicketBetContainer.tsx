@@ -42,10 +42,11 @@ import {
 	formatQuote,
 	getBetOptionAndAddressFromMatch,
 	getBetOptionFromMatchBetOption,
-	getOddFromByBetType,
+	getOddByBetType,
 	getSelectedCoinIndex,
 	getStablecoinDecimals,
 	isBellowOrEqualResolution,
+	isCombined,
 	updateUnsubmittedTicketMatches
 } from '@/utils/helpers'
 import { getSportsAMMQuoteMethod } from '@/utils/amm'
@@ -179,8 +180,7 @@ const TicketBetContainer = () => {
 			const { parlayMarketsAMMContract } = networkConnector
 			if (parlayMarketsAMMContract && parlayAmmData?.minUsdAmount) {
 				const marketsAddresses = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses
-				const betOptions = activeTicketValues?.matches?.map((market) => getPositionFromBetOption(market.betOption))
-
+				const betOptions = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).betTypes
 				const minUsdAmount =
 					susdAmountForQuote < parlayAmmData?.minUsdAmount
 						? parlayAmmData?.minUsdAmount // deafult value for qoute info
@@ -269,12 +269,12 @@ const TicketBetContainer = () => {
 			if (signer && sUSDContract && isWalletConnected) {
 				const sUSDContractWithSigner = sUSDContract?.connect(signer)
 				// TODO: Add logic when user switch coin type
-				let allowance
+				let allowance = BigInt(0)
 				if (activeTicketMatchesCount === 0) {
-					allowance = 0
-				} else if (activeTicketMatchesCount === 1) {
+					allowance = BigInt(0)
+				} else if (activeTicketMatchesCount === 1 && !isCombined(activeTicketValues?.matches?.[0].betOption)) {
 					allowance = await sUSDContractWithSigner.allowance(address, sportsAMMContract?.address)
-				} else if (activeTicketMatchesCount > 1) {
+				} else if (activeTicketMatchesCount > 1 || isCombined(activeTicketValues?.matches?.[0].betOption)) {
 					allowance = await sUSDContractWithSigner.allowance(address, parlayMarketsAMMContract?.address)
 				}
 				return Number(ethers.utils.formatEther(allowance))
@@ -333,7 +333,6 @@ const TicketBetContainer = () => {
 			if (!activeTicketValues?.buyIn || activeTicketValues?.matches?.length === 0 || !signer)
 				return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0 }
 			const currentAddress = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses[0]
-			// TODO: find out which address to send here, whether it is the current address
 			const contract = new ethers.Contract(currentAddress || '', sportsMarketContract.abi, signer)
 			const ammBalances = await contract.balancesOf(sportsAMMContract?.address)
 			const ammBalanceForSelectedPosition = ammBalances[getBetOptionAndAddressFromMatch(activeTicketValues.matches).betTypes[0]]
@@ -346,7 +345,7 @@ const TicketBetContainer = () => {
 				const amountOfTokens =
 					fetchAmountOfTokensForXsUSDAmount(
 						Number(activeTicketValues?.buyIn),
-						getOddFromByBetType(activeTicketValues?.matches?.[0] as any, activeTicketValues.copied || false) as any,
+						getOddByBetType(activeTicketValues?.matches?.[0] as any, activeTicketValues.copied || false).rawOdd as any,
 						singlesAmmMaximumUSDAmountQuote / divider,
 						availablePerPosition[getBetOptionFromMatchBetOption(activeTicketValues?.matches?.[0].betOption as any)].available || 0,
 						bigNumberFormatter(ammBalanceForSelectedPosition)
@@ -375,7 +374,7 @@ const TicketBetContainer = () => {
 				// 	)
 				const calculatedReducedBonus = 0
 				const totalBonus = calculatedReducedBonus ? formatPercentage(calculatedReducedBonus) : formatPercentage(0)
-
+				// TODO: zistit ci sa neda nahradit za novy helper
 				const getOdds = () => {
 					const selectedMatch = getMatchByBetOption(
 						activeTicketValues?.matches?.[0]?.betOption as BET_OPTIONS.WINNER_HOME,
@@ -414,7 +413,6 @@ const TicketBetContainer = () => {
 			throw new Error('Failed to fetch single ticket data', { cause: err })
 		}
 	}
-
 	const handleConfirmTicket = async (values: IUnsubmittedBetTicket) => {
 		try {
 			// TODO: if the currency changes from USD to another, buyFromParlayWithDifferentCollateral is called
@@ -425,11 +423,13 @@ const TicketBetContainer = () => {
 
 			const sUSDPaid = ethers.utils.parseUnits((values.buyIn || 0).toString(), 'ether')
 			const additionalSlippage = ethers.utils.parseEther(ADDITIONAL_SLIPPAGE)
-			const expectedPayout = ethers.utils.parseEther(roundNumberToDecimals(Number(activeTicketValues.payout)).toString()) // TODO: treba vyratavat totalQuote z activeTicketValues
+			const expectedPayout = ethers.utils.parseEther(roundNumberToDecimals(Number(activeTicketValues.payout)).toString())
 			let data
+			// SINGLE
 			if (
 				getBetOptionAndAddressFromMatch(values?.matches).addresses.length === 1 &&
-				getBetOptionAndAddressFromMatch(values?.matches).betTypes?.length === 1
+				getBetOptionAndAddressFromMatch(values?.matches).betTypes?.length === 1 &&
+				!isCombined(values?.matches?.[0].betOption)
 			) {
 				const reqData = [
 					getBetOptionAndAddressFromMatch(values?.matches).addresses[0],
@@ -446,6 +446,7 @@ const TicketBetContainer = () => {
 					gasLimit: chain?.id ? finalEstimation : undefined
 				})) as ethers.ContractTransaction
 			} else {
+				// PARLAY
 				const estimationGas = await parlayMarketsAMMContractWithSigner?.estimateGas.buyFromParlayWithReferrer(
 					getBetOptionAndAddressFromMatch(values?.matches).addresses,
 					getBetOptionAndAddressFromMatch(values?.matches).betTypes,
@@ -584,7 +585,11 @@ const TicketBetContainer = () => {
 					/>
 				</Spin>
 				<TicketBetContainerForm
-					fetchTicketData={(activeTicketValues?.matches?.length || 0) > 1 ? fetchParleyTicketData : fetchSinglesTicketData}
+					fetchTicketData={
+						(activeTicketValues?.matches?.length || 0) === 1 && !isCombined(activeTicketValues?.matches?.[0].betOption)
+							? fetchSinglesTicketData
+							: fetchParleyTicketData
+					}
 					isWalletConnected={isWalletConnected}
 					handleApprove={handleApproveAllowance}
 					onSubmit={handleConfirmTicket}

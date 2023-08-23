@@ -2,7 +2,7 @@ import { IShareTags } from '@/atoms/SEOHelmet'
 import { CLOSED_TICKET_TYPE, MSG_TYPE, ORDER_DIRECTION, PositionNumber, TICKET_TYPE } from '@/utils/constants'
 import { SportMarket, ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
 import { BetType, DoubleChanceMarketType } from '@/utils/tags'
-import { WALLET_TICKETS } from '@/utils/enums'
+import { BET_OPTIONS, WALLET_TICKETS } from '@/utils/enums'
 
 export type TagInfo = {
 	id: number
@@ -218,5 +218,9 @@ export interface IMatch extends SportMarket {
 	doubleChanceTypeMatches?: SportMarket[]
 	spreadTypeMatch?: SportMarket
 	totalTypeMatch?: SportMarket
-	betOption?: any
+	betOption?: BET_OPTIONS
+	combinedTypeMatch?: SGPItem
+	homeBonus?: number
+	awayBonus?: number
+	drawBonus?: number
 }
