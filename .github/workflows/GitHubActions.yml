@@ -69,7 +69,7 @@ jobs:
           tar -xzf ipfs.tar.gz
           cp -f ./go-ipfs/ipfs /usr/local/bin/
           ipfs init
-
+          
       # IPFS daemon is running as a containerized service
 
       - name: Wait for daemon to start
@@ -99,6 +99,7 @@ jobs:
         run: |
           curl \
             --silent \
+            --verbose \
             --request POST \
             --user "$IPFS_USER:$IPFS_PASS" \
             "https://ipfs.synthetix.io:5001/api/v0/pin/add?recursive=true&progress=true&arg=$IPFS_CID" \
