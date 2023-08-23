@@ -13,6 +13,9 @@ export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	border-radius: 12px;
 	padding: 24px;
+	@media (max-height: 930px) {
+		padding: 16px;
+	}
 	@media (max-width: ${breakpoints.semixxl}px) {
 		top: unset;
 		display: flex;
@@ -290,4 +293,21 @@ export const SubmittingSpinner = styled(Spin)`
 		${HeadingSMMedium};
 		color: white;
 	}
+`
+
+const fadeGradientAbove = (theme: any) => `linear-gradient(180deg, ${theme['color-base-surface-secondary']} 0%, rgba(34, 37, 49, 0) 100%)`
+const fadeGradientUnder = (theme: any) => `linear-gradient(0deg, ${theme['color-base-surface-secondary']} 20%, rgba(34, 37, 49, 0) 100%)`
+
+export const Fade = styled.div<{ show: boolean; direction: 'above' | 'under' }>`
+	position: absolute;
+	top: ${({ direction }) => (direction === 'above' ? '0px' : 'unset')};
+	bottom: ${({ direction }) => (direction === 'under' ? '0px' : 'unset')};
+	width: 100%;
+	height: 20px;
+	display: ${({ show }) => (show ? 'block' : 'none')};
+	background: ${({ theme, direction }) => (direction === 'above' ? fadeGradientAbove(theme) : fadeGradientUnder(theme))};
+`
+
+export const TicketMatchesFaded = styled.div`
+	position: relative;
 `
