@@ -34,7 +34,6 @@ const ConnectButton = () => {
 	const provider = useProvider({ chainId: chain?.id || NETWORK_IDS.OPTIMISM })
 	const { switchNetwork } = useSwitchNetwork()
 
-	const [, setIsWalletReady] = useState(false)
 	const [isModalVisible, setIsModalVisible] = useState(false)
 
 	useEffect(() => {
@@ -43,7 +42,6 @@ const ConnectButton = () => {
 			provider,
 			signer: signer || undefined
 		})
-		setIsWalletReady(true)
 	}, [signer, provider, chain?.id])
 
 	const handleSwitchNetwork = async (network: any) => {
@@ -57,6 +55,7 @@ const ConnectButton = () => {
 					switchNetwork?.(network.networkId)
 					setIsModalVisible(false)
 				} catch (switchError: any) {
+					// NOTE: the requested chain hasn't been added
 					if (switchError.code === 4902) {
 						try {
 							await (window.ethereum as any).request({
@@ -104,7 +103,7 @@ const ConnectButton = () => {
 							<Col flex={'end'}>
 								<SCG.FlexRow>
 									{chain?.id === network.chainId && <SC.Connected>{t('connected')}</SC.Connected>}
-									<SC.Logo alt={''} src={network.icon} />
+									<SC.Logo alt={'network-icon'} src={network.icon} />
 								</SCG.FlexRow>
 							</Col>
 						</SC.ChainRow>

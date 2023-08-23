@@ -111,14 +111,6 @@ export const AccountModalButton = styled(Col)`
 	}
 `
 
-export const NetworkIcon = styled.i`
-	font-size: 24px;
-	color: red;
-	&.icon--arb {
-		position: relative;
-		left: -2px;
-	}
-`
 export const ChainOptions = styled.div`
 	display: flex;
 	flex-direction: column;
