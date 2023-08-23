@@ -173,6 +173,7 @@ export type UserTicket = {
 	sportMarketsFromContract?: string[]
 	ticketType: WALLET_TICKETS
 	isClaimable: boolean
+	timestamp: string
 	positions: [
 		{
 			side: string
