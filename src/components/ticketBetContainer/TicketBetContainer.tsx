@@ -17,11 +17,11 @@ import useAvailablePerPositionQuery from '@/hooks/useAvailablePerPositionQuery'
 
 // utils
 import { BET_OPTIONS, DoubleChanceMarketType, FORM, RESOLUTIONS } from '@/utils/enums'
-import { getMaxGasLimitForNetwork } from '@/utils/network'
 import { sportsMarketContract } from '@/utils/contracts/sportsMarketContract'
 import {
 	ADDITIONAL_SLIPPAGE,
 	GAS_ESTIMATION_BUFFER,
+	MAX_ALLOWANCE,
 	MAX_BUY_IN,
 	MIN_BUY_IN,
 	MSG_TYPE,
@@ -494,12 +494,18 @@ const TicketBetContainer = () => {
 		if (signer && sUSDContract) {
 			try {
 				const sUSDContractWithSigner = sUSDContract.connect(signer)
-				const approveAmount = ethers.utils.parseEther(roundNumberToDecimals(Number(activeTicketValues.buyIn)).toString())
+				const approveAmount = ethers.BigNumber.from(MAX_ALLOWANCE)
+				const estimationGas = await sUSDContractWithSigner.estimateGas.approve(
+					activeTicketMatchesCount === 1 ? sportsAMMContract?.address : parlayMarketsAMMContract?.address,
+					approveAmount
+				)
+				const finalEstimation = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
+
 				const tx = (await sUSDContractWithSigner.approve(
 					activeTicketMatchesCount === 1 ? sportsAMMContract?.address : parlayMarketsAMMContract?.address,
 					approveAmount,
 					{
-						gasLimit: chain?.id ? getMaxGasLimitForNetwork(chain?.id) : undefined
+						gasLimit: chain?.id ? finalEstimation : undefined
 					}
 				)) as ethers.ContractTransaction
 				await tx.wait().then(async () => {

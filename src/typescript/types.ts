@@ -51,7 +51,7 @@ export type ParlayLeaderboardItem = {
 		value: number
 	}
 }
-
+export type CombinedMarketsPositionName = '1&O' | '1&U' | 'H1&O' | 'H1&U' | 'X&O' | 'X&U' | '2&O' | '2&U' | 'H2&O' | 'H2&U' | ''
 export type ParlayLeaderboardTableItem = {
 	rank: number
 	address: string

@@ -53,11 +53,12 @@ import { ParlayMarket, Position, PositionBalance, PositionType } from '@/__gener
 
 import OptimismIcon from '@/assets/icons/optimism-icon.svg'
 import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
-import { IMatch, ITicket, SGPContractData, SGPItem, Sorter, SportMarketInfo, UserTicket } from '@/typescript/types'
+import { CombinedMarketsPositionName, IMatch, ITicket, SGPContractData, SGPItem, Sorter, SportMarketInfo, UserTicket } from '@/typescript/types'
 import { IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 import { NetworkId } from './networkConnector'
 import { bigNumberFormatter, bigNumberFormmaterWithDecimals } from '@/utils/formatters/ethers'
 import { getFormattedBonus } from '@/utils/markets'
+import { BetType } from '@/utils/tags'
 
 export const roundPrice = (price: number | undefined | null, includeDollarSign?: boolean) => {
 	if (!price) {
@@ -670,7 +671,6 @@ export const getBetOptionFromMatchBetOption = (matchBetOption: BET_OPTIONS): 0 |
 }
 
 export const getBetOptionAndAddressFromMatch = (matches: TicketPosition[] | undefined) => {
-	// console.log('matches', matches)
 	const result: { addresses: any[]; betTypes: any[] } = {
 		addresses: [],
 		betTypes: []
@@ -1188,6 +1188,21 @@ export const getCollateral = (networkId: Network, index: number) => COLLATERALS[
 
 export const getStablecoinDecimals = (networkId: Network, stableIndex: number) => STABLE_DECIMALS[getCollateral(networkId, stableIndex)]
 
-// export const getMatchHint = (match: TicketPosition) => {
-// TODO: tu budu texty pre hinty pre zapasy na zaklade ich betOption
-// }
+export const getCombinedPositionName = (markets: SportMarketInfo[], positions: any[]): CombinedMarketsPositionName | null => {
+	if (markets[0].betType === BetType.WINNER && markets[1].betType === BetType.TOTAL) {
+		if (positions[0] === 0 && positions[1] === 0) return '1&O'
+		if (positions[0] === 0 && positions[1] === 1) return '1&U'
+		if (positions[0] === 1 && positions[1] === 0) return '2&O'
+		if (positions[0] === 1 && positions[1] === 1) return '2&U'
+		if (positions[0] === 2 && positions[1] === 0) return 'X&O'
+		if (positions[0] === 2 && positions[1] === 1) return 'X&U'
+	}
+
+	if (markets[0].betType === BetType.SPREAD && markets[1].betType === BetType.TOTAL) {
+		if (positions[0] === 0 && positions[1] === 0) return 'H1&O'
+		if (positions[0] === 0 && positions[1] === 1) return 'H1&U'
+		if (positions[0] === 1 && positions[1] === 0) return 'H2&O'
+		if (positions[0] === 1 && positions[1] === 1) return 'H2&U'
+	}
+	return null
+}
