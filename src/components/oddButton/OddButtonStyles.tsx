@@ -3,17 +3,19 @@ import { Button } from 'antd'
 import { TextXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
+// background: ${({ theme, active, isMobilePanel }) =>
+// 	active
+// 		? isMobilePanel
+// 			? theme['color-base-state-info-bg']
+// 			: theme['color-base-surface-secondary']
+// 		: isMobilePanel
+// 		? theme['color-base-surface-secondary']
+// 		: theme['color-base-surface-quaternary']};
 export const OddButton = styled(Button)<{ active?: boolean; isMobilePanel?: boolean }>`
 	width: 62px;
 	border-radius: 6px;
-	background: ${({ theme, active, isMobilePanel }) =>
-		active
-			? isMobilePanel
-				? theme['color-base-state-info-bg']
-				: theme['color-base-surface-secondary']
-			: isMobilePanel
-			? theme['color-base-surface-secondary']
-			: theme['color-base-surface-quaternary']};
+	// TODO: opravit background sem podla toho ci som mobile alebo ide sa z headeru
+	background: indianred;
 	border: 2px solid ${({ theme, active }) => (active ? theme['color-base-action-primary-default'] : theme['color-base-surface-quaternary'])} !important;
 	box-shadow: none;
 	color: white;
@@ -46,13 +48,12 @@ export const OddButton = styled(Button)<{ active?: boolean; isMobilePanel?: bool
 	}
 `
 
-export const MatchContentOddButton = styled(OddButton)`
-	// height: ${({ isMobilePanel }) => (isMobilePanel ? '32px' : '42px')};
+export const MatchContentOddButton = styled(OddButton)<{ isHeader?: boolean }>`
 	height: 32px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: ${({ theme, active }) => (active ? theme['color-base-surface-secondary'] : theme['color-base-surface-secondary'])};
+	//background: ${({ theme, active }) => (active ? theme['color-base-surface-secondary'] : theme['color-base-surface-secondary'])};
 	flex: 1;
 	${TextXSMedium}
 	&:disabled {
