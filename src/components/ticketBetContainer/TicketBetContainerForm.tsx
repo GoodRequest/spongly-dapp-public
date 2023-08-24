@@ -279,7 +279,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 									title={t('Total Quote')}
 									value={formValues?.totalQuote && formValues?.totalQuote > 0 ? formValues?.totalQuote : '-'}
 								/>
-								<SummaryCol title={t('Total Bonus')} value={formValues?.totalBonus ?? '-'} align={'right'} />
+								<SummaryCol title={t('Total Bonus')} value={`${formValues?.totalBonus}%` ?? '-'} align={'right'} />
 								<SummaryCol
 									title={t('Payout')}
 									value={formValues?.payout && formValues.payout !== 0 ? `${formValues.payout} ${formValues?.selectedStablecoin}` : '-'}

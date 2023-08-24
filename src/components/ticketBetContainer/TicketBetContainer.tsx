@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAccount, useNetwork } from 'wagmi'
 import { useTranslation } from 'next-export-i18n'
-import { toNumber } from 'lodash'
+import { round, toNumber } from 'lodash'
 import { Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 
@@ -35,7 +35,7 @@ import {
 } from '@/utils/constants'
 import networkConnector from '@/utils/networkConnector'
 import { getParlayMarketsAMMQuoteMethod } from '@/utils/parlayAmm'
-import { floorNumberToDecimals, formatPercentage, roundNumberToDecimals } from '@/utils/formatters/number'
+import { floorNumberToDecimals, roundNumberToDecimals } from '@/utils/formatters/number'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import {
 	formatCurrency,
@@ -51,7 +51,7 @@ import {
 } from '@/utils/helpers'
 import { getSportsAMMQuoteMethod } from '@/utils/amm'
 import { fetchAmountOfTokensForXsUSDAmount } from '@/utils/skewCalculator'
-import { getBonusPropertyFromBetOption, getMatchByBetOption, getOddsPropertyFromBetOption, getPositionFromBetOption, isMarketAvailable } from '@/utils/markets'
+import { getMatchByBetOption, getOddsPropertyFromBetOption, isMarketAvailable } from '@/utils/markets'
 import { showNotifications } from '@/utils/tsxHelpers'
 
 // components
@@ -251,18 +251,6 @@ const TicketBetContainer = () => {
 		[chain?.id, activeTicketValues?.selectedStablecoin, activeTicketValues?.matches, activeTicketValues?.buyIn]
 	)
 
-	const calculatedBonusPercentageDec = useMemo(() => {
-		let totalBonusDec = 1
-		activeTicketValues?.matches?.forEach((market) => {
-			const bonusProperty = getBonusPropertyFromBetOption(market.betOption)
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const bonusDecimal = market[bonusProperty]! / 100 + 1
-			totalBonusDec *= bonusDecimal
-		})
-
-		return totalBonusDec - 1
-	}, [activeTicketValues?.matches])
-
 	const getAllowance = async () => {
 		const { signer, sUSDContract, parlayMarketsAMMContract, sportsAMMContract } = networkConnector
 		try {
@@ -290,7 +278,7 @@ const TicketBetContainer = () => {
 		if (!activeTicketValues?.buyIn) return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0 }
 
 		try {
-			const parlayAmmMinimumUSDAmountQuote = parlayAmmData?.minUsdAmount ? await fetchParlayAmmQuote(parlayAmmData?.minUsdAmount) : 0
+			// const parlayAmmMinimumUSDAmountQuote = parlayAmmData?.minUsdAmount ? await fetchParlayAmmQuote(parlayAmmData?.minUsdAmount) : 0
 			const parlayAmmQuote = await fetchParlayAmmQuote(activeTicketValues?.buyIn)
 
 			if (!parlayAmmQuote?.error) {
@@ -302,15 +290,24 @@ const TicketBetContainer = () => {
 						? formatCurrency(totalBuyAmount - toNumber(activeTicketValues.buyIn), 2)
 						: '-'
 				const skew = bigNumberFormatter(parlayAmmQuote?.skewImpact || 0)
-				let totalBonus = '0'
+				// TODO: Do we need this logic?
+				// const totalBonus = '0'
+				// console.log('parlayAmmMinimumUSDAmountQuote', parlayAmmMinimumUSDAmountQuote)
 				// Calculates total bonus percentage
-				if (!parlayAmmMinimumUSDAmountQuote.error) {
-					const baseQuote = bigNumberFormatter(parlayAmmMinimumUSDAmountQuote?.totalQuote ?? 0)
-					const calculatedReducedTotalBonus =
-						(calculatedBonusPercentageDec * Number(formatQuote(OddsType.DECIMAL, totalQuote))) / Number(formatQuote(OddsType.DECIMAL, baseQuote))
-					totalBonus = calculatedReducedTotalBonus > 0 ? formatPercentage(calculatedReducedTotalBonus) : formatPercentage(0)
-				}
+				// if (!parlayAmmMinimumUSDAmountQuote.error) {
+				// 	const baseQuote = bigNumberFormatter(parlayAmmMinimumUSDAmountQuote?.totalQuote ?? 0)
+				// 	const calculatedReducedTotalBonus =
+				// 		(calculatedBonusPercentageDec * Number(formatQuote(OddsType.DECIMAL, totalQuote))) / Number(formatQuote(OddsType.DECIMAL, baseQuote))
+				// 	totalBonus = calculatedReducedTotalBonus > 0 ? formatPercentage(calculatedReducedTotalBonus) : formatPercentage(0)
+				// }
 
+				const calculatedBonusPercentageDec =
+					(activeTicketValues?.matches || []).reduce((accumulator, currentItem) => {
+						// console.log('currentItem', currentItem)
+						const bonusDecimal = getOddByBetType(currentItem as any, false).rawBonus / 100 + 1
+						return accumulator * bonusDecimal
+					}, 1) - 1
+				const totalBonus = round(calculatedBonusPercentageDec * 100, 2).toFixed(2)
 				return {
 					...activeTicketValues,
 					totalQuote: formatQuote(OddsType.DECIMAL, totalQuote),
@@ -339,6 +336,7 @@ const TicketBetContainer = () => {
 			const roundedMaxAmount = floorNumberToDecimals(
 				availablePerPosition[getBetOptionFromMatchBetOption(activeTicketValues?.matches?.[0].betOption as any)].available || 0
 			)
+			// console.log('calculatedBonusPercentageDec', calculatedBonusPercentageDec)
 			const singlesAmmMaximumUSDAmountQuote = await fetchSinglesAmmQuote(roundedMaxAmount)
 			const singlesAmmQuote = await fetchSinglesAmmQuote(activeTicketValues?.buyIn)
 			if (singlesAmmQuote !== null) {
@@ -359,22 +357,8 @@ const TicketBetContainer = () => {
 				const payout = roundNumberToDecimals(maxAvailableTokenAmount ?? 0)
 				const potentionalProfit = roundNumberToDecimals(maxAvailableTokenAmount ?? 0) - activeTicketValues.buyIn
 				const skew = 0
-				// TODO: Calculates total bonus percentage
-				// const newQuote = maxAvailableTokenAmount / Number(activeTicketValues?.buyIn)
-				// const calculatedReducedBonus =
-				// 	(calculatedBonusPercentageDec * newQuote) /
-				// 	Number(
-				// 		formatQuote(
-				// 			OddsType.DECIMAL,
-				// 			getPositionOdds({
-				// 				...activeTicketValues?.matches?.[0],
-				// 				position: getBetOptionAndAddressFromMatch(activeTicketValues.matches).betTypes[0]
-				// 			})
-				// 		)
-				// 	)
-				const calculatedReducedBonus = 0
-				const totalBonus = calculatedReducedBonus ? formatPercentage(calculatedReducedBonus) : formatPercentage(0)
-				// TODO: zistit ci sa neda nahradit za novy helper
+				// TODO: calculate number from bonus?
+				const totalBonus = round(Number(getOddByBetType(activeTicketValues?.matches?.[0] as any, false).rawBonus), 2).toFixed(2)
 				const getOdds = () => {
 					const selectedMatch = getMatchByBetOption(
 						activeTicketValues?.matches?.[0]?.betOption as BET_OPTIONS.WINNER_HOME,

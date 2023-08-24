@@ -75,6 +75,9 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 						<SC.RadioMobileHeader>
 							<span>{t('Double chance')}</span>
 						</SC.RadioMobileHeader>
+						{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd < MIN_ODD_TRESHOLD && (
+							<SC.WarningText>{t('Coming soon')}</SC.WarningText>
+						)}
 						<SC.RadioMobileGroup>
 							<OddButton match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_HOME} isMobilePanel />
 							<OddButton match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_DRAW} isMobilePanel />

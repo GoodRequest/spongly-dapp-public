@@ -582,19 +582,6 @@ export const getEtherScanTxHash = (chainId: number, txHash: string) => {
 }
 export const hasBonus = (bonus: number | undefined) => Number(bonus) > 0
 
-export const getBonus = (market: any): number => {
-	switch (market.position) {
-		case PositionNumber.HOME:
-			return hasBonus(market.homeBonus) ? Number(market.homeBonus) : 0
-		case PositionNumber.AWAY:
-			return hasBonus(market.awayBonus) ? Number(market.awayBonus) : 0
-		case PositionNumber.DRAW:
-			return hasBonus(market.drawBonus) ? Number(market.drawBonus) : 0
-		default:
-			return 0
-	}
-}
-
 export const updateUnsubmittedTicketMatches = (
 	matches: TicketPosition[] | undefined,
 	unsubmittedTickets: IUnsubmittedBetTicket[] | null,
