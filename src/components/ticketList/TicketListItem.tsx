@@ -133,7 +133,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 			<Row>
 				<SC.MatchContainerRow span={24}>
 					{tempMatches?.map((match: any, key: any) => (
-						<MatchRow readOnly key={`matchRow-${key}`} match={match} />
+						<MatchRow readOnly copied key={`matchRow-${key}`} match={match} />
 					))}
 				</SC.MatchContainerRow>
 			</Row>
