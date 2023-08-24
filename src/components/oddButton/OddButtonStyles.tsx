@@ -1,10 +1,9 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Button } from 'antd'
 import { TextXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
 export const OddButton = styled(Button)<{ active?: boolean; isMobilePanel?: boolean }>`
-	height: 32px;
 	width: 62px;
 	border-radius: 6px;
 	background: ${({ theme, active, isMobilePanel }) =>
@@ -46,11 +45,13 @@ export const OddButton = styled(Button)<{ active?: boolean; isMobilePanel?: bool
 		width: 100% !important;
 	}
 `
+
 export const MatchContentOddButton = styled(OddButton)`
+	// height: ${({ isMobilePanel }) => (isMobilePanel ? '32px' : '42px')};
+	height: 32px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 42px;
 	background: ${({ theme, active }) => (active ? theme['color-base-surface-secondary'] : theme['color-base-surface-secondary'])};
 	flex: 1;
 	${TextXSMedium}
