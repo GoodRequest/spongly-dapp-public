@@ -58,3 +58,13 @@ export const MatchContentOddButton = styled(OddButton)`
 		background: ${({ theme }) => theme['color-base-surface-quaternary']} !important;
 	}
 `
+export const Odd = styled.div`
+	flex: 1;
+	text-align: center;
+	${TextXSMedium}
+`
+export const OddBonus = styled.span`
+	${TextXSMedium};
+	color: ${({ theme }) => theme['color-base-state-success-fg']};
+	margin-left: 4px;
+`

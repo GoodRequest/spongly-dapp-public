@@ -34,6 +34,7 @@ import {
 } from '@/utils/helpers'
 import Modal from '@/components/modal/Modal'
 import OddButton from '@/components/oddButton/OddButton'
+import OddValue from '@/components/oddButton/OddValue'
 
 interface IMatchListContent {
 	match: TicketPosition
@@ -49,8 +50,6 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(winnerTypeMatch?.tags[0] as any)
 	const [visibleTotalWinnerModal, setVisibleTotalWinnerModal] = useState(false)
-	const formattedWinnerTypeMatch = formatMarketOdds(OddsType.DECIMAL, winnerTypeMatch)
-
 	const formattedDoubleChanceTypeMatches = doubleChanceTypeMatches
 		? Object.assign(
 				{},
@@ -110,7 +109,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 			<SC.ModalDescriptionText>{t('Only one participant per event is supported.')}</SC.ModalDescriptionText>
 		</Modal>
 	)
-
+	console.log('bonus', getOddByBetType(match as any, false, BET_OPTIONS.WINNER_HOME))
 	return (
 		<div>
 			<SC.SmallMatchContentWrapper>
@@ -122,7 +121,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 							<span>{t('Winner')}</span>
 						</SC.RadioMobileHeader>
 						<SC.RadioMobileGroup>
-							{formattedWinnerTypeMatch.homeOdds > MIN_ODD_TRESHOLD && (
+							{match.homeOdds > MIN_ODD_TRESHOLD && (
 								<SC.OddButton
 									isMobilePanel={true}
 									value={BET_OPTIONS.WINNER_HOME}
@@ -148,7 +147,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 								</SC.OddButton>
 							)}
 							{!match.drawOdds ||
-								(Number(match.drawOdds) !== 0 && formattedWinnerTypeMatch.drawOdds > MIN_ODD_TRESHOLD && (
+								(Number(match.drawOdds) !== 0 && match.drawOdds > MIN_ODD_TRESHOLD && (
 									<SC.OddButton
 										isMobilePanel={true}
 										value={BET_OPTIONS.WINNER_DRAW}
@@ -163,7 +162,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 										{isTotalWinner ? t('YES') : BET_OPTIONS.WINNER_DRAW}
 									</SC.OddButton>
 								))}
-							{formattedWinnerTypeMatch.awayOdds > MIN_ODD_TRESHOLD && (
+							{match.awayOdds > MIN_ODD_TRESHOLD && (
 								<SC.OddButton
 									isMobilePanel={true}
 									value={BET_OPTIONS.WINNER_AWAY}
@@ -186,29 +185,23 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 							)}
 						</SC.RadioMobileGroup>
 						<SC.OddsWrapper>
-							{formattedWinnerTypeMatch.homeOdds > MIN_ODD_TRESHOLD && (
+							{match.homeOdds > MIN_ODD_TRESHOLD && (
 								<SC.Odd>
-									{formattedWinnerTypeMatch.homeOdds}
-									{!!formattedWinnerTypeMatch.homeBonus && formattedWinnerTypeMatch.homeBonus > 0 && (
-										<SC.BonusLabel>{getFormattedBonus(formattedWinnerTypeMatch.homeBonus)}</SC.BonusLabel>
-									)}
+									{match.homeOdds}
+									{!!match.homeBonus && match.homeBonus > 0 && <SC.BonusLabel>{getFormattedBonus(match.homeBonus)}</SC.BonusLabel>}
 								</SC.Odd>
 							)}
 							{!match.drawOdds ||
-								(Number(match.drawOdds) !== 0 && formattedWinnerTypeMatch.drawOdds > MIN_ODD_TRESHOLD && (
+								(Number(match.drawOdds) !== 0 && match.drawOdds > MIN_ODD_TRESHOLD && (
 									<SC.Odd>
-										{formattedWinnerTypeMatch.drawOdds}
-										{!!formattedWinnerTypeMatch.drawBonus && formattedWinnerTypeMatch.drawBonus > 0 && (
-											<SC.BonusLabel>{getFormattedBonus(formattedWinnerTypeMatch.drawBonus)}</SC.BonusLabel>
-										)}
+										{match.drawOdds}
+										{!!match.drawBonus && match.drawBonus > 0 && <SC.BonusLabel>{getFormattedBonus(match.drawBonus)}</SC.BonusLabel>}
 									</SC.Odd>
 								))}
-							{formattedWinnerTypeMatch.awayOdds > MIN_ODD_TRESHOLD && (
+							{match.awayOdds > MIN_ODD_TRESHOLD && (
 								<SC.Odd>
-									{formattedWinnerTypeMatch.awayOdds}
-									{!!formattedWinnerTypeMatch.awayBonus && formattedWinnerTypeMatch.awayBonus > 0 && (
-										<SC.BonusLabel>{getFormattedBonus(formattedWinnerTypeMatch.awayBonus)}</SC.BonusLabel>
-									)}
+									{match.awayOdds}
+									{!!match.awayBonus && match.awayBonus > 0 && <SC.BonusLabel>{getFormattedBonus(match.awayBonus)}</SC.BonusLabel>}
 								</SC.Odd>
 							)}
 						</SC.OddsWrapper>
@@ -575,7 +568,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 					</SC.MobileWrapper>
 				)}
 			</SC.SmallMatchContentWrapper>
-			{/* // Deskptop */}
+			{/* // Desktop */}
 			<SC.ExtendedMatchContentWrapper>
 				{winnerTypeMatch && (
 					<SC.ExtendedMatchContentItemCol>
@@ -587,31 +580,9 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 								<OddButton match={match} betOption={BET_OPTIONS.WINNER_AWAY} oddName={BET_OPTIONS.WINNER_AWAY} />
 							</SC.ExtendedMatchContentRadioButtonGroup>
 							<SC.ExtendedOddsWrapper>
-								{getOddByBetType(match as any, false, BET_OPTIONS.WINNER_HOME).formattedOdd > MIN_ODD_TRESHOLD && (
-									<SC.Odd>
-										{getOddByBetType(match as any, false, BET_OPTIONS.WINNER_HOME).formattedOdd}
-										{!!formattedWinnerTypeMatch.homeBonus && formattedWinnerTypeMatch.homeBonus > 0 && (
-											<SC.BonusLabel>{getFormattedBonus(formattedWinnerTypeMatch.homeBonus)}</SC.BonusLabel>
-										)}
-									</SC.Odd>
-								)}
-								{getOddByBetType(match as any, false, BET_OPTIONS.WINNER_DRAW).formattedOdd > MIN_ODD_TRESHOLD && (
-									<SC.Odd>
-										{getOddByBetType(match as any, false, BET_OPTIONS.WINNER_DRAW).formattedOdd}
-										{!!formattedWinnerTypeMatch.drawBonus && formattedWinnerTypeMatch.drawBonus > 0 && (
-											<SC.BonusLabel>{getFormattedBonus(formattedWinnerTypeMatch.drawBonus)}</SC.BonusLabel>
-										)}
-									</SC.Odd>
-								)}
-
-								{getOddByBetType(match as any, false, BET_OPTIONS.WINNER_AWAY).formattedOdd > MIN_ODD_TRESHOLD && (
-									<SC.Odd>
-										{getOddByBetType(match as any, false, BET_OPTIONS.WINNER_AWAY).formattedOdd}
-										{!!formattedWinnerTypeMatch.awayBonus && formattedWinnerTypeMatch.awayBonus > 0 && (
-											<SC.BonusLabel>{getFormattedBonus(formattedWinnerTypeMatch.awayBonus)}</SC.BonusLabel>
-										)}
-									</SC.Odd>
-								)}
+								<OddValue match={match as any} betOption={BET_OPTIONS.WINNER_HOME} />
+								<OddValue match={match as any} betOption={BET_OPTIONS.WINNER_DRAW} />
+								<OddValue match={match as any} betOption={BET_OPTIONS.WINNER_AWAY} />
 							</SC.ExtendedOddsWrapper>
 						</SC.ExtendedRowItemContent>
 					</SC.ExtendedMatchContentItemCol>

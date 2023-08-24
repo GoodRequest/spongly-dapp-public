@@ -214,6 +214,12 @@ export type UserStatistic = {
 	tickets: UserTicket[]
 }
 
+export interface IBonus {
+	homeBonus?: number
+	awayBonus?: number
+	drawBonus?: number
+}
+
 export interface IMatch extends SportMarket {
 	winnerTypeMatch?: SportMarket
 	doubleChanceTypeMatches?: SportMarket[]
@@ -221,7 +227,4 @@ export interface IMatch extends SportMarket {
 	totalTypeMatch?: SportMarket
 	betOption?: BET_OPTIONS
 	combinedTypeMatch?: SGPItem
-	homeBonus?: number
-	awayBonus?: number
-	drawBonus?: number
 }
