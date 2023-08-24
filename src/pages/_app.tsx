@@ -54,7 +54,7 @@ const overtimeIcons = CustomFont({
 	variable: '--overtime-icon-font'
 })
 
-const { chains, provider } = configureChains([optimism, goerli, arbitrum, optimismGoerli], [infuraProvider({ apiKey: INFURA_ID }), publicProvider()])
+const { chains, provider } = configureChains([optimism, arbitrum, optimismGoerli], [infuraProvider({ apiKey: INFURA_ID }), publicProvider()])
 const projectId = process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID || ''
 const connectors = connectorsForWallets([
 	{
