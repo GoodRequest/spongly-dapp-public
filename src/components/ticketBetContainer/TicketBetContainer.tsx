@@ -134,7 +134,7 @@ const TicketBetContainer = () => {
 
 	useEffect(() => {
 		if (!unsubmittedTickets || unsubmittedTickets?.length === 0) {
-			dispatch({ type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_INIT, payload: { data: [{ id: 1, matches: [] }] } })
+			dispatch({ type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_INIT, payload: { data: [{ id: 1, matches: [], copied: false }] } })
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
@@ -538,8 +538,8 @@ const TicketBetContainer = () => {
 			payload: {
 				data: unsubmittedTickets
 					? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					  [...unsubmittedTickets, { id: (largestId || 1) + 1, matches: [] }]
-					: [{ id: 1, matches: [] }]
+					  [...unsubmittedTickets, { id: (largestId || 1) + 1, matches: [], copied: false }]
+					: [{ id: 1, matches: [], copied: false }]
 			}
 		})
 	}

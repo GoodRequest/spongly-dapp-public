@@ -225,16 +225,17 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	useEffect(() => {
 		// TODO: event interface
 		const onScroll = (event: any) => {
-			const visibleScrollbar = event.srcElement.scrollHeight > event.srcElement.clientHeight
-			if (event.srcElement.scrollTop === 0 || !visibleScrollbar) {
+			const { target } = event
+			const visibleScrollbar = target.scrollHeight > target.clientHeight
+			if (target.scrollTop === 0 || !visibleScrollbar) {
 				setFadeTop(false)
-			} else if (event.srcElement.scrollTop > 0 && visibleScrollbar) {
+			} else if (target.scrollTop > 0 && visibleScrollbar) {
 				setFadeTop(true)
 			}
 
-			if (event.srcElement.clientHeight + event.srcElement.scrollTop === event.srcElement.scrollHeight || !visibleScrollbar) {
+			if (target.clientHeight + target.scrollTop === target.scrollHeight || !visibleScrollbar) {
 				setFadeBottom(false)
-			} else if (event.srcElement.clientHeight + event.srcElement.scrollTop < event.srcElement.scrollHeight && visibleScrollbar) {
+			} else if (target.clientHeight + target.scrollTop < target.scrollHeight && visibleScrollbar) {
 				setFadeBottom(true)
 			}
 		}
@@ -244,7 +245,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 			return () => listRef.current?.removeEventListener('scroll', onScroll)
 		}
 		return () => {}
-	}, [])
+	}, [listRef.current])
 
 	useEffect(() => {
 		const visibleScrollbar = listRef.current !== null && listRef.current.scrollHeight > listRef.current.clientHeight

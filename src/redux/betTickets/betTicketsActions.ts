@@ -31,6 +31,6 @@ export const updateActiveTicketMatches =
 		const matches = activeMatches ? [...activeMatches, match] : [match]
 		dispatch(change(FORM.BET_TICKET, 'matches', matches))
 		// Set that the ticket has been modified and according to this, the ticket that was not copied but edited will be made
-		dispatch(change(FORM.BET_TICKET, 'copied', false))
+		// dispatch(change(FORM.BET_TICKET, 'copied', false))
 		return matches
 	}
