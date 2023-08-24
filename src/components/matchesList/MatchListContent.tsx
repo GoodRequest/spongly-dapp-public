@@ -620,11 +620,9 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 					<SC.ExtendedMatchContentItemCol>
 						<SC.ExtendedMatchContentItemHeader>{t('Double chance')}</SC.ExtendedMatchContentItemHeader>
 						<SC.ExtendedRowItemContent>
-							{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd === '0' &&
-								getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_AWAY).formattedOdd === '0' &&
-								getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_DRAW).formattedOdd === '0' && (
-									<SC.WarningText>{t('Coming soon')}</SC.WarningText>
-								)}
+							{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd < MIN_ODD_TRESHOLD && (
+								<SC.WarningText>{t('Coming soon')}</SC.WarningText>
+							)}
 							<SC.ExtendedMatchContentRadioButtonGroup>
 								<OddButton match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_HOME} oddName={BET_OPTIONS.DOUBLE_CHANCE_HOME} />
 								<OddButton match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_DRAW} oddName={BET_OPTIONS.DOUBLE_CHANCE_DRAW} />
