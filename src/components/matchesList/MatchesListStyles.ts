@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Button, Col, Collapse, Divider, Radio, Row, Skeleton } from 'antd'
+import { Col, Collapse, Divider, Radio, Row, Skeleton } from 'antd'
 import Ticket from '@/assets/images/empty_state_ticket.png'
 import { HeadingXXSMedium, TextMDMedium, TextMDRegular, TextSMMedium, TextXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
@@ -64,12 +64,6 @@ export const MatchCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 	border: ${({ theme, isExpanded }) => (isExpanded ? `2px solid ${theme['color-base-surface-quintarny']}` : '2px solid transparent')};
 `
 
-export const BonusLabel = styled.span`
-	${TextXSMedium};
-	color: ${({ theme }) => theme['color-base-state-success-fg']};
-	margin-left: 4px;
-`
-
 export const OddsWrapper = styled.div`
 	width: 100%;
 	display: flex;
@@ -80,13 +74,7 @@ export const ExtendedOddsWrapper = styled(OddsWrapper)`
 	gap: 24px;
 `
 
-export const Odd = styled.div`
-	flex: 1;
-	text-align: center;
-	${TextXSMedium}
-`
-
-export const ColapsePanel = styled(Panel)`
+export const CollapsePanel = styled(Panel)`
 	.ant-collapse-content {
 		background: ${({ theme }) => theme['color-base-surface-secondary']};
 		border-top: none;
@@ -236,31 +224,6 @@ export const RadioGroup = styled(Radio.Group)`
 	}
 `
 
-export const RadioButton = styled(Radio.Button)`
-	height: 36px;
-	width: 62px;
-	border-radius: 6px;
-	background: ${({ theme }) => theme['color-base-surface-quaternary']};
-	border: 2px solid ${({ theme }) => theme['color-base-surface-quaternary']};
-	box-shadow: none;
-	color: white;
-	border-inline-start: 2px solid ${({ theme }) => theme['color-base-surface-quaternary']};
-	label {
-		&:hover {
-			color: white;
-		}
-	}
-
-	&.ant-radio-button-wrapper-checked {
-		border: 2px solid ${({ theme }) => theme['color-base-action-primary-default']} !important;
-		color: white;
-		&:hover {
-			border: 2px solid ${({ theme }) => theme['color-base-action-primary-default']};
-			color: white;
-		}
-	}
-`
-
 export const RadioMobileGroup = styled(Radio.Group)`
 	height: 32px;
 	display: flex;
@@ -280,72 +243,10 @@ export const RadioMobileGroup = styled(Radio.Group)`
 	}
 `
 
-export const OddButton = styled(Button)<{ active?: boolean; isMobilePanel?: boolean }>`
-	height: 32px;
-	width: 62px;
-	border-radius: 6px;
-	background: ${({ theme, active, isMobilePanel }) =>
-		active
-			? isMobilePanel
-				? theme['color-base-state-info-bg']
-				: theme['color-base-surface-secondary']
-			: isMobilePanel
-			? theme['color-base-surface-secondary']
-			: theme['color-base-surface-quaternary']};
-	border: 2px solid ${({ theme, active }) => (active ? theme['color-base-action-primary-default'] : theme['color-base-surface-quaternary'])} !important;
-	box-shadow: none;
-	color: white;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	padding: 0px;
-	${TextXSMedium};
-	border-inline-start: 2px solid ${({ theme }) => theme['color-base-surface-quaternary']};
-	label {
-		&:hover {
-			color: white;
-		}
-	}
-	&:hover {
-		border: 2px solid ${({ theme }) => theme['color-base-action-primary-default']} !important;
-		color: white !important;
-	}
-	&:disabled {
-		background: ${({ theme }) => theme['color-base-surface-secondary']} !important;
-		color: white !important;
-		border-color: ${({ theme }) => theme['color-base-surface-quaternary']};
-		border-color: ${({ theme, active }) => (active ? theme['color-base-action-primary-default'] : theme['color-base-surface-quaternary'])};
-		&:hover {
-			border-color: ${({ theme }) => theme['color-base-surface-quaternary']};
-		}
-	}
-	@media (max-width: ${breakpoints.md}px) {
-		width: 100% !important;
-	}
-`
-
-export const ExtendedMatchContentOddButton = styled(OddButton)`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 42px;
-	background: ${({ theme, active }) => (active ? theme['color-base-surface-secondary'] : theme['color-base-surface-secondary'])};
-	flex: 1;
-	${TextXSMedium}
-	&:disabled {
-		background: ${({ theme }) => theme['color-base-surface-quaternary']} !important;
-	}
-`
-
 export const ExtendedMatchContentRadioButtonGroup = styled(RadioGroup)`
 	display: flex;
 	gap: 8px;
 	width: 100%;
-`
-
-export const RadioButtonDescription = styled(Row)`
-	${TextXSMedium};
-	font-size: 12px;
 `
 
 export const StatusWrapper = styled.div`
@@ -431,11 +332,6 @@ export const MobileDivider = styled(Divider)`
 export const ButtonIcon = styled.img`
 	width: 20px;
 	height: 20px;
-`
-
-export const ButtonWrapper = styled.div`
-	width: 100%;
-	padding: 16px;
 `
 
 export const RadioMobileHeader = styled.div`

@@ -205,14 +205,15 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN }) => 
 						</SC.RadioMobileHeader>
 						<SC.RadioMobileGroup>
 							<OddButton
+								isHeader
 								match={match}
 								setVisibleTotalWinnerModal={isTotalWinner ? setVisibleTotalWinnerModal : undefined}
 								betOption={BET_OPTIONS.WINNER_HOME}
 								oddName={isTotalWinner ? t('YES') : BET_OPTIONS.WINNER_HOME}
 								isMobilePanel
 							/>
-							<OddButton match={match} betOption={BET_OPTIONS.WINNER_DRAW} isMobilePanel />
-							<OddButton match={match} betOption={BET_OPTIONS.WINNER_AWAY} isMobilePanel />
+							<OddButton isHeader match={match} betOption={BET_OPTIONS.WINNER_DRAW} isMobilePanel />
+							<OddButton isHeader match={match} betOption={BET_OPTIONS.WINNER_AWAY} isMobilePanel />
 						</SC.RadioMobileGroup>
 						<SC.OddsWrapper>
 							<OddValue match={match} betOption={BET_OPTIONS.WINNER_HOME} />
@@ -246,13 +247,14 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN }) => 
 								<SC.RowItemContent>
 									<SC.RadioGroup>
 										<OddButton
+											isHeader
 											match={match}
 											setVisibleTotalWinnerModal={isTotalWinner ? setVisibleTotalWinnerModal : undefined}
 											betOption={BET_OPTIONS.WINNER_HOME}
 											oddName={isTotalWinner ? t('YES') : BET_OPTIONS.WINNER_HOME}
 										/>
-										<OddButton match={match} betOption={BET_OPTIONS.WINNER_DRAW} />
-										<OddButton match={match} betOption={BET_OPTIONS.WINNER_AWAY} />
+										<OddButton isHeader match={match} betOption={BET_OPTIONS.WINNER_DRAW} />
+										<OddButton isHeader match={match} betOption={BET_OPTIONS.WINNER_AWAY} />
 									</SC.RadioGroup>
 									<SC.OddsWrapper>
 										<OddValue match={match} betOption={BET_OPTIONS.WINNER_HOME} />
@@ -273,9 +275,9 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN }) => 
 									)}
 									<SC.RowItemContent>
 										<SC.RadioGroup>
-											<OddButton match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_HOME} />
-											<OddButton match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_DRAW} />
-											<OddButton match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_AWAY} />
+											<OddButton isHeader match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_HOME} />
+											<OddButton isHeader match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_DRAW} />
+											<OddButton isHeader match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_AWAY} />
 										</SC.RadioGroup>
 										<SC.OddsWrapper>
 											<OddValue match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_HOME} />
@@ -290,8 +292,8 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN }) => 
 								<SC.Header>{t('Handicap ({{ spread }})', { spread: roundToTwoDecimals(spreadTypeMatch?.spread || 0) })}</SC.Header>
 								<SC.RowItemContent>
 									<SC.RadioGroup>
-										<OddButton match={match} betOption={BET_OPTIONS.HANDICAP_HOME} />
-										<OddButton match={match} betOption={BET_OPTIONS.HANDICAP_AWAY} />
+										<OddButton isHeader match={match} betOption={BET_OPTIONS.HANDICAP_HOME} />
+										<OddButton isHeader match={match} betOption={BET_OPTIONS.HANDICAP_AWAY} />
 									</SC.RadioGroup>
 									<SC.OddsWrapper>
 										<OddValue match={match} betOption={BET_OPTIONS.HANDICAP_HOME} />
@@ -305,8 +307,8 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN }) => 
 								<SC.Header>{t('Total ({{ total }})', { total: roundToTwoDecimals(totalTypeMatch?.total || 0) })}</SC.Header>
 								<SC.RowItemContent>
 									<SC.RadioGroup>
-										<OddButton match={match} betOption={BET_OPTIONS.TOTAL_OVER} />
-										<OddButton match={match} betOption={BET_OPTIONS.TOTAL_UNDER} />
+										<OddButton isHeader match={match} betOption={BET_OPTIONS.TOTAL_OVER} />
+										<OddButton isHeader match={match} betOption={BET_OPTIONS.TOTAL_UNDER} />
 									</SC.RadioGroup>
 									<SC.OddsWrapper>
 										<OddValue match={match} betOption={BET_OPTIONS.TOTAL_OVER} />

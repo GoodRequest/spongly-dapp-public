@@ -1,29 +1,39 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { Button } from 'antd'
 import { TextXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
-// background: ${({ theme, active, isMobilePanel }) =>
-// 	active
-// 		? isMobilePanel
-// 			? theme['color-base-state-info-bg']
-// 			: theme['color-base-surface-secondary']
-// 		: isMobilePanel
-// 		? theme['color-base-surface-secondary']
-// 		: theme['color-base-surface-quaternary']};
-export const OddButton = styled(Button)<{ active?: boolean; isMobilePanel?: boolean }>`
+export const OddButton = styled(Button)<{ active?: boolean; isMobilePanel?: boolean; isHeader?: boolean }>`
 	width: 62px;
+	height: 32px;
 	border-radius: 6px;
-	// TODO: opravit background sem podla toho ci som mobile alebo ide sa z headeru
-	background: indianred;
 	border: 2px solid ${({ theme, active }) => (active ? theme['color-base-action-primary-default'] : theme['color-base-surface-quaternary'])} !important;
 	box-shadow: none;
 	color: white;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: 0px;
+	padding: 0;
 	${TextXSMedium};
+	flex: 1;
+	background: ${({ theme, active, isMobilePanel, isHeader }) => {
+		if (isHeader && !active) {
+			return theme['color-base-surface-quaternary']
+		}
+		if (isMobilePanel && !active) {
+			return theme['color-base-surface-secondary'] // Inactive, Mobile Panel
+		}
+		if (!isMobilePanel && !isHeader) {
+			return theme['color-base-surface-secondary']
+		}
+		if (active) {
+			if (isHeader) {
+				return theme['color-base-surface-secondary']
+			}
+			return theme['color-base-state-info-bg'] // Active, Desktop Panel
+		}
+		return theme['color-base-surface-quaternary'] // Inactive, Desktop Panel
+	}};
 	border-inline-start: 2px solid ${({ theme }) => theme['color-base-surface-quaternary']};
 	label {
 		&:hover {
@@ -53,7 +63,6 @@ export const MatchContentOddButton = styled(OddButton)<{ isHeader?: boolean }>`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	//background: ${({ theme, active }) => (active ? theme['color-base-surface-secondary'] : theme['color-base-surface-secondary'])};
 	flex: 1;
 	${TextXSMedium}
 	&:disabled {
