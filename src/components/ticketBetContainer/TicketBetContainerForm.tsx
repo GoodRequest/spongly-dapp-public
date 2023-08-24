@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { ElementRef, FC, useEffect, useRef, useState } from 'react'
 import { Col, Row, Spin } from 'antd'
 import { Field, getFormValues, InjectedFormProps, reduxForm } from 'redux-form'
 import { Chain } from 'wagmi'
@@ -64,7 +64,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	const matches = formValues?.matches ?? []
 	const hasAtLeastOneMatch = matches.length > 0
 	const { openConnectModal } = useConnectModal()
-	const listRef = useRef<HTMLDivElement>(null)
+	const listRef = useRef<ElementRef<'div'>>(null)
 
 	const [fadeTop, setFadeTop] = useState(false)
 	const [fadeBottom, setFadeBottom] = useState(true)
