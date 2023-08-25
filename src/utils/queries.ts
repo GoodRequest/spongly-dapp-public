@@ -46,6 +46,7 @@ export const GET_USERS_STATISTICS = gql`
 			marketQuotes
 			totalQuote
 			totalAmount
+			timestamp
 			txHash
 			won
 			sportMarketsFromContract

@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import networkConnector from './networkConnector'
 
 // types
-import { MarketData, SportMarketInfo } from '@/typescript/types'
+import { CombinedMarketsPositionName, MarketData, SportMarketInfo } from '@/typescript/types'
 import { OddsType, PositionNumber, STABLE_DECIMALS } from './constants'
 import { BetType, DoubleChanceMarketType } from './tags'
 import { PositionType, SportMarket } from '@/__generated__/resolvers-types'
@@ -162,7 +162,15 @@ export const convertPositionNameToPosition = (side: PositionType) => {
 	return 1
 }
 
-export const getSymbolText = (position: PositionNumber, market: SportMarketInfo | MarketData | SportMarket) => {
+export const getSymbolText = (
+	position: PositionNumber,
+	market: SportMarketInfo | MarketData | SportMarket,
+	combinedMarketPositionSymbol?: CombinedMarketsPositionName
+) => {
+	if (combinedMarketPositionSymbol) {
+		return combinedMarketPositionSymbol
+	}
+
 	switch (position) {
 		case PositionNumber.HOME:
 			switch (Number(market.betType)) {
