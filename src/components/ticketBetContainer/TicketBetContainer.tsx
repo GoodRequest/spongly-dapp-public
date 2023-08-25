@@ -275,12 +275,12 @@ const TicketBetContainer = () => {
 	}
 
 	const fetchParleyTicketData = async () => {
-		if (!activeTicketValues?.buyIn) return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0 }
+		if (!activeTicketValues?.buyIn || Number(activeTicketValues?.buyIn) < MIN_BUY_IN)
+			return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0, totalBonus: 0 }
 
 		try {
 			// const parlayAmmMinimumUSDAmountQuote = parlayAmmData?.minUsdAmount ? await fetchParlayAmmQuote(parlayAmmData?.minUsdAmount) : 0
 			const parlayAmmQuote = await fetchParlayAmmQuote(activeTicketValues?.buyIn)
-
 			if (!parlayAmmQuote?.error) {
 				const totalQuote = bigNumberFormatter(parlayAmmQuote?.totalQuote ?? 0)
 				const totalBuyAmount = bigNumberFormatter(parlayAmmQuote?.totalBuyAmount ?? 0)
@@ -288,9 +288,9 @@ const TicketBetContainer = () => {
 				const potentionalProfit =
 					parlayAmmData?.minUsdAmount && activeTicketValues?.buyIn >= parlayAmmData?.minUsdAmount
 						? formatCurrency(totalBuyAmount - toNumber(activeTicketValues.buyIn), 2)
-						: '-'
+						: null
 				const skew = bigNumberFormatter(parlayAmmQuote?.skewImpact || 0)
-				// TODO: Do we need this logic?
+				// TODO: Do we need this logic? Remove this logic if testing bonuses will be correct
 				// const totalBonus = '0'
 				// console.log('parlayAmmMinimumUSDAmountQuote', parlayAmmMinimumUSDAmountQuote)
 				// Calculates total bonus percentage
@@ -327,8 +327,8 @@ const TicketBetContainer = () => {
 		try {
 			const { signer, sportsAMMContract } = networkConnector
 			const divider = Number(`1e${getStablecoinDecimals(chain?.id || NETWORK_IDS.OPTIMISM, getSelectedCoinIndex(activeTicketValues.selectedStablecoin))}`)
-			if (!activeTicketValues?.buyIn || activeTicketValues?.matches?.length === 0 || !signer)
-				return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0 }
+			if (!activeTicketValues?.buyIn || Number(activeTicketValues.buyIn) < MIN_BUY_IN || activeTicketValues?.matches?.length === 0 || !signer)
+				return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0, totalBonus: 0 }
 			const currentAddress = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses[0]
 			const contract = new ethers.Contract(currentAddress || '', sportsMarketContract.abi, signer)
 			const ammBalances = await contract.balancesOf(sportsAMMContract?.address)
@@ -336,7 +336,6 @@ const TicketBetContainer = () => {
 			const roundedMaxAmount = floorNumberToDecimals(
 				availablePerPosition[getBetOptionFromMatchBetOption(activeTicketValues?.matches?.[0].betOption as any)].available || 0
 			)
-			// console.log('calculatedBonusPercentageDec', calculatedBonusPercentageDec)
 			const singlesAmmMaximumUSDAmountQuote = await fetchSinglesAmmQuote(roundedMaxAmount)
 			const singlesAmmQuote = await fetchSinglesAmmQuote(activeTicketValues?.buyIn)
 			if (singlesAmmQuote !== null) {
@@ -353,9 +352,8 @@ const TicketBetContainer = () => {
 				const recalculatedTokenAmount = roundNumberToDecimals((amountOfTokens * Number(activeTicketValues?.buyIn)) / parsedQuote)
 
 				const maxAvailableTokenAmount = recalculatedTokenAmount > flooredAmountOfTokens ? flooredAmountOfTokens : recalculatedTokenAmount
-
 				const payout = roundNumberToDecimals(maxAvailableTokenAmount ?? 0)
-				const potentionalProfit = roundNumberToDecimals(maxAvailableTokenAmount ?? 0) - activeTicketValues.buyIn
+				const potentionalProfit = Number(maxAvailableTokenAmount) - Number(activeTicketValues.buyIn)
 				const skew = 0
 				// TODO: calculate number from bonus?
 				const totalBonus = getOddByBetType(activeTicketValues?.matches?.[0] as any, false).rawBonus
@@ -390,7 +388,7 @@ const TicketBetContainer = () => {
 					totalBonus,
 					payout,
 					skew,
-					potentionalProfit: potentionalProfit > 0 ? potentionalProfit : 0
+					potentionalProfit: potentionalProfit > 0 ? round(potentionalProfit, 2).toFixed(2) : 0
 				}
 			}
 			return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0 }

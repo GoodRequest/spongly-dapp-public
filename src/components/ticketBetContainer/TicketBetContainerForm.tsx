@@ -130,7 +130,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 				<span>
 					{t('Maximum buy-in is')}{' '}
 					<SC.Highlight>
-						{MIN_BUY_IN.toFixed(2)} {formValues?.selectedStablecoin}
+						{MAX_BUY_IN.toFixed(2)} {formValues?.selectedStablecoin}
 					</SC.Highlight>
 				</span>
 			))
@@ -275,23 +275,13 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 						</Col>
 						<Spin spinning={isProcessing} size='small' indicator={<LoadingOutlined spin />}>
 							<Row gutter={[0, 12]}>
-								<SummaryCol
-									title={t('Total Quote')}
-									value={formValues?.totalQuote && formValues?.totalQuote > 0 ? formValues?.totalQuote : '-'}
-								/>
+								<SummaryCol title={t('Total Quote')} value={formValues?.totalQuote || 0} />
 								<SummaryCol title={t('Total Bonus')} value={formValues?.totalBonus ? `${formValues?.totalBonus}%` : '0.00%'} align={'right'} />
-								<SummaryCol
-									title={t('Payout')}
-									value={formValues?.payout && formValues.payout !== 0 ? `${formValues.payout} ${formValues?.selectedStablecoin}` : '-'}
-								/>
+								<SummaryCol title={t('Payout')} value={`${formValues.payout} ${formValues?.selectedStablecoin}`} />
 								<SummaryCol
 									isProfit
 									title={t('Profit')}
-									value={
-										formValues?.potentionalProfit && formValues.potentionalProfit !== 0
-											? `+ ${formValues.potentionalProfit} ${formValues?.selectedStablecoin}`
-											: '-'
-									}
+									value={`+ ${formValues.potentionalProfit} ${formValues?.selectedStablecoin}`}
 									align={'right'}
 								/>
 							</Row>
