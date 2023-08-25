@@ -5,7 +5,7 @@ import infoIconPurple from '@/assets/icons/info-circle.svg'
 import { TextMDMedium, TextXSMedium, HeadingXSMedium, TextMDRegular, TextSMMedium, HeadingSMMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 import closeIcon from '@/assets/icons/x-close.svg'
-import { AllPositionsHeader, MobileWrapper, OddButton, RadioMobileHeader } from '../matchesList/MatchesListStyles'
+import { AllPositionsHeader, MobileWrapper, RadioMobileHeader } from '../matchesList/MatchesListStyles'
 
 export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
 	position: sticky;
@@ -120,7 +120,6 @@ export const AvailableBalanceTitle = styled.span`
 
 export const AvailableBalance = styled.span<{ value?: number }>`
 	${TextMDMedium};
-	color: ${({ theme, value }) => (value && value > 0 ? theme['color-base-state-success-fg'] : theme['color-base-content-quaternary'])};
 `
 
 export const TicketMatchesWrapper = styled.div`
@@ -193,9 +192,7 @@ export const MatchBetOptionsWrapper = styled.div`
 	${AllPositionsHeader} {
 		display: none;
 	}
-	${OddButton} {
-		background: ${({ theme }) => theme['color-base-surface-quaternary']};
-	}
+
 	${RadioMobileHeader} {
 		${TextXSMedium};
 		justify-content: flex-start;

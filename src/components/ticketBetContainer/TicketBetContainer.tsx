@@ -303,11 +303,11 @@ const TicketBetContainer = () => {
 
 				const calculatedBonusPercentageDec =
 					(activeTicketValues?.matches || []).reduce((accumulator, currentItem) => {
-						// console.log('currentItem', currentItem)
 						const bonusDecimal = getOddByBetType(currentItem as any, false).rawBonus / 100 + 1
 						return accumulator * bonusDecimal
 					}, 1) - 1
-				const totalBonus = round(calculatedBonusPercentageDec * 100, 2).toFixed(2)
+
+				const totalBonus = calculatedBonusPercentageDec ? round(calculatedBonusPercentageDec * 100, 2).toFixed(2) : null
 				return {
 					...activeTicketValues,
 					totalQuote: formatQuote(OddsType.DECIMAL, totalQuote),
@@ -358,7 +358,9 @@ const TicketBetContainer = () => {
 				const potentionalProfit = roundNumberToDecimals(maxAvailableTokenAmount ?? 0) - activeTicketValues.buyIn
 				const skew = 0
 				// TODO: calculate number from bonus?
-				const totalBonus = round(Number(getOddByBetType(activeTicketValues?.matches?.[0] as any, false).rawBonus), 2).toFixed(2)
+				const totalBonus = getOddByBetType(activeTicketValues?.matches?.[0] as any, false).rawBonus
+					? round(Number(getOddByBetType(activeTicketValues?.matches?.[0] as any, false).rawBonus), 2).toFixed(2)
+					: null
 				const getOdds = () => {
 					const selectedMatch = getMatchByBetOption(
 						activeTicketValues?.matches?.[0]?.betOption as BET_OPTIONS.WINNER_HOME,
