@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { ElementRef, FC, useEffect, useRef, useState } from 'react'
 import { Col, Row, Spin } from 'antd'
 import { Field, getFormValues, InjectedFormProps, reduxForm } from 'redux-form'
 import { Chain } from 'wagmi'
@@ -64,6 +64,10 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	const matches = formValues?.matches ?? []
 	const hasAtLeastOneMatch = matches.length > 0
 	const { openConnectModal } = useConnectModal()
+	const listRef = useRef<ElementRef<'div'>>(null)
+
+	const [fadeTop, setFadeTop] = useState(false)
+	const [fadeBottom, setFadeBottom] = useState(true)
 
 	const allowance = Number(round(Number(formValues?.allowance), 2).toFixed(2))
 	const buyIn = Number(round(Number(formValues?.buyIn), 2).toFixed(2))
@@ -218,14 +222,54 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 		</Row>
 	)
 
+	useEffect(() => {
+		// TODO: event interface
+		const onScroll = (event: any) => {
+			const { target } = event
+			const visibleScrollbar = target.scrollHeight > target.clientHeight
+			if (target.scrollTop === 0 || !visibleScrollbar) {
+				setFadeTop(false)
+			} else if (target.scrollTop > 0 && visibleScrollbar) {
+				setFadeTop(true)
+			}
+
+			if (target.clientHeight + target.scrollTop === target.scrollHeight || !visibleScrollbar) {
+				setFadeBottom(false)
+			} else if (target.clientHeight + target.scrollTop < target.scrollHeight && visibleScrollbar) {
+				setFadeBottom(true)
+			}
+		}
+
+		if (listRef.current !== null) {
+			listRef.current.addEventListener('scroll', onScroll)
+			return () => listRef.current?.removeEventListener('scroll', onScroll)
+		}
+		return () => {}
+	}, [listRef.current])
+
+	useEffect(() => {
+		const visibleScrollbar = listRef.current !== null && listRef.current.scrollHeight > listRef.current.clientHeight
+		if (!visibleScrollbar) {
+			setFadeBottom(false)
+			setFadeTop(false)
+		}
+		if (visibleScrollbar) {
+			setFadeBottom(true)
+		}
+	}, [formValues?.matches?.length])
+
 	return (
 		<form onSubmit={handleSubmit} style={{ display: rolledUp ? 'block' : 'none' }}>
 			{hasAtLeastOneMatch ? (
-				<SC.TicketMatchesWrapper>
-					{formValues?.matches?.map((match, key) => (
-						<MatchRow key={`matchRow-${key}-${match.gameId}`} match={match} allTicketMatches={matches} deleteHandler={handleDeleteItem} />
-					))}
-				</SC.TicketMatchesWrapper>
+				<SC.TicketMatchesFaded>
+					<SC.TicketMatchesWrapper ref={listRef}>
+						{formValues?.matches?.map((match, key) => (
+							<MatchRow key={`matchRow-${key}-${match.gameId}`} match={match} allTicketMatches={matches} deleteHandler={handleDeleteItem} />
+						))}
+					</SC.TicketMatchesWrapper>
+					<SC.Fade show={fadeTop} direction={'above'} />
+					<SC.Fade show={fadeBottom} direction={'under'} />
+				</SC.TicketMatchesFaded>
 			) : (
 				emptyTicketState
 			)}

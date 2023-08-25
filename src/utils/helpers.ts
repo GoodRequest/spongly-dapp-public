@@ -598,18 +598,40 @@ export const updateUnsubmittedTicketMatches = (
 	matches: TicketPosition[] | undefined,
 	unsubmittedTickets: IUnsubmittedBetTicket[] | null,
 	dispatch: Dispatch<AnyAction>,
-	activeTicketID?: number,
-	copied = false
+	activeTicketID?: number
 ) => {
 	// TODO: copied does not work if user switching between ticket that is copied and then modified by match and switched in tab (corner case will be fixed in separated TASK)
 	const data = unsubmittedTickets?.map((ticket) => {
 		if (ticket.id === activeTicketID) {
 			return {
 				...ticket,
-				matches
+				matches,
+				copied: false
 			}
 		}
-		return { ...ticket, copied }
+		return { ...ticket }
+	})
+	dispatch({
+		type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_UPDATE,
+		payload: { data }
+	})
+}
+
+export const copyTicketToUnsubmittedTickets = (
+	matches: TicketPosition[] | undefined,
+	unsubmittedTickets: IUnsubmittedBetTicket[] | null,
+	dispatch: Dispatch<AnyAction>,
+	activeTicketID?: number
+) => {
+	const data = unsubmittedTickets?.map((ticket) => {
+		if (ticket.id === activeTicketID) {
+			return {
+				...ticket,
+				matches,
+				copied: true
+			}
+		}
+		return { ...ticket }
 	})
 	dispatch({
 		type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_UPDATE,
