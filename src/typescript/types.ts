@@ -220,11 +220,11 @@ export interface IBonus {
 	drawBonus?: number
 }
 
-export interface IMatch extends SportMarket {
-	winnerTypeMatch?: SportMarket
-	doubleChanceTypeMatches?: SportMarket[]
-	spreadTypeMatch?: SportMarket
-	totalTypeMatch?: SportMarket
+export interface IMatch extends SportMarket, IBonus {
+	winnerTypeMatch?: SportMarket & IBonus
+	doubleChanceTypeMatches?: (SportMarket & IBonus)[]
+	spreadTypeMatch?: SportMarket & IBonus
+	totalTypeMatch?: SportMarket & IBonus
 	betOption?: BET_OPTIONS
 	combinedTypeMatch?: SGPItem
 }

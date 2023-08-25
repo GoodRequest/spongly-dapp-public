@@ -53,9 +53,6 @@ export type SportMarket = {
 	homeOdds: Scalars['String']
 	homeScore?: Maybe<Scalars['String']>
 	homeTeam: Scalars['String']
-	homeBonus: Scalars['Int']
-	awayBonus: Scalars['Int']
-	drawBonus: Scalars['Int']
 	id: Scalars['ID']
 	isApex?: Maybe<Scalars['Boolean']>
 	isCanceled: Scalars['Boolean']
