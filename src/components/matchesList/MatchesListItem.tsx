@@ -47,13 +47,13 @@ const MatchListItem: FC<IMatchListItem> = ({ match, keyValue, filter, loading = 
 			isExpanded={isExpanded}
 			key={keyValue}
 		>
-			<SC.ColapsePanel header={<MatchListHeader match={match as any} type={filter.status} />} key={match.maturityDate}>
+			<SC.CollapsePanel header={<MatchListHeader match={match as any} type={filter.status} />} key={match.maturityDate}>
 				{!loading && match.isOpen && (
 					<SC.PanelContent>
 						<MatchListContent match={match as any} />
 					</SC.PanelContent>
 				)}
-			</SC.ColapsePanel>
+			</SC.CollapsePanel>
 			{filter.status === MATCHES.OPEN && (
 				<SC.CollapseButtonWrapper>
 					<Button

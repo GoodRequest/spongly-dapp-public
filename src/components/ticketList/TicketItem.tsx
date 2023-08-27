@@ -12,14 +12,12 @@ import { convertPositionNameToPosition, getMatchOddsContract, getSymbolText } fr
 import networkConnector from '@/utils/networkConnector'
 import { Position } from '@/__generated__/resolvers-types'
 import { NO_TEAM_IMAGE_FALLBACK, TOTAL_WINNER_TAGS } from '@/utils/constants'
-
-// compoennts
-import * as SC from './TicketItemStyles'
+import { RESULT_TYPE } from '@/utils/enums'
 
 // styles
+import * as SC from './TicketItemStyles'
 import { Icon } from '@/styles/Icons'
 import * as SCS from '@/styles/GlobalStyles'
-import { RESULT_TYPE } from '@/utils/enums'
 
 type Props = {
 	match: Position
@@ -152,8 +150,6 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 					) : (
 						<Spin indicator={<LoadingOutlined spin />} />
 					)}
-					{/* // TODO: in task CH-126 */}
-					{/* <SC.BonusText>+5%</SC.BonusText> */}
 				</SC.OddsWrapper>
 			</SC.TicketContent>
 		</SC.TicketItemWrapper>

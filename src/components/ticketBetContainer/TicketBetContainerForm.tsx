@@ -19,7 +19,6 @@ import MatchRow from './components/matchRow/MatchRow'
 import SummaryCol from './components/summaryCol/SummaryCol'
 
 // utils
-import { roundNumberToDecimals } from '@/utils/formatters/number'
 import { MAX_BUY_IN, MAX_TICKET_MATCHES, MAX_TOTAL_QUOTE, MIN_BUY_IN, STABLE_COIN } from '@/utils/constants'
 import { FORM } from '@/utils/enums'
 
@@ -125,6 +124,17 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 					{t('Minimum buy-in is')}{' '}
 					<SC.Highlight>
 						{MIN_BUY_IN.toFixed(2)} {formValues?.selectedStablecoin}
+					</SC.Highlight>
+				</span>
+			))
+			return
+		}
+		if (buyIn > MAX_BUY_IN) {
+			setError(() => (
+				<span>
+					{t('Maximum buy-in is')}{' '}
+					<SC.Highlight>
+						{MAX_BUY_IN.toFixed(2)} {formValues?.selectedStablecoin}
 					</SC.Highlight>
 				</span>
 			))
@@ -282,18 +292,8 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 				</Col>
 				<Col span={24}>
 					<Row>
-						<Col span={12}>
-							<SC.AvailableBalanceTitle>{t('Available')}: </SC.AvailableBalanceTitle>
-							<SC.AvailableBalance value={availableBalance || 0}>
-								{availableBalance || 0} {formValues?.selectedStablecoin}
-							</SC.AvailableBalance>
-						</Col>
-						<Col span={12} style={{ textAlign: 'end' }}>
-							<SC.AvailableBalanceTitle>{t('Allowance')}: </SC.AvailableBalanceTitle>
-							<SC.AvailableBalance value={allowance || 0}>
-								{allowance || 0} {formValues?.selectedStablecoin}
-							</SC.AvailableBalance>
-						</Col>
+						<SummaryCol title={t('Available')} value={`${availableBalance || 0} ${formValues?.selectedStablecoin}`} align={'left'} />
+						<SummaryCol title={t('Allowance')} value={`${allowance || 0} ${formValues?.selectedStablecoin}`} align={'right'} />
 					</Row>
 				</Col>
 				{hasAtLeastOneMatch && (
@@ -319,22 +319,13 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 						</Col>
 						<Spin spinning={isProcessing} size='small' indicator={<LoadingOutlined spin />}>
 							<Row gutter={[0, 12]}>
+								<SummaryCol title={t('Total Quote')} value={formValues?.totalQuote || 0} />
+								<SummaryCol title={t('Total Bonus')} value={formValues?.totalBonus ? `${formValues?.totalBonus}%` : '0.00%'} align={'right'} />
+								<SummaryCol title={t('Payout')} value={`${formValues.payout} ${formValues?.selectedStablecoin}`} />
 								<SummaryCol
-									title={t('Total Quote')}
-									value={formValues?.totalQuote && formValues?.totalQuote > 0 ? formValues?.totalQuote : '-'}
-								/>
-								<SummaryCol title={t('Total Bonus')} value={formValues?.totalBonus ?? '-'} align={'right'} />
-								<SummaryCol
-									title={t('Payout')}
-									value={formValues?.payout && formValues.payout !== 0 ? `${formValues.payout} ${formValues?.selectedStablecoin}` : '-'}
-								/>
-								<SummaryCol
+									isProfit
 									title={t('Profit')}
-									value={
-										formValues?.potentionalProfit && formValues.potentionalProfit !== 0
-											? `${roundNumberToDecimals(formValues.potentionalProfit)} ${formValues?.selectedStablecoin}`
-											: '-'
-									}
+									value={`+ ${formValues.potentionalProfit} ${formValues?.selectedStablecoin}`}
 									align={'right'}
 								/>
 							</Row>

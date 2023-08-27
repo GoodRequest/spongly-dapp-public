@@ -25,7 +25,7 @@ export const StartCenteredRow = styled(Row)`
 
 export const TeamImages = styled.div`
 	height: 48px;
-	width: 80px;
+	margin-right: 4px;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -76,7 +76,7 @@ export const BetOptionButton = styled(Button)`
 `
 
 export const MatchOdd = styled.div`
-	${TextSMMedium}
+	${TextSMMedium};
 `
 
 export const RemoveButtonWrapper = styled.div`
@@ -101,4 +101,10 @@ export const ShiftedRow = styled(Row)`
 export const MatchNames = styled.div`
 	height: 48px;
 	width: calc(100% - 90px);
+`
+export const BonusText = styled.div<{ hide?: boolean }>`
+	${TextSMMedium};
+	margin-left: ${({ hide }) => (hide ? '0' : '4px')};
+	visibility: ${({ hide }) => (hide ? 'hidden' : 'visible')};
+	color: ${({ theme }) => theme['color-base-state-success-fg']};
 `
