@@ -9,6 +9,7 @@ import { Col, Row } from 'antd'
 import { showNotifications } from '@/utils/tsxHelpers'
 import {
 	getCanceledClaimAmount,
+	getCombinedPositionTest,
 	getEtherScanTxHash,
 	getUserTicketType,
 	getUserTicketTypeName,
@@ -84,6 +85,11 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 
 	// positions must be ordered like sportsMarkets or marketQuotes wont fit
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
+
+	// const fixedCombinedPositions =
+	console.log(ticket)
+	console.log(orderedPositions)
+	// getCombinedPositionTest(orderedPositions)
 
 	const userTicketType = getUserTicketType(ticket)
 

@@ -58,6 +58,7 @@ import { IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '
 import { NetworkId } from './networkConnector'
 import { bigNumberFormatter, bigNumberFormmaterWithDecimals } from '@/utils/formatters/ethers'
 import { BetType } from '@/utils/tags'
+import { convertPositionNameToPosition } from './markets'
 
 export const roundPrice = (price: number | undefined | null, includeDollarSign?: boolean) => {
 	if (!price) {
@@ -768,7 +769,7 @@ export const orderPositionsAsSportMarkets = (ticket: UserTicket | ITicket) => {
 	const orderedPositions = ticket.sportMarkets.map((item) => {
 		// def has positions if conditions above are correct.
 		// @ts-ignore
-		return ticket.positions.find((position) => position.market.gameId === item.gameId)
+		return ticket.positions.find((position) => position.market.gameId === item.gameId && item.address === position.market.address)
 	})
 
 	return orderedPositions
@@ -1111,4 +1112,19 @@ export const getCombinedPositionName = (markets: SportMarketInfo[], positions: a
 		if (positions[0] === 1 && positions[1] === 1) return 'H2&U'
 	}
 	return null
+}
+
+export const getCombinedPositionTest = (positions: Position[]) => {
+	const firstPositionBetType = positions[0]?.market?.betType
+	const secondPositionBetType = positions[1]?.market?.betType
+
+	const firstPositionSide = convertPositionNameToPosition(positions[0]?.side)
+	const secondPositionSide = convertPositionNameToPosition(positions[1].side)
+
+	console.log(positions)
+
+	console.log(firstPositionBetType)
+	console.log(secondPositionBetType)
+	console.log(firstPositionSide)
+	console.log(secondPositionSide)
 }

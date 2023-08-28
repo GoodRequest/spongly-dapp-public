@@ -159,7 +159,9 @@ const MyWalletContent = () => {
 						successRate = Number(((wonTickets.length / numberOfAttempts) * 100).toFixed(2))
 					}
 
-					assignOtherAttrs([...parlayTickets, ...positionTickets]).then((ticketsWithOtherAttrs) => {
+					const test = [...parlayTickets, ...positionTickets].filter((item) => item.id === '0xaf00a28a012e3f6ea5c8ed99b59fc07cf23a4eb1')
+
+					assignOtherAttrs(test).then((ticketsWithOtherAttrs) => {
 						setUserStatistic({
 							user: { ...values?.data?.user, successRate },
 							tickets: ticketsWithOtherAttrs.sort((a, b) => (Number(a.timestamp) < Number(b.timestamp) ? 1 : -1))
