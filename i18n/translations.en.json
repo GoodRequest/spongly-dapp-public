@@ -151,7 +151,7 @@
     "There are currently no {{ticketsType}}": "There are currently no {{ticketsType}}",
     "There are no superstars in current biweekly period": "There are no superstars in current biweekly period",
     "Tickets": "Tickets",
-    "Tickets not redeemed within 30 days of market being resolved are forfeit.": "Tickets not redeemed within 30 days of market being resolved are forfeit.",
+    "Tickets not redeemed within 90 days of market being resolved are forfeit.": "Tickets not redeemed within 90 days of market being resolved are forfeit.",
     "Total": "Total",
     "Total ({{ total }})": "Total ({{ total }})",
     "Total Bonus": "Total Bonus",

@@ -53,7 +53,17 @@ import { ParlayMarket, Position, PositionBalance, PositionType } from '@/__gener
 
 import OptimismIcon from '@/assets/icons/optimism-icon.svg'
 import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
-import { CombinedMarketsPositionName, IMatch, ITicket, SGPContractData, SGPItem, Sorter, SportMarketInfo, UserTicket } from '@/typescript/types'
+import {
+	CombinedMarketsPositionName,
+	IMatch,
+	ITicket,
+	PositionWithCombinedAttrs,
+	SGPContractData,
+	SGPItem,
+	Sorter,
+	SportMarketInfo,
+	UserTicket
+} from '@/typescript/types'
 import { IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 import { NetworkId } from './networkConnector'
 import { bigNumberFormatter, bigNumberFormmaterWithDecimals } from '@/utils/formatters/ethers'
@@ -1097,6 +1107,7 @@ export const getCollateral = (networkId: Network, index: number) => COLLATERALS[
 
 export const getStablecoinDecimals = (networkId: Network, stableIndex: number) => STABLE_DECIMALS[getCollateral(networkId, stableIndex)]
 
+// TODO: probably wont use this, remove?
 export const getCombinedPositionName = (markets: SportMarketInfo[], positions: any[]): CombinedMarketsPositionName | null => {
 	if (markets[0].betType === BetType.WINNER && markets[1].betType === BetType.TOTAL) {
 		if (positions[0] === 0 && positions[1] === 0) return '1&O'
@@ -1142,14 +1153,13 @@ export const getCombinedPositionText = (positions: Position[]): CombinedMarketsP
 	return null
 }
 
-export const getCombinedPositionsOdds = (positions: any[], ticket: UserTicket, sgpFees: SGPItem[] | undefined) => {
+type PositionWithIndex = {
+	index: number
+} & Position
+
+export const getCombinedPositionsOdds = (positions: PositionWithIndex[], ticket: UserTicket, sgpFees: SGPItem[] | undefined) => {
 	const firstPositionOdds = Number(formatParlayQuote(Number(ticket?.marketQuotes?.[positions[0]?.index])))
 	const secondPositionOdds = Number(formatParlayQuote(Number(ticket?.marketQuotes?.[positions[1]?.index])))
-
-	// 608267420406341580', '602011793840452355'
-
-	// console.log(ticket?.marketQuotes?.[positions[0]?.index])
-	// console.log(ticket?.marketQuotes?.[positions[1]?.index])
 
 	const combinedOdds = firstPositionOdds * secondPositionOdds
 
@@ -1160,7 +1170,7 @@ export const getCombinedPositionsOdds = (positions: any[], ticket: UserTicket, s
 	let sgpItem: undefined | SGPItem
 
 	sgpFees.forEach((item) => {
-		if (item.tags.every((value, index) => value === Number(positions[0].market.tags[index]))) {
+		if (item.tags.every((value, index) => value === Number(positions[0]?.market?.tags?.[index]))) {
 			if (item.combination.includes(Number(positions[0].market.betType)) && item.combination.includes(Number(positions[1].market.betType))) {
 				sgpItem = item
 			}
@@ -1192,14 +1202,7 @@ export const getPositionsWithMergedCombinedPositions = (positions: Position[], t
 		})
 	)
 
-	type UserPosition = {
-		index: number
-		odds?: number
-		combinedPositionsText?: string
-		isCombined?: boolean
-	} & Position
-
-	const newPositions: UserPosition[] = []
+	const newPositions: PositionWithCombinedAttrs[] = []
 
 	groupedPositions.forEach((item) => {
 		const positions = item?.[1]
@@ -1212,6 +1215,7 @@ export const getPositionsWithMergedCombinedPositions = (positions: Position[], t
 				combinedPositionsText: getCombinedPositionText(positions),
 				odds: getCombinedPositionsOdds(positions, ticket, sgpFees),
 				isCombined: true,
+				claimable: !(!positions[0].claimable || !positions[1].claimable),
 				market: {
 					...positions[0].market
 				}

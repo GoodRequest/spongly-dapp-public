@@ -225,7 +225,7 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 			activeKey={isExpanded ? [ticket.id] : []}
 			isExpanded={isExpanded}
 		>
-			<SC.ColapsePanel header={ticketHeader} key={ticket.id} onClick={() => console.log(ticket)}>
+			<SC.ColapsePanel header={ticketHeader} key={ticket.id}>
 				<Row gutter={[16, 16]}>
 					{map(positionsWithMergedCombinedPositions, (item, index) => (
 						<Col key={item?.id} xxl={12} span={24}>

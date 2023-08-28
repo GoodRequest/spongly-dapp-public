@@ -12,7 +12,7 @@ const YouNeedToClaimBanner = () => {
 					<SC.Claim>{t('claim')}</SC.Claim>
 				</SC.YouNeedTo>
 			</SC.ClaimHeader>
-			<SC.ClaimText>{t('Tickets not redeemed within 30 days of market being resolved are forfeit.')}</SC.ClaimText>
+			<SC.ClaimText>{t('Tickets not redeemed within 90 days of market being resolved are forfeit.')}</SC.ClaimText>
 		</SC.ContentWrapper>
 	)
 }

@@ -1,6 +1,6 @@
 import { IShareTags } from '@/atoms/SEOHelmet'
 import { CLOSED_TICKET_TYPE, MSG_TYPE, ORDER_DIRECTION, PositionNumber, TICKET_TYPE } from '@/utils/constants'
-import { SportMarket, ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
+import { SportMarket, ParlayMarket, PositionBalance, Position } from '@/__generated__/resolvers-types'
 import { BetType, DoubleChanceMarketType } from '@/utils/tags'
 import { BET_OPTIONS, WALLET_TICKETS } from '@/utils/enums'
 
@@ -225,3 +225,10 @@ export interface IMatch extends SportMarket {
 	awayBonus?: number
 	drawBonus?: number
 }
+
+export type PositionWithCombinedAttrs = {
+	index: number
+	odds?: number
+	combinedPositionsText?: string
+	isCombined?: boolean
+} & Position
