@@ -3,7 +3,7 @@ import { notification } from 'antd'
 import numbro from 'numbro'
 import Router from 'next/router'
 
-import { floor, round, toNumber } from 'lodash'
+import { floor, groupBy, round, toNumber } from 'lodash'
 import { AnyAction, Dispatch } from 'redux'
 
 import {
@@ -1114,17 +1114,36 @@ export const getCombinedPositionName = (markets: SportMarketInfo[], positions: a
 	return null
 }
 
-export const getCombinedPositionTest = (positions: Position[]) => {
-	const firstPositionBetType = positions[0]?.market?.betType
-	const secondPositionBetType = positions[1]?.market?.betType
+export const getCombinedPositionTest = (positions: Position[]): CombinedMarketsPositionName | null => {
+	const firstPositionBetType = Number(positions[0]?.market?.betType) as BetType
+	const secondPositionBetType = Number(positions[1]?.market?.betType) as BetType
 
 	const firstPositionSide = convertPositionNameToPosition(positions[0]?.side)
 	const secondPositionSide = convertPositionNameToPosition(positions[1].side)
 
-	console.log(positions)
+	if (firstPositionBetType === BetType.WINNER && secondPositionBetType === BetType.TOTAL) {
+		if (firstPositionSide === 0 && secondPositionSide === 0) return '1&O'
+		if (firstPositionSide === 0 && secondPositionSide === 1) return '1&U'
+		if (firstPositionSide === 1 && secondPositionSide === 0) return '2&O'
+		if (firstPositionSide === 1 && secondPositionSide === 1) return '2&U'
+		if (firstPositionSide === 2 && secondPositionSide === 0) return 'X&O'
+		if (firstPositionSide === 2 && secondPositionSide === 1) return 'X&U'
+	}
 
-	console.log(firstPositionBetType)
-	console.log(secondPositionBetType)
-	console.log(firstPositionSide)
-	console.log(secondPositionSide)
+	if (firstPositionBetType === BetType.SPREAD && secondPositionBetType === BetType.TOTAL) {
+		if (firstPositionSide === 0 && secondPositionSide === 0) return 'H1&O'
+		if (firstPositionSide === 0 && secondPositionSide === 1) return 'H1&U'
+		if (firstPositionSide === 1 && secondPositionSide === 0) return 'H2&O'
+		if (firstPositionSide === 1 && secondPositionSide === 1) return 'H2&U'
+	}
+
+	return null
+}
+
+export const getPositionsWithMergedCombinedPositions = (positions: Position[]) => {
+	const groupedPositions = groupBy(positions, (position) => {
+		return position.market.gameId
+	})
+
+	console.log(groupedPositions)
 }

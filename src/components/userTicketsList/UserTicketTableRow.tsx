@@ -11,6 +11,7 @@ import {
 	getCanceledClaimAmount,
 	getCombinedPositionTest,
 	getEtherScanTxHash,
+	getPositionsWithMergedCombinedPositions,
 	getUserTicketType,
 	getUserTicketTypeName,
 	isClaimableUntil,
@@ -86,10 +87,11 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 	// positions must be ordered like sportsMarkets or marketQuotes wont fit
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 
-	// const fixedCombinedPositions =
-	console.log(ticket)
-	console.log(orderedPositions)
-	// getCombinedPositionTest(orderedPositions)
+	const positionWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions)
+
+	// const fixedCombinedPositions = getCombinedPositionTest(orderedPositions)
+
+	// console.log(fixedCombinedPositions)
 
 	const userTicketType = getUserTicketType(ticket)
 

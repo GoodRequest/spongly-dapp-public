@@ -159,7 +159,7 @@ const MyWalletContent = () => {
 						successRate = Number(((wonTickets.length / numberOfAttempts) * 100).toFixed(2))
 					}
 
-					const test = [...parlayTickets, ...positionTickets].filter((item) => item.id === '0xaf00a28a012e3f6ea5c8ed99b59fc07cf23a4eb1')
+					const test = [...parlayTickets, ...positionTickets].filter((item) => item.id === '0xff47b3978ccece504a0f1765026f184b7092e97a')
 
 					assignOtherAttrs(test).then((ticketsWithOtherAttrs) => {
 						setUserStatistic({
