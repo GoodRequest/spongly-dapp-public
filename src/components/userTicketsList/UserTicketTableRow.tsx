@@ -9,7 +9,6 @@ import { Col, Row } from 'antd'
 import { showNotifications } from '@/utils/tsxHelpers'
 import {
 	getCanceledClaimAmount,
-	getCombinedPositionTest,
 	getEtherScanTxHash,
 	getPositionsWithMergedCombinedPositions,
 	getUserTicketType,
@@ -19,10 +18,9 @@ import {
 	roundPrice
 } from '@/utils/helpers'
 import { USER_TICKET_TYPE, NOTIFICATION_TYPE, MSG_TYPE, GAS_ESTIMATION_BUFFER } from '@/utils/constants'
-import networkConnector, { NetworkId } from '@/utils/networkConnector'
-import { getMaxGasLimitForNetwork } from '@/utils/network'
+import networkConnector from '@/utils/networkConnector'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
-import { UserTicket } from '@/typescript/types'
+import { SGPItem, UserTicket } from '@/typescript/types'
 
 import Button from '@/atoms/button/Button'
 import TicketItem from '../ticketList/TicketItem'
@@ -30,6 +28,7 @@ import TicketItem from '../ticketList/TicketItem'
 import * as SC from './UserTicketTableRowStyles'
 
 import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
+import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 
 type Props = {
 	ticket: UserTicket
@@ -42,6 +41,18 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 
 	const [expiryDate, setExpiryDate] = useState(0)
 	const [isExpanded, setIsExpanded] = useState(false)
+
+	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
+
+	const sgpFeesRaw = useSGPFeesQuery(chain?.id as any, {
+		enabled: !!chain?.id
+	})
+
+	useEffect(() => {
+		if (sgpFeesRaw.isSuccess && sgpFeesRaw.data) {
+			setSgpFees(sgpFeesRaw.data)
+		}
+	}, [sgpFeesRaw.data, sgpFeesRaw.isSuccess])
 
 	const maturityDates = ticket.positions?.map((item) => {
 		return { maturityDate: item?.maturityDate, id: item.marketAddress }
@@ -87,11 +98,7 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 	// positions must be ordered like sportsMarkets or marketQuotes wont fit
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 
-	const positionWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions)
-
-	// const fixedCombinedPositions = getCombinedPositionTest(orderedPositions)
-
-	// console.log(fixedCombinedPositions)
+	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions, ticket, sgpFees)
 
 	const userTicketType = getUserTicketType(ticket)
 
@@ -220,11 +227,16 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 		>
 			<SC.ColapsePanel header={ticketHeader} key={ticket.id} onClick={() => console.log(ticket)}>
 				<Row gutter={[16, 16]}>
-					{map(orderedPositions, (item, index) => (
+					{map(positionsWithMergedCombinedPositions, (item, index) => (
 						<Col key={item?.id} xxl={12} span={24}>
 							<TicketItem
 								match={item as any}
-								oddsInfo={{ quote: Number(ticket?.marketQuotes?.[index]), isParlay: ticket.positions.length > 1 }}
+								oddsInfo={{
+									quote: item?.isCombined ? item?.odds : Number(ticket?.marketQuotes?.[index]),
+									isParlay: ticket.positions.length > 1,
+									isCombined: item?.isCombined,
+									combinedPositionsText: item?.combinedPositionsText
+								}}
 							/>
 						</Col>
 					))}

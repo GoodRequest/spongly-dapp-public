@@ -71,8 +71,7 @@ const MyWalletContent = () => {
 	const fetchStatistics = () => {
 		setIsLoading(true)
 		setTimeout(() => {
-			// fetchUserStatistic({ variables: { id: address?.toLocaleLowerCase() || '' }, context: { chainId: chain?.id } })
-			fetchUserStatistic({ variables: { id: '0xF21e489f84566Bd82DFF2783C80b5fC1A9dca608'.toLocaleLowerCase() }, context: { chainId: chain?.id } })
+			fetchUserStatistic({ variables: { id: address?.toLocaleLowerCase() || '' }, context: { chainId: chain?.id } })
 				.then(async (values) => {
 					const parlayData = values?.data?.parlayMarkets
 					const positions = values?.data?.positionBalances
@@ -159,9 +158,10 @@ const MyWalletContent = () => {
 						successRate = Number(((wonTickets.length / numberOfAttempts) * 100).toFixed(2))
 					}
 
-					const test = [...parlayTickets, ...positionTickets].filter((item) => item.id === '0xff47b3978ccece504a0f1765026f184b7092e97a')
+					// const test = [...parlayTickets, ...positionTickets].filter((item) => item.id === '0x32918c04777e8f9f08d07198030d7cb23fa5b383')
+					// const test = [...parlayTickets, ...positionTickets].filter((item) => item.id === '0xff47b3978ccece504a0f1765026f184b7092e97a')
 
-					assignOtherAttrs(test).then((ticketsWithOtherAttrs) => {
+					assignOtherAttrs([...parlayTickets, ...positionTickets]).then((ticketsWithOtherAttrs) => {
 						setUserStatistic({
 							user: { ...values?.data?.user, successRate },
 							tickets: ticketsWithOtherAttrs.sort((a, b) => (Number(a.timestamp) < Number(b.timestamp) ? 1 : -1))

@@ -3,7 +3,7 @@ import { notification } from 'antd'
 import numbro from 'numbro'
 import Router from 'next/router'
 
-import { floor, groupBy, round, toNumber } from 'lodash'
+import { floor, groupBy, round, toNumber, toPairs } from 'lodash'
 import { AnyAction, Dispatch } from 'redux'
 
 import {
@@ -58,6 +58,8 @@ import { IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '
 import { NetworkId } from './networkConnector'
 import { bigNumberFormatter, bigNumberFormmaterWithDecimals } from '@/utils/formatters/ethers'
 import { BetType } from '@/utils/tags'
+
+// eslint-disable-next-line import/no-cycle
 import { convertPositionNameToPosition } from './markets'
 
 export const roundPrice = (price: number | undefined | null, includeDollarSign?: boolean) => {
@@ -1114,7 +1116,7 @@ export const getCombinedPositionName = (markets: SportMarketInfo[], positions: a
 	return null
 }
 
-export const getCombinedPositionTest = (positions: Position[]): CombinedMarketsPositionName | null => {
+export const getCombinedPositionText = (positions: Position[]): CombinedMarketsPositionName | null => {
 	const firstPositionBetType = Number(positions[0]?.market?.betType) as BetType
 	const secondPositionBetType = Number(positions[1]?.market?.betType) as BetType
 
@@ -1140,10 +1142,83 @@ export const getCombinedPositionTest = (positions: Position[]): CombinedMarketsP
 	return null
 }
 
-export const getPositionsWithMergedCombinedPositions = (positions: Position[]) => {
-	const groupedPositions = groupBy(positions, (position) => {
-		return position.market.gameId
+export const getCombinedPositionsOdds = (positions: any[], ticket: UserTicket, sgpFees: SGPItem[] | undefined) => {
+	const firstPositionOdds = Number(formatParlayQuote(Number(ticket?.marketQuotes?.[positions[0]?.index])))
+	const secondPositionOdds = Number(formatParlayQuote(Number(ticket?.marketQuotes?.[positions[1]?.index])))
+
+	// 608267420406341580', '602011793840452355'
+
+	// console.log(ticket?.marketQuotes?.[positions[0]?.index])
+	// console.log(ticket?.marketQuotes?.[positions[1]?.index])
+
+	const combinedOdds = firstPositionOdds * secondPositionOdds
+
+	if (!sgpFees) {
+		return combinedOdds
+	}
+
+	let sgpItem: undefined | SGPItem
+
+	sgpFees.forEach((item) => {
+		if (item.tags.every((value, index) => value === Number(positions[0].market.tags[index]))) {
+			if (item.combination.includes(Number(positions[0].market.betType)) && item.combination.includes(Number(positions[1].market.betType))) {
+				sgpItem = item
+			}
+		}
 	})
 
-	console.log(groupedPositions)
+	if (!sgpItem) {
+		return combinedOdds
+	}
+
+	// TODO: totalquote wont match this quote. Same on Overtime
+
+	const afterSGPFee = Number(combinedOdds) * sgpItem.SGPFee
+
+	return floor(afterSGPFee, 2).toFixed(2)
+}
+
+export const getPositionsWithMergedCombinedPositions = (positions: Position[], ticket: UserTicket, sgpFees: SGPItem[] | undefined) => {
+	const positionsWithIndex = positions?.map((position, index) => {
+		return {
+			...position,
+			index
+		}
+	})
+
+	const groupedPositions = toPairs(
+		groupBy(positionsWithIndex, (position) => {
+			return position.market.gameId
+		})
+	)
+
+	type UserPosition = {
+		index: number
+		odds?: number
+		combinedPositionsText?: string
+		isCombined?: boolean
+	} & Position
+
+	const newPositions: UserPosition[] = []
+
+	groupedPositions.forEach((item) => {
+		const positions = item?.[1]
+		if (positions?.length === 1) {
+			newPositions.push(positions[0])
+		} else {
+			// NOTE: 2 positions => combined
+			const newPosition = {
+				...positions[0], // NOTE: its id/marketaddress ... wont be used anymore.
+				combinedPositionsText: getCombinedPositionText(positions),
+				odds: getCombinedPositionsOdds(positions, ticket, sgpFees),
+				isCombined: true,
+				market: {
+					...positions[0].market
+				}
+			}
+			newPositions.push(newPosition as any)
+		}
+	})
+
+	return newPositions
 }
