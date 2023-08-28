@@ -133,6 +133,9 @@ const useFetchTickets = () => {
 					...values[5].data.positionBalances
 				]
 
+				// console.log(allTickets)
+				const test = allTickets?.find((item) => item.id === '0x77a4982d34a07824f8a3a7264104c29cdc4fe9eb')
+
 				dispatch({
 					type: TICKET_LIST.TICKET_LIST_LOAD_DONE,
 					payload: { data: mapTicketsData(allTickets), successRateMap: getSuccessRateMap(allTickets) }

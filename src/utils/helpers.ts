@@ -1142,12 +1142,28 @@ export const getCombinedPositionText = (positions: Position[]): CombinedMarketsP
 		if (firstPositionSide === 2 && secondPositionSide === 0) return 'X&O'
 		if (firstPositionSide === 2 && secondPositionSide === 1) return 'X&U'
 	}
+	// NOTE: might be ordered differently
+	if (secondPositionBetType === BetType.WINNER && firstPositionBetType === BetType.TOTAL) {
+		if (secondPositionSide === 0 && firstPositionSide === 0) return '1&O'
+		if (secondPositionSide === 0 && firstPositionSide === 1) return '1&U'
+		if (secondPositionSide === 1 && firstPositionSide === 0) return '2&O'
+		if (secondPositionSide === 1 && firstPositionSide === 1) return '2&U'
+		if (secondPositionSide === 2 && firstPositionSide === 0) return 'X&O'
+		if (secondPositionSide === 2 && firstPositionSide === 1) return 'X&U'
+	}
 
 	if (firstPositionBetType === BetType.SPREAD && secondPositionBetType === BetType.TOTAL) {
 		if (firstPositionSide === 0 && secondPositionSide === 0) return 'H1&O'
 		if (firstPositionSide === 0 && secondPositionSide === 1) return 'H1&U'
 		if (firstPositionSide === 1 && secondPositionSide === 0) return 'H2&O'
 		if (firstPositionSide === 1 && secondPositionSide === 1) return 'H2&U'
+	}
+
+	if (secondPositionBetType === BetType.SPREAD && firstPositionBetType === BetType.TOTAL) {
+		if (secondPositionSide === 0 && firstPositionSide === 0) return 'H1&O'
+		if (secondPositionSide === 0 && firstPositionSide === 1) return 'H1&U'
+		if (secondPositionSide === 1 && firstPositionSide === 0) return 'H2&O'
+		if (secondPositionSide === 1 && firstPositionSide === 1) return 'H2&U'
 	}
 
 	return null
