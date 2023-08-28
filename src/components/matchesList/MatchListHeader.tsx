@@ -14,7 +14,7 @@ import { BET_OPTIONS, FORM, MATCHES } from '@/utils/enums'
 import { SportFilterEnum, OddsType, NO_TEAM_IMAGE_FALLBACK, NETWORK_IDS, MIN_ODD_TRESHOLD, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { BetType, DoubleChanceMarketType, SPORTS_MAP } from '@/utils/tags'
 import { getTeamImageSource } from '@/utils/images'
-import { checkTotalWinnerBetExist, getFormatDate, roundToTwoDecimals, updateUnsubmittedTicketMatches } from '@/utils/helpers'
+import { checkTotalWinnerBetExist, getFormatDate, getOddByBetType, roundToTwoDecimals, updateUnsubmittedTicketMatches } from '@/utils/helpers'
 import { formatMarketOdds, getFormattedBonus } from '@/utils/markets'
 
 // icons
@@ -213,7 +213,7 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN }) => 
 			onCancel={() => {
 				setVisibleTotalWinnerModal(false)
 			}}
-			title={t('Parlay Validation') as string}
+			title={t('Parlay Validation')}
 			centered
 		>
 			<SC.ModalDescriptionText>{t('Only one participant per event is supported.')}</SC.ModalDescriptionText>
@@ -437,6 +437,9 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN }) => 
 							!(chain?.id === NETWORK_IDS.OPTIMISM_GOERLI) && (
 								<SC.MatchItemCol span={getSpanNumber(BetType.DOUBLE_CHANCE)}>
 									<SC.Header>{t('Double chance')}</SC.Header>
+									{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd < MIN_ODD_TRESHOLD && (
+										<SC.WarningText>{t('Coming soon')}</SC.WarningText>
+									)}
 									<SC.RowItemContent>
 										<SC.RadioGroup>
 											{formattedDoubleChanceTypeMatches[DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE]?.homeOdds > MIN_ODD_TRESHOLD && (

@@ -2,7 +2,7 @@ import { IShareTags } from '@/atoms/SEOHelmet'
 import { CLOSED_TICKET_TYPE, MSG_TYPE, ORDER_DIRECTION, PositionNumber, TICKET_TYPE } from '@/utils/constants'
 import { SportMarket, ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
 import { BetType, DoubleChanceMarketType } from '@/utils/tags'
-import { WALLET_TICKETS } from '@/utils/enums'
+import { BET_OPTIONS, WALLET_TICKETS } from '@/utils/enums'
 
 export type TagInfo = {
 	id: number
@@ -51,7 +51,7 @@ export type ParlayLeaderboardItem = {
 		value: number
 	}
 }
-
+export type CombinedMarketsPositionName = '1&O' | '1&U' | 'H1&O' | 'H1&U' | 'X&O' | 'X&U' | '2&O' | '2&U' | 'H2&O' | 'H2&U' | ''
 export type ParlayLeaderboardTableItem = {
 	rank: number
 	address: string
@@ -173,6 +173,7 @@ export type UserTicket = {
 	sportMarketsFromContract?: string[]
 	ticketType: WALLET_TICKETS
 	isClaimable: boolean
+	timestamp: string
 	positions: [
 		{
 			side: string
@@ -218,5 +219,9 @@ export interface IMatch extends SportMarket {
 	doubleChanceTypeMatches?: SportMarket[]
 	spreadTypeMatch?: SportMarket
 	totalTypeMatch?: SportMarket
-	betOption?: any
+	betOption?: BET_OPTIONS
+	combinedTypeMatch?: SGPItem
+	homeBonus?: number
+	awayBonus?: number
+	drawBonus?: number
 }
