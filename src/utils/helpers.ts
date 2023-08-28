@@ -768,7 +768,7 @@ export const orderPositionsAsSportMarkets = (ticket: UserTicket | ITicket) => {
 	const orderedPositions = ticket.sportMarkets.map((item) => {
 		// def has positions if conditions above are correct.
 		// @ts-ignore
-		return ticket.positions.find((position) => position.market.gameId === item.gameId)
+		return ticket.positions.find((position) => position.market.gameId === item.gameId && item.address === position.market.address)
 	})
 
 	return orderedPositions
