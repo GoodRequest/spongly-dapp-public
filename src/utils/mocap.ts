@@ -2,6 +2,12 @@ export const presentationSliderData = [
 	{
 		text: '',
 		textColor: '#ffffff',
+		image: '/banners/Warsaw_banner.webp',
+		button: null
+	},
+	{
+		text: '',
+		textColor: '#ffffff',
 		image: '/banners/Join-discord.webp',
 		button: {
 			title: 'Join Discord',

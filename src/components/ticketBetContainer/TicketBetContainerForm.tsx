@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { ElementRef, FC, useEffect, useRef, useState } from 'react'
 import { Col, Row, Spin } from 'antd'
 import { Field, getFormValues, InjectedFormProps, reduxForm } from 'redux-form'
 import { Chain } from 'wagmi'
@@ -19,7 +19,6 @@ import MatchRow from './components/matchRow/MatchRow'
 import SummaryCol from './components/summaryCol/SummaryCol'
 
 // utils
-import { roundNumberToDecimals } from '@/utils/formatters/number'
 import { MAX_BUY_IN, MAX_TICKET_MATCHES, MAX_TOTAL_QUOTE, MIN_BUY_IN, STABLE_COIN } from '@/utils/constants'
 import { FORM } from '@/utils/enums'
 
@@ -64,6 +63,10 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	const matches = formValues?.matches ?? []
 	const hasAtLeastOneMatch = matches.length > 0
 	const { openConnectModal } = useConnectModal()
+	const listRef = useRef<ElementRef<'div'>>(null)
+
+	const [fadeTop, setFadeTop] = useState(false)
+	const [fadeBottom, setFadeBottom] = useState(true)
 
 	const allowance = Number(round(Number(formValues?.allowance), 2).toFixed(2))
 	const buyIn = Number(round(Number(formValues?.buyIn), 2).toFixed(2))
@@ -121,6 +124,17 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 					{t('Minimum buy-in is')}{' '}
 					<SC.Highlight>
 						{MIN_BUY_IN.toFixed(2)} {formValues?.selectedStablecoin}
+					</SC.Highlight>
+				</span>
+			))
+			return
+		}
+		if (buyIn > MAX_BUY_IN) {
+			setError(() => (
+				<span>
+					{t('Maximum buy-in is')}{' '}
+					<SC.Highlight>
+						{MAX_BUY_IN.toFixed(2)} {formValues?.selectedStablecoin}
 					</SC.Highlight>
 				</span>
 			))
@@ -218,14 +232,54 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 		</Row>
 	)
 
+	useEffect(() => {
+		// TODO: event interface
+		const onScroll = (event: any) => {
+			const { target } = event
+			const visibleScrollbar = target.scrollHeight > target.clientHeight
+			if (target.scrollTop === 0 || !visibleScrollbar) {
+				setFadeTop(false)
+			} else if (target.scrollTop > 0 && visibleScrollbar) {
+				setFadeTop(true)
+			}
+
+			if (target.clientHeight + target.scrollTop === target.scrollHeight || !visibleScrollbar) {
+				setFadeBottom(false)
+			} else if (target.clientHeight + target.scrollTop < target.scrollHeight && visibleScrollbar) {
+				setFadeBottom(true)
+			}
+		}
+
+		if (listRef.current !== null) {
+			listRef.current.addEventListener('scroll', onScroll)
+			return () => listRef.current?.removeEventListener('scroll', onScroll)
+		}
+		return () => {}
+	}, [listRef.current])
+
+	useEffect(() => {
+		const visibleScrollbar = listRef.current !== null && listRef.current.scrollHeight > listRef.current.clientHeight
+		if (!visibleScrollbar) {
+			setFadeBottom(false)
+			setFadeTop(false)
+		}
+		if (visibleScrollbar) {
+			setFadeBottom(true)
+		}
+	}, [formValues?.matches?.length])
+
 	return (
 		<form onSubmit={handleSubmit} style={{ display: rolledUp ? 'block' : 'none' }}>
 			{hasAtLeastOneMatch ? (
-				<SC.TicketMatchesWrapper>
-					{formValues?.matches?.map((match, key) => (
-						<MatchRow key={`matchRow-${key}-${match.gameId}`} match={match} allTicketMatches={matches} deleteHandler={handleDeleteItem} />
-					))}
-				</SC.TicketMatchesWrapper>
+				<SC.TicketMatchesFaded>
+					<SC.TicketMatchesWrapper ref={listRef}>
+						{formValues?.matches?.map((match, key) => (
+							<MatchRow key={`matchRow-${key}-${match.gameId}`} match={match} allTicketMatches={matches} deleteHandler={handleDeleteItem} />
+						))}
+					</SC.TicketMatchesWrapper>
+					<SC.Fade show={fadeTop} direction={'above'} />
+					<SC.Fade show={fadeBottom} direction={'under'} />
+				</SC.TicketMatchesFaded>
 			) : (
 				emptyTicketState
 			)}
@@ -238,18 +292,8 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 				</Col>
 				<Col span={24}>
 					<Row>
-						<Col span={12}>
-							<SC.AvailableBalanceTitle>{t('Available')}: </SC.AvailableBalanceTitle>
-							<SC.AvailableBalance value={availableBalance || 0}>
-								{availableBalance || 0} {formValues?.selectedStablecoin}
-							</SC.AvailableBalance>
-						</Col>
-						<Col span={12} style={{ textAlign: 'end' }}>
-							<SC.AvailableBalanceTitle>{t('Allowance')}: </SC.AvailableBalanceTitle>
-							<SC.AvailableBalance value={allowance || 0}>
-								{allowance || 0} {formValues?.selectedStablecoin}
-							</SC.AvailableBalance>
-						</Col>
+						<SummaryCol title={t('Available')} value={`${availableBalance || 0} ${formValues?.selectedStablecoin}`} align={'left'} />
+						<SummaryCol title={t('Allowance')} value={`${allowance || 0} ${formValues?.selectedStablecoin}`} align={'right'} />
 					</Row>
 				</Col>
 				{hasAtLeastOneMatch && (
@@ -275,22 +319,13 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 						</Col>
 						<Spin spinning={isProcessing} size='small' indicator={<LoadingOutlined spin />}>
 							<Row gutter={[0, 12]}>
+								<SummaryCol title={t('Total Quote')} value={formValues?.totalQuote || 0} />
+								<SummaryCol title={t('Total Bonus')} value={formValues?.totalBonus ? `${formValues?.totalBonus}%` : '0.00%'} align={'right'} />
+								<SummaryCol title={t('Payout')} value={`${formValues.payout} ${formValues?.selectedStablecoin}`} />
 								<SummaryCol
-									title={t('Total Quote')}
-									value={formValues?.totalQuote && formValues?.totalQuote > 0 ? formValues?.totalQuote : '-'}
-								/>
-								<SummaryCol title={t('Total Bonus')} value={formValues?.totalBonus ?? '-'} align={'right'} />
-								<SummaryCol
-									title={t('Payout')}
-									value={formValues?.payout && formValues.payout !== 0 ? `${formValues.payout} ${formValues?.selectedStablecoin}` : '-'}
-								/>
-								<SummaryCol
+									isProfit
 									title={t('Profit')}
-									value={
-										formValues?.potentionalProfit && formValues.potentionalProfit !== 0
-											? `${roundNumberToDecimals(formValues.potentionalProfit)} ${formValues?.selectedStablecoin}`
-											: '-'
-									}
+									value={`+ ${formValues.potentionalProfit} ${formValues?.selectedStablecoin}`}
 									align={'right'}
 								/>
 							</Row>

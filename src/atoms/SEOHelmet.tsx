@@ -40,7 +40,7 @@ const SEOHelmet = ({ shareTags }: ISEOHelmet) => {
 			<meta property={'og:site_name'} content={'Spongly'} />
 			<meta property={'og:title'} content={capitalizeFirstLetter(st?.title || 'Spongly')} />
 			<meta property={'og:description'} content={capitalizeFirstLetter(st?.description)} />
-			<meta property={'og:image'} content={st?.image || ''} />
+			<meta property={'og:image'} content={st?.image || '/logos/ogimage.png'} />
 			<meta property={'og:image:alt'} content={st?.imageAlt || 'Spongly'} />
 			<meta property={'og:type'} content={'website'} />
 		</Head>

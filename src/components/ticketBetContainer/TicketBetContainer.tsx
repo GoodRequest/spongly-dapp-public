@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAccount, useNetwork } from 'wagmi'
 import { useTranslation } from 'next-export-i18n'
-import { toNumber } from 'lodash'
+import { round, toNumber } from 'lodash'
 import { Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 
@@ -35,7 +35,7 @@ import {
 } from '@/utils/constants'
 import networkConnector from '@/utils/networkConnector'
 import { getParlayMarketsAMMQuoteMethod } from '@/utils/parlayAmm'
-import { floorNumberToDecimals, formatPercentage, roundNumberToDecimals } from '@/utils/formatters/number'
+import { floorNumberToDecimals, roundNumberToDecimals } from '@/utils/formatters/number'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import {
 	formatCurrency,
@@ -51,7 +51,7 @@ import {
 } from '@/utils/helpers'
 import { getSportsAMMQuoteMethod } from '@/utils/amm'
 import { fetchAmountOfTokensForXsUSDAmount } from '@/utils/skewCalculator'
-import { getBonusPropertyFromBetOption, getMatchByBetOption, getOddsPropertyFromBetOption, getPositionFromBetOption, isMarketAvailable } from '@/utils/markets'
+import { getMatchByBetOption, getOddsPropertyFromBetOption, isMarketAvailable } from '@/utils/markets'
 import { showNotifications } from '@/utils/tsxHelpers'
 
 // components
@@ -134,7 +134,7 @@ const TicketBetContainer = () => {
 
 	useEffect(() => {
 		if (!unsubmittedTickets || unsubmittedTickets?.length === 0) {
-			dispatch({ type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_INIT, payload: { data: [{ id: 1, matches: [] }] } })
+			dispatch({ type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_INIT, payload: { data: [{ id: 1, matches: [], copied: false }] } })
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
@@ -251,18 +251,6 @@ const TicketBetContainer = () => {
 		[chain?.id, activeTicketValues?.selectedStablecoin, activeTicketValues?.matches, activeTicketValues?.buyIn]
 	)
 
-	const calculatedBonusPercentageDec = useMemo(() => {
-		let totalBonusDec = 1
-		activeTicketValues?.matches?.forEach((market) => {
-			const bonusProperty = getBonusPropertyFromBetOption(market.betOption)
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const bonusDecimal = market[bonusProperty]! / 100 + 1
-			totalBonusDec *= bonusDecimal
-		})
-
-		return totalBonusDec - 1
-	}, [activeTicketValues?.matches])
-
 	const getAllowance = async () => {
 		const { signer, sUSDContract, parlayMarketsAMMContract, sportsAMMContract } = networkConnector
 		try {
@@ -287,12 +275,12 @@ const TicketBetContainer = () => {
 	}
 
 	const fetchParleyTicketData = async () => {
-		if (!activeTicketValues?.buyIn) return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0 }
+		if (!activeTicketValues?.buyIn || Number(activeTicketValues?.buyIn) < MIN_BUY_IN)
+			return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0, totalBonus: 0 }
 
 		try {
-			const parlayAmmMinimumUSDAmountQuote = parlayAmmData?.minUsdAmount ? await fetchParlayAmmQuote(parlayAmmData?.minUsdAmount) : 0
+			// const parlayAmmMinimumUSDAmountQuote = parlayAmmData?.minUsdAmount ? await fetchParlayAmmQuote(parlayAmmData?.minUsdAmount) : 0
 			const parlayAmmQuote = await fetchParlayAmmQuote(activeTicketValues?.buyIn)
-
 			if (!parlayAmmQuote?.error) {
 				const totalQuote = bigNumberFormatter(parlayAmmQuote?.totalQuote ?? 0)
 				const totalBuyAmount = bigNumberFormatter(parlayAmmQuote?.totalBuyAmount ?? 0)
@@ -300,17 +288,26 @@ const TicketBetContainer = () => {
 				const potentionalProfit =
 					parlayAmmData?.minUsdAmount && activeTicketValues?.buyIn >= parlayAmmData?.minUsdAmount
 						? formatCurrency(totalBuyAmount - toNumber(activeTicketValues.buyIn), 2)
-						: '-'
+						: null
 				const skew = bigNumberFormatter(parlayAmmQuote?.skewImpact || 0)
-				let totalBonus = '0'
+				// TODO: Do we need this logic? Remove this logic if testing bonuses will be correct
+				// const totalBonus = '0'
+				// console.log('parlayAmmMinimumUSDAmountQuote', parlayAmmMinimumUSDAmountQuote)
 				// Calculates total bonus percentage
-				if (!parlayAmmMinimumUSDAmountQuote.error) {
-					const baseQuote = bigNumberFormatter(parlayAmmMinimumUSDAmountQuote?.totalQuote ?? 0)
-					const calculatedReducedTotalBonus =
-						(calculatedBonusPercentageDec * Number(formatQuote(OddsType.DECIMAL, totalQuote))) / Number(formatQuote(OddsType.DECIMAL, baseQuote))
-					totalBonus = calculatedReducedTotalBonus > 0 ? formatPercentage(calculatedReducedTotalBonus) : formatPercentage(0)
-				}
+				// if (!parlayAmmMinimumUSDAmountQuote.error) {
+				// 	const baseQuote = bigNumberFormatter(parlayAmmMinimumUSDAmountQuote?.totalQuote ?? 0)
+				// 	const calculatedReducedTotalBonus =
+				// 		(calculatedBonusPercentageDec * Number(formatQuote(OddsType.DECIMAL, totalQuote))) / Number(formatQuote(OddsType.DECIMAL, baseQuote))
+				// 	totalBonus = calculatedReducedTotalBonus > 0 ? formatPercentage(calculatedReducedTotalBonus) : formatPercentage(0)
+				// }
 
+				const calculatedBonusPercentageDec =
+					(activeTicketValues?.matches || []).reduce((accumulator, currentItem) => {
+						const bonusDecimal = getOddByBetType(currentItem as any, false).rawBonus / 100 + 1
+						return accumulator * bonusDecimal
+					}, 1) - 1
+
+				const totalBonus = calculatedBonusPercentageDec ? round(calculatedBonusPercentageDec * 100, 2).toFixed(2) : null
 				return {
 					...activeTicketValues,
 					totalQuote: formatQuote(OddsType.DECIMAL, totalQuote),
@@ -330,8 +327,8 @@ const TicketBetContainer = () => {
 		try {
 			const { signer, sportsAMMContract } = networkConnector
 			const divider = Number(`1e${getStablecoinDecimals(chain?.id || NETWORK_IDS.OPTIMISM, getSelectedCoinIndex(activeTicketValues.selectedStablecoin))}`)
-			if (!activeTicketValues?.buyIn || activeTicketValues?.matches?.length === 0 || !signer)
-				return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0 }
+			if (!activeTicketValues?.buyIn || Number(activeTicketValues.buyIn) < MIN_BUY_IN || activeTicketValues?.matches?.length === 0 || !signer)
+				return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0, totalBonus: 0 }
 			const currentAddress = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses[0]
 			const contract = new ethers.Contract(currentAddress || '', sportsMarketContract.abi, signer)
 			const ammBalances = await contract.balancesOf(sportsAMMContract?.address)
@@ -355,26 +352,13 @@ const TicketBetContainer = () => {
 				const recalculatedTokenAmount = roundNumberToDecimals((amountOfTokens * Number(activeTicketValues?.buyIn)) / parsedQuote)
 
 				const maxAvailableTokenAmount = recalculatedTokenAmount > flooredAmountOfTokens ? flooredAmountOfTokens : recalculatedTokenAmount
-
 				const payout = roundNumberToDecimals(maxAvailableTokenAmount ?? 0)
-				const potentionalProfit = roundNumberToDecimals(maxAvailableTokenAmount ?? 0) - activeTicketValues.buyIn
+				const potentionalProfit = Number(maxAvailableTokenAmount) - Number(activeTicketValues.buyIn)
 				const skew = 0
-				// TODO: Calculates total bonus percentage
-				// const newQuote = maxAvailableTokenAmount / Number(activeTicketValues?.buyIn)
-				// const calculatedReducedBonus =
-				// 	(calculatedBonusPercentageDec * newQuote) /
-				// 	Number(
-				// 		formatQuote(
-				// 			OddsType.DECIMAL,
-				// 			getPositionOdds({
-				// 				...activeTicketValues?.matches?.[0],
-				// 				position: getBetOptionAndAddressFromMatch(activeTicketValues.matches).betTypes[0]
-				// 			})
-				// 		)
-				// 	)
-				const calculatedReducedBonus = 0
-				const totalBonus = calculatedReducedBonus ? formatPercentage(calculatedReducedBonus) : formatPercentage(0)
-				// TODO: zistit ci sa neda nahradit za novy helper
+				// TODO: calculate number from bonus?
+				const totalBonus = getOddByBetType(activeTicketValues?.matches?.[0] as any, false).rawBonus
+					? round(Number(getOddByBetType(activeTicketValues?.matches?.[0] as any, false).rawBonus), 2).toFixed(2)
+					: null
 				const getOdds = () => {
 					const selectedMatch = getMatchByBetOption(
 						activeTicketValues?.matches?.[0]?.betOption as BET_OPTIONS.WINNER_HOME,
@@ -404,7 +388,7 @@ const TicketBetContainer = () => {
 					totalBonus,
 					payout,
 					skew,
-					potentionalProfit: potentionalProfit > 0 ? potentionalProfit : 0
+					potentionalProfit: potentionalProfit > 0 ? round(potentionalProfit, 2).toFixed(2) : 0
 				}
 			}
 			return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0 }
@@ -538,8 +522,8 @@ const TicketBetContainer = () => {
 			payload: {
 				data: unsubmittedTickets
 					? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					  [...unsubmittedTickets, { id: (largestId || 1) + 1, matches: [] }]
-					: [{ id: 1, matches: [] }]
+					  [...unsubmittedTickets, { id: (largestId || 1) + 1, matches: [], copied: false }]
+					: [{ id: 1, matches: [], copied: false }]
 			}
 		})
 	}

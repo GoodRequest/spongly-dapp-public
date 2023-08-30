@@ -130,6 +130,13 @@ export const FlexColumn = styled.div`
 	flex-direction: column;
 `
 
+export const FlexRow = styled.div`
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	gap: 16px;
+`
+
 export const Sorter = styled.div<{ sorterName: any }>`
 	${TextSorter};
 	display: inline-flex;

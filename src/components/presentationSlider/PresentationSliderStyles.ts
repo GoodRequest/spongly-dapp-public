@@ -52,6 +52,8 @@ export const SlideCard = styled.div<{ image: string }>`
 	padding: 55px 64px;
 	background-color: ${({ theme }) => theme['color-base-surface-secondary']};
 	background-image: url('${({ image }) => image}');
+	background-position: center;
+	background-repeat: no-repeat;
 	background-size: cover;
 
 	@media (max-width: ${breakpoints.lg}px) {

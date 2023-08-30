@@ -23,7 +23,7 @@ import { convertPositionNameToPosition, getSymbolText } from '@/utils/markets'
 import networkConnector from '@/utils/networkConnector'
 import { TICKET_TYPE } from '@/utils/constants'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
-import { orderPositionsAsSportMarkets, updateUnsubmittedTicketMatches } from '@/utils/helpers'
+import { orderPositionsAsSportMarkets, copyTicketToUnsubmittedTickets } from '@/utils/helpers'
 
 // styles
 import * as SC from './TicketListStyles'
@@ -90,21 +90,21 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 			  [...unsubmittedTickets, { id: (largestId || 1) + 1, matches, copied: true }]
 			: [{ id: 1, matches, copied: true }]
 
-		dispatch({
+		await dispatch({
 			type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_UPDATE,
 			payload: {
 				data
 			}
 		})
 		// NOTE: set active state for new ticket item in HorizontalScroller id === data.length (actual state of tickets and set active ticket to last item)
-		dispatch({ type: ACTIVE_BET_TICKET.ACTIVE_BET_TICKET_SET, payload: { data: { id: (largestId || 1) + 1 } } })
+		await dispatch({ type: ACTIVE_BET_TICKET.ACTIVE_BET_TICKET_SET, payload: { data: { id: (largestId || 1) + 1 } } })
 	}
 
 	const handleCopyTicket = async () => {
-		updateUnsubmittedTicketMatches(activeMatches as any, unsubmittedTickets, dispatch, activeTicketValues.id, true)
+		copyTicketToUnsubmittedTickets(activeMatches as any, unsubmittedTickets, dispatch, activeTicketValues.id)
 		dispatch(change(FORM.BET_TICKET, 'matches', activeMatches))
-		// helper variable which says that ticket has matches which were copied
 		dispatch(change(FORM.BET_TICKET, 'copied', true))
+		// helper variable which says that ticket has matches which were copied
 	}
 
 	const handleCollapseChange = (e: any) => {
@@ -167,7 +167,6 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 								content={<span>{t('Create new ticket')}</span>}
 								onClick={() => {
 									setCopyModal({ visible: false, onlyCopy: false })
-									handleCopyTicket()
 									handleAddTicket()
 								}}
 							/>
@@ -227,7 +226,11 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 									</Col>
 								)}
 								<Col md={type === TICKET_TYPE.CLOSED_TICKET ? 24 : 12} span={24}>
-									{/* <Button btnStyle={'secondary'} content={<span>{t('Show ticket detail')}</span>} onClick={handleCreateTicket} /> */}
+									{/* <Button
+										btnStyle={'secondary'}
+										content={<span>{t('Show ticket detail')}</span>}
+										onClick={ handleCreateTicket }
+									/> */}
 								</Col>
 							</SC.StylesRow>
 						</SC.PanelContent>

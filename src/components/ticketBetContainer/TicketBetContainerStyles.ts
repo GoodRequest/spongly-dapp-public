@@ -5,7 +5,7 @@ import infoIconPurple from '@/assets/icons/info-circle.svg'
 import { TextMDMedium, TextXSMedium, HeadingXSMedium, TextMDRegular, TextSMMedium, HeadingSMMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 import closeIcon from '@/assets/icons/x-close.svg'
-import { AllPositionsHeader, MobileWrapper, OddButton, RadioMobileHeader } from '../matchesList/MatchesListStyles'
+import { AllPositionsHeader, MobileWrapper, RadioMobileHeader } from '../matchesList/MatchesListStyles'
 
 export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
 	position: sticky;
@@ -13,6 +13,9 @@ export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	border-radius: 12px;
 	padding: 24px;
+	@media (max-height: 930px) {
+		padding: 16px;
+	}
 	@media (max-width: ${breakpoints.semixxl}px) {
 		top: unset;
 		display: flex;
@@ -120,7 +123,6 @@ export const AvailableBalanceTitle = styled.span`
 
 export const AvailableBalance = styled.span<{ value?: number }>`
 	${TextMDMedium};
-	color: ${({ theme, value }) => (value && value > 0 ? theme['color-base-state-success-fg'] : theme['color-base-content-quaternary'])};
 `
 
 export const TicketMatchesWrapper = styled.div`
@@ -193,9 +195,7 @@ export const MatchBetOptionsWrapper = styled.div`
 	${AllPositionsHeader} {
 		display: none;
 	}
-	${OddButton} {
-		background: ${({ theme }) => theme['color-base-surface-quaternary']};
-	}
+
 	${RadioMobileHeader} {
 		${TextXSMedium};
 		justify-content: flex-start;
@@ -290,4 +290,21 @@ export const SubmittingSpinner = styled(Spin)`
 		${HeadingSMMedium};
 		color: white;
 	}
+`
+
+const fadeGradientAbove = (theme: any) => `linear-gradient(180deg, ${theme['color-base-surface-secondary']} 0%, rgba(34, 37, 49, 0) 100%)`
+const fadeGradientUnder = (theme: any) => `linear-gradient(0deg, ${theme['color-base-surface-secondary']} 20%, rgba(34, 37, 49, 0) 100%)`
+
+export const Fade = styled.div<{ show: boolean; direction: 'above' | 'under' }>`
+	position: absolute;
+	top: ${({ direction }) => (direction === 'above' ? '0px' : 'unset')};
+	bottom: ${({ direction }) => (direction === 'under' ? '0px' : 'unset')};
+	width: 100%;
+	height: 20px;
+	display: ${({ show }) => (show ? 'block' : 'none')};
+	background: ${({ theme, direction }) => (direction === 'above' ? fadeGradientAbove(theme) : fadeGradientUnder(theme))};
+`
+
+export const TicketMatchesFaded = styled.div`
+	position: relative;
 `
