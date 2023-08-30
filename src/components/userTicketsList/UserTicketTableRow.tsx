@@ -6,6 +6,11 @@ import { useEffect, useState } from 'react'
 import { map } from 'lodash'
 import { Col, Row } from 'antd'
 
+// components
+import Button from '@/atoms/button/Button'
+import TicketItem from '../ticketList/TicketItem'
+
+// utils
 import { showNotifications } from '@/utils/tsxHelpers'
 import {
 	getCanceledClaimAmount,
@@ -20,15 +25,17 @@ import {
 import { USER_TICKET_TYPE, NOTIFICATION_TYPE, MSG_TYPE, GAS_ESTIMATION_BUFFER } from '@/utils/constants'
 import networkConnector from '@/utils/networkConnector'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
+
+// types
 import { SGPItem, UserTicket } from '@/typescript/types'
 
-import Button from '@/atoms/button/Button'
-import TicketItem from '../ticketList/TicketItem'
+// hooks
+import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 
 import * as SC from './UserTicketTableRowStyles'
 
+// assets
 import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
-import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 
 type Props = {
 	ticket: UserTicket

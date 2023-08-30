@@ -1286,7 +1286,7 @@ type PositionWithIndex = {
 	index: number
 } & Position
 
-export const getCombinedPositionsOdds = (positions: PositionWithIndex[], ticket: UserTicket, sgpFees: SGPItem[] | undefined) => {
+export const getCombinedPositionsOdds = (positions: PositionWithIndex[], ticket: UserTicket | ITicket, sgpFees: SGPItem[] | undefined) => {
 	const firstPositionOdds = Number(formatParlayQuote(Number(ticket?.marketQuotes?.[positions[0]?.index])))
 	const secondPositionOdds = Number(formatParlayQuote(Number(ticket?.marketQuotes?.[positions[1]?.index])))
 
@@ -1317,7 +1317,7 @@ export const getCombinedPositionsOdds = (positions: PositionWithIndex[], ticket:
 	return floor(afterSGPFee, 2).toFixed(2)
 }
 
-export const getPositionsWithMergedCombinedPositions = (positions: Position[], ticket: UserTicket, sgpFees: SGPItem[] | undefined) => {
+export const getPositionsWithMergedCombinedPositions = (positions: Position[], ticket: UserTicket | ITicket, sgpFees: SGPItem[] | undefined) => {
 	const positionsWithIndex = positions?.map((position, index) => {
 		return {
 			...position,
