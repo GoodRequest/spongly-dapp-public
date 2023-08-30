@@ -2,9 +2,9 @@ import dayjs from 'dayjs'
 import { notification } from 'antd'
 import numbro from 'numbro'
 import Router from 'next/router'
-
 import { floor, groupBy, round, toNumber, toPairs } from 'lodash'
 import { AnyAction, Dispatch } from 'redux'
+import { IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 
 import {
 	CLOSED_TICKET_TYPE,
@@ -28,7 +28,6 @@ import {
 	PARLAY_LEADERBOARD_FIRST_PERIOD_TOP_10_REWARDS,
 	PARLAY_LEADERBOARD_OPTIMISM_REWARDS_TOP_10,
 	PARLAY_LEADERBOARD_OPTIMISM_REWARDS_TOP_20,
-	PositionNumber,
 	SGPCombinationsFromContractOrderMapping,
 	SHORT_CURRENCY_DECIMALS,
 	STABLE_COIN,
@@ -51,8 +50,6 @@ import {
 } from './enums'
 import { ParlayMarket, Position, PositionBalance, PositionType } from '@/__generated__/resolvers-types'
 
-import OptimismIcon from '@/assets/icons/optimism-icon.svg'
-import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
 import {
 	CombinedMarketsPositionName,
 	IMatch,
@@ -64,11 +61,14 @@ import {
 	SportMarketInfo,
 	UserTicket
 } from '@/typescript/types'
-import { IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 import { NetworkId } from './networkConnector'
+
 import { bigNumberFormatter, bigNumberFormmaterWithDecimals } from '@/utils/formatters/ethers'
 import { getFormattedBonus } from '@/utils/markets'
 import { BetType } from '@/utils/tags'
+
+import OptimismIcon from '@/assets/icons/optimism-icon.svg'
+import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
 
 // eslint-disable-next-line import/no-cycle
 import { convertPositionNameToPosition } from './markets'
@@ -1219,26 +1219,6 @@ export const isBellowOrEqualResolution = (currentResolution: RESOLUTIONS, resolu
 export const getCollateral = (networkId: Network, index: number) => COLLATERALS[networkId][index]
 
 export const getStablecoinDecimals = (networkId: Network, stableIndex: number) => STABLE_DECIMALS[getCollateral(networkId, stableIndex)]
-
-// TODO: probably wont use this, remove?
-export const getCombinedPositionName = (markets: SportMarketInfo[], positions: any[]): CombinedMarketsPositionName | null => {
-	if (markets[0].betType === BetType.WINNER && markets[1].betType === BetType.TOTAL) {
-		if (positions[0] === 0 && positions[1] === 0) return '1&O'
-		if (positions[0] === 0 && positions[1] === 1) return '1&U'
-		if (positions[0] === 1 && positions[1] === 0) return '2&O'
-		if (positions[0] === 1 && positions[1] === 1) return '2&U'
-		if (positions[0] === 2 && positions[1] === 0) return 'X&O'
-		if (positions[0] === 2 && positions[1] === 1) return 'X&U'
-	}
-
-	if (markets[0].betType === BetType.SPREAD && markets[1].betType === BetType.TOTAL) {
-		if (positions[0] === 0 && positions[1] === 0) return 'H1&O'
-		if (positions[0] === 0 && positions[1] === 1) return 'H1&U'
-		if (positions[0] === 1 && positions[1] === 0) return 'H2&O'
-		if (positions[0] === 1 && positions[1] === 1) return 'H2&U'
-	}
-	return null
-}
 
 export const getCombinedPositionText = (positions: Position[]): CombinedMarketsPositionName | null => {
 	const firstPositionBetType = Number(positions[0]?.market?.betType) as BetType
