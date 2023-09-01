@@ -31,7 +31,7 @@ const SEOHelmet = ({ shareTags }: ISEOHelmet) => {
 			<meta name={'viewport'} content={'width=device-width, initial-scale=1'} />
 			{/* Primary meta tags */}
 			<title>{st?.title ? `${capitalizeFirstLetter(st?.title)} | Spongly` : 'Spongly'}</title>
-			<meta name={'title'} content={st?.title ? `${capitalizeFirstLetter(st?.title)} | Spongly` : 'Spongly'} />
+			<meta name={'title'} content={st?.title ? `${capitalizeFirstLetter(st?.title)} | Spongly` : t('default-header-title')} />
 			<meta name={'description'} content={capitalizeFirstLetter(st?.description || (t('default-header-description') as string))} />
 			<meta name={'keywords'} content={st?.keywords || (t('default-header-keywords') as string)} />
 			<link rel='icon' type='image/png' sizes='32x32' href={'/favicons/favicon-32x32.png'} />
