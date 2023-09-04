@@ -158,6 +158,8 @@ export const GET_TICKETS = gql`
 			}
 			sportMarkets {
 				gameId
+				address
+				isCanceled
 			}
 		}
 		positionBalances(first: $firstSingle, skip: $skipSingle) {

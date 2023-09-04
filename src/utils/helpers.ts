@@ -329,7 +329,7 @@ export const getUserTicketType = (ticket: UserTicket) => {
 	}
 	if (finished?.length > 0) {
 		const lossMatch = finished?.filter((item) => !item?.claimable)
-		if (lossMatch) return USER_TICKET_TYPE.MISS
+		if (lossMatch?.length !== 0) return USER_TICKET_TYPE.MISS
 	}
 
 	const paused = ticket?.positions?.filter((item) => item.isPaused)
@@ -778,7 +778,7 @@ export const orderPositionsAsSportMarkets = (ticket: UserTicket | ITicket) => {
 	const orderedPositions = ticket.sportMarkets.map((item) => {
 		// def has positions if conditions above are correct.
 		// @ts-ignore
-		return ticket.positions.find((position) => position.market.gameId === item.gameId)
+		return ticket.positions.find((position) => position.market.gameId === item.gameId && item.address === position.market.address)
 	})
 
 	return orderedPositions

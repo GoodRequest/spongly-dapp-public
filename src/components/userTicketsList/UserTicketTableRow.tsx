@@ -17,8 +17,7 @@ import {
 	roundPrice
 } from '@/utils/helpers'
 import { USER_TICKET_TYPE, NOTIFICATION_TYPE, MSG_TYPE, GAS_ESTIMATION_BUFFER } from '@/utils/constants'
-import networkConnector, { NetworkId } from '@/utils/networkConnector'
-import { getMaxGasLimitForNetwork } from '@/utils/network'
+import networkConnector from '@/utils/networkConnector'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
 import { UserTicket } from '@/typescript/types'
 
