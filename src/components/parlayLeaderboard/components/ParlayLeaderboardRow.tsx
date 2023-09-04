@@ -1,7 +1,7 @@
 import { Col, Row } from 'antd'
 
-import { formatAddress } from '@/utils/helpers'
 import { ParlayLeaderboardItem } from '@/typescript/types'
+import { formatAddress } from '@/utils/formatters/string'
 
 import * as PSC from '../ParlayLeaderboardStyles'
 import * as SC from './ParlayLeaderboardRowStyles'

@@ -5,13 +5,14 @@ import { useAccount, useNetwork, useProvider, useSigner, useSwitchNetwork } from
 import { useEffect, useState } from 'react'
 
 // utils
-import { formatAddress } from '@/utils/helpers'
 import { MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE } from '@/utils/constants'
 import { getWalletImage } from '@/utils/images'
 import { hasEthereumInjected, NETWORK_SWITCHER_SUPPORTED_NETWORKS, SUPPORTED_NETWORKS_DESCRIPTIONS } from '@/utils/network'
 import networkConnector, { NetworkId } from '@/utils/networkConnector'
 import { showNotifications } from '@/utils/tsxHelpers'
+import { formatAddress } from '@/utils/formatters/string'
 
+// components
 import Modal from '@/components/modal/Modal'
 
 // hooks
@@ -21,7 +22,7 @@ import * as SC from './ConnectButtonStyles'
 import * as SCS from '@/components/ticketList/TicketListStyles'
 import * as SCG from '@/styles/GlobalStyles'
 
-// components, assets
+// assets
 import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
 
 const ConnectButton = () => {

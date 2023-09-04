@@ -16,7 +16,7 @@ import {
 	rabbyWallet
 } from '@rainbow-me/rainbowkit/wallets'
 import { configureChains, createClient, WagmiConfig } from 'wagmi'
-import { optimism, goerli, arbitrum, optimismGoerli } from 'wagmi/chains'
+import { optimism, arbitrum, optimismGoerli } from 'wagmi/chains'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
 import { Provider } from 'react-redux'

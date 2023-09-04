@@ -3,16 +3,16 @@ import { Row } from 'antd'
 import { useAccount, useNetwork } from 'wagmi'
 
 import StatisticCard from '@/atoms/statisticCard/StatisticCard'
-import { roundPrice } from '@/utils/helpers'
 import { useIsMounted } from '@/hooks/useIsMounted'
 import { User } from '@/typescript/types'
+import { getWalletImage } from '@/utils/images'
+import { roundPrice } from '@/utils/formatters/currency'
 
 import * as SC from './TicketsStatisticRowStyles'
 
 import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
 import SuccessIcon from '@/assets/icons/success-rate-statistics-icon.png'
 import ProfitsTicketsIcon from '@/assets/icons/profits-tickets-statistics-icon.png'
-import { getWalletImage } from '@/utils/images'
 
 type Props = {
 	isLoading: boolean

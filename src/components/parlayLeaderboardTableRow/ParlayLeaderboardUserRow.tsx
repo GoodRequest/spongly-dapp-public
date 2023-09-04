@@ -2,7 +2,7 @@ import { Col, Row } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 
 import { ParlayLeaderboardTableItem } from '@/typescript/types'
-import { formatAddress } from '@/utils/helpers'
+import { formatAddress } from '@/utils/formatters/string'
 
 import * as SC from './ParlayLeaderboardUserRowStyles'
 

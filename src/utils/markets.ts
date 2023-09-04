@@ -12,9 +12,7 @@ import { TicketPosition } from '@/redux/betTickets/betTicketTypes'
 
 // helpers
 import { bigNumberFormatter, bigNumberFormmaterWithDecimals } from './formatters/ethers'
-
-// eslint-disable-next-line import/no-cycle
-import { formatQuote } from './helpers'
+import { formatQuote } from './formatters/quote'
 
 export const isMarketAvailable = (market: SportMarket) => {
 	return !!(

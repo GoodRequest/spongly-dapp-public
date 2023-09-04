@@ -1,5 +1,5 @@
 import { NetworkId } from './networkConnector'
-import { MAX_GAS_LIMIT, NETWORK_IDS, Network, STABLE_DECIMALS } from '@/utils/constants'
+import { NETWORK_IDS, Network, STABLE_DECIMALS } from '@/utils/constants'
 import OptimismIcon from '@/assets/icons/optimism-icon.svg'
 
 type OptimismNetwork = {
@@ -65,11 +65,6 @@ export const SUPPORTED_NETWORKS_DESCRIPTIONS: Record<number, OptimismNetwork> = 
 export const getDefaultDecimalsForNetwork = (networkId: NetworkId) => {
 	if (networkId === NETWORK_IDS.ARBITRUM) return STABLE_DECIMALS.USDC
 	return STABLE_DECIMALS.sUSD
-}
-
-export const getMaxGasLimitForNetwork = (networkId: Network) => {
-	if (networkId === NETWORK_IDS.ARBITRUM) return undefined
-	return MAX_GAS_LIMIT
 }
 
 export const hasEthereumInjected = () => !!window.ethereum

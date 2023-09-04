@@ -5,7 +5,8 @@ import { useTranslation } from 'next-export-i18n'
 // utils
 import { MIN_ODD_TRESHOLD, NETWORK_IDS, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { BET_OPTIONS } from '@/utils/enums'
-import { getHandicapValue, getOddByBetType, roundToTwoDecimals } from '@/utils/helpers'
+import { getHandicapValue, getOddByBetType } from '@/utils/helpers'
+import { roundToTwoDecimals } from '@/utils/formatters/number'
 
 // redux
 import { TicketPosition } from '@/redux/betTickets/betTicketTypes'

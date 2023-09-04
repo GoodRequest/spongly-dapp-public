@@ -1,22 +1,18 @@
 import dayjs from 'dayjs'
 import { notification } from 'antd'
-import numbro from 'numbro'
 import Router from 'next/router'
-import { floor, groupBy, round, toNumber, toPairs } from 'lodash'
+import { floor, groupBy, toNumber, toPairs } from 'lodash'
 import { AnyAction, Dispatch } from 'redux'
 import { IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 
 import {
 	CLOSED_TICKET_TYPE,
 	COLLATERALS,
-	DEFAULT_CURRENCY_DECIMALS,
 	ErrorNotificationTypes,
 	ETHERSCAN_TX_URL_ARBITRUM,
 	ETHERSCAN_TX_URL_OPTIMISM,
 	ETHERSCAN_TX_URL_OPTIMISM_GOERLI,
-	LONG_CURRENCY_DECIMALS,
 	MATCH_STATUS,
-	MAX_GAS_LIMIT,
 	MSG_TYPE,
 	Network,
 	NETWORK_IDS,
@@ -29,7 +25,6 @@ import {
 	PARLAY_LEADERBOARD_OPTIMISM_REWARDS_TOP_10,
 	PARLAY_LEADERBOARD_OPTIMISM_REWARDS_TOP_20,
 	SGPCombinationsFromContractOrderMapping,
-	SHORT_CURRENCY_DECIMALS,
 	STABLE_COIN,
 	STABLE_DECIMALS,
 	START_OF_BIWEEKLY_PERIOD,
@@ -37,17 +32,7 @@ import {
 	TOTAL_WINNER_TAGS,
 	USER_TICKET_TYPE
 } from './constants'
-import {
-	BET_OPTIONS,
-	COMBINED_BET_OPTIONS,
-	ContractSGPOrder,
-	DoubleChanceMarketType,
-	LIST_TYPE,
-	MARKET_PROPERTY,
-	MATCHES,
-	RESOLUTIONS,
-	WALLET_TICKETS
-} from './enums'
+import { BET_OPTIONS, COMBINED_BET_OPTIONS, ContractSGPOrder, DoubleChanceMarketType, LIST_TYPE, MARKET_PROPERTY, RESOLUTIONS, WALLET_TICKETS } from './enums'
 import { ParlayMarket, Position, PositionBalance, PositionType } from '@/__generated__/resolvers-types'
 
 import {
@@ -61,39 +46,16 @@ import {
 	SportMarketInfo,
 	UserTicket
 } from '@/typescript/types'
-import { NetworkId } from './networkConnector'
 
 import { bigNumberFormatter, bigNumberFormmaterWithDecimals } from '@/utils/formatters/ethers'
-import { getFormattedBonus } from '@/utils/markets'
+import { getFormattedBonus, convertPositionNameToPosition } from '@/utils/markets'
 import { BetType } from '@/utils/tags'
 
 import OptimismIcon from '@/assets/icons/optimism-icon.svg'
 import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
 
-// eslint-disable-next-line import/no-cycle
-import { convertPositionNameToPosition } from './markets'
-
-export const roundPrice = (price: number | undefined | null, includeDollarSign?: boolean) => {
-	if (!price) {
-		return 0
-	}
-	// TODO: OPTIMISM_DIVISOR is only for Optimism add helper getStablecoinDecimals() task: CH-315
-	const roundedPrice = round(price / OPTIMISM_DIVISOR, 2).toFixed(2)
-	if (!includeDollarSign) return roundedPrice
-	return `${roundedPrice} $`
-}
-
-export const roundETH = (value: string) => {
-	return floor(Number(value), 2).toFixed(2)
-}
-
-export const formatDateTime = (dateTime: number) => {
-	if (!dateTime) {
-		return '-'
-	}
-
-	return dayjs.unix(dateTime)?.format('MMM DD,YY|HH:mm')
-}
+import { formatParlayQuote, formatQuote, formattedCombinedTypeMatch } from './formatters/quote'
+import { roundToTwoDecimals } from './formatters/number'
 
 export const handleErrorMessage = (errorType: ErrorNotificationTypes, t: any) => {
 	let message
@@ -116,49 +78,6 @@ export const handleErrorMessage = (errorType: ErrorNotificationTypes, t: any) =>
 	notification.error({
 		message
 	})
-}
-
-export const formatCurrency = (value: string | number, decimals: number, trimDecimals = false) => {
-	if (!value || !Number(value)) {
-		return 0
-	}
-
-	return numbro(value).format({
-		thousandSeparated: true,
-		trimMantissa: trimDecimals,
-		mantissa: decimals
-	})
-}
-
-const getPrecision = (amount: string | number) => {
-	if (toNumber(amount) >= 1) {
-		return DEFAULT_CURRENCY_DECIMALS
-	}
-	if (toNumber(amount) > 0.01) {
-		return SHORT_CURRENCY_DECIMALS
-	}
-	return LONG_CURRENCY_DECIMALS
-}
-
-export const formatCurrencyWithSign = (sign: string | null | undefined, value: string | number | null | undefined, decimals?: number) => {
-	if (!value) return '-'
-	return `${sign} ${formatCurrency(value, decimals !== undefined ? decimals : getPrecision(value))}`
-}
-
-export const formatAddress = (address: string | undefined) => {
-	if (!address) return ''
-
-	return `${address?.slice(0, 3)}...${address?.slice(-3)}`
-}
-
-export const formatNetworkName = (networkName: string | undefined) => {
-	if (!networkName) return ''
-
-	if (networkName?.includes(' ')) {
-		return networkName.split(' ')?.at(0)
-	}
-
-	return networkName
 }
 
 export const getCurrentBiweeklyPeriod = () => {
@@ -386,12 +305,6 @@ export const isWindowReady = () => {
 	return typeof window !== 'undefined'
 }
 
-export const getFormatDate = (type: string, date: any, t: any) => {
-	if (type === MATCHES.ONGOING) return t('Playing right now')
-	if (type === MATCHES.PAUSED) return `${t('Paused until')} ${dayjs(toNumber(date) * 1000).format('MMM DD | HH:mm')}`
-	return dayjs(toNumber(date) * 1000).format('MMM DD | HH:mm')
-}
-
 export const getReward = (index: number | undefined, chainId: number | undefined) => {
 	if (!index && index !== 0) {
 		return undefined
@@ -413,7 +326,6 @@ export const getReward = (index: number | undefined, chainId: number | undefined
 
 	return { value: PARLAY_LEADERBOARD_OPTIMISM_REWARDS_TOP_20[index], iconUrl: OptimismIcon }
 }
-export const formatDateWithTime = (date: Date | number) => dayjs(date, 'dd MMM HH:mm')
 
 export const getParlayItemStatus = (position: Position, isPlayedNow: boolean, t: any) => {
 	const date = dayjs(toNumber(position.market.maturityDate) * 1000).format('| MMM DD')
@@ -428,28 +340,6 @@ export const getParlayItemStatus = (position: Position, isPlayedNow: boolean, t:
 		return { status: MATCH_STATUS.MISS, text: t('Miss {{ date }}', { date }) }
 	}
 	return { status: MATCH_STATUS.OPEN, text: dayjs(toNumber(position.market.maturityDate) * 1000).format('MMM DD | HH:mm') }
-}
-
-export const formatQuote = (oddsType: OddsType, quote: number | undefined | null | string): string => {
-	if (!quote) {
-		return '0'
-	}
-
-	switch (oddsType) {
-		case OddsType.DECIMAL:
-			return `${formatCurrency(1 / Number(quote), 2)}`
-		case OddsType.AMERICAN:
-			// eslint-disable-next-line no-case-declarations
-			const decimal = 1 / Number(quote)
-			if (decimal >= 2) {
-				return `+${formatCurrency((decimal - 1) * 100, 0)}`
-			}
-			return `-${formatCurrency(100 / (decimal - 1), 0)}`
-
-		case OddsType.AMM:
-		default:
-			return `${formatCurrency(quote, quote < 0.1 ? 4 : 2)}`
-	}
 }
 
 export const getOddsBySide = (ticket: ITicket) => {
@@ -474,10 +364,6 @@ export const getTicketTotalQuote = (ticket: ITicket, totalQuote?: any) => {
 	}
 
 	return 0
-}
-
-export const formatAccount = (account: string) => {
-	return account.slice(0, 3).concat('...').concat(account.slice(-3))
 }
 
 export const getPositions = (data: ParlayMarket | PositionBalance): Array<Position> => {
@@ -593,7 +479,6 @@ export const getEtherScanTxHash = (chainId: number, txHash: string) => {
 			return undefined
 	}
 }
-export const hasBonus = (bonus: number | undefined) => Number(bonus) > 0
 
 export const updateUnsubmittedTicketMatches = (
 	matches: TicketPosition[] | undefined,
@@ -752,11 +637,6 @@ export const getBetOptionAndAddressFromMatch = (matches: TicketPosition[] | unde
 	return result
 }
 
-export const getMaxGasLimitForNetwork = (networkId: NetworkId) => {
-	if (networkId === NETWORK_IDS.ARBITRUM) return undefined
-	return MAX_GAS_LIMIT
-}
-
 export const isClaimableUntil = (date: number) => {
 	let dateDiff = date
 	const days = Math.floor(date / 1440)
@@ -797,10 +677,6 @@ export const orderPositionsAsSportMarkets = (ticket: UserTicket | ITicket) => {
 	return orderedPositions
 }
 
-export const roundToTwoDecimals = (number: number) => {
-	return parseFloat((number / 100).toString())
-}
-
 export const getHandicapValue = (number: number, type: BET_OPTIONS.HANDICAP_AWAY | BET_OPTIONS.HANDICAP_HOME) => {
 	if (type === BET_OPTIONS.HANDICAP_HOME) {
 		return roundToTwoDecimals(number)
@@ -819,34 +695,6 @@ export const checkTotalWinnerBetExist = (activeTicketValues: IUnsubmittedBetTick
 		return true
 	}
 	return false
-}
-
-export const formatParlayQuote = (quote: number | undefined) => {
-	if (!quote) return ''
-	// AMM odds.
-	const ammOdds = quote / OPTIMISM_DIVISOR
-
-	return formatQuote(OddsType.DECIMAL, ammOdds)
-}
-
-export const formatPositionOdds = (match: Position) => {
-	switch (match.side) {
-		case PositionType.Away: {
-			const ammOdds = Number(match.market.awayOdds) / OPTIMISM_DIVISOR
-			return formatQuote(OddsType.DECIMAL, Number(ammOdds))
-		}
-		case PositionType.Draw: {
-			const ammOdds = Number(match.market.drawOdds) / OPTIMISM_DIVISOR
-			return formatQuote(OddsType.DECIMAL, ammOdds)
-		}
-
-		case PositionType.Home: {
-			const ammOdds = Number(match.market.homeOdds) / OPTIMISM_DIVISOR
-			return formatQuote(OddsType.DECIMAL, ammOdds)
-		}
-		default:
-			return 0
-	}
 }
 
 export const getCanceledClaimAmount = (ticket: UserTicket) => {
@@ -908,42 +756,6 @@ export const convertSGPContractDataToSGPItemType = (sgpContractData: SGPContract
 	})
 
 	return finalSGPItems
-}
-
-export const formatMatchCombinedPositionsQuote = (position1: number, position2: number, SGPFee: number) => {
-	const odd = formatQuote(OddsType.DECIMAL, position1 * position2)
-	const oddWithFee = floor(Number(odd) * SGPFee, 2).toFixed(2)
-	return oddWithFee
-}
-
-export const formattedCombinedTypeMatch = (match: IMatch, customBetOption?: BET_OPTIONS) => {
-	const betOption = customBetOption || match.betOption
-	if (betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER) {
-		return formatMatchCombinedPositionsQuote(
-			Number(match.winnerTypeMatch?.homeOdds),
-			Number(match.totalTypeMatch?.homeOdds),
-			Number(match.combinedTypeMatch?.SGPFee)
-		)
-	}
-	if (betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER) {
-		return formatMatchCombinedPositionsQuote(
-			Number(match.winnerTypeMatch?.homeOdds),
-			Number(match.totalTypeMatch?.awayOdds),
-			Number(match.combinedTypeMatch?.SGPFee)
-		)
-	}
-	if (betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER) {
-		return formatMatchCombinedPositionsQuote(
-			Number(match.winnerTypeMatch?.awayOdds),
-			Number(match.totalTypeMatch?.homeOdds),
-			Number(match.combinedTypeMatch?.SGPFee)
-		)
-	}
-	return formatMatchCombinedPositionsQuote(
-		Number(match.winnerTypeMatch?.awayOdds),
-		Number(match.totalTypeMatch?.awayOdds),
-		Number(match.combinedTypeMatch?.SGPFee)
-	)
 }
 
 export const getSelectedCoinIndex = (selectedCoin?: string): number => {

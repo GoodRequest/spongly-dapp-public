@@ -3,19 +3,21 @@ import { useTranslation } from 'next-export-i18n'
 import { useSelector } from 'react-redux'
 import { Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
-
 import { round } from 'lodash'
 import { RootState } from '@/redux/rootReducer'
 
-// components
-import { ITicketContent } from '@/content/ticketsContent/TicketsContent'
-import * as SC from '@/components/ticketList/TicketListStyles'
-import { TicketIcon } from '@/components/ticketList/TicketListStyles'
-
 // utils
-import { formatAccount, getTicketTypeName } from '@/utils/helpers'
+import { getTicketTypeName } from '@/utils/helpers'
 import { TICKET_TYPE } from '@/utils/constants'
 import { getWalletImage } from '@/utils/images'
+import { formatAccount } from '@/utils/formatters/string'
+
+// components
+import { ITicketContent } from '@/content/ticketsContent/TicketsContent'
+
+// styles
+import * as SC from '@/components/ticketList/TicketListStyles'
+import { TicketIcon } from '@/components/ticketList/TicketListStyles'
 
 const TicketListItemHeader: FC<ITicketContent> = ({ ticket }) => {
 	const { t } = useTranslation()

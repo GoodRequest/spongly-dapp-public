@@ -19,12 +19,12 @@ import {
 	getUserTicketType,
 	getUserTicketTypeName,
 	isClaimableUntil,
-	orderPositionsAsSportMarkets,
-	roundPrice
+	orderPositionsAsSportMarkets
 } from '@/utils/helpers'
 import { USER_TICKET_TYPE, NOTIFICATION_TYPE, MSG_TYPE, GAS_ESTIMATION_BUFFER } from '@/utils/constants'
 import networkConnector from '@/utils/networkConnector'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
+import { roundPrice } from '@/utils/formatters/currency'
 
 // types
 import { SGPItem, UserTicket } from '@/typescript/types'

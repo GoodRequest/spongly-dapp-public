@@ -4,22 +4,25 @@ import { Col } from 'antd'
 import { useRouter } from 'next-translate-routes'
 import { useNetwork } from 'wagmi'
 
+// components
 import HeaderLogo from '@/components/headerLogo/HeaderLogo'
 import ConnectButton from '@/components/connectButton/ConnectButton'
-import { PAGES, RESOLUTIONS } from '@/utils/enums'
-import { useMedia } from '@/hooks/useMedia'
-
-import * as SC from './HeaderStyles'
 import MobileMenu from '@/components/mobileMenu/MobileMenu'
+
+// utils
+import { PAGES } from '@/utils/enums'
+
+// hooks
 import { useIsMounted } from '@/hooks/useIsMounted'
-import { isAboveOrEqualResolution } from '@/utils/helpers'
+
+// styled
+import * as SC from './HeaderStyles'
 
 const Header = () => {
 	const [selected, setSelected] = useState(PAGES.DASHBOARD)
 	const { t } = useTranslation()
 	const router = useRouter()
 	const { chain } = useNetwork()
-	const size = useMedia()
 	const isMounted = useIsMounted()
 
 	const handleSelect = (e: any) => {
@@ -35,7 +38,7 @@ const Header = () => {
 				{isMounted && chain?.id && <SC.MenuItem key={PAGES.MY_WALLET}>{t('My wallet')}</SC.MenuItem>}
 			</>
 		),
-		[t, isMounted, chain?.id, size, router.pathname]
+		[t, isMounted, chain?.id]
 	)
 
 	const chooseSelected = () => {

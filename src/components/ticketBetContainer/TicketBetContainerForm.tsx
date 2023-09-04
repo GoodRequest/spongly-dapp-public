@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import { debounce, round, toNumber } from 'lodash'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { LoadingOutlined } from '@ant-design/icons'
+import { RootState } from '@/redux/rootReducer'
 
 // atoms
 import InputField from '@/atoms/form/input/InputField'
@@ -21,6 +22,7 @@ import SummaryCol from './components/summaryCol/SummaryCol'
 // utils
 import { MAX_BUY_IN, MAX_TICKET_MATCHES, MAX_TOTAL_QUOTE, MIN_BUY_IN, STABLE_COIN } from '@/utils/constants'
 import { FORM } from '@/utils/enums'
+import handleOnchangeForm from './helpers/changeBetContainer'
 
 // types
 import { IUnsubmittedBetTicket, TicketPosition } from '@/redux/betTickets/betTicketTypes'
@@ -35,8 +37,6 @@ import DAIIcon from '@/assets/icons/dai-icon.svg'
 import USDCIcon from '@/assets/icons/usdc-icon.svg'
 import USDTIcon from '@/assets/icons/usdt-icon.svg'
 import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
-import { RootState } from '@/redux/rootReducer'
-import handleOnchangeForm from './helpers/changeBetContainer'
 
 interface IComponentProps {
 	handleDeleteItem: (position: TicketPosition) => void

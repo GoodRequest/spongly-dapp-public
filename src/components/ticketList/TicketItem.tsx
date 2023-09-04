@@ -6,13 +6,14 @@ import { LoadingOutlined } from '@ant-design/icons'
 
 // utils
 import { getTeamImageSource } from '@/utils/images'
-import { formatParlayQuote, formatPositionOdds, getParlayItemStatus } from '@/utils/helpers'
+import { getParlayItemStatus } from '@/utils/helpers'
 import { SPORTS_MAP } from '@/utils/tags'
 import { convertPositionNameToPosition, getMatchOddsContract, getSymbolText } from '@/utils/markets'
 import networkConnector from '@/utils/networkConnector'
 import { Position } from '@/__generated__/resolvers-types'
 import { NO_TEAM_IMAGE_FALLBACK, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { RESULT_TYPE } from '@/utils/enums'
+import { formatParlayQuote, formatPositionOdds } from '@/utils/formatters/quote'
 
 // styles
 import * as SC from './TicketItemStyles'
