@@ -1,8 +1,10 @@
-import { IShareTags } from '@/atoms/SEOHelmet'
+import { SportMarket, ParlayMarket, PositionBalance, Position } from '@/__generated__/resolvers-types'
+
 import { CLOSED_TICKET_TYPE, MSG_TYPE, ORDER_DIRECTION, PositionNumber, TICKET_TYPE } from '@/utils/constants'
-import { SportMarket, ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
 import { BetType, DoubleChanceMarketType } from '@/utils/tags'
 import { BET_OPTIONS, WALLET_TICKETS } from '@/utils/enums'
+
+import { IShareTags } from '@/atoms/SEOHelmet'
 
 export type TagInfo = {
 	id: number
@@ -220,6 +222,12 @@ export interface IBonus {
 	drawBonus?: number
 }
 
+export type PositionWithCombinedAttrs = {
+	index: number
+	odds?: number
+	combinedPositionsText?: string
+	isCombined?: boolean
+} & Position
 export interface IMatch extends SportMarket, IBonus {
 	winnerTypeMatch?: SportMarket & IBonus
 	doubleChanceTypeMatches?: (SportMarket & IBonus)[]

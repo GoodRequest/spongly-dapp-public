@@ -20,3 +20,7 @@ export const floorNumberToDecimals = (value: number, decimals = DEFAULT_CURRENCY
 export const roundNumberToDecimals = (value: number, decimals = 2) => {
 	return +`${Math.round(Number(`${value}e+${decimals}`))}e-${decimals}`
 }
+
+export const roundToTwoDecimals = (number: number) => {
+	return parseFloat((number / 100).toString())
+}

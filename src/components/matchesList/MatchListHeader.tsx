@@ -8,12 +8,15 @@ import { useNetwork } from 'wagmi'
 import Modal from '../modal/Modal'
 import OddButton from '@/components/oddButton/OddButton'
 import OddValue from '@/components/oddButton/OddValue'
+
 // utils
 import { BET_OPTIONS, MATCHES } from '@/utils/enums'
 import { MIN_ODD_TRESHOLD, NETWORK_IDS, NO_TEAM_IMAGE_FALLBACK, SportFilterEnum, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { BetType, SPORTS_MAP } from '@/utils/tags'
 import { getTeamImageSource } from '@/utils/images'
-import { getFormatDate, getOddByBetType, roundToTwoDecimals } from '@/utils/helpers'
+import { getOddByBetType } from '@/utils/helpers'
+import { roundToTwoDecimals } from '@/utils/formatters/number'
+import { getFormatDate } from '@/utils/formatters/string'
 
 // icons
 import PauseIcon from '@/assets/icons/pause.svg'

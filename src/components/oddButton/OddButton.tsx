@@ -1,14 +1,19 @@
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
+
+// redux
 import { useDispatch, useSelector } from 'react-redux'
 import { getFormValues } from 'redux-form'
-
-import { BET_OPTIONS, FORM } from '@/utils/enums'
-import { updateActiveTicketMatches } from '@/redux/betTickets/betTicketsActions'
-import { checkTotalWinnerBetExist, getOddByBetType, updateUnsubmittedTicketMatches } from '@/utils/helpers'
-import * as SC from '@/components/oddButton/OddButtonStyles'
-import { IUnsubmittedBetTicket, TicketPosition } from '@/redux/betTickets/betTicketTypes'
 import { RootState } from '@/redux/rootReducer'
+import { updateActiveTicketMatches } from '@/redux/betTickets/betTicketsActions'
+import { IUnsubmittedBetTicket, TicketPosition } from '@/redux/betTickets/betTicketTypes'
+
+// utils
+import { BET_OPTIONS, FORM } from '@/utils/enums'
+import { checkTotalWinnerBetExist, getOddByBetType, updateUnsubmittedTicketMatches } from '@/utils/helpers'
 import { MIN_ODD_TRESHOLD } from '@/utils/constants'
+
+// styled
+import * as SC from '@/components/oddButton/OddButtonStyles'
 
 type Props = {
 	betOption: BET_OPTIONS

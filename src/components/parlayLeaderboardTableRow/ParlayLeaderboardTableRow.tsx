@@ -2,13 +2,14 @@ import { Col, Row } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 
 import { ParlayLeaderboardTableItem } from '@/typescript/types'
-import { formatAddress, isBellowOrEqualResolution } from '@/utils/helpers'
+import { isBellowOrEqualResolution } from '@/utils/helpers'
+import { useMedia } from '@/hooks/useMedia'
+import { RESOLUTIONS } from '@/utils/enums'
+import { formatAddress } from '@/utils/formatters/string'
 
 import * as SC from './ParlayLeaderboardTableRowStyles'
 
 import BadgeIcon from '@/assets/icons/medal-star.svg'
-import { useMedia } from '@/hooks/useMedia'
-import { RESOLUTIONS } from '@/utils/enums'
 
 const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, reward, isLoading = false }: ParlayLeaderboardTableItem) => {
 	const { t } = useTranslation()

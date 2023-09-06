@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { change, getFormValues } from 'redux-form'
 
 // components
+import { useNetwork } from 'wagmi'
 import TicketListItemHeader from '@/components/ticketList/TicketListItemHeader'
 import { ITicketContent } from '@/content/ticketsContent/TicketsContent'
 import Button from '@/atoms/button/Button'
@@ -23,7 +24,13 @@ import { convertPositionNameToPosition, getSymbolText } from '@/utils/markets'
 import networkConnector from '@/utils/networkConnector'
 import { TICKET_TYPE } from '@/utils/constants'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
-import { orderPositionsAsSportMarkets, copyTicketToUnsubmittedTickets } from '@/utils/helpers'
+import { orderPositionsAsSportMarkets, copyTicketToUnsubmittedTickets, getPositionsWithMergedCombinedPositions } from '@/utils/helpers'
+
+// types
+import { SGPItem } from '@/typescript/types'
+
+// hooks
+import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 
 // styles
 import * as SC from './TicketListStyles'
@@ -39,6 +46,8 @@ interface ITicketListItem extends ITicketContent {
 const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, activeKeysList, setActiveKeysList }) => {
 	const dispatch = useDispatch()
 	const { t } = useTranslation()
+	const { chain } = useNetwork()
+
 	const [copyModal, setCopyModal] = useState<{ visible: boolean; onlyCopy: boolean }>({ visible: false, onlyCopy: false })
 	const { sportsAMMContract } = networkConnector
 	const unsubmittedTickets = useSelector((state: RootState) => state.betTickets.unsubmittedBetTickets.data)
@@ -47,7 +56,21 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
 	const [activeMatches, setActiveMatches] = useState<any[]>([])
 
+	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
+
+	const sgpFeesRaw = useSGPFeesQuery(chain?.id as any, {
+		enabled: !!chain?.id
+	})
+
+	useEffect(() => {
+		if (sgpFeesRaw.isSuccess && sgpFeesRaw.data) {
+			setSgpFees(sgpFeesRaw.data)
+		}
+	}, [sgpFeesRaw.data, sgpFeesRaw.isSuccess])
+
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
+
+	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions, ticket, sgpFees)
 
 	const formatMatchesToTicket = async () => {
 		return Promise.all(
@@ -185,11 +208,16 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 					{!loading && (
 						<SC.PanelContent>
 							<Row gutter={[16, 16]}>
-								{map(orderedPositions, (item, index) => (
+								{map(positionsWithMergedCombinedPositions, (item, index) => (
 									<Col key={item.id} span={24} lg={12}>
 										<TicketItem
 											match={item}
-											oddsInfo={{ quote: Number(ticket?.marketQuotes?.[index]), isParlay: orderedPositions.length > 1 }}
+											oddsInfo={{
+												quote: item?.isCombined ? item?.odds : Number(ticket?.marketQuotes?.[index]),
+												isParlay: orderedPositions.length > 1,
+												isCombined: item?.isCombined,
+												combinedPositionsText: item?.combinedPositionsText
+											}}
 										/>
 									</Col>
 								))}

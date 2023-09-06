@@ -6,13 +6,14 @@ import { LoadingOutlined } from '@ant-design/icons'
 
 // utils
 import { getTeamImageSource } from '@/utils/images'
-import { formatParlayQuote, formatPositionOdds, getParlayItemStatus } from '@/utils/helpers'
+import { getParlayItemStatus } from '@/utils/helpers'
 import { SPORTS_MAP } from '@/utils/tags'
 import { convertPositionNameToPosition, getMatchOddsContract, getSymbolText } from '@/utils/markets'
 import networkConnector from '@/utils/networkConnector'
 import { Position } from '@/__generated__/resolvers-types'
 import { NO_TEAM_IMAGE_FALLBACK, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { RESULT_TYPE } from '@/utils/enums'
+import { formatParlayQuote, formatPositionOdds } from '@/utils/formatters/quote'
 
 // styles
 import * as SC from './TicketItemStyles'
@@ -24,6 +25,8 @@ type Props = {
 	oddsInfo: {
 		quote?: number
 		isParlay: boolean
+		isCombined?: boolean
+		combinedPositionsText?: string
 	}
 }
 
@@ -32,7 +35,7 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 	const { t } = useTranslation()
 	const [oddsDataFromContract, setOddsDataFromContract] = useState()
 
-	const oddsSymbol = getSymbolText(convertPositionNameToPosition(match.side), match.market)
+	const oddsSymbol = oddsInfo?.isCombined ? oddsInfo?.combinedPositionsText : getSymbolText(convertPositionNameToPosition(match.side), match.market)
 	const isTotalWinner = match.market?.tags && TOTAL_WINNER_TAGS.includes(match.market.tags?.[0])
 	const fetchOddsData = async () => {
 		try {
@@ -63,6 +66,10 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 	}
 
 	const getOdds = () => {
+		if (oddsInfo?.isCombined) {
+			return oddsInfo?.quote
+		}
+
 		if (oddsInfo.isParlay) {
 			return formatParlayQuote(Number(oddsInfo.quote))
 		}

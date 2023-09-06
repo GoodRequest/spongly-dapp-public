@@ -7,14 +7,14 @@ import { useAccount, useNetwork } from 'wagmi'
 
 import Button from '@/atoms/button/Button'
 import { PAGES } from '@/utils/enums'
+import { formatAddress } from '@/utils/formatters/string'
+import { useIsMounted } from '@/hooks/useIsMounted'
 
 import OpenMenuIcon from '@/assets/icons/mobile-menu-icon.svg'
 import CloseMenuIcon from '@/assets/icons/close-icon.svg'
 import LogoImg from '@/assets/icons/header-logo-placeholder.svg'
 
 import * as SC from './MobileMenuStyles'
-import { formatAddress } from '@/utils/helpers'
-import { useIsMounted } from '@/hooks/useIsMounted'
 
 type Props = {
 	selected: string

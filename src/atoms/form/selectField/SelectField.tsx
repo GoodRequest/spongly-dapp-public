@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Select as AntdSelect, SelectProps } from 'antd'
 import { WrappedFieldProps } from 'redux-form'
 import { get, isArray, isObject, map } from 'lodash'
+
 import * as SC from './SelectFieldStyles'
 
 declare module 'react' {
@@ -102,6 +103,7 @@ export const Select = React.forwardRef(
 			return () => {
 				window.removeEventListener('scroll', onScroll)
 			}
+			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, [isOpen])
 
 		const renderPlaceholder = (omittedValues: any[] = []) => <p>{`+ ${omittedValues.length}`}</p>

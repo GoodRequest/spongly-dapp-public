@@ -38,8 +38,6 @@ import { getParlayMarketsAMMQuoteMethod } from '@/utils/parlayAmm'
 import { floorNumberToDecimals, roundNumberToDecimals } from '@/utils/formatters/number'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import {
-	formatCurrency,
-	formatQuote,
 	getBetOptionAndAddressFromMatch,
 	getBetOptionFromMatchBetOption,
 	getOddByBetType,
@@ -53,6 +51,8 @@ import { getSportsAMMQuoteMethod } from '@/utils/amm'
 import { fetchAmountOfTokensForXsUSDAmount } from '@/utils/skewCalculator'
 import { getMatchByBetOption, getOddsPropertyFromBetOption, isMarketAvailable } from '@/utils/markets'
 import { showNotifications } from '@/utils/tsxHelpers'
+import { formatCurrency } from '@/utils/formatters/currency'
+import { formatQuote } from '@/utils/formatters/quote'
 
 // components
 import HorizontalScroller from './components/horizontalScroller/HorizontalScroller'

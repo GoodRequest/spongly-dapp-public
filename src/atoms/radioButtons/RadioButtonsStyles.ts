@@ -34,8 +34,8 @@ export const ContentWrapper = styled.div`
 export const CountBubble = styled.span`
 	display: flex;
 	border-radius: 50%;
-	width: 26px;
-	height: 26px;
+	min-width: 26px;
+	min-height: 26px;
 	background: ${({ theme }) => theme['color-base-state-success-fg']};
 	color: ${({ theme }) => theme['color-base-surface-top']};
 	align-items: center;
