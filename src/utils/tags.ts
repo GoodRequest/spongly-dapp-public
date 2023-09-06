@@ -33,8 +33,6 @@ export const TAGS_LIST: Tags = [
 	{ id: 9013, label: 'Bundesliga', logo: bundesLigaIcon, country: 'DE', logoClass: 'icon-league league--bundesliga' },
 	{ id: 9014, label: 'La Liga', logo: laLigaIcon, country: 'ES', logoClass: 'icon-league league--la-liga' },
 	{ id: 9015, label: 'Serie A', logo: seriea, country: 'IT', logoClass: 'icon-league league--serie-a' },
-	{ id: 9016, label: 'UEFA Champions League', logo: uclIcon, country: 'WORLD', logoClass: 'icon-league league--ucl' },
-	{ id: 9017, label: 'UEFA Europa League', country: 'WORLD', logoClass: 'icon-league league--uel' },
 	{ id: 9018, label: 'FIFA World Cup', country: 'WORLD', logoClass: 'icon-league league--fifa-world-cup' },
 	{ id: 9019, label: 'J1 League', country: 'JP', logoClass: 'icon-league league--j1' },
 	{ id: 9100, label: 'Formula 1', logo: f1Icon, country: 'WORLD', logoClass: 'icon-league league--f1' },
@@ -54,17 +52,23 @@ export const TAGS_LIST: Tags = [
 	{ id: 9061, label: 'Primeira Liga', country: 'PT', logoClass: 'icon-league league--portugal' },
 	{ id: 9045, label: 'Copa Libertadores', country: 'WORLD', logoClass: 'icon-league league--copa-libertadores' },
 	{ id: 9033, label: 'IIHF World Championship', country: 'WORLD', logoClass: 'icon-league league--iihf' },
-	{ id: 9296, label: 'FIFA World Cup U20', country: 'WORLD', logoClass: 'icon-league league--fifa-world-cup-u20' },
 	{ id: 9021, label: 'T20 Blast', country: 'GB', logoClass: 'icon-league league--t20' },
-	{ id: 9050, label: 'UEFA EURO Qualifications', country: 'WORLD', logoClass: 'icon-league league--uefa' },
 	{ id: 109021, label: 'Golf head-to-head', country: 'WORLD', logoClass: 'icon-league league--pga' },
 	{ id: 109121, label: 'Golf Tournament Winner', country: 'WORLD', logoClass: 'icon-league league--pga' },
-	{ id: 18806, label: 'UEFA Nations League', country: 'WORLD', logoClass: 'icon-league league--uefa-nations' },
 	{ id: 18821, label: 'CONCACAF Nations League', country: 'WORLD', logoClass: 'icon-league league--concacaf-nations' },
 	{ id: 9288, label: 'UEFA EURO U21', country: 'WORLD', logoClass: '' },
+	{ id: 18806, label: 'UEFA Nations League', country: 'WORLD', logoClass: 'icon-league league--uefa-nations' },
+	{ id: 9050, label: 'UEFA EURO Qualifications', country: 'WORLD', logoClass: 'icon-league league--uefa' },
 	{ id: 9042, label: 'UEFA Champions League Qualification', country: 'WORLD', logoClass: 'icon-league league--ucl' },
+	{ id: 9016, label: 'UEFA Champions League', logo: uclIcon, country: 'WORLD', logoClass: 'icon-league league--ucl' },
+	{ id: 9017, label: 'UEFA Europa League', country: 'WORLD', logoClass: 'icon-league league--uel' },
 	{ id: 19216, label: 'UEFA Conference League qualification', country: 'WORLD', logoClass: '' },
-	{ id: 9076, label: 'FIFA World Cup Women', country: 'WORLD', logoClass: '' }
+	{ id: 9073, label: 'UEFA Europa League Qualification', country: 'WORLD', logoClass: 'icon-league league--uel' },
+	{ id: 9076, label: 'FIFA World Cup Women', country: 'WORLD', logoClass: '' },
+	{ id: 9296, label: 'FIFA World Cup U20', country: 'WORLD', logoClass: 'icon-league league--fifa-world-cup-u20' },
+	{ id: 9409, label: 'FIBA World Cup', logoClass: '', country: 'WORLD' },
+	{ id: 9536, label: 'Saudi Professional League', logoClass: '', country: 'SA' },
+	{ id: 9268, label: 'Serie A', logoClass: '', country: 'BR' }
 ]
 
 export enum BetType {
@@ -130,11 +134,15 @@ export const SPORTS_MAP: SportsMap = {
 	9288: 'Soccer',
 	9042: 'Soccer',
 	19216: 'Soccer',
-	9076: 'Soccer'
+	9076: 'Soccer',
+	9073: 'Soccer',
+	9409: 'Basketball',
+	9536: 'Soccer',
+	9268: 'Soccer'
 }
 
 export const ENETPULSE_SPORTS = [
-	9153, 9156, 18977, 18983, 19138, 9399, 18196, 9057, 9061, 9045, 9445, 9033, 9296, 9050, 9497, 18806, 18821, 9288, 9042, 19216, 9076
+	9153, 9156, 18977, 18983, 19138, 9399, 18196, 9057, 9061, 9045, 9445, 9033, 9296, 9050, 9497, 18806, 18821, 9288, 9042, 19216, 9076, 9073, 9409, 9536, 9268
 ]
 
 export const JSON_ODDS_SPORTS = [109021, 109121]
@@ -149,9 +157,9 @@ export const GOLF_TOURNAMENT_WINNER_TAG = 109121
 export const SPORTS_TAGS_MAP: SportsTagsMap = {
 	Football: [9001, 9002],
 	Baseball: [9003],
-	Basketball: [9004, 9005, 9008, 9399],
+	Basketball: [9004, 9005, 9008, 9399, 9409],
 	Hockey: [9006, 9033],
-	Soccer: [9010, 9011, 9012, 9013, 9014, 9015, 9016, 9017, 9018, 9019, 9057, 9061, 9045, 9296, 9050, 18806, 18821, 9288, 9042, 19216, 9076],
+	Soccer: [9010, 9011, 9012, 9013, 9014, 9015, 9016, 9017, 9018, 9019, 9057, 9061, 9045, 9296, 9050, 18806, 18821, 9288, 9042, 19216, 9076, 9073, 9536, 9268],
 	MMA: [9007, 18196],
 	Motosport: [9445, 9497],
 	Tennis: [9153, 9156],
