@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Button, Row } from 'antd'
-import { TextSMMedium } from '@/styles/typography'
+import { TextSMMedium, TextXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
 export const MatchRow = styled(Row)<{ readOnly?: boolean }>`
@@ -76,6 +76,7 @@ export const BetOptionButton = styled(Button)`
 `
 
 export const MatchOdd = styled.div`
+	width: 32px;
 	${TextSMMedium};
 `
 
@@ -103,7 +104,8 @@ export const MatchNames = styled.div`
 	width: calc(100% - 90px);
 `
 export const BonusText = styled.div<{ hide?: boolean }>`
-	${TextSMMedium};
+	${TextXSMedium};
+	width: ${({ hide }) => (hide ? '28px' : 'auto')};
 	margin-left: ${({ hide }) => (hide ? '0' : '4px')};
 	visibility: ${({ hide }) => (hide ? 'hidden' : 'visible')};
 	color: ${({ theme }) => theme['color-base-state-success-fg']};
