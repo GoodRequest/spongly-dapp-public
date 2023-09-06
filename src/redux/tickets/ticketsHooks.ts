@@ -14,7 +14,14 @@ import { ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
 
 // utils
 import { GET_TICKETS } from '@/utils/queries'
-import { getClosedTicketType, getSuccessRateForTickets, getTicketTotalQuote, getTicketType, removeDuplicateSubstring } from '@/utils/helpers'
+import {
+	getClosedTicketType,
+	getSuccessRateForTickets,
+	getTicketTotalQuote,
+	getTicketType,
+	removeDuplicatesByGameId,
+	removeDuplicateSubstring
+} from '@/utils/helpers'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import { ITicket } from '@/typescript/types'
 
@@ -54,7 +61,7 @@ const useFetchTickets = () => {
 					ticketType: getTicketType(ticket),
 					closedTicketType: getClosedTicketType(ticket),
 					buyIn: ticket?.sUSDPaid ? Number(bigNumberFormatter(ticket.sUSDPaid as string)) : 0,
-					matches: 'positions' in ticket ? ticket.positions.length : 1,
+					matches: 'positions' in ticket ? removeDuplicatesByGameId(ticket.positions) : 1,
 					positions:
 						'positions' in ticket
 							? ticket.positions.map((item) => {

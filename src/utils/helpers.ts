@@ -1161,3 +1161,13 @@ export const removeDuplicateSubstring = (inputString: string): string => {
 	// Convert Set to Array and join the unique words
 	return Array.from(uniqueWords).join(' ')
 }
+
+export const removeDuplicatesByGameId = (positions: Position[]): number => {
+	const uniqueGameIds = positions.reduce((gameIds: Set<string>, position: Position) => {
+		const { gameId } = position.market
+		gameIds.add(gameId)
+		return gameIds
+	}, new Set<string>())
+
+	return uniqueGameIds.size
+}
