@@ -14,7 +14,7 @@ import { ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
 
 // utils
 import { GET_TICKETS } from '@/utils/queries'
-import { getClosedTicketType, getSuccessRateForTickets, getTicketTotalQuote, getTicketType } from '@/utils/helpers'
+import { getClosedTicketType, getSuccessRateForTickets, getTicketTotalQuote, getTicketType, removeDuplicateSubstring } from '@/utils/helpers'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import { ITicket } from '@/typescript/types'
 
@@ -55,7 +55,28 @@ const useFetchTickets = () => {
 					closedTicketType: getClosedTicketType(ticket),
 					buyIn: ticket?.sUSDPaid ? Number(bigNumberFormatter(ticket.sUSDPaid as string)) : 0,
 					matches: 'positions' in ticket ? ticket.positions.length : 1,
-					positions: 'positions' in ticket ? ticket.positions : [ticket.position],
+					positions:
+						'positions' in ticket
+							? ticket.positions.map((item) => {
+									return {
+										...item,
+										market: {
+											...item.market,
+											homeTeam: removeDuplicateSubstring(item.market.homeTeam),
+											awayTeam: removeDuplicateSubstring(item.market.awayTeam)
+										}
+									}
+							  })
+							: [ticket.position].map((item) => {
+									return {
+										...item,
+										market: {
+											...item.market,
+											homeTeam: removeDuplicateSubstring(item.market.homeTeam),
+											awayTeam: removeDuplicateSubstring(item.market.awayTeam)
+										}
+									}
+							  }),
 					successRate: Number(successRateMap.get(ticket.account)),
 					totalTicketQuote: Number(getTicketTotalQuote(ticket as ITicket, 'positions' in ticket ? ticket.totalQuote : undefined))
 				}
@@ -132,7 +153,6 @@ const useFetchTickets = () => {
 					...values[5].data.parlayMarkets,
 					...values[5].data.positionBalances
 				]
-
 				dispatch({
 					type: TICKET_LIST.TICKET_LIST_LOAD_DONE,
 					payload: { data: mapTicketsData(allTickets), successRateMap: getSuccessRateMap(allTickets) }

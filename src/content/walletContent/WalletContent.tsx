@@ -12,7 +12,7 @@ import { UserStatistic, UserTicket } from '@/typescript/types'
 import { ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
 import UserTicketsList from '@/components/userTicketsList/UserTicketsList'
 import networkConnector from '@/utils/networkConnector'
-import { getUserTicketType, ticketTypeToWalletType } from '@/utils/helpers'
+import { getUserTicketType, removeDuplicateSubstring, ticketTypeToWalletType } from '@/utils/helpers'
 import { MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE, USER_TICKET_TYPE } from '@/utils/constants'
 import { useIsMounted } from '@/hooks/useIsMounted'
 import { showNotifications } from '@/utils/tsxHelpers'
@@ -103,7 +103,11 @@ const MyWalletContent = () => {
 									isResolved: positionItem?.market?.isResolved,
 									maturityDate: Number(positionItem?.market?.maturityDate),
 									marketAddress: positionItem?.market?.address,
-									market: positionItem.market
+									market: {
+										...positionItem.market,
+										homeTeam: removeDuplicateSubstring(positionItem?.market?.homeTeam),
+										awayTeam: removeDuplicateSubstring(positionItem?.market?.awayTeam)
+									}
 								}
 							}),
 							sportMarkets: parlay?.sportMarkets?.map((item) => ({
@@ -143,7 +147,11 @@ const MyWalletContent = () => {
 									isResolved: positionItem?.position?.market?.isResolved,
 									marketAddress: positionItem?.position?.market?.address,
 									maturityDate: Number(positionItem?.position?.market?.maturityDate),
-									market: positionItem.position?.market
+									market: {
+										...positionItem.position?.market,
+										homeTeam: removeDuplicateSubstring(positionItem?.position?.market?.homeTeam),
+										awayTeam: removeDuplicateSubstring(positionItem?.position?.market?.awayTeam)
+									}
 								}
 							]
 						}

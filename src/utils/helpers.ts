@@ -1147,3 +1147,17 @@ export const getPositionsWithMergedCombinedPositions = (positions: Position[], t
 
 	return newPositions
 }
+
+export const removeDuplicateSubstring = (inputString: string): string => {
+	// Split the input string into words
+	const words = inputString.split(' ')
+	// Set<string> means unique collection of strings (similar to array)
+	const uniqueWords = words.reduce((acc: Set<string>, word: string) => {
+		if (!acc.has(word)) {
+			acc.add(word)
+		}
+		return acc
+	}, new Set<string>())
+	// Convert Set to Array and join the unique words
+	return Array.from(uniqueWords).join(' ')
+}
