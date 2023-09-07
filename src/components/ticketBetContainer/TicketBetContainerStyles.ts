@@ -12,7 +12,7 @@ export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
 	top: 24px;
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	border-radius: 12px;
-	padding: 24px;
+	padding: 16px;
 	@media (max-height: 930px) {
 		padding: 16px;
 	}
