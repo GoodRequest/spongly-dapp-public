@@ -98,7 +98,7 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, copie
 					</SC.StartCenteredRow>
 				</Col>
 				<Col xs={3} sm={3} md={0}>
-					<SC.BetOptionButton type={'primary'} onClick={() => setModalOpen(true)}>
+					<SC.BetOptionButton type={'primary'} disabled={getPossibleBetOptions(match)?.length <= 1} onClick={() => setModalOpen(true)}>
 						{match.betOption}
 					</SC.BetOptionButton>
 				</Col>
@@ -108,6 +108,7 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, copie
 						useBodyAsPopupContainer={true}
 						popupClassName={'odds-select'}
 						onChange={(betOption: BET_OPTIONS) => handleChangeBetType(betOption)}
+						// TODO: check also copied value for disabled
 						disabled={getPossibleBetOptions(match)?.length <= 1} // NOTE: if has 1 option, it does not need to be active ( total winner )
 						options={
 							getPossibleBetOptions(match)?.map((betOption, key) => (

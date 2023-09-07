@@ -73,6 +73,11 @@ export const BetOptionButton = styled(Button)`
 	box-shadow: none;
 	background: ${({ theme }) => theme['color-base-action-secondary-default']};
 	border: 2px solid ${({ theme }) => theme['color-base-action-primary-default']};
+	&:disabled {
+		color: ${({ theme }) => theme['color-base-content-top']};
+		border: 2px solid ${({ theme }) => theme['color-base-action-primary-default']};
+		background: ${({ theme }) => theme['color-base-action-secondary-default']};
+	}
 `
 
 export const MatchOdd = styled.div`
