@@ -88,7 +88,7 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, copie
 	return (
 		<>
 			<SC.MatchRow gutter={[0, 0]} readOnly={readOnly}>
-				<Col xs={14} sm={16} md={14} xl={14}>
+				<Col xs={readOnly ? 16 : 14} sm={readOnly ? 18 : 16} md={readOnly ? 18 : 14} xl={readOnly ? 18 : 14}>
 					<SC.StartCenteredRow>
 						<SC.TeamImages>{images}</SC.TeamImages>
 						<SC.TeamNames>
@@ -98,7 +98,7 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, copie
 					</SC.StartCenteredRow>
 				</Col>
 				<Col xs={3} sm={3} md={0}>
-					<SC.BetOptionButton type={'primary'} onClick={() => setModalOpen(true)}>
+					<SC.BetOptionButton type={'primary'} disabled={getPossibleBetOptions(match)?.length <= 1} onClick={() => setModalOpen(true)}>
 						{match.betOption}
 					</SC.BetOptionButton>
 				</Col>
@@ -108,6 +108,7 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, copie
 						useBodyAsPopupContainer={true}
 						popupClassName={'odds-select'}
 						onChange={(betOption: BET_OPTIONS) => handleChangeBetType(betOption)}
+						// TODO: check also copied value for disabled
 						disabled={getPossibleBetOptions(match)?.length <= 1} // NOTE: if has 1 option, it does not need to be active ( total winner )
 						options={
 							getPossibleBetOptions(match)?.map((betOption, key) => (
@@ -118,21 +119,14 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, copie
 						}
 					/>
 				</Col>
-				<Col
-					xs={5}
-					sm={3}
-					md={5}
-					xl={5}
-					style={{
-						display: 'flex',
-						justifyContent: 'flex-end'
-					}}
-				>
+				<SC.OddCol xs={5} sm={3} md={readOnly ? 3 : 5} xl={readOnly ? 3 : 5}>
 					<SC.MatchOdd>{getOddByBetType(match as any, copied ? true : !!formValues.copied).formattedOdd}</SC.MatchOdd>
-					<SC.BonusText hide={getOddByBetType(match as any, copied ? true : !!formValues.copied).rawBonus <= 0}>
-						{getOddByBetType(match as any, copied ? true : !!formValues.copied).formattedBonus}
-					</SC.BonusText>
-				</Col>
+					{!readOnly && (
+						<SC.BonusText hide={getOddByBetType(match as any, copied ? true : !!formValues.copied).rawBonus <= 0}>
+							{getOddByBetType(match as any, copied ? true : !!formValues.copied).formattedBonus}
+						</SC.BonusText>
+					)}
+				</SC.OddCol>
 				{deleteHandler && (
 					<SC.RemoveButtonWrapper>
 						<Tooltip title={t('Remove')} placement={'left'}>

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Button, Row } from 'antd'
+import { Button, Row, Col } from 'antd'
 import { TextSMMedium, TextXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
@@ -73,6 +73,11 @@ export const BetOptionButton = styled(Button)`
 	box-shadow: none;
 	background: ${({ theme }) => theme['color-base-action-secondary-default']};
 	border: 2px solid ${({ theme }) => theme['color-base-action-primary-default']};
+	&:disabled {
+		color: ${({ theme }) => theme['color-base-content-top']};
+		border: 2px solid ${({ theme }) => theme['color-base-action-primary-default']};
+		background: ${({ theme }) => theme['color-base-action-secondary-default']};
+	}
 `
 
 export const MatchOdd = styled.div`
@@ -109,4 +114,10 @@ export const BonusText = styled.div<{ hide?: boolean }>`
 	margin-left: ${({ hide }) => (hide ? '0' : '4px')};
 	visibility: ${({ hide }) => (hide ? 'hidden' : 'visible')};
 	color: ${({ theme }) => theme['color-base-state-success-fg']};
+`
+
+export const OddCol = styled(Col)`
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
 `

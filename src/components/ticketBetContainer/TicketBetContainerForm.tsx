@@ -20,7 +20,7 @@ import MatchRow from './components/matchRow/MatchRow'
 import SummaryCol from './components/summaryCol/SummaryCol'
 
 // utils
-import { MAX_BUY_IN, MAX_TICKET_MATCHES, MAX_TOTAL_QUOTE, MIN_BUY_IN, STABLE_COIN } from '@/utils/constants'
+import { MAX_BUY_IN, MAX_SELECTED_ALLOWANCE, MAX_TICKET_MATCHES, MAX_TOTAL_QUOTE, MIN_BUY_IN, STABLE_COIN } from '@/utils/constants'
 import { FORM } from '@/utils/enums'
 import handleOnchangeForm from './helpers/changeBetContainer'
 
@@ -293,7 +293,9 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 				<Col span={24}>
 					<Row>
 						<SummaryCol title={t('Available')} value={`${availableBalance || 0} ${formValues?.selectedStablecoin}`} align={'left'} />
-						<SummaryCol title={t('Allowance')} value={`${allowance || 0} ${formValues?.selectedStablecoin}`} align={'right'} />
+						{allowance < MAX_SELECTED_ALLOWANCE && (
+							<SummaryCol title={t('Allowance')} value={`${allowance || 0} ${formValues?.selectedStablecoin}`} align={'right'} />
+						)}
 					</Row>
 				</Col>
 				{hasAtLeastOneMatch && (
