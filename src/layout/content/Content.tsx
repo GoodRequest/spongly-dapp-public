@@ -16,7 +16,7 @@ const Content: FC<ILayout> = ({ children }) => {
 	const fullWidthPages = [`/${PAGES.PARLAY_LEADERBOARD}`]
 	return (
 		<SC.MainContainer>
-			<Row gutter={30} style={{ display: 'flex' }}>
+			<Row gutter={30} style={{ display: 'flex', justifyContent: 'space-between' }}>
 				{includes(fullWidthPages, router.pathname) ? (
 					<Col lg={24} xl={24}>
 						{children}

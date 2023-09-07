@@ -43,10 +43,6 @@ export const MatchIcon = styled.div`
 		max-height: 28px;
 	}
 `
-export const TeamWrapper = styled(Col)`
-	display: flex;
-	align-items: center;
-`
 export const ResultsWrapper = styled(Col)`
 	display: flex;
 	margin-left: -16px;
@@ -139,13 +135,6 @@ export const TicketStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 		`}
 `
 
-export const IsPlayedDot = styled.span`
-	color: ${({ theme }) => theme['color-base-state-warning-fg']};
-	font-size: 36px;
-	margin-right: 4px;
-	margin-top: -4px;
-`
-
 export const SportLogo = styled.div`
 	${FlexItemCenter};
 	border-radius: 6px;
@@ -154,16 +143,9 @@ export const SportLogo = styled.div`
 	width: 32px;
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 `
-export const TicketContent = styled(Row)``
-export const TeamTextWrapper = styled.div`
-	margin-left: 12px;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-`
 
 export const TeamText = styled.div`
-	margin-right: 16px;
+	margin-right: 8px;
 	${TextSMMedium}
 `
 

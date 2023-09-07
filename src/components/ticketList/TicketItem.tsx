@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { toNumber } from 'lodash'
-import { Spin } from 'antd'
+import { Spin, Row, Col } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import { LoadingOutlined } from '@ant-design/icons'
 
@@ -100,49 +100,47 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 					<span>{getParlayItemStatus(match, isPlayedNow(), t).text}</span>
 				</SC.TicketStatus>
 			</SC.TicketHeader>
-			<SC.TicketContent justify={'space-between'}>
-				<SC.TeamWrapper md={{ span: 18, order: 1 }} sm={{ span: 24, order: 1 }} xs={{ span: 24, order: 1 }}>
-					<div>
+			<Row gutter={8}>
+				<Col xxl={6} xl={6} lg={6} md={4} sm={4} xs={7}>
+					<SC.MatchIcon>
+						<img
+							src={getTeamImageSource(match?.market.homeTeam || '', toNumber(match?.market.tags?.[0]))}
+							onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
+								e.target.src = NO_TEAM_IMAGE_FALLBACK
+							}}
+						/>
+					</SC.MatchIcon>
+					{!isTotalWinner && (
 						<SC.MatchIcon>
 							<img
-								src={getTeamImageSource(match?.market.homeTeam || '', toNumber(match?.market.tags?.[0]))}
+								src={getTeamImageSource(match?.market.awayTeam || '', toNumber(match?.market.tags?.[0]))}
 								onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
 									e.target.src = NO_TEAM_IMAGE_FALLBACK
 								}}
 							/>
 						</SC.MatchIcon>
-						{!isTotalWinner && (
-							<SC.MatchIcon>
-								<img
-									src={getTeamImageSource(match?.market.awayTeam || '', toNumber(match?.market.tags?.[0]))}
-									onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
-										e.target.src = NO_TEAM_IMAGE_FALLBACK
-									}}
-								/>
-							</SC.MatchIcon>
-						)}
-					</div>
-					<SC.TeamTextWrapper>
+					)}
+				</Col>
+				<Col xxl={14} xl={12} lg={14} md={16} sm={18} xs={16}>
+					<SCS.EllipsisText
+						ellipsis={{
+							rows: 1
+						}}
+						title={match.market.homeTeam}
+					>
+						{match.market.homeTeam}
+					</SCS.EllipsisText>
+					{!isTotalWinner && (
 						<SCS.EllipsisText
 							ellipsis={{
 								rows: 1
 							}}
-							title={match.market.homeTeam}
+							title={match.market.awayTeam}
 						>
-							{match.market.homeTeam}
+							{match.market.awayTeam}
 						</SCS.EllipsisText>
-						{!isTotalWinner && (
-							<SCS.EllipsisText
-								ellipsis={{
-									rows: 1
-								}}
-								title={match.market.awayTeam}
-							>
-								{match.market.awayTeam}
-							</SCS.EllipsisText>
-						)}
-					</SC.TeamTextWrapper>
-				</SC.TeamWrapper>
+					)}
+				</Col>
 				{isFinished && (
 					<SC.ResultsWrapper md={{ span: 2, order: 2 }} sm={{ span: 12, order: 3 }} xs={{ span: 12, order: 3 }}>
 						{getTicketResults()}
@@ -158,7 +156,7 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 						<Spin indicator={<LoadingOutlined spin />} />
 					)}
 				</SC.OddsWrapper>
-			</SC.TicketContent>
+			</Row>
 		</SC.TicketItemWrapper>
 	)
 }
