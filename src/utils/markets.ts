@@ -13,6 +13,7 @@ import { TicketPosition } from '@/redux/betTickets/betTicketTypes'
 // helpers
 import { bigNumberFormatter, bigNumberFormmaterWithDecimals } from './formatters/ethers'
 import { formatQuote } from './formatters/quote'
+import { removeDuplicateSubstring } from '@/utils/helpers'
 
 export const isMarketAvailable = (market: SportMarket) => {
 	return !!(
@@ -247,6 +248,8 @@ export const getMarketOddsFromContract = async (markets: SportMarket[]) => {
 		if (oddsItem || priceImpactItem) {
 			return {
 				...market,
+				homeTeam: removeDuplicateSubstring(market.homeTeam),
+				awayTeam: removeDuplicateSubstring(market.awayTeam),
 				homeOdds: oddsItem ? bigNumberFormmaterWithDecimals(oddsItem.odds[0], STABLE_DECIMALS.sUSD) : market.homeOdds,
 				awayOdds: oddsItem ? bigNumberFormmaterWithDecimals(oddsItem.odds[1], STABLE_DECIMALS.sUSD) : market.awayOdds,
 				drawOdds: oddsItem && oddsItem.odds[2] ? bigNumberFormmaterWithDecimals(oddsItem.odds[2], STABLE_DECIMALS.sUSD) : undefined,
@@ -260,6 +263,8 @@ export const getMarketOddsFromContract = async (markets: SportMarket[]) => {
 		}
 		return {
 			...market,
+			homeTeam: removeDuplicateSubstring(market.homeTeam),
+			awayTeam: removeDuplicateSubstring(market.awayTeam),
 			homeOdds: bigNumberFormmaterWithDecimals(market.homeOdds),
 			awayOdds: bigNumberFormmaterWithDecimals(market.awayOdds),
 			drawOdds: market.drawOdds ? bigNumberFormmaterWithDecimals(market.drawOdds) : undefined
