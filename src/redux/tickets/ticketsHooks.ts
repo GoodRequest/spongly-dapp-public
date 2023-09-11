@@ -6,6 +6,7 @@ import { useNetwork } from 'wagmi'
 
 import { TICKET_LIST } from '@/redux/tickets/ticketType'
 
+import successRateData from '@/assets/stats.json'
 // components
 import { ITicketContent } from '@/content/ticketsContent/TicketsContent'
 
@@ -53,7 +54,6 @@ const useFetchTickets = () => {
 	}
 
 	const mapTicketsData = (data: (ParlayMarket | PositionBalance)[]): ITicketContent[] => {
-		const successRateMap = getSuccessRateMap(data as ParlayMarket[])
 		return data.map((ticket) => {
 			return {
 				ticket: {
@@ -84,7 +84,7 @@ const useFetchTickets = () => {
 										}
 									}
 							  }),
-					successRate: Number(successRateMap.get(ticket.account)),
+					successRate: successRateData.stats.filter((item) => item.account === ticket.account)[0]?.successRate || 0,
 					totalTicketQuote: Number(getTicketTotalQuote(ticket as ITicket, 'positions' in ticket ? ticket.totalQuote : undefined))
 				}
 			} as ITicketContent
@@ -162,7 +162,7 @@ const useFetchTickets = () => {
 				]
 				dispatch({
 					type: TICKET_LIST.TICKET_LIST_LOAD_DONE,
-					payload: { data: mapTicketsData(allTickets), successRateMap: getSuccessRateMap(allTickets) }
+					payload: { data: mapTicketsData(allTickets) }
 				})
 			})
 			.catch(() => {
