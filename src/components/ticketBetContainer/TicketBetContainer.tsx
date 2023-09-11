@@ -537,7 +537,6 @@ const TicketBetContainer = () => {
 		if (activeTicketValues.id === id || data?.length === 1) {
 			// NOTE: If selected ticket will be removed, we need to set active ticket to first ticket in list
 			setActiveTicketID(data?.[0].id || 1)
-			dispatch(initialize(FORM.BET_TICKET, { ...data?.[0] }))
 		}
 	}
 
