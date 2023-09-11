@@ -1,12 +1,12 @@
 import { useEffect } from 'react'
 import { ApolloError, useLazyQuery } from '@apollo/client'
-import { groupBy } from 'lodash'
 import { useDispatch } from 'react-redux'
 import { useNetwork } from 'wagmi'
 
 import { TICKET_LIST } from '@/redux/tickets/ticketType'
 
 import successRateData from '@/assets/stats.json'
+
 // components
 import { ITicketContent } from '@/content/ticketsContent/TicketsContent'
 
@@ -15,14 +15,7 @@ import { ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
 
 // utils
 import { GET_TICKETS } from '@/utils/queries'
-import {
-	getClosedTicketType,
-	getSuccessRateForTickets,
-	getTicketTotalQuote,
-	getTicketType,
-	removeDuplicatesByGameId,
-	removeDuplicateSubstring
-} from '@/utils/helpers'
+import { getClosedTicketType, getTicketTotalQuote, getTicketType, removeDuplicatesByGameId, removeDuplicateSubstring } from '@/utils/helpers'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import { ITicket } from '@/typescript/types'
 
@@ -45,13 +38,6 @@ const useFetchTickets = () => {
 	const [fetchTicketsData3] = useLazyQuery(GET_TICKETS)
 	const [fetchTicketsData4] = useLazyQuery(GET_TICKETS)
 	const [fetchTicketsData5] = useLazyQuery(GET_TICKETS)
-
-	const getSuccessRateMap = (data: ParlayMarket[]) => {
-		const walletSuccessRateMap = new Map()
-		const usersTickets = groupBy(data, 'account')
-		Object.entries(usersTickets).forEach(([key, value]) => walletSuccessRateMap.set(key, getSuccessRateForTickets(value)))
-		return walletSuccessRateMap
-	}
 
 	const mapTicketsData = (data: (ParlayMarket | PositionBalance)[]): ITicketContent[] => {
 		return data.map((ticket) => {
@@ -84,7 +70,7 @@ const useFetchTickets = () => {
 										}
 									}
 							  }),
-					successRate: successRateData.stats.filter((item) => item.account === ticket.account)[0]?.successRate || 0,
+					successRate: successRateData.stats.find((item) => item.account === ticket.account)?.successRate || 0,
 					totalTicketQuote: Number(getTicketTotalQuote(ticket as ITicket, 'positions' in ticket ? ticket.totalQuote : undefined))
 				}
 			} as ITicketContent
@@ -168,7 +154,7 @@ const useFetchTickets = () => {
 			.catch(() => {
 				dispatch({
 					type: TICKET_LIST.TICKET_LIST_LOAD_DONE,
-					payload: { data: [], successRateMap: new Map() }
+					payload: { data: [] }
 				})
 			})
 	}
