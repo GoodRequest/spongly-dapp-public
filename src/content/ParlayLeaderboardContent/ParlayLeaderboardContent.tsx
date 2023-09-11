@@ -11,7 +11,7 @@ import Search from '@/atoms/search/Search'
 import ParlayLeaderboardTableRow from '@/components/parlayLeaderboardTableRow/ParlayLeaderboardTableRow'
 import ParlayLeaderboardUserRow from '@/components/parlayLeaderboardTableRow/ParlayLeaderboardUserRow'
 import Button from '@/atoms/button/Button'
-import { ENDPOINTS, ErrorNotificationTypes, NETWORK_IDS, ORDER_DIRECTION, PARLAY_LEADERBOARD_SORTING } from '@/utils/constants'
+import { ENDPOINTS, ErrorNotificationTypes, NETWORK_IDS, OddsType, ORDER_DIRECTION, PARLAY_LEADERBOARD_SORTING } from '@/utils/constants'
 import { getReq } from '@/utils/requests'
 import { getCurrentBiweeklyPeriod, getPeriodEndsText, getReward, handleErrorMessage } from '@/utils/helpers'
 import { useIsMounted } from '@/hooks/useIsMounted'
@@ -23,6 +23,7 @@ import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
 import SortIcon from '@/assets/icons/sort-icon.svg'
 
 import * as SC from './ParlayLeaderboardContentStyles'
+import { formatQuote } from '@/utils/formatters/quote'
 
 type ParlayLeaderboardFilter = {
 	page: number
@@ -219,7 +220,7 @@ const ParlayLeaderboardContent = () => {
 					address={data.address}
 					position={data.position}
 					paid={data.paid ? round(Number(data?.paid), 2).toFixed(2) : 0}
-					quote={data.quote ? round(Number(data?.quote), 2).toFixed(2) : 0}
+					quote={data.quote ? formatQuote(OddsType.DECIMAL, data?.quote) : 0}
 					won={data.won ? round(Number(data?.won), 2).toFixed(2) : 0}
 					reward={getReward(data?.rank ? data.rank - 1 : undefined, chain?.id)}
 				/>
