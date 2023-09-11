@@ -526,6 +526,8 @@ const TicketBetContainer = () => {
 					: [{ id: 1, matches: [], copied: false }]
 			}
 		})
+		setActiveTicketID((largestId || 1) + 1)
+		setIsSwitchedTicket(true)
 	}
 
 	const handleRemoveTicket = (id: number) => {
