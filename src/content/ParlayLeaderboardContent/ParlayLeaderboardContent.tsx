@@ -122,9 +122,9 @@ const ParlayLeaderboardContent = () => {
 	const biweeklyPeriodOptions = (): Option[] => {
 		const newOptions: Option[] = []
 
-		for (let i = 1; i <= getCurrentBiweeklyPeriod(); i += 1) {
+		for (let i = 0; i <= getCurrentBiweeklyPeriod(); i += 1) {
 			const newOption = {
-				label: `${t('Bi-weekly period')} ${i}`,
+				label: `${t('Bi-weekly period')} ${i + 1}`,
 				value: `${i}`
 			}
 			newOptions.push(newOption)
