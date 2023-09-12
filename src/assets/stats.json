@@ -1,54 +1,334 @@
 {
-	"processStart": "2023-09-07T11:55:17.328Z",
+	"processStart": "2023-09-11T13:45:02.386Z",
 	"context": {
 		"ticketsCount": 18000,
 		"uniqueUsersCount": 1540
 	},
 	"stats": [
 		{
-			"account": "0xe966c59c15566a994391f6226fee5bc0ef70f87a",
-			"successRate": 17.72,
-			"totalTickets": 86
+			"account": "0x6c5fe0c4f7443691397e744806684486040c00a4",
+			"successRate": 22.22,
+			"totalTickets": 55
 		},
 		{
-			"account": "0xbf4a60736dd30b807e176e97ae2fd551d0764eb2",
-			"successRate": 35.29,
-			"totalTickets": 18
+			"account": "0x2588253cc1daac3e7d823b9190ec87e75c67f2c4",
+			"successRate": 2.43,
+			"totalTickets": 372
 		},
 		{
 			"account": "0xcc71d2ff046b1464fa39f5d1108695d92d01767e",
+			"successRate": 50,
+			"totalTickets": 5
+		},
+		{
+			"account": "0x088cda4c48750442548ab476af5eea7135394063",
+			"successRate": 22.22,
+			"totalTickets": 10
+		},
+		{
+			"account": "0x3838433f63f4d4a24260f2485aacf5894ba7bc93",
 			"successRate": 0,
-			"totalTickets": 2
+			"totalTickets": 5
+		},
+		{
+			"account": "0xdf627f524a24212acb573e8b1ae5f47e6ab83f69",
+			"successRate": 34.48,
+			"totalTickets": 30
 		},
 		{
 			"account": "0xbb3d0c6168ef0056ed6586bfcf5717a7db0c866f",
+			"successRate": 46.15,
+			"totalTickets": 17
+		},
+		{
+			"account": "0xfb15339d187a76af62698f73d700e1f8536f03bd",
+			"successRate": 21.51,
+			"totalTickets": 173
+		},
+		{
+			"account": "0x7b7d6ca0bf9aeb1744e98701ea777744eae280af",
+			"successRate": 24.56,
+			"totalTickets": 60
+		},
+		{
+			"account": "0x02a3a92b339a742815a5a13d9afda5e3d344e540",
+			"successRate": 15.94,
+			"totalTickets": 69
+		},
+		{
+			"account": "0x2c84278aa407886b277bbd96ccf3c0e31a3f8ffd",
+			"successRate": 20.1,
+			"totalTickets": 633
+		},
+		{
+			"account": "0x161866628e6d33c0ca057d987c8cbf93c647dd74",
+			"successRate": 4,
+			"totalTickets": 28
+		},
+		{
+			"account": "0x126c14a5a983d103e51fcd3eb2e5063ada22029c",
+			"successRate": 2.6,
+			"totalTickets": 90
+		},
+		{
+			"account": "0x75c1b767ab7c46c074710ce0cb8c03a99fc28abc",
+			"successRate": 12.5,
+			"totalTickets": 61
+		},
+		{
+			"account": "0xb8ee03750511a08aced1ec8edf8512ee82332e1f",
+			"successRate": 0,
+			"totalTickets": 9
+		},
+		{
+			"account": "0xffcfa5f7b994aeb4c6931e0a6cd95d8984e038ce",
+			"successRate": 66.67,
+			"totalTickets": 9
+		},
+		{
+			"account": "0x77fa39f3adf09bde9d4f175e40d0854d21a33318",
 			"successRate": 50,
-			"totalTickets": 11
+			"totalTickets": 2
+		},
+		{
+			"account": "0x703fc8c1dacc8ffd1b00bb555944c5482d1108f5",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0x862c6f0373ac129fc66a324b234943139ca10c92",
+			"successRate": 0,
+			"totalTickets": 6
+		},
+		{
+			"account": "0xa7449576ed057677662b0d87452ae06a1f0f13bd",
+			"successRate": 11.11,
+			"totalTickets": 9
+		},
+		{
+			"account": "0x9633d229b711dcbf06cdd8739238765e0f3135b0",
+			"successRate": 28.77,
+			"totalTickets": 73
+		},
+		{
+			"account": "0x547b324b3f9e1f9f436fede6e88ae1ca816db6f3",
+			"successRate": 10,
+			"totalTickets": 30
+		},
+		{
+			"account": "0x8508c66ab569d07505f2574c3453fc43253f3801",
+			"successRate": 50,
+			"totalTickets": 6
+		},
+		{
+			"account": "0x0f45156f109e474295913d78036fa213b1745d5a",
+			"successRate": 42.86,
+			"totalTickets": 7
+		},
+		{
+			"account": "0x4a02a9eed0540f6c797c75203da66b53f28b54b8",
+			"successRate": 6.67,
+			"totalTickets": 120
 		},
 		{
 			"account": "0xc45abdaeec965d490dfb750bebd1ea482147e9f4",
 			"successRate": 0,
+			"totalTickets": 6
+		},
+		{
+			"account": "0x0e9b063789909565ceda1fba162474405a151e66",
+			"successRate": 20.99,
+			"totalTickets": 82
+		},
+		{
+			"account": "0xc74ad3eba49d462d1462988aa1c2bb07619c7034",
+			"successRate": 0,
+			"totalTickets": 6
+		},
+		{
+			"account": "0x7dba1768394a3d2b69f5737e0af64b7851371740",
+			"successRate": 9.28,
+			"totalTickets": 194
+		},
+		{
+			"account": "0xf12ec382c04e0a989b852e89ce01ab720e406600",
+			"successRate": 25,
 			"totalTickets": 4
 		},
 		{
-			"account": "0xfb15339d187a76af62698f73d700e1f8536f03bd",
-			"successRate": 21.34,
-			"totalTickets": 164
+			"account": "0xea9501cbf76162acbc0a21228ceada69902b66cf",
+			"successRate": 0,
+			"totalTickets": 3
 		},
 		{
 			"account": "0xbe12e889a5af67b12369c5610187a18c0a43dce0",
-			"successRate": 22.86,
-			"totalTickets": 36
+			"successRate": 21.05,
+			"totalTickets": 38
 		},
 		{
-			"account": "0x2588253cc1daac3e7d823b9190ec87e75c67f2c4",
-			"successRate": 2.77,
-			"totalTickets": 362
+			"account": "0x7648ec1f0f91c68082e55dfab066f74728f238fc",
+			"successRate": 0,
+			"totalTickets": 4
 		},
 		{
-			"account": "0x02a3a92b339a742815a5a13d9afda5e3d344e540",
-			"successRate": 17.86,
-			"totalTickets": 58
+			"account": "0x668540812466219a4cf9ef22151bb7e513010f17",
+			"successRate": 21.79,
+			"totalTickets": 78
+		},
+		{
+			"account": "0x57b02589d6e24203fc43e442ce9a4803e290293b",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0x65215710313f9599d1e8f41ab6af66fc44276c75",
+			"successRate": 0,
+			"totalTickets": 2
+		},
+		{
+			"account": "0xce1b76a218f2d93b564b73958aded0e36885c4ab",
+			"successRate": 0,
+			"totalTickets": 7
+		},
+		{
+			"account": "0x3ea56ba46b0a7cbfb67ddb5dc5ea88ffd2933b71",
+			"successRate": 75,
+			"totalTickets": 4
+		},
+		{
+			"account": "0x0a9faafb19e4df3a23ebef4cfa01fbbe2a137c78",
+			"successRate": 33.33,
+			"totalTickets": 3
+		},
+		{
+			"account": "0x3754733ca2d12d52d94dd9789a472baa10fdb333",
+			"successRate": 75,
+			"totalTickets": 4
+		},
+		{
+			"account": "0xc290067ef915116e31ce171097d4697da36c8c43",
+			"successRate": 4.52,
+			"totalTickets": 177
+		},
+		{
+			"account": "0xbf49b454818783d12bf4f3375ff17c59015e66cb",
+			"successRate": 18.18,
+			"totalTickets": 67
+		},
+		{
+			"account": "0x8315f67ceaf52d9c4e03971d925af7cff2f5f8e1",
+			"successRate": 0,
+			"totalTickets": 4
+		},
+		{
+			"account": "0xa30cc61535aab02b6a8b4691e1bf535cdaac7494",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0x1bb03305286db08af2c313765cf900169843d0c7",
+			"successRate": 0,
+			"totalTickets": 6
+		},
+		{
+			"account": "0xf21e489f84566bd82dff2783c80b5fc1a9dca608",
+			"successRate": 32,
+			"totalTickets": 25
+		},
+		{
+			"account": "0xc9486849a02e2529f69dc914fd293895e15f7b2a",
+			"successRate": 0,
+			"totalTickets": 8
+		},
+		{
+			"account": "0x9d1c59c651c668ddefc7cf8b22d604e1cfc908ca",
+			"successRate": 31.25,
+			"totalTickets": 16
+		},
+		{
+			"account": "0x4b2cab349149ad53d4cea045d90b52ce4cf517cb",
+			"successRate": 20,
+			"totalTickets": 35
+		},
+		{
+			"account": "0xda1d9534bef3344fa5be3b644b767b349e7415c7",
+			"successRate": 2.35,
+			"totalTickets": 213
+		},
+		{
+			"account": "0xf12c220b631125425f4c69823d6187fe3c8d0999",
+			"successRate": 11.11,
+			"totalTickets": 27
+		},
+		{
+			"account": "0xe966c59c15566a994391f6226fee5bc0ef70f87a",
+			"successRate": 18.29,
+			"totalTickets": 83
+		},
+		{
+			"account": "0x88a10d7995b96f28a1ecd7ddf1f2e2cbbe1e3786",
+			"successRate": 50,
+			"totalTickets": 6
+		},
+		{
+			"account": "0x92e40c3ac7f668631b508cee97002b64415af8b2",
+			"successRate": 23.33,
+			"totalTickets": 60
+		},
+		{
+			"account": "0xac6cca006247e198f7786e4e5cb864992a4ec230",
+			"successRate": 50,
+			"totalTickets": 4
+		},
+		{
+			"account": "0x9fc7d6e7a3d4ab7b8b28d813f68674c8a6e91e83",
+			"successRate": 20.83,
+			"totalTickets": 24
+		},
+		{
+			"account": "0x12a21203755ea50013fdefe0c8759767bda368ad",
+			"successRate": 0,
+			"totalTickets": 4
+		},
+		{
+			"account": "0xa5e1f590602e4600023d9b1576c7fc0f97eea143",
+			"successRate": 17.95,
+			"totalTickets": 39
+		},
+		{
+			"account": "0xbb5e1932d2907da46d10258f9fa6d79d160a460d",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0x7d4c4d5380ca2f9c7a091bb622b80613da7eae8c",
+			"successRate": 12.5,
+			"totalTickets": 41
+		},
+		{
+			"account": "0xc53d8683ed3d15e105f76ff181ee44f881c2e056",
+			"successRate": 0,
+			"totalTickets": 2
+		},
+		{
+			"account": "0x4a3e7f1c66327890348e9f2a5f79d6e60d98db8b",
+			"successRate": 0,
+			"totalTickets": 19
+		},
+		{
+			"account": "0x0851dae86b9504adb9aca6bb7031e178d0236faf",
+			"successRate": 15.79,
+			"totalTickets": 19
+		},
+		{
+			"account": "0xb20fb6bf02434581e6344e4e0f04f37953b29913",
+			"successRate": 0,
+			"totalTickets": 18
+		},
+		{
+			"account": "0x52081a6912cfa64968999fbeb31387446a49b207",
+			"successRate": 100,
+			"totalTickets": 1
 		},
 		{
 			"account": "0x7474765fc6629e96696f1e1b0460419b4478d8dc",
@@ -56,19 +336,159 @@
 			"totalTickets": 12
 		},
 		{
+			"account": "0x9c7579db47648468c9e37989e69cc2d9ad03452d",
+			"successRate": 20,
+			"totalTickets": 10
+		},
+		{
+			"account": "0xb9d8b2ee00469d536cff87ebcd96a9a17ebb1fd7",
+			"successRate": 42.86,
+			"totalTickets": 7
+		},
+		{
+			"account": "0xbf4a60736dd30b807e176e97ae2fd551d0764eb2",
+			"successRate": 28.57,
+			"totalTickets": 21
+		},
+		{
+			"account": "0x1fb68bd780b98da7653ba2714bf98449949f7a02",
+			"successRate": 36.36,
+			"totalTickets": 11
+		},
+		{
+			"account": "0x209217189e39dcecf92309d8560aae57bff596c3",
+			"successRate": 17.53,
+			"totalTickets": 97
+		},
+		{
+			"account": "0xd6f04cdbb1a2f78e2ae6ef42aeda817ad701322a",
+			"successRate": 0,
+			"totalTickets": 4
+		},
+		{
+			"account": "0x8eeceec8367efb3951b50c98ab3a846adf7d8a38",
+			"successRate": 25,
+			"totalTickets": 4
+		},
+		{
+			"account": "0x95f9c76f016e88533615a18ed75ef7384e42bee6",
+			"successRate": 0,
+			"totalTickets": 5
+		},
+		{
+			"account": "0x5d21694058a9c23c68e76c77ea61e04a84035eef",
+			"successRate": 8.33,
+			"totalTickets": 12
+		},
+		{
 			"account": "0x08f518870ec33bc96cc251692b79a745c1af78b5",
-			"successRate": 29.63,
-			"totalTickets": 136
+			"successRate": 30.08,
+			"totalTickets": 133
 		},
 		{
-			"account": "0x2c84278aa407886b277bbd96ccf3c0e31a3f8ffd",
-			"successRate": 18.59,
-			"totalTickets": 643
+			"account": "0x0014ea9bbe130c8af7f00c8e61fc07368bdaaf7d",
+			"successRate": 24,
+			"totalTickets": 175
 		},
 		{
-			"account": "0x75c1b767ab7c46c074710ce0cb8c03a99fc28abc",
-			"successRate": 12.5,
-			"totalTickets": 51
+			"account": "0xe88857d67cf8e0031ca1674ffe17f72578e566ee",
+			"successRate": 27.78,
+			"totalTickets": 18
+		},
+		{
+			"account": "0xb316e544635e00fc4c631873987cd8dfc9322c39",
+			"successRate": 28.57,
+			"totalTickets": 7
+		},
+		{
+			"account": "0xfb5e8a587733e1a8700e1d448f97a12bab4ad4ea",
+			"successRate": 75,
+			"totalTickets": 4
+		},
+		{
+			"account": "0xb729973d8c89c3225daf9bc2b2f2e6805f1e641b",
+			"successRate": 50,
+			"totalTickets": 2
+		},
+		{
+			"account": "0xd894de705b1fa1548c8c7ad1b827b32f6ca36475",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0x3e516b6d229bf935f1b6bf4a0c2531ddab48cf1b",
+			"successRate": 25,
+			"totalTickets": 4
+		},
+		{
+			"account": "0x3d3c815878bb9dab554377d5f24f47b4cde8f8bb",
+			"successRate": 7.14,
+			"totalTickets": 14
+		},
+		{
+			"account": "0xff936b80783b32ad3f2b4e610d04c9778c4669a0",
+			"successRate": 11.76,
+			"totalTickets": 17
+		},
+		{
+			"account": "0x280668d0fb6bf8e0a649d62fd8eba092bdc6e469",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0x6a19339468ea1549ae3646881cd8732ad36778ad",
+			"successRate": 7.14,
+			"totalTickets": 14
+		},
+		{
+			"account": "0x4b9c86d7c271ddc2ea06342317f52b1b037c7da2",
+			"successRate": 30,
+			"totalTickets": 10
+		},
+		{
+			"account": "0xa12eec92d8c155c8ea9159cb87da4e062bf9992d",
+			"successRate": 10.53,
+			"totalTickets": 19
+		},
+		{
+			"account": "0xaaf5f562c083c1300be13ba1b46cea3dbeaef404",
+			"successRate": 11.11,
+			"totalTickets": 36
+		},
+		{
+			"account": "0x09cc15dda77789d42c0133c909e88fb6e3af793a",
+			"successRate": 31.82,
+			"totalTickets": 22
+		},
+		{
+			"account": "0x5f742bd29175ed7b0352357c37ef7d1de199182a",
+			"successRate": 25,
+			"totalTickets": 4
+		},
+		{
+			"account": "0x489429cc166b93bc93af8600ea123b4512177932",
+			"successRate": 30.56,
+			"totalTickets": 36
+		},
+		{
+			"account": "0x599ea676f449f5288f2b01b14b3c3315e6933193",
+			"successRate": 2.86,
+			"totalTickets": 35
+		},
+		{
+			"account": "0xfe32cb2bb7c4f1fcad4f4f6cfc2fec7b50987d12",
+			"successRate": 18.03,
+			"totalTickets": 61
+		},
+		{
+			"account": "0xd67da3d36085b966b1fd7f72dd8bd7e5dc630f7d",
+			"successRate": 28.13,
+			"totalTickets": 32
+		},
+		{
+			"account": "0xe684dc05c16851c65edb5d9fc3b11bce4f427eb2",
+			"successRate": 15.79,
+			"totalTickets": 19
 		},
 		{
 			"account": "0x34c9a21c189ce4a40bc5d24dd742196402668ee3",
@@ -76,39 +496,14 @@
 			"totalTickets": 2
 		},
 		{
-			"account": "0xc290067ef915116e31ce171097d4697da36c8c43",
-			"successRate": 3.93,
-			"totalTickets": 181
-		},
-		{
 			"account": "0x1ffeec04b0363ca9e9c3d5eb528654961c9bfecc",
-			"successRate": 5.03,
+			"successRate": 4.93,
 			"totalTickets": 223
-		},
-		{
-			"account": "0x3d3c815878bb9dab554377d5f24f47b4cde8f8bb",
-			"successRate": 8.33,
-			"totalTickets": 13
-		},
-		{
-			"account": "0x7d4c4d5380ca2f9c7a091bb622b80613da7eae8c",
-			"successRate": 4.17,
-			"totalTickets": 34
-		},
-		{
-			"account": "0x4a02a9eed0540f6c797c75203da66b53f28b54b8",
-			"successRate": 7.69,
-			"totalTickets": 117
-		},
-		{
-			"account": "0xff936b80783b32ad3f2b4e610d04c9778c4669a0",
-			"successRate": 15.38,
-			"totalTickets": 14
 		},
 		{
 			"account": "0xa5ecc068db75ffb36d157625b08e747895a03d18",
 			"successRate": 0,
-			"totalTickets": 2
+			"totalTickets": 1
 		},
 		{
 			"account": "0xd38dfe4f29e7d2b03d649ecbecd0e9d2941c816e",
@@ -122,12 +517,12 @@
 		},
 		{
 			"account": "0xb7d865c7c63d758db991b191e9c80c3867b34b8e",
-			"successRate": 28.57,
+			"successRate": 25,
 			"totalTickets": 8
 		},
 		{
 			"account": "0x6970fbbf39a78e72ded6d87781887e12b18322b0",
-			"successRate": 21.43,
+			"successRate": 20,
 			"totalTickets": 15
 		},
 		{
@@ -137,13 +532,8 @@
 		},
 		{
 			"account": "0xf874afa0b950270dc702740904d103822307f028",
-			"successRate": 12.5,
-			"totalTickets": 17
-		},
-		{
-			"account": "0xc74ad3eba49d462d1462988aa1c2bb07619c7034",
-			"successRate": 0,
-			"totalTickets": 4
+			"successRate": 13.33,
+			"totalTickets": 15
 		},
 		{
 			"account": "0x3e791cade64ecb1e78be4a5a99cde0b2fa51675d",
@@ -161,54 +551,19 @@
 			"totalTickets": 3
 		},
 		{
-			"account": "0xb8ee03750511a08aced1ec8edf8512ee82332e1f",
-			"successRate": 0,
-			"totalTickets": 2
-		},
-		{
-			"account": "0xda1d9534bef3344fa5be3b644b767b349e7415c7",
-			"successRate": 1.88,
-			"totalTickets": 214
-		},
-		{
-			"account": "0x7dba1768394a3d2b69f5737e0af64b7851371740",
-			"successRate": 8.96,
-			"totalTickets": 212
-		},
-		{
 			"account": "0xc55c3798eb474dc956c8dc0e25fb1ab72049738f",
 			"successRate": 0,
 			"totalTickets": 2
 		},
 		{
-			"account": "0x4b2cab349149ad53d4cea045d90b52ce4cf517cb",
-			"successRate": 20.69,
-			"totalTickets": 29
-		},
-		{
 			"account": "0xcdb7361e0793350be029f2b1139621597e4cb053",
-			"successRate": 27.78,
+			"successRate": 25,
 			"totalTickets": 20
 		},
 		{
-			"account": "0x9d1c59c651c668ddefc7cf8b22d604e1cfc908ca",
-			"successRate": 40,
-			"totalTickets": 11
-		},
-		{
-			"account": "0x4b9c86d7c271ddc2ea06342317f52b1b037c7da2",
-			"successRate": 22.22,
-			"totalTickets": 10
-		},
-		{
 			"account": "0x26ca32b540bdb8080a514f82705c9e9ab53a5207",
-			"successRate": 27.91,
+			"successRate": 27.27,
 			"totalTickets": 44
-		},
-		{
-			"account": "0xf12c220b631125425f4c69823d6187fe3c8d0999",
-			"successRate": 7.14,
-			"totalTickets": 29
 		},
 		{
 			"account": "0xba09a1033f821f034253ef89ec837361baa47508",
@@ -216,39 +571,14 @@
 			"totalTickets": 1
 		},
 		{
-			"account": "0xf21e489f84566bd82dff2783c80b5fc1a9dca608",
-			"successRate": 31.82,
-			"totalTickets": 24
-		},
-		{
 			"account": "0x3059c5e38d9ed4b697ec38705ca06db24a33f777",
-			"successRate": 20,
+			"successRate": 16.67,
 			"totalTickets": 6
 		},
 		{
-			"account": "0xbf49b454818783d12bf4f3375ff17c59015e66cb",
-			"successRate": 18.75,
-			"totalTickets": 66
-		},
-		{
-			"account": "0x7b7d6ca0bf9aeb1744e98701ea777744eae280af",
-			"successRate": 24.49,
-			"totalTickets": 49
-		},
-		{
-			"account": "0x9633d229b711dcbf06cdd8739238765e0f3135b0",
-			"successRate": 31.82,
-			"totalTickets": 66
-		},
-		{
-			"account": "0xaaf5f562c083c1300be13ba1b46cea3dbeaef404",
-			"successRate": 13.33,
-			"totalTickets": 35
-		},
-		{
 			"account": "0x86aabcd459587bc1a347ae1e2d15223856354ec9",
-			"successRate": 29.55,
-			"totalTickets": 89
+			"successRate": 29.07,
+			"totalTickets": 86
 		},
 		{
 			"account": "0x321e3397b783ac9fe5326ab5f05f3070497d831f",
@@ -261,18 +591,13 @@
 			"totalTickets": 37
 		},
 		{
-			"account": "0x489429cc166b93bc93af8600ea123b4512177932",
-			"successRate": 31.43,
-			"totalTickets": 35
-		},
-		{
 			"account": "0x0a4de625aa7624dd72cb09a41a6e52fce1993310",
-			"successRate": 40,
-			"totalTickets": 6
+			"successRate": 20,
+			"totalTickets": 5
 		},
 		{
 			"account": "0xe94e1412dba04f387b5ab51a0a5b8c03b1a71bbb",
-			"successRate": 55.56,
+			"successRate": 50,
 			"totalTickets": 10
 		},
 		{
@@ -282,33 +607,18 @@
 		},
 		{
 			"account": "0x259b9c4cfeadaef8a5b842710a777364988415b3",
-			"successRate": 41.18,
+			"successRate": 40.38,
 			"totalTickets": 52
 		},
 		{
 			"account": "0x7e5c1a665bfd595a8de3ac91dabb37a65db04096",
-			"successRate": 21.74,
-			"totalTickets": 46
+			"successRate": 23.81,
+			"totalTickets": 42
 		},
 		{
 			"account": "0x19526550cb6f610801baaa847e1f1b97ef1e540b",
 			"successRate": 100,
 			"totalTickets": 5
-		},
-		{
-			"account": "0x0a9faafb19e4df3a23ebef4cfa01fbbe2a137c78",
-			"successRate": 100,
-			"totalTickets": 1
-		},
-		{
-			"account": "0x161866628e6d33c0ca057d987c8cbf93c647dd74",
-			"successRate": 3.85,
-			"totalTickets": 27
-		},
-		{
-			"account": "0x0014ea9bbe130c8af7f00c8e61fc07368bdaaf7d",
-			"successRate": 23.43,
-			"totalTickets": 175
 		},
 		{
 			"account": "0x819a371ab4bfded173edcf12b6d37c6c80e4a8c0",
@@ -321,34 +631,9 @@
 			"totalTickets": 11
 		},
 		{
-			"account": "0xdf627f524a24212acb573e8b1ae5f47e6ab83f69",
-			"successRate": 37.04,
-			"totalTickets": 27
-		},
-		{
 			"account": "0x89df1af8600af226df87d01ce4eee7e5c0cc1642",
 			"successRate": 30.77,
 			"totalTickets": 13
-		},
-		{
-			"account": "0xa12eec92d8c155c8ea9159cb87da4e062bf9992d",
-			"successRate": 11.11,
-			"totalTickets": 18
-		},
-		{
-			"account": "0xfe32cb2bb7c4f1fcad4f4f6cfc2fec7b50987d12",
-			"successRate": 22.73,
-			"totalTickets": 66
-		},
-		{
-			"account": "0xa7449576ed057677662b0d87452ae06a1f0f13bd",
-			"successRate": 20,
-			"totalTickets": 6
-		},
-		{
-			"account": "0x4a3e7f1c66327890348e9f2a5f79d6e60d98db8b",
-			"successRate": 0,
-			"totalTickets": 17
 		},
 		{
 			"account": "0x0738cda1f891a5750eec53b12dca2488756b1b7a",
@@ -356,19 +641,9 @@
 			"totalTickets": 1
 		},
 		{
-			"account": "0x9c7579db47648468c9e37989e69cc2d9ad03452d",
-			"successRate": 22.22,
-			"totalTickets": 9
-		},
-		{
 			"account": "0x5135606856a0a96e8f50dd3d69b028e608663f62",
-			"successRate": 28.57,
-			"totalTickets": 7
-		},
-		{
-			"account": "0xd6f04cdbb1a2f78e2ae6ef42aeda817ad701322a",
-			"successRate": 0,
-			"totalTickets": 3
+			"successRate": 25,
+			"totalTickets": 8
 		},
 		{
 			"account": "0x18461b9cfdcfd7371734a3cad04c2a0979e5e981",
@@ -387,8 +662,8 @@
 		},
 		{
 			"account": "0x38b38a61feb0df615d73cbc5b2612d6084cdba08",
-			"successRate": 4.17,
-			"totalTickets": 24
+			"successRate": 4.35,
+			"totalTickets": 23
 		},
 		{
 			"account": "0xded07e659a7147d94ed16d99eee64158e319c7f0",
@@ -402,33 +677,18 @@
 		},
 		{
 			"account": "0x277a632432c3e026d5753694f42c8b1590ccc744",
-			"successRate": 26.67,
-			"totalTickets": 15
-		},
-		{
-			"account": "0x5d21694058a9c23c68e76c77ea61e04a84035eef",
-			"successRate": 10,
-			"totalTickets": 10
+			"successRate": 21.43,
+			"totalTickets": 14
 		},
 		{
 			"account": "0x96031b060abf020a2f57008e50d1ddce37e43410",
-			"successRate": 8.33,
-			"totalTickets": 12
+			"successRate": 0,
+			"totalTickets": 8
 		},
 		{
 			"account": "0x69c905a98afdb904626f796e3e7f9a863c92e86f",
 			"successRate": 0,
 			"totalTickets": 5
-		},
-		{
-			"account": "0x3ea56ba46b0a7cbfb67ddb5dc5ea88ffd2933b71",
-			"successRate": 50,
-			"totalTickets": 2
-		},
-		{
-			"account": "0x3754733ca2d12d52d94dd9789a472baa10fdb333",
-			"successRate": 50,
-			"totalTickets": 2
 		},
 		{
 			"account": "0xd595710aedaba1d2e18bfdbab46ab796664c6d89",
@@ -437,28 +697,13 @@
 		},
 		{
 			"account": "0x786f5f93db421a49d6906dd3f174d0778df758aa",
-			"successRate": 10,
-			"totalTickets": 60
-		},
-		{
-			"account": "0x1bb03305286db08af2c313765cf900169843d0c7",
-			"successRate": 0,
-			"totalTickets": 2
+			"successRate": 8.62,
+			"totalTickets": 58
 		},
 		{
 			"account": "0x179dcb465928a84c5d67505952e8ff7c1faaeab6",
 			"successRate": 50,
 			"totalTickets": 4
-		},
-		{
-			"account": "0x547b324b3f9e1f9f436fede6e88ae1ca816db6f3",
-			"successRate": 8.33,
-			"totalTickets": 24
-		},
-		{
-			"account": "0xe684dc05c16851c65edb5d9fc3b11bce4f427eb2",
-			"successRate": 16.67,
-			"totalTickets": 18
 		},
 		{
 			"account": "0xc82a46ee1c54859dae3f881f718cd52bf5a034a5",
@@ -468,27 +713,17 @@
 		{
 			"account": "0x8d7ef68d3d17fe776254f4d023b905369c897230",
 			"successRate": 0,
-			"totalTickets": 5
+			"totalTickets": 4
 		},
 		{
 			"account": "0xfa2df969bfb2b9eeb06584f034c4214419f71ecf",
-			"successRate": 18.18,
-			"totalTickets": 11
-		},
-		{
-			"account": "0xe88857d67cf8e0031ca1674ffe17f72578e566ee",
-			"successRate": 33.33,
-			"totalTickets": 16
+			"successRate": 28.57,
+			"totalTickets": 7
 		},
 		{
 			"account": "0xac9c065b1a84a486628fd20efc9426e435ba7cc2",
 			"successRate": 50,
 			"totalTickets": 4
-		},
-		{
-			"account": "0xb20fb6bf02434581e6344e4e0f04f37953b29913",
-			"successRate": 0,
-			"totalTickets": 14
 		},
 		{
 			"account": "0x8c42138c925d1049ec6b29f1ecf817b1628e54ba",
@@ -541,164 +776,9 @@
 			"totalTickets": 1
 		},
 		{
-			"account": "0x09cc15dda77789d42c0133c909e88fb6e3af793a",
-			"successRate": 30.43,
-			"totalTickets": 23
-		},
-		{
 			"account": "0x6ce6c64c7da3eef28be2665120f97584b97bf969",
-			"successRate": 71.43,
-			"totalTickets": 28
-		},
-		{
-			"account": "0xcf4dc923ffb69a2f6dde883539c4527a8a8a6a9b",
-			"successRate": 0,
-			"totalTickets": 2
-		},
-		{
-			"account": "0x209217189e39dcecf92309d8560aae57bff596c3",
-			"successRate": 18.09,
-			"totalTickets": 94
-		},
-		{
-			"account": "0x1706f86e1798e341944746fe336d63b60e1d0ccb",
-			"successRate": 50,
-			"totalTickets": 12
-		},
-		{
-			"account": "0x97579172749e2bc672e204891a43cbc0f87c8374",
-			"successRate": 19.35,
-			"totalTickets": 31
-		},
-		{
-			"account": "0x3b2d77d70f78c85b48d97145c2f1632be780d4fb",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0xcb43b5c0a2b3e2f153a45872b12c43606687425d",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0xf85a4c44e2c66e378707570680f4a1339ef6d9be",
-			"successRate": 0,
-			"totalTickets": 8
-		},
-		{
-			"account": "0xa58cc23a546b6ce08ee258cfb54d92d4cc151ba4",
-			"successRate": 0,
-			"totalTickets": 2
-		},
-		{
-			"account": "0xece70493b90b04000aa8cdfc06932525d90c4b3e",
-			"successRate": 43.48,
-			"totalTickets": 46
-		},
-		{
-			"account": "0xda9ad6284300b15bc802c3fbf6dbbdf7ceb27fe8",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0x087d1aa55f2cf879b3be11c31d252b94bc7a6616",
-			"successRate": 0,
-			"totalTickets": 2
-		},
-		{
-			"account": "0x314e3e92bf03daee4d2d296f474804a05126504e",
-			"successRate": 0,
-			"totalTickets": 7
-		},
-		{
-			"account": "0x539a2ab0871dab48fc2fd28a59426c54463ef22c",
-			"successRate": 25,
-			"totalTickets": 8
-		},
-		{
-			"account": "0x0851dae86b9504adb9aca6bb7031e178d0236faf",
-			"successRate": 16.67,
-			"totalTickets": 24
-		},
-		{
-			"account": "0x429801692ae55c2d706cf57276fe9f71abcce3cc",
-			"successRate": 12.5,
-			"totalTickets": 24
-		},
-		{
-			"account": "0xfb21f8a7a67c1846b1034d13ae118855ad1b8da0",
-			"successRate": 33.33,
-			"totalTickets": 3
-		},
-		{
-			"account": "0xc6516e190b29605154cf0d83a4c8a7f954ff29b5",
-			"successRate": 0,
-			"totalTickets": 4
-		},
-		{
-			"account": "0xadce21bdc15c6f39888c9b0a3ec41c9637932495",
-			"successRate": 85.71,
-			"totalTickets": 7
-		},
-		{
-			"account": "0xbfdffcd81a3796f55b476b36937253fa6267644b",
-			"successRate": 50,
-			"totalTickets": 4
-		},
-		{
-			"account": "0x8559027bac39638438ddb32d713f0b12ef66ea7b",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0x437ed927a90db53106b83a4626574bfadecc6420",
-			"successRate": 30.43,
-			"totalTickets": 23
-		},
-		{
-			"account": "0x126c14a5a983d103e51fcd3eb2e5063ada22029c",
-			"successRate": 2.63,
-			"totalTickets": 38
-		},
-		{
-			"account": "0xaaada5efede1f50be1cb122281f4fce9c0c031fd",
-			"successRate": 33.33,
-			"totalTickets": 3
-		},
-		{
-			"account": "0x8b81420441ac3933c58d1190c8499c2f89eb1263",
-			"successRate": 13.33,
-			"totalTickets": 30
-		},
-		{
-			"account": "0x768ccbb0c70094a7a838fb9afbd5d9dca3778f1f",
-			"successRate": 50,
-			"totalTickets": 12
-		},
-		{
-			"account": "0xd8c24e8dc079bd7c9d6fb3a2f2dc772a7ff1d0e6",
-			"successRate": 5.56,
-			"totalTickets": 36
-		},
-		{
-			"account": "0xb69e74324bc030f1b5409236efa461496d439116",
-			"successRate": 27.78,
-			"totalTickets": 18
-		},
-		{
-			"account": "0xd67da3d36085b966b1fd7f72dd8bd7e5dc630f7d",
-			"successRate": 33.33,
-			"totalTickets": 33
-		},
-		{
-			"account": "0x9d0d6552288ba41aa852a9f3e11cc32a9b5254e0",
-			"successRate": 50,
-			"totalTickets": 2
-		},
-		{
-			"account": "0x9ffc81e2912e937afe1a635b1f8641df62b176e5",
-			"successRate": 2.7,
-			"totalTickets": 37
+			"successRate": 72.41,
+			"totalTickets": 29
 		},
 		{
 			"account": "0x2f61c4f604150de760d9cf9c19c200cd19f251c9",
@@ -712,8 +792,8 @@
 		},
 		{
 			"account": "0x82b3634c0518507d5d817be6dab6233ebe4d68d9",
-			"successRate": 53.56,
-			"totalTickets": 1960
+			"successRate": 53.31,
+			"totalTickets": 1984
 		},
 		{
 			"account": "0x8c50bc819a91cfb9e8c4a98b54088d969c46b464",
@@ -742,7 +822,12 @@
 		},
 		{
 			"account": "0x00000000008c09a3ab0d1c9ba0255e5cd39079cc",
-			"successRate": 40,
+			"successRate": 37.93,
+			"totalTickets": 29
+		},
+		{
+			"account": "0x8b81420441ac3933c58d1190c8499c2f89eb1263",
+			"successRate": 13.33,
 			"totalTickets": 30
 		},
 		{
@@ -757,8 +842,8 @@
 		},
 		{
 			"account": "0x9706779988e23b2e4f747fced2972f81dfa764d6",
-			"successRate": 47.62,
-			"totalTickets": 21
+			"successRate": 45,
+			"totalTickets": 20
 		},
 		{
 			"account": "0xb82b04f420d4bc501512013133ac7f2aca64a064",
@@ -772,13 +857,13 @@
 		},
 		{
 			"account": "0xa4007e5deed110fac652323e607c5b8f7f88e5f6",
-			"successRate": 60,
-			"totalTickets": 5
+			"successRate": 50,
+			"totalTickets": 4
 		},
 		{
 			"account": "0x5d6efee9b5bec7e248c2a3bcf06683f83ade5015",
-			"successRate": 49.43,
-			"totalTickets": 87
+			"successRate": 48.84,
+			"totalTickets": 86
 		},
 		{
 			"account": "0x880a6c5ab3b50e66c883cc9f056860abbb68099a",
@@ -802,8 +887,8 @@
 		},
 		{
 			"account": "0xd2c32f54a26285decf30e6d208f722e7d5fd3f58",
-			"successRate": 27.27,
-			"totalTickets": 44
+			"successRate": 29.27,
+			"totalTickets": 41
 		},
 		{
 			"account": "0xf534b46711affef626c75b4df62f2e92131efa99",
@@ -827,8 +912,8 @@
 		},
 		{
 			"account": "0x82ad906c88feb7fa2e9a7e3743bea818b350bdfc",
-			"successRate": 14.81,
-			"totalTickets": 27
+			"successRate": 15.38,
+			"totalTickets": 26
 		},
 		{
 			"account": "0xb64485c3d3f162ccbf0c4c0ff10dac1eba3b6da7",
@@ -837,12 +922,12 @@
 		},
 		{
 			"account": "0xbaac5464bf6e767c9af0e8d4677c01be2065fd5f",
-			"successRate": 35.62,
-			"totalTickets": 73
+			"successRate": 34.72,
+			"totalTickets": 72
 		},
 		{
 			"account": "0xc922f4cde42dd658a7d3ea852caf7eae47f6cecd",
-			"successRate": 53.52,
+			"successRate": 54.17,
 			"totalTickets": 72
 		},
 		{
@@ -856,19 +941,14 @@
 			"totalTickets": 30
 		},
 		{
-			"account": "0x0e9b063789909565ceda1fba162474405a151e66",
-			"successRate": 21.95,
-			"totalTickets": 82
-		},
-		{
 			"account": "0x9e36f868fd118585cb53ee4b7dea5256f03ba3d0",
-			"successRate": 50,
-			"totalTickets": 22
+			"successRate": 47.62,
+			"totalTickets": 21
 		},
 		{
 			"account": "0xbd63174ab3bed489ed606b3da99e296138c4c938",
-			"successRate": 41.07,
-			"totalTickets": 56
+			"successRate": 40.74,
+			"totalTickets": 54
 		},
 		{
 			"account": "0x877dff188db6890090bfd0e73fb84a327bb99c7d",
@@ -883,17 +963,17 @@
 		{
 			"account": "0x471e96a01962b62fe3e9e8e367f6be56e3e983d0",
 			"successRate": 0,
-			"totalTickets": 3
+			"totalTickets": 1
 		},
 		{
 			"account": "0x5e2b49c68f1fd68af1354c377eacec2f05632d3f",
-			"successRate": 32.43,
-			"totalTickets": 37
+			"successRate": 31.58,
+			"totalTickets": 38
 		},
 		{
 			"account": "0x128bd93fd0240efc358f8f21f0b95a5a25d9abc0",
-			"successRate": 55,
-			"totalTickets": 20
+			"successRate": 52.63,
+			"totalTickets": 19
 		},
 		{
 			"account": "0x49908e05de9e1d559499b08042d1123a1daae6b4",
@@ -927,8 +1007,8 @@
 		},
 		{
 			"account": "0x007d142b804c417bc177b394d80e8922e17aa23d",
-			"successRate": 50,
-			"totalTickets": 6
+			"successRate": 60,
+			"totalTickets": 5
 		},
 		{
 			"account": "0x0c2e9660aee57e6afc454c40964c7f3445e7f9fe",
@@ -942,8 +1022,8 @@
 		},
 		{
 			"account": "0x177b13f1bf13dba858dc633e4f6b525144b02ee7",
-			"successRate": 14.29,
-			"totalTickets": 7
+			"successRate": 0,
+			"totalTickets": 5
 		},
 		{
 			"account": "0x1f58d7fc28e29e8f7e0c49cfd65fd93c4a790b48",
@@ -952,8 +1032,8 @@
 		},
 		{
 			"account": "0x265edbcdcc0227078f39e620d040eef255e7c3b3",
-			"successRate": 20,
-			"totalTickets": 15
+			"successRate": 21.43,
+			"totalTickets": 14
 		},
 		{
 			"account": "0x2e2ea30ba045df4bc38e80cf11e119e12e06c1c2",
@@ -962,8 +1042,8 @@
 		},
 		{
 			"account": "0x398e17b329b074c700d18e87f49b85d0512699e9",
-			"successRate": 10,
-			"totalTickets": 30
+			"successRate": 10.34,
+			"totalTickets": 29
 		},
 		{
 			"account": "0x51834f313ad8804b9f7884980f45cf6ba70116b6",
@@ -972,8 +1052,8 @@
 		},
 		{
 			"account": "0x5ecc25d1f658af69d9b59fcaedb2d9ee38254036",
-			"successRate": 31.25,
-			"totalTickets": 32
+			"successRate": 34.48,
+			"totalTickets": 29
 		},
 		{
 			"account": "0x5ffe390ca15f7946290dace0b329b6369a1f5002",
@@ -982,18 +1062,18 @@
 		},
 		{
 			"account": "0x6f277a0c36184ad4d1c26fdf8c97637c38733b29",
-			"successRate": 11.11,
-			"totalTickets": 18
+			"successRate": 11.76,
+			"totalTickets": 17
 		},
 		{
 			"account": "0x7306da486ef680bdeda0b63c8040cb688bd997a8",
-			"successRate": 25,
-			"totalTickets": 4
+			"successRate": 33.33,
+			"totalTickets": 3
 		},
 		{
 			"account": "0x767a60f295aedd958932088f9cd6a4951d8739b6",
-			"successRate": 33.33,
-			"totalTickets": 6
+			"successRate": 40,
+			"totalTickets": 5
 		},
 		{
 			"account": "0x7c5b7bf87feab9a3f4972323bddda04c79d61315",
@@ -1027,8 +1107,8 @@
 		},
 		{
 			"account": "0x97405809a98a5a4f13acaf9daea745af7f844d0e",
-			"successRate": 26.32,
-			"totalTickets": 19
+			"successRate": 27.78,
+			"totalTickets": 18
 		},
 		{
 			"account": "0x9b09024e63bb18747d357f8fbb94c825a634bab8",
@@ -1042,13 +1122,13 @@
 		},
 		{
 			"account": "0xa52b5a5d71e3f386a0109c24ff5fbeda0bd31150",
-			"successRate": 20,
-			"totalTickets": 10
+			"successRate": 22.22,
+			"totalTickets": 9
 		},
 		{
 			"account": "0xa7ff0bc6f74fc6c49ccba87f3df51b1adf98543d",
-			"successRate": 36,
-			"totalTickets": 25
+			"successRate": 37.5,
+			"totalTickets": 24
 		},
 		{
 			"account": "0xb91b0e319af35145871a364f24d55f01f30c615f",
@@ -1092,8 +1172,8 @@
 		},
 		{
 			"account": "0xea64f2cbd95c5f5fa5c71ed803e4158bf46a924d",
-			"successRate": 10.71,
-			"totalTickets": 28
+			"successRate": 11.11,
+			"totalTickets": 27
 		},
 		{
 			"account": "0xf327ea8952b7cf816821436a63235b0211fcef69",
@@ -1117,8 +1197,8 @@
 		},
 		{
 			"account": "0xf3bcd2e7cc95ac1c5824da5e372b9d6259dcf75c",
-			"successRate": 81.82,
-			"totalTickets": 11
+			"successRate": 80,
+			"totalTickets": 10
 		},
 		{
 			"account": "0xeeb9565c8d8db8aeb3448d6ec75e7a7d6c96bda6",
@@ -1196,11 +1276,6 @@
 			"totalTickets": 5
 		},
 		{
-			"account": "0x668540812466219a4cf9ef22151bb7e513010f17",
-			"successRate": 21.79,
-			"totalTickets": 78
-		},
-		{
 			"account": "0x72819b106dbffd451bbe40ed1e3ce2fbd13cc947",
 			"successRate": 83.33,
 			"totalTickets": 6
@@ -1214,6 +1289,11 @@
 			"account": "0x92ca158b261b9f3b3bb55e865dbc3e5abaccd0c6",
 			"successRate": 100,
 			"totalTickets": 1
+		},
+		{
+			"account": "0x97579172749e2bc672e204891a43cbc0f87c8374",
+			"successRate": 19.35,
+			"totalTickets": 31
 		},
 		{
 			"account": "0x9f5ad429c43b13ca6248365c1bfcb305226cd738",
@@ -1277,8 +1357,8 @@
 		},
 		{
 			"account": "0xabe648928a8d5b1d943d5d237de71bb2a0c2794c",
-			"successRate": 10.78,
-			"totalTickets": 102
+			"successRate": 10.2,
+			"totalTickets": 98
 		},
 		{
 			"account": "0x7553fa99ab1f429551eec660708c08e14e30584f",
@@ -1292,8 +1372,8 @@
 		},
 		{
 			"account": "0xebacc96ea6449db03732e11f807188e4e57cca97",
-			"successRate": 17.07,
-			"totalTickets": 41
+			"successRate": 15,
+			"totalTickets": 40
 		},
 		{
 			"account": "0xf519765f1ccf2d2522d316d6a5d1771e8972233a",
@@ -1307,8 +1387,8 @@
 		},
 		{
 			"account": "0x7edba0f13e5aa11bd5c1fb96ab25d26f1907fd1a",
-			"successRate": 43.4,
-			"totalTickets": 53
+			"successRate": 44.44,
+			"totalTickets": 54
 		},
 		{
 			"account": "0xfb59caaeced0d305a83799926551303d9e8108d1",
@@ -1332,12 +1412,17 @@
 		},
 		{
 			"account": "0x47d312c7604b1751f691011aed4ce32231bff4d1",
-			"successRate": 60,
-			"totalTickets": 5
+			"successRate": 33.33,
+			"totalTickets": 3
 		},
 		{
 			"account": "0x4a24fd841e74c28309bca5730b40679e18c5fca0",
 			"successRate": 31.25,
+			"totalTickets": 16
+		},
+		{
+			"account": "0xde0e14e314ec13cabc21272f9dd27dec0c92b504",
+			"successRate": 6.25,
 			"totalTickets": 16
 		},
 		{
@@ -1376,11 +1461,6 @@
 			"totalTickets": 1
 		},
 		{
-			"account": "0xb9d8b2ee00469d536cff87ebcd96a9a17ebb1fd7",
-			"successRate": 50,
-			"totalTickets": 6
-		},
-		{
 			"account": "0x24357454d8d1a0cc93a6c25fd490467372bc2454",
 			"successRate": 40,
 			"totalTickets": 10
@@ -1397,8 +1477,8 @@
 		},
 		{
 			"account": "0xfb25a6227de0951ec4e2ac47f72a7146f70da0b5",
-			"successRate": 18.25,
-			"totalTickets": 126
+			"successRate": 17.54,
+			"totalTickets": 114
 		},
 		{
 			"account": "0x233e5d7ecf7ef70e6123f125ec317da19322f275",
@@ -1407,8 +1487,8 @@
 		},
 		{
 			"account": "0x2067d095f4cacb434e921a2cf5b89a09dbf518a4",
-			"successRate": 57.14,
-			"totalTickets": 7
+			"successRate": 66.67,
+			"totalTickets": 6
 		},
 		{
 			"account": "0x58649b6a76c5a2c18e01be41648e6a48dcfda408",
@@ -1457,8 +1537,8 @@
 		},
 		{
 			"account": "0x9870603d9c543bd8e3c1f3be223c51a1dae1f4e8",
-			"successRate": 66.67,
-			"totalTickets": 3
+			"successRate": 50,
+			"totalTickets": 2
 		},
 		{
 			"account": "0x256283eae7cf236cbbe3f736094c03ed9c836622",
@@ -1467,8 +1547,8 @@
 		},
 		{
 			"account": "0x0ba967f11a8ee2c6951247dc365152f84d2b064c",
-			"successRate": 26.47,
-			"totalTickets": 34
+			"successRate": 27.27,
+			"totalTickets": 33
 		},
 		{
 			"account": "0xca4a31c7ebcb126c60fab495a4d7b545422f3aaf",
@@ -1527,8 +1607,8 @@
 		},
 		{
 			"account": "0x86e39d06c9f61242fa4d2c1925d606ce07cbc9b4",
-			"successRate": 66.67,
-			"totalTickets": 6
+			"successRate": 100,
+			"totalTickets": 3
 		},
 		{
 			"account": "0xb8e1eb8964661e04ca4573f76cc82ddd1b8c0876",
@@ -1567,8 +1647,8 @@
 		},
 		{
 			"account": "0x5419c2900b238447848bfb16c6fab7c3c7143518",
-			"successRate": 25,
-			"totalTickets": 4
+			"successRate": 33.33,
+			"totalTickets": 3
 		},
 		{
 			"account": "0x6fe6a38405816bfce41aabfc7d090b1c8ab594c1",
@@ -1602,8 +1682,8 @@
 		},
 		{
 			"account": "0x32e2445935040eb233ce2fa27da534d39a083f2c",
-			"successRate": 20,
-			"totalTickets": 5
+			"successRate": 25,
+			"totalTickets": 4
 		},
 		{
 			"account": "0x24de90e08999faed07011a574104fe57f3465f96",
@@ -1654,11 +1734,6 @@
 			"account": "0x09ddcfc021c00d8a7ddba1ba83af478876ac1cdc",
 			"successRate": 0,
 			"totalTickets": 1
-		},
-		{
-			"account": "0x1fb68bd780b98da7653ba2714bf98449949f7a02",
-			"successRate": 40,
-			"totalTickets": 10
 		},
 		{
 			"account": "0x227897bf30d03783dfc6adbac66b36e50fb9c296",
@@ -1757,8 +1832,8 @@
 		},
 		{
 			"account": "0x45611b606b576014c1a5f09a9e8e1e5322779290",
-			"successRate": 18.75,
-			"totalTickets": 32
+			"successRate": 19.35,
+			"totalTickets": 31
 		},
 		{
 			"account": "0x4d89d373a7ec36cec559d81c3820fb22c460053f",
@@ -1836,6 +1911,11 @@
 			"totalTickets": 20
 		},
 		{
+			"account": "0xece70493b90b04000aa8cdfc06932525d90c4b3e",
+			"successRate": 43.48,
+			"totalTickets": 46
+		},
+		{
 			"account": "0x8af0a5658776b68912b22ec954a91b9c20d3f8aa",
 			"successRate": 11.11,
 			"totalTickets": 27
@@ -1887,8 +1967,8 @@
 		},
 		{
 			"account": "0xba743394ca6c38886c066e45bb9980a09aec7a65",
-			"successRate": 28.57,
-			"totalTickets": 35
+			"successRate": 26.47,
+			"totalTickets": 34
 		},
 		{
 			"account": "0xc61a14453e2fe2a00843d8441eb7d26bc4f06107",
@@ -1916,14 +1996,19 @@
 			"totalTickets": 1
 		},
 		{
+			"account": "0xb69e74324bc030f1b5409236efa461496d439116",
+			"successRate": 27.78,
+			"totalTickets": 18
+		},
+		{
 			"account": "0xbff4d4f82e2aa032a1ef35f7e648503789113609",
-			"successRate": 15.38,
-			"totalTickets": 13
+			"successRate": 16.67,
+			"totalTickets": 12
 		},
 		{
 			"account": "0xd7d08a41ace97f92432d229d4f5bdda01a5c2f6c",
-			"successRate": 50,
-			"totalTickets": 6
+			"successRate": 33.33,
+			"totalTickets": 3
 		},
 		{
 			"account": "0x0d417d6a72b35460f757ea2c679b5a2db2b48dba",
@@ -2041,14 +2126,9 @@
 			"totalTickets": 8
 		},
 		{
-			"account": "0xfb5e8a587733e1a8700e1d448f97a12bab4ad4ea",
-			"successRate": 100,
-			"totalTickets": 3
-		},
-		{
 			"account": "0x0c3978de6a063d1ca8d579e47ccb294807995fdd",
 			"successRate": 0,
-			"totalTickets": 3
+			"totalTickets": 2
 		},
 		{
 			"account": "0x0d3015631c1e642e8eb35b5a0efcea24a7685603",
@@ -2087,8 +2167,8 @@
 		},
 		{
 			"account": "0x4c02684c94c80796e06e487ce3e3e875bea6694a",
-			"successRate": 33.33,
-			"totalTickets": 3
+			"successRate": 50,
+			"totalTickets": 2
 		},
 		{
 			"account": "0x4e13015ceafb442fa90dc62c1314447711ec7758",
@@ -2101,19 +2181,9 @@
 			"totalTickets": 8
 		},
 		{
-			"account": "0x92e40c3ac7f668631b508cee97002b64415af8b2",
-			"successRate": 24.14,
-			"totalTickets": 58
-		},
-		{
 			"account": "0x98dbb153a69cb91e0e0c8a5753377a3dff05fa40",
 			"successRate": 0,
 			"totalTickets": 3
-		},
-		{
-			"account": "0xa5e1f590602e4600023d9b1576c7fc0f97eea143",
-			"successRate": 18.92,
-			"totalTickets": 37
 		},
 		{
 			"account": "0xb8d095b23282a6c5c94ac9d463f60511cece53c9",
@@ -2162,8 +2232,8 @@
 		},
 		{
 			"account": "0xf7b0175565366602f5ddf57be6d67424497c72a2",
-			"successRate": 20,
-			"totalTickets": 5
+			"successRate": 25,
+			"totalTickets": 4
 		},
 		{
 			"account": "0x2442b2575ef2902af5d3281fed512f76543a341e",
@@ -2187,8 +2257,8 @@
 		},
 		{
 			"account": "0x3607c4ae351264892154bdab2d65622b8f5420fe",
-			"successRate": 33.33,
-			"totalTickets": 15
+			"successRate": 45.45,
+			"totalTickets": 11
 		},
 		{
 			"account": "0x6c499efafff5a17a51a504341124fd5bdd3a779c",
@@ -2232,8 +2302,8 @@
 		},
 		{
 			"account": "0x223c381a3aae44f7e073e66a8295dce2955e0098",
-			"successRate": 50,
-			"totalTickets": 4
+			"successRate": 40,
+			"totalTickets": 5
 		},
 		{
 			"account": "0x377dbfe249fa323a5622cacc8595d9b4c463e97b",
@@ -2246,14 +2316,9 @@
 			"totalTickets": 4
 		},
 		{
-			"account": "0x7648ec1f0f91c68082e55dfab066f74728f238fc",
-			"successRate": 0,
-			"totalTickets": 2
-		},
-		{
 			"account": "0xbfec0d235c11674178171a24a75c642b510a8136",
-			"successRate": 33.33,
-			"totalTickets": 9
+			"successRate": 42.86,
+			"totalTickets": 7
 		},
 		{
 			"account": "0x5fdb500ba1d9b6be0c164ce609277cd968c5d45e",
@@ -2286,34 +2351,14 @@
 			"totalTickets": 1
 		},
 		{
-			"account": "0xa669164903b90611131f4125486024e83a2da575",
-			"successRate": 100,
-			"totalTickets": 1
-		},
-		{
-			"account": "0xa86850b40dfaa450c0d899b001dde092f98de838",
-			"successRate": 100,
-			"totalTickets": 1
-		},
-		{
-			"account": "0xb6baa30c4c6bd5fc804bbcdfb112ffad1320a8cd",
-			"successRate": 100,
-			"totalTickets": 1
-		},
-		{
-			"account": "0xc7b7c0e133ce1b3428f3b033c996331b6eaba215",
-			"successRate": 100,
-			"totalTickets": 1
-		},
-		{
 			"account": "0x461783a831e6db52d68ba2f3194f6fd1e0087e04",
-			"successRate": 20,
-			"totalTickets": 75
+			"successRate": 18.57,
+			"totalTickets": 70
 		},
 		{
 			"account": "0x107bc70283432b6cf3f8c27ab26c563277275c68",
-			"successRate": 8.33,
-			"totalTickets": 48
+			"successRate": 8.7,
+			"totalTickets": 46
 		},
 		{
 			"account": "0x59e0381b67af7729bf353674eb1981b925494465",
@@ -2361,11 +2406,6 @@
 			"totalTickets": 44
 		},
 		{
-			"account": "0x6c5fe0c4f7443691397e744806684486040c00a4",
-			"successRate": 22.64,
-			"totalTickets": 53
-		},
-		{
 			"account": "0xe1690f5153ad0bbc683964aa81645c49b3cf6567",
 			"successRate": 58.33,
 			"totalTickets": 12
@@ -2392,8 +2432,8 @@
 		},
 		{
 			"account": "0xebe1e96e67a516c2f8549edbd48e6fdc7b50c9ae",
-			"successRate": 20,
-			"totalTickets": 5
+			"successRate": 25,
+			"totalTickets": 4
 		},
 		{
 			"account": "0x3bd821e3c1794234e9ce9de401ef98e2d6f9a282",
@@ -2412,8 +2452,8 @@
 		},
 		{
 			"account": "0x93f423e471866fd7f5716c9e97f0685e5ba94f76",
-			"successRate": 28.57,
-			"totalTickets": 14
+			"successRate": 23.08,
+			"totalTickets": 13
 		},
 		{
 			"account": "0x4977c1b189e23efac9bade4df7e2582676fe78e3",
@@ -2732,8 +2772,8 @@
 		},
 		{
 			"account": "0xb9581d8311cc3b9e677af6b0c55f1b93b69ad6f6",
-			"successRate": 33.33,
-			"totalTickets": 3
+			"successRate": 0,
+			"totalTickets": 2
 		},
 		{
 			"account": "0x365f559ceea3989b49fb5069912765bbb347fa7f",
@@ -2742,11 +2782,6 @@
 		},
 		{
 			"account": "0x356930cad4554f95f425d5ef8c22bca952c1aed1",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0x77fa39f3adf09bde9d4f175e40d0854d21a33318",
 			"successRate": 0,
 			"totalTickets": 1
 		},
@@ -2768,7 +2803,7 @@
 		{
 			"account": "0xbb10a4cfbad91566b48944ebbf7292a55b484ae6",
 			"successRate": 0,
-			"totalTickets": 4
+			"totalTickets": 3
 		},
 		{
 			"account": "0x367ca4480d7e069e3e357cf93a745982982fdf46",
@@ -2799,11 +2834,6 @@
 			"account": "0x7bd44402a58397c5251a902654b57624e64823f9",
 			"successRate": 33.33,
 			"totalTickets": 6
-		},
-		{
-			"account": "0x088cda4c48750442548ab476af5eea7135394063",
-			"successRate": 18.18,
-			"totalTickets": 11
 		},
 		{
 			"account": "0x54411028b577177c95d0f1113a946b304cbe9d3e",
@@ -2937,8 +2967,8 @@
 		},
 		{
 			"account": "0x1bdd2bc6e8107d2fd209bf65ddeff14fc7a41c47",
-			"successRate": 33.33,
-			"totalTickets": 9
+			"successRate": 37.5,
+			"totalTickets": 8
 		},
 		{
 			"account": "0x7fd8a3e656c90a0e3cd703e4ba46aa4c9d9e84fb",
@@ -3026,9 +3056,119 @@
 			"totalTickets": 3
 		},
 		{
+			"account": "0x768ccbb0c70094a7a838fb9afbd5d9dca3778f1f",
+			"successRate": 50,
+			"totalTickets": 12
+		},
+		{
 			"account": "0x657d475a99487f7d133acd1c295f5bc5013e4ebc",
 			"successRate": 22.22,
 			"totalTickets": 9
+		},
+		{
+			"account": "0xcf4dc923ffb69a2f6dde883539c4527a8a8a6a9b",
+			"successRate": 0,
+			"totalTickets": 2
+		},
+		{
+			"account": "0x1706f86e1798e341944746fe336d63b60e1d0ccb",
+			"successRate": 50,
+			"totalTickets": 12
+		},
+		{
+			"account": "0x3b2d77d70f78c85b48d97145c2f1632be780d4fb",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0xcb43b5c0a2b3e2f153a45872b12c43606687425d",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0xf85a4c44e2c66e378707570680f4a1339ef6d9be",
+			"successRate": 0,
+			"totalTickets": 8
+		},
+		{
+			"account": "0xa58cc23a546b6ce08ee258cfb54d92d4cc151ba4",
+			"successRate": 0,
+			"totalTickets": 2
+		},
+		{
+			"account": "0xda9ad6284300b15bc802c3fbf6dbbdf7ceb27fe8",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0x087d1aa55f2cf879b3be11c31d252b94bc7a6616",
+			"successRate": 0,
+			"totalTickets": 2
+		},
+		{
+			"account": "0x314e3e92bf03daee4d2d296f474804a05126504e",
+			"successRate": 0,
+			"totalTickets": 7
+		},
+		{
+			"account": "0x539a2ab0871dab48fc2fd28a59426c54463ef22c",
+			"successRate": 25,
+			"totalTickets": 8
+		},
+		{
+			"account": "0x429801692ae55c2d706cf57276fe9f71abcce3cc",
+			"successRate": 12.5,
+			"totalTickets": 24
+		},
+		{
+			"account": "0xfb21f8a7a67c1846b1034d13ae118855ad1b8da0",
+			"successRate": 33.33,
+			"totalTickets": 3
+		},
+		{
+			"account": "0xc6516e190b29605154cf0d83a4c8a7f954ff29b5",
+			"successRate": 0,
+			"totalTickets": 4
+		},
+		{
+			"account": "0xadce21bdc15c6f39888c9b0a3ec41c9637932495",
+			"successRate": 85.71,
+			"totalTickets": 7
+		},
+		{
+			"account": "0xbfdffcd81a3796f55b476b36937253fa6267644b",
+			"successRate": 50,
+			"totalTickets": 4
+		},
+		{
+			"account": "0x8559027bac39638438ddb32d713f0b12ef66ea7b",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0x437ed927a90db53106b83a4626574bfadecc6420",
+			"successRate": 30.43,
+			"totalTickets": 23
+		},
+		{
+			"account": "0xaaada5efede1f50be1cb122281f4fce9c0c031fd",
+			"successRate": 33.33,
+			"totalTickets": 3
+		},
+		{
+			"account": "0xd8c24e8dc079bd7c9d6fb3a2f2dc772a7ff1d0e6",
+			"successRate": 5.56,
+			"totalTickets": 36
+		},
+		{
+			"account": "0x9d0d6552288ba41aa852a9f3e11cc32a9b5254e0",
+			"successRate": 50,
+			"totalTickets": 2
+		},
+		{
+			"account": "0x9ffc81e2912e937afe1a635b1f8641df62b176e5",
+			"successRate": 2.7,
+			"totalTickets": 37
 		},
 		{
 			"account": "0xcb3ccb3103c1a42235e17ed6958839348b6590e1",
@@ -3037,8 +3177,8 @@
 		},
 		{
 			"account": "0x782af07f170cec08617c24745248db628319264d",
-			"successRate": 11.63,
-			"totalTickets": 43
+			"successRate": 9.52,
+			"totalTickets": 42
 		},
 		{
 			"account": "0xbaf9b2027a92fa2f851cc0df405251bbc80f10c8",
@@ -3052,8 +3192,8 @@
 		},
 		{
 			"account": "0x0ae24412441d1e3f332d574d31adaf4ffa627cde",
-			"successRate": 27.03,
-			"totalTickets": 37
+			"successRate": 25.71,
+			"totalTickets": 35
 		},
 		{
 			"account": "0xea74bf7e0bb562e2d97d11c5a2d94b0a900d03bd",
@@ -3062,8 +3202,8 @@
 		},
 		{
 			"account": "0x81e1f62d4f5722daa0c2f87137228d0b59516aba",
-			"successRate": 23.78,
-			"totalTickets": 164
+			"successRate": 24.14,
+			"totalTickets": 116
 		},
 		{
 			"account": "0x62b84cadf8d5444a2630f4a073250f9f1e3f371d",
@@ -3079,16 +3219,6 @@
 			"account": "0xb2a0449699876824cc16121dd19195e821a5956b",
 			"successRate": 0,
 			"totalTickets": 1
-		},
-		{
-			"account": "0x3e516b6d229bf935f1b6bf4a0c2531ddab48cf1b",
-			"successRate": 33.33,
-			"totalTickets": 3
-		},
-		{
-			"account": "0xc9486849a02e2529f69dc914fd293895e15f7b2a",
-			"successRate": 0,
-			"totalTickets": 5
 		},
 		{
 			"account": "0x4d776ac2f17ad84a7b8e68716228c936fa4f0ce5",
@@ -3137,13 +3267,13 @@
 		},
 		{
 			"account": "0xcf10a8e7c907144cc87721ac1fd7ac75a8aebec7",
-			"successRate": 50,
-			"totalTickets": 4
+			"successRate": 33.33,
+			"totalTickets": 3
 		},
 		{
 			"account": "0x7680e7f556f1aa397daafdbadeedb48cd76500a6",
-			"successRate": 3.77,
-			"totalTickets": 53
+			"successRate": 2.04,
+			"totalTickets": 49
 		},
 		{
 			"account": "0x3820dfce0c99c2f374fd074595c68b0209620f5e",
@@ -3166,19 +3296,14 @@
 			"totalTickets": 48
 		},
 		{
-			"account": "0xce1b76a218f2d93b564b73958aded0e36885c4ab",
-			"successRate": 0,
-			"totalTickets": 4
-		},
-		{
 			"account": "0x88964ba115559267068ca9354068e24739cbf68d",
 			"successRate": 4.17,
 			"totalTickets": 48
 		},
 		{
 			"account": "0x73cb0f1b2d329cfa481c0577473c0abd32b15be5",
-			"successRate": 27.68,
-			"totalTickets": 112
+			"successRate": 27.03,
+			"totalTickets": 111
 		},
 		{
 			"account": "0x08888ce68d8de3d2616f96270f06b1b6fb3a18f6",
@@ -3191,69 +3316,24 @@
 			"totalTickets": 5
 		},
 		{
-			"account": "0xce836f1ace8ddab50b7cdcbd1f119429b55c59a4",
-			"successRate": 50,
-			"totalTickets": 2
-		},
-		{
-			"account": "0x078148d2af29603596aa318188b56fd51eb94ed3",
-			"successRate": 75,
-			"totalTickets": 4
-		},
-		{
-			"account": "0x84085549633e3e19d7f1a49344223ed5e9f4500a",
-			"successRate": 0,
-			"totalTickets": 2
-		},
-		{
-			"account": "0xc0a980584bab01aef804e10144c64f58723430f3",
-			"successRate": 66.67,
-			"totalTickets": 6
-		},
-		{
-			"account": "0x9f8e4ee788d9b00a3409584e18034aa7b736c396",
-			"successRate": 0,
-			"totalTickets": 7
-		},
-		{
-			"account": "0xf9d94ea04bd0d09d9131699c37c6ff4210d9d191",
-			"successRate": 0,
+			"account": "0xa669164903b90611131f4125486024e83a2da575",
+			"successRate": 100,
 			"totalTickets": 1
 		},
 		{
-			"account": "0x0eb3d22bb4a1b0a1c66698f07dbc208e402480cf",
-			"successRate": 22.22,
-			"totalTickets": 27
+			"account": "0xa86850b40dfaa450c0d899b001dde092f98de838",
+			"successRate": 100,
+			"totalTickets": 1
 		},
 		{
-			"account": "0xb316e544635e00fc4c631873987cd8dfc9322c39",
-			"successRate": 33.33,
-			"totalTickets": 6
+			"account": "0xb6baa30c4c6bd5fc804bbcdfb112ffad1320a8cd",
+			"successRate": 100,
+			"totalTickets": 1
 		},
 		{
-			"account": "0x98e8ce84ea3136b53b87d4f1e4126892d835f4b7",
-			"successRate": 5.17,
-			"totalTickets": 58
-		},
-		{
-			"account": "0x5f742bd29175ed7b0352357c37ef7d1de199182a",
-			"successRate": 50,
-			"totalTickets": 2
-		},
-		{
-			"account": "0x31544fb310e39b4ee34ccd52fc95e03704479887",
-			"successRate": 0,
-			"totalTickets": 4
-		},
-		{
-			"account": "0x87373f497a67d182d92c180c6ce2f74dc5d2acb7",
-			"successRate": 42.86,
-			"totalTickets": 7
-		},
-		{
-			"account": "0xf168b094577aff84e0c1fa67a661775fbac7e6fa",
-			"successRate": 0,
-			"totalTickets": 2
+			"account": "0xc7b7c0e133ce1b3428f3b033c996331b6eaba215",
+			"successRate": 100,
+			"totalTickets": 1
 		},
 		{
 			"account": "0xc9183e3306a06e64c2a83e655756f70a83152536",
@@ -3266,8 +3346,13 @@
 			"totalTickets": 1
 		},
 		{
+			"account": "0x8cd509e416d0e6f5fde5b22c660746c36a69ace3",
+			"successRate": 100,
+			"totalTickets": 1
+		},
+		{
 			"account": "0x951f5e167f6171aaaa3f88cf62e4b25000336d76",
-			"successRate": 50,
+			"successRate": 60,
 			"totalTickets": 5
 		},
 		{
@@ -3316,19 +3401,9 @@
 			"totalTickets": 1
 		},
 		{
-			"account": "0x0f45156f109e474295913d78036fa213b1745d5a",
-			"successRate": 50,
-			"totalTickets": 4
-		},
-		{
 			"account": "0x3177bdcb49b717864a2fd9b26df27c82471519c9",
 			"successRate": 25,
 			"totalTickets": 4
-		},
-		{
-			"account": "0x9fc7d6e7a3d4ab7b8b28d813f68674c8a6e91e83",
-			"successRate": 25,
-			"totalTickets": 20
 		},
 		{
 			"account": "0x7478bf358f55bf9709754105180f079035bc8180",
@@ -3407,8 +3482,8 @@
 		},
 		{
 			"account": "0x3136cac0b116fde768e51492e38571de29692133",
-			"successRate": 50,
-			"totalTickets": 6
+			"successRate": 75,
+			"totalTickets": 4
 		},
 		{
 			"account": "0x46893bccacaf54cc656540e98c7fdd099b9f04c6",
@@ -3467,13 +3542,8 @@
 		},
 		{
 			"account": "0x609470c2f08ff626078ba64ceb905d73b155089d",
-			"successRate": 33.33,
-			"totalTickets": 3
-		},
-		{
-			"account": "0xf12ec382c04e0a989b852e89ce01ab720e406600",
-			"successRate": 33.33,
-			"totalTickets": 3
+			"successRate": 0,
+			"totalTickets": 2
 		},
 		{
 			"account": "0x06e0466b0f98aa0408266307b36b4294070e8ded",
@@ -3497,8 +3567,8 @@
 		},
 		{
 			"account": "0xe48fe6012f97b6a13c0ce5cef314caf66e972deb",
-			"successRate": 40,
-			"totalTickets": 15
+			"successRate": 38.46,
+			"totalTickets": 13
 		},
 		{
 			"account": "0x6d4ed8a1599dee2655d51b245f786293e03d58f7",
@@ -3507,8 +3577,8 @@
 		},
 		{
 			"account": "0x99cbf8a99f52e847e55452eaf0e86330256095cb",
-			"successRate": 50,
-			"totalTickets": 2
+			"successRate": 100,
+			"totalTickets": 1
 		},
 		{
 			"account": "0xaa7fd3f2f8beec3856e1cca2cee9e8cfd6c30eb6",
@@ -3582,8 +3652,8 @@
 		},
 		{
 			"account": "0xff317ae69563163f0f2d92e5eaa7a1b881cac418",
-			"successRate": 38.46,
-			"totalTickets": 13
+			"successRate": 41.67,
+			"totalTickets": 12
 		},
 		{
 			"account": "0x2b133b6f1d3877ca592db3aed25168771b10df8e",
@@ -3606,9 +3676,19 @@
 			"totalTickets": 7
 		},
 		{
+			"account": "0x3a3889f816921913b2503454d9bc924e1c744a49",
+			"successRate": 50,
+			"totalTickets": 4
+		},
+		{
 			"account": "0x873abd32375e70179d19a7727842d8160a952616",
 			"successRate": 25,
 			"totalTickets": 4
+		},
+		{
+			"account": "0xce836f1ace8ddab50b7cdcbd1f119429b55c59a4",
+			"successRate": 50,
+			"totalTickets": 2
 		},
 		{
 			"account": "0x765300b0d8ab17f8c0d85be2f4cf80980212780b",
@@ -3707,8 +3787,8 @@
 		},
 		{
 			"account": "0x55fb540be6496628fad9286a98fe35f39e4cfcf6",
-			"successRate": 50,
-			"totalTickets": 10
+			"successRate": 55.56,
+			"totalTickets": 9
 		},
 		{
 			"account": "0x5a47fb9f912733cf2a44746ae5d84934081ecc4e",
@@ -3829,6 +3909,11 @@
 			"account": "0x9235510dfc8984780afa0d22e7143ef018b7f37b",
 			"successRate": 100,
 			"totalTickets": 1
+		},
+		{
+			"account": "0x98e8ce84ea3136b53b87d4f1e4126892d835f4b7",
+			"successRate": 5.66,
+			"totalTickets": 53
 		},
 		{
 			"account": "0x520aba3b9dea0a8c92a56b0c523a621f63658ca7",
@@ -3967,8 +4052,8 @@
 		},
 		{
 			"account": "0x9176581b50bbd54af8b445a7abf006594efc8520",
-			"successRate": 75,
-			"totalTickets": 4
+			"successRate": 66.67,
+			"totalTickets": 3
 		},
 		{
 			"account": "0x2071467ddc56ab94bdb12c3a02f59161b6db0b84",
@@ -4014,16 +4099,6 @@
 			"account": "0x5ea126efe94ff3b91757b8eb8a018f9ffea7bb61",
 			"successRate": 0,
 			"totalTickets": 2
-		},
-		{
-			"account": "0x0000000088bf97fff3e7f6d915a38cc9ddb80b79",
-			"successRate": 100,
-			"totalTickets": 2
-		},
-		{
-			"account": "0x6772525614ae3e69aea8bf9a4c2fa54d95a81ebd",
-			"successRate": 100,
-			"totalTickets": 1
 		},
 		{
 			"account": "0x043ac44f8cec7e359a31415f1e54459a8c2599a0",
@@ -4097,8 +4172,8 @@
 		},
 		{
 			"account": "0x83bad39f067ef72e354f2ea9d318eaad381a7f15",
-			"successRate": 8.62,
-			"totalTickets": 58
+			"successRate": 8.77,
+			"totalTickets": 57
 		},
 		{
 			"account": "0xc9bebd8772137e31824f58921f3203666cf7ebe8",
@@ -4192,8 +4267,8 @@
 		},
 		{
 			"account": "0x9c8d7afdd90bbb07e54a60291c5af391d8ae6dfa",
-			"successRate": 6.67,
-			"totalTickets": 15
+			"successRate": 7.14,
+			"totalTickets": 14
 		},
 		{
 			"account": "0xe3d78491476736b0bef40f4296ec444b22dda2e1",
@@ -4301,6 +4376,51 @@
 			"totalTickets": 2
 		},
 		{
+			"account": "0x078148d2af29603596aa318188b56fd51eb94ed3",
+			"successRate": 75,
+			"totalTickets": 4
+		},
+		{
+			"account": "0x84085549633e3e19d7f1a49344223ed5e9f4500a",
+			"successRate": 0,
+			"totalTickets": 2
+		},
+		{
+			"account": "0xc0a980584bab01aef804e10144c64f58723430f3",
+			"successRate": 66.67,
+			"totalTickets": 6
+		},
+		{
+			"account": "0x9f8e4ee788d9b00a3409584e18034aa7b736c396",
+			"successRate": 0,
+			"totalTickets": 5
+		},
+		{
+			"account": "0xf9d94ea04bd0d09d9131699c37c6ff4210d9d191",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0x0eb3d22bb4a1b0a1c66698f07dbc208e402480cf",
+			"successRate": 22.22,
+			"totalTickets": 27
+		},
+		{
+			"account": "0x31544fb310e39b4ee34ccd52fc95e03704479887",
+			"successRate": 0,
+			"totalTickets": 4
+		},
+		{
+			"account": "0x87373f497a67d182d92c180c6ce2f74dc5d2acb7",
+			"successRate": 42.86,
+			"totalTickets": 7
+		},
+		{
+			"account": "0xf168b094577aff84e0c1fa67a661775fbac7e6fa",
+			"successRate": 0,
+			"totalTickets": 2
+		},
+		{
 			"account": "0x2b22540c7d8ab4e1c66bea8d014e09360d5c4eb3",
 			"successRate": 4.17,
 			"totalTickets": 24
@@ -4312,8 +4432,8 @@
 		},
 		{
 			"account": "0x7315b9a6d2f7b93cd8588774aebefeff14869ea2",
-			"successRate": 2.22,
-			"totalTickets": 45
+			"successRate": 2.56,
+			"totalTickets": 39
 		},
 		{
 			"account": "0xd33a3c34f94064b5a5a95b736da1a2706b8f96dc",
@@ -4327,23 +4447,13 @@
 		},
 		{
 			"account": "0x39c8783aa1676f767795dc5f34d8a3ace3a7cef9",
-			"successRate": 1.75,
-			"totalTickets": 57
+			"successRate": 2,
+			"totalTickets": 50
 		},
 		{
 			"account": "0x2a176d6e37a179d2cc2cd0ddbf744f399322646b",
 			"successRate": 0,
 			"totalTickets": 1
-		},
-		{
-			"account": "0x599ea676f449f5288f2b01b14b3c3315e6933193",
-			"successRate": 0,
-			"totalTickets": 17
-		},
-		{
-			"account": "0x88a10d7995b96f28a1ecd7ddf1f2e2cbbe1e3786",
-			"successRate": 75,
-			"totalTickets": 4
 		},
 		{
 			"account": "0xc874a7c1f109a67292d4ea4551f34677a548b9fc",
@@ -4357,11 +4467,6 @@
 		},
 		{
 			"account": "0xf3b1cba0b30e6a38889c2ccbc1711a65b0eb2dfa",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0xc53d8683ed3d15e105f76ff181ee44f881c2e056",
 			"successRate": 0,
 			"totalTickets": 1
 		},
@@ -4456,69 +4561,14 @@
 			"totalTickets": 1
 		},
 		{
-			"account": "0x95f9c76f016e88533615a18ed75ef7384e42bee6",
-			"successRate": 0,
-			"totalTickets": 10
-		},
-		{
-			"account": "0x9844b0ba061b8635f60ccaecc28e13aa42271fde",
-			"successRate": 0,
-			"totalTickets": 3
-		},
-		{
-			"account": "0xbb68dcf509480f648e3c501d2dbbc5636b82f689",
-			"successRate": 0,
-			"totalTickets": 9
-		},
-		{
-			"account": "0xed345b69b68086d2dfca17fc87e0e8909b858dd3",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0xfaf5b4ad24340fa76843dc8d8acee47842946ae8",
-			"successRate": 0,
+			"account": "0x0000000088bf97fff3e7f6d915a38cc9ddb80b79",
+			"successRate": 100,
 			"totalTickets": 2
 		},
 		{
-			"account": "0xf72c7e9646e1ee5e5664bbc3fce246ffa4184d51",
-			"successRate": 3.64,
-			"totalTickets": 55
-		},
-		{
-			"account": "0x659fbc0fc53ea0368793585d1e2c76d6ef48bf4e",
-			"successRate": 0,
-			"totalTickets": 2
-		},
-		{
-			"account": "0xd253cca4b130cc7f7c90312e2a13b1db3441f76a",
-			"successRate": 50,
-			"totalTickets": 2
-		},
-		{
-			"account": "0x7c3d0402278366a3e1ed3f2b997005b7ca0e1ebe",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0x474df67b050e3068041a95a167d699723540502c",
-			"successRate": 3.33,
-			"totalTickets": 30
-		},
-		{
-			"account": "0x57b3abae7e7392571396a4a91bc1ae35bbdd19d7",
-			"successRate": 9.09,
-			"totalTickets": 11
-		},
-		{
-			"account": "0x4be80a823e619ef57a61cc19b6bfb72974df0604",
+			"account": "0x6772525614ae3e69aea8bf9a4c2fa54d95a81ebd",
 			"successRate": 100,
 			"totalTickets": 1
-		},
-		{
-			"account": "0x12e007d8031004ad8aa582b8cf5ec0daa7eee9f1",
-			"successRate": 11.11,
-			"totalTickets": 9
 		},
 		{
 			"account": "0x464fbeb7d6a5d459f58251ed135d00a824e5b4f8",
@@ -4537,8 +4587,8 @@
 		},
 		{
 			"account": "0x4cd34f7ea5412cfdcf382139786b44eb63617701",
-			"successRate": 33.33,
-			"totalTickets": 3
+			"successRate": 50,
+			"totalTickets": 2
 		},
 		{
 			"account": "0x03dfb24f6c8079468230abbad99dad56f7f67b50",
@@ -4598,7 +4648,7 @@
 		{
 			"account": "0x91f6f271e8f314f1846dac54b6f8f455420468ba",
 			"successRate": 100,
-			"totalTickets": 2
+			"totalTickets": 1
 		},
 		{
 			"account": "0x0045fa93dedb0af02956f7d7c306b34263688872",
@@ -4911,6 +4961,11 @@
 			"totalTickets": 4
 		},
 		{
+			"account": "0x57b3abae7e7392571396a4a91bc1ae35bbdd19d7",
+			"successRate": 9.09,
+			"totalTickets": 11
+		},
+		{
 			"account": "0x8c64012390fb1febb01c0ad69a9c38b3edb97664",
 			"successRate": 0,
 			"totalTickets": 1
@@ -4922,8 +4977,8 @@
 		},
 		{
 			"account": "0x39b946e35b3dc215455cc95b446edd8368928d10",
-			"successRate": 33.33,
-			"totalTickets": 3
+			"successRate": 50,
+			"totalTickets": 2
 		},
 		{
 			"account": "0x00e2569ad83ed3bab5a618a06e941ac561616271",
@@ -4988,7 +5043,7 @@
 		{
 			"account": "0x7f1a12fcd00c00221a212847307f54c1d397689d",
 			"successRate": 100,
-			"totalTickets": 5
+			"totalTickets": 4
 		},
 		{
 			"account": "0xa48775145c8849747ccb1e754cba700b7122fdf9",
@@ -4999,11 +5054,6 @@
 			"account": "0x08eafda6638457c05c210df7bc7331ce01b8fa3a",
 			"successRate": 100,
 			"totalTickets": 1
-		},
-		{
-			"account": "0xac6cca006247e198f7786e4e5cb864992a4ec230",
-			"successRate": 66.67,
-			"totalTickets": 3
 		},
 		{
 			"account": "0xcbcdca647cfda9283992193604f8718a910b42fc",
@@ -5067,16 +5117,6 @@
 		},
 		{
 			"account": "0xf155ecd2423041a8167fab5c24e9891c3f595e52",
-			"successRate": 100,
-			"totalTickets": 1
-		},
-		{
-			"account": "0x1c175ce4f8f3e8a16df7165f15057a82a88c025c",
-			"successRate": 100,
-			"totalTickets": 1
-		},
-		{
-			"account": "0x73dff01f7ccc578fda7a21eee17c48fab1300d47",
 			"successRate": 100,
 			"totalTickets": 1
 		},
@@ -5353,7 +5393,7 @@
 		{
 			"account": "0x31234050e7c75506be124ccb803b4d9aaa32e53c",
 			"successRate": 0,
-			"totalTickets": 4
+			"totalTickets": 3
 		},
 		{
 			"account": "0x8df7f677070db91bde0fa153f9ab8bc2c46da01b",
@@ -5441,13 +5481,63 @@
 			"totalTickets": 3
 		},
 		{
-			"account": "0xa908d87081f57ff1771664b495fe03bd7f7e19df",
+			"account": "0x9844b0ba061b8635f60ccaecc28e13aa42271fde",
 			"successRate": 0,
 			"totalTickets": 3
 		},
 		{
-			"account": "0x8508c66ab569d07505f2574c3453fc43253f3801",
-			"successRate": 66.67,
+			"account": "0xbb68dcf509480f648e3c501d2dbbc5636b82f689",
+			"successRate": 0,
+			"totalTickets": 9
+		},
+		{
+			"account": "0xed345b69b68086d2dfca17fc87e0e8909b858dd3",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0xfaf5b4ad24340fa76843dc8d8acee47842946ae8",
+			"successRate": 0,
+			"totalTickets": 2
+		},
+		{
+			"account": "0xf72c7e9646e1ee5e5664bbc3fce246ffa4184d51",
+			"successRate": 2.17,
+			"totalTickets": 46
+		},
+		{
+			"account": "0x659fbc0fc53ea0368793585d1e2c76d6ef48bf4e",
+			"successRate": 0,
+			"totalTickets": 2
+		},
+		{
+			"account": "0xd253cca4b130cc7f7c90312e2a13b1db3441f76a",
+			"successRate": 50,
+			"totalTickets": 2
+		},
+		{
+			"account": "0x7c3d0402278366a3e1ed3f2b997005b7ca0e1ebe",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0x474df67b050e3068041a95a167d699723540502c",
+			"successRate": 3.33,
+			"totalTickets": 30
+		},
+		{
+			"account": "0x4be80a823e619ef57a61cc19b6bfb72974df0604",
+			"successRate": 100,
+			"totalTickets": 1
+		},
+		{
+			"account": "0x12e007d8031004ad8aa582b8cf5ec0daa7eee9f1",
+			"successRate": 11.11,
+			"totalTickets": 9
+		},
+		{
+			"account": "0xa908d87081f57ff1771664b495fe03bd7f7e19df",
+			"successRate": 0,
 			"totalTickets": 3
 		},
 		{
@@ -5486,11 +5576,6 @@
 			"totalTickets": 3
 		},
 		{
-			"account": "0xde0e14e314ec13cabc21272f9dd27dec0c92b504",
-			"successRate": 0,
-			"totalTickets": 15
-		},
-		{
 			"account": "0xfb925186f787694009ab6404b9caab95bc7ae377",
 			"successRate": 100,
 			"totalTickets": 1
@@ -5502,8 +5587,8 @@
 		},
 		{
 			"account": "0xd01dc15ef8e91a876c78a96a834fb93359db6e4e",
-			"successRate": 8.11,
-			"totalTickets": 37
+			"successRate": 6.25,
+			"totalTickets": 32
 		},
 		{
 			"account": "0xdb6428c5fa405b9ba438bba5c1c2c4f099684004",
@@ -5516,44 +5601,14 @@
 			"totalTickets": 8
 		},
 		{
-			"account": "0x5eb4bab4c79636bcd100168af58bbf2376f73825",
-			"successRate": 0,
-			"totalTickets": 29
-		},
-		{
-			"account": "0xe003777add9dc9c6651c9abd2242677f06b19aa2",
-			"successRate": 3.33,
-			"totalTickets": 30
-		},
-		{
-			"account": "0x3f2e82eb92fe2a9fee4596c1550e0c8a7b0ead99",
-			"successRate": 9.38,
-			"totalTickets": 32
-		},
-		{
-			"account": "0x8eeceec8367efb3951b50c98ab3a846adf7d8a38",
-			"successRate": 33.33,
-			"totalTickets": 3
-		},
-		{
-			"account": "0xdceb0bb3311342e3ce9e49f57affce9deac40ba1",
-			"successRate": 80,
-			"totalTickets": 5
-		},
-		{
-			"account": "0x6a19339468ea1549ae3646881cd8732ad36778ad",
-			"successRate": 5.56,
-			"totalTickets": 18
-		},
-		{
-			"account": "0x9ea9f8d0697672dd2a504c3ae4f85eee67c5b4e4",
-			"successRate": 0,
-			"totalTickets": 4
-		},
-		{
-			"account": "0x75d228291f2670546549563569d25ab1840fa897",
+			"account": "0x1c175ce4f8f3e8a16df7165f15057a82a88c025c",
 			"successRate": 100,
-			"totalTickets": 2
+			"totalTickets": 1
+		},
+		{
+			"account": "0x73dff01f7ccc578fda7a21eee17c48fab1300d47",
+			"successRate": 100,
+			"totalTickets": 1
 		},
 		{
 			"account": "0x7ab301bc5c6f69753e7cc60c1c246e09caaac53d",
@@ -5567,8 +5622,8 @@
 		},
 		{
 			"account": "0xf32c45669115ee9c99d441f4f8d532afb717ac02",
-			"successRate": 50,
-			"totalTickets": 2
+			"successRate": 0,
+			"totalTickets": 1
 		},
 		{
 			"account": "0xe1b80bdc59763706763382033f3a8c5a1525928f",
@@ -5614,11 +5669,6 @@
 			"account": "0x376ac340cd8f91899a9d93737c191c644f2a42a9",
 			"successRate": 0,
 			"totalTickets": 1
-		},
-		{
-			"account": "0x3a3889f816921913b2503454d9bc924e1c744a49",
-			"successRate": 66.67,
-			"totalTickets": 3
 		},
 		{
 			"account": "0x9184f5813df0a59e9568dda12825212b8b5335cc",
@@ -5777,8 +5827,8 @@
 		},
 		{
 			"account": "0x8a59ea01e629a3e8443f2821a986dd626333d2ad",
-			"successRate": 50,
-			"totalTickets": 2
+			"successRate": 100,
+			"totalTickets": 1
 		},
 		{
 			"account": "0x6afb6a536e4399bf6dfa804f50a3e135169edca6",
@@ -5826,14 +5876,14 @@
 			"totalTickets": 1
 		},
 		{
+			"account": "0x3f2e82eb92fe2a9fee4596c1550e0c8a7b0ead99",
+			"successRate": 9.38,
+			"totalTickets": 32
+		},
+		{
 			"account": "0xa181a4361d94bfedb29de43dda450362a8b5a40d",
 			"successRate": 28.57,
 			"totalTickets": 21
-		},
-		{
-			"account": "0xea9501cbf76162acbc0a21228ceada69902b66cf",
-			"successRate": 0,
-			"totalTickets": 1
 		},
 		{
 			"account": "0x80d484872560138749c4bed15b090fb73e386b01",
@@ -5892,8 +5942,13 @@
 		},
 		{
 			"account": "0xc6485e80df1bfa7156bf86c55e20729e564380ea",
-			"successRate": 33.33,
-			"totalTickets": 3
+			"successRate": 0,
+			"totalTickets": 2
+		},
+		{
+			"account": "0x29f38498071b772a99bab18c7ea4125387ed2332",
+			"successRate": 50,
+			"totalTickets": 2
 		},
 		{
 			"account": "0xe7751c7ebf77d97d922d5632846eeea36ce08413",
@@ -5927,41 +5982,6 @@
 		},
 		{
 			"account": "0xdd6fe101d9597a6768ba115aee830ffb60e112e7",
-			"successRate": 100,
-			"totalTickets": 1
-		},
-		{
-			"account": "0xdf6021c1b98848c61b52bd98eb04821737a92db5",
-			"successRate": 0,
-			"totalTickets": 2
-		},
-		{
-			"account": "0x896a86d3a563bd76fbf72859d04ae550ba7e8a34",
-			"successRate": 100,
-			"totalTickets": 1
-		},
-		{
-			"account": "0xfd79594cca89144aa2e5fd5f1c07bba29fb43bf5",
-			"successRate": 100,
-			"totalTickets": 1
-		},
-		{
-			"account": "0x26407c701f42f358256aa1f1ef86db3e1c99fb6b",
-			"successRate": 100,
-			"totalTickets": 1
-		},
-		{
-			"account": "0x7a44546d86aad1479895390c1ec7add0b9e45f08",
-			"successRate": 100,
-			"totalTickets": 1
-		},
-		{
-			"account": "0xc9e60767be3c0e812301ab2f38237ec52b56a009",
-			"successRate": 100,
-			"totalTickets": 1
-		},
-		{
-			"account": "0xdd5555ef3f38db5497871fb402b1cf764524398a",
 			"successRate": 100,
 			"totalTickets": 1
 		},
@@ -6341,9 +6361,34 @@
 			"totalTickets": 94
 		},
 		{
+			"account": "0x5eb4bab4c79636bcd100168af58bbf2376f73825",
+			"successRate": 0,
+			"totalTickets": 29
+		},
+		{
+			"account": "0xe003777add9dc9c6651c9abd2242677f06b19aa2",
+			"successRate": 3.33,
+			"totalTickets": 30
+		},
+		{
+			"account": "0xdceb0bb3311342e3ce9e49f57affce9deac40ba1",
+			"successRate": 80,
+			"totalTickets": 5
+		},
+		{
+			"account": "0x9ea9f8d0697672dd2a504c3ae4f85eee67c5b4e4",
+			"successRate": 0,
+			"totalTickets": 4
+		},
+		{
+			"account": "0x75d228291f2670546549563569d25ab1840fa897",
+			"successRate": 100,
+			"totalTickets": 2
+		},
+		{
 			"account": "0x427a225099366d3e917c2aa9d3c77db4653f584a",
-			"successRate": 33.33,
-			"totalTickets": 3
+			"successRate": 50,
+			"totalTickets": 2
 		},
 		{
 			"account": "0x9c3942c91cc97e016bd3b9feb69294d12b143234",
@@ -6372,13 +6417,13 @@
 		},
 		{
 			"account": "0x2de570bc6976b8e0386cfe35175387befd7dcf38",
-			"successRate": 9.09,
-			"totalTickets": 22
+			"successRate": 12.5,
+			"totalTickets": 16
 		},
 		{
 			"account": "0x598901eee9568184b97d23138deea82b8ba4eaee",
-			"successRate": 10,
-			"totalTickets": 10
+			"successRate": 0,
+			"totalTickets": 9
 		},
 		{
 			"account": "0x9a77296b6f4f118a93668e5906ec8701bce9dda2",
@@ -6386,53 +6431,38 @@
 			"totalTickets": 1
 		},
 		{
-			"account": "0x7c0d1b2f35c40a7a35407c739efa11235c022c92",
+			"account": "0xdf6021c1b98848c61b52bd98eb04821737a92db5",
 			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0xfbdbe466764083ceb38cae6c5b4efa7e1833bc04",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0xaa905f2b105693e68321ce806d899df561f07e96",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0xf7f6f7ec25c52c3e4794c9e2d32020ec00c07dc2",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0x564b83d4eeb45f269e68ccc990476f07840d4745",
-			"successRate": 3,
-			"totalTickets": 100
-		},
-		{
-			"account": "0x0d4474ed33c2ace66ce45ad1752bf778c11f901b",
-			"successRate": 3.16,
-			"totalTickets": 95
-		},
-		{
-			"account": "0x880d67829b2b54b89c639c20a8640b7af6cd562f",
-			"successRate": 0,
-			"totalTickets": 5
-		},
-		{
-			"account": "0xd87cfd8757db0aa5b3380bc8009881f64f76bd20",
-			"successRate": 50,
 			"totalTickets": 2
 		},
 		{
-			"account": "0xd443b7c949ac7cf62fe8440804bbc37abf0a6f52",
-			"successRate": 0,
+			"account": "0x896a86d3a563bd76fbf72859d04ae550ba7e8a34",
+			"successRate": 100,
 			"totalTickets": 1
 		},
 		{
-			"account": "0xe5edfe0e968bf5dad6d023814989b536c0875676",
-			"successRate": 0,
+			"account": "0xfd79594cca89144aa2e5fd5f1c07bba29fb43bf5",
+			"successRate": 100,
+			"totalTickets": 1
+		},
+		{
+			"account": "0x26407c701f42f358256aa1f1ef86db3e1c99fb6b",
+			"successRate": 100,
+			"totalTickets": 1
+		},
+		{
+			"account": "0x7a44546d86aad1479895390c1ec7add0b9e45f08",
+			"successRate": 100,
+			"totalTickets": 1
+		},
+		{
+			"account": "0xc9e60767be3c0e812301ab2f38237ec52b56a009",
+			"successRate": 100,
+			"totalTickets": 1
+		},
+		{
+			"account": "0xdd5555ef3f38db5497871fb402b1cf764524398a",
+			"successRate": 100,
 			"totalTickets": 1
 		},
 		{
@@ -6443,7 +6473,7 @@
 		{
 			"account": "0x11ebee2bf244325b5559f0f583722d35659ddce8",
 			"successRate": 0,
-			"totalTickets": 4
+			"totalTickets": 1
 		},
 		{
 			"account": "0x26f8448e705d5f409d0e6a8fa46482e5f186eac3",
@@ -6462,8 +6492,8 @@
 		},
 		{
 			"account": "0x7476d1e9659a49b92c3f65f0a6de00a18fc3d6fa",
-			"successRate": 33.33,
-			"totalTickets": 3
+			"successRate": 50,
+			"totalTickets": 2
 		},
 		{
 			"account": "0x7d1be921ac9d115030c856ee75ad08c25b1d4249",
@@ -6492,8 +6522,8 @@
 		},
 		{
 			"account": "0xca3f069cc7f1a4812fd192f3bb46b4485f4163af",
-			"successRate": 33.33,
-			"totalTickets": 6
+			"successRate": 0,
+			"totalTickets": 3
 		},
 		{
 			"account": "0xdbade435d5d25f4bf811b67f80fd6f21d1eff716",
@@ -6518,7 +6548,7 @@
 		{
 			"account": "0xb3d1e41f84acd0e77f83473aa62fc8560c2a3c0c",
 			"successRate": 0,
-			"totalTickets": 2
+			"totalTickets": 1
 		},
 		{
 			"account": "0xfd0478d6c000ca54d8551e468051dbd950f614a8",
@@ -6544,6 +6574,11 @@
 			"account": "0x8f678841ebd0202bc2e5c2d25b4170b5426abfa3",
 			"successRate": 0,
 			"totalTickets": 1
+		},
+		{
+			"account": "0x0d4474ed33c2ace66ce45ad1752bf778c11f901b",
+			"successRate": 3.16,
+			"totalTickets": 95
 		},
 		{
 			"account": "0xa8f8ddd03224218ad3777a5b00ec2824ec603c1b",
@@ -6736,11 +6771,6 @@
 			"totalTickets": 1
 		},
 		{
-			"account": "0x29f38498071b772a99bab18c7ea4125387ed2332",
-			"successRate": 100,
-			"totalTickets": 1
-		},
-		{
 			"account": "0x19c75d37b95eb40cd0a951eda2dd77354a488cb6",
 			"successRate": 100,
 			"totalTickets": 1
@@ -6773,36 +6803,6 @@
 		{
 			"account": "0xa99e985137edc4bd1040047cb42ec2ba4c4367ab",
 			"successRate": 100,
-			"totalTickets": 1
-		},
-		{
-			"account": "0x72c3fdba4f73b41ec2144a20883536710e14cbbb",
-			"successRate": 100,
-			"totalTickets": 1
-		},
-		{
-			"account": "0x5e14c52c105c036c61ac707468f462003dc17c94",
-			"successRate": 0,
-			"totalTickets": 2
-		},
-		{
-			"account": "0xcf4798d0d502139f0d45becf9dfbee8ce9f2c16a",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0xa382c3587185a90706ad1abce475fa803e277a09",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0xbf7c4501bb949646fdfcbb61e9bdcec0d663d3f6",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0xd6a55ce28deb0eb41098dd79b6f965056795135d",
-			"successRate": 0,
 			"totalTickets": 1
 		},
 		{
@@ -6891,6 +6891,51 @@
 			"totalTickets": 27
 		},
 		{
+			"account": "0x7c0d1b2f35c40a7a35407c739efa11235c022c92",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0xfbdbe466764083ceb38cae6c5b4efa7e1833bc04",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0xaa905f2b105693e68321ce806d899df561f07e96",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0xf7f6f7ec25c52c3e4794c9e2d32020ec00c07dc2",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0x564b83d4eeb45f269e68ccc990476f07840d4745",
+			"successRate": 3,
+			"totalTickets": 100
+		},
+		{
+			"account": "0x880d67829b2b54b89c639c20a8640b7af6cd562f",
+			"successRate": 0,
+			"totalTickets": 5
+		},
+		{
+			"account": "0xd87cfd8757db0aa5b3380bc8009881f64f76bd20",
+			"successRate": 50,
+			"totalTickets": 2
+		},
+		{
+			"account": "0xd443b7c949ac7cf62fe8440804bbc37abf0a6f52",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0xe5edfe0e968bf5dad6d023814989b536c0875676",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
 			"account": "0x44c437cc3c57596da98b8e059ee2cc0604cf8717",
 			"successRate": 0,
 			"totalTickets": 1
@@ -6973,7 +7018,7 @@
 		{
 			"account": "0xfd7846f77e41bbdae1bce61b2bb361ee04216cb7",
 			"successRate": 0,
-			"totalTickets": 7
+			"totalTickets": 6
 		},
 		{
 			"account": "0xb4d502361a3c6f823eeb9a99af09e110382206ee",
@@ -6988,7 +7033,7 @@
 		{
 			"account": "0xc74a225561d7c2d02dce6ec664f799955d76af8e",
 			"successRate": 0,
-			"totalTickets": 5
+			"totalTickets": 2
 		},
 		{
 			"account": "0x95c8b59b40225181a6a158a3e85710b82aceeeef",
@@ -7013,12 +7058,12 @@
 		{
 			"account": "0x84b6f8ac045a6bd9c03a3da7c427eb3245dcf9ba",
 			"successRate": 0,
-			"totalTickets": 3
+			"totalTickets": 2
 		},
 		{
 			"account": "0xb436141073efe6c21ac6be9a5bb0d1d74f0ce87c",
-			"successRate": 50,
-			"totalTickets": 2
+			"successRate": 100,
+			"totalTickets": 1
 		},
 		{
 			"account": "0xfdbeeef9d4275c49542bc0378e6a2652c7934861",
@@ -7028,7 +7073,7 @@
 		{
 			"account": "0xf90d28704c0d943525c303f2be8d5102dae22420",
 			"successRate": 100,
-			"totalTickets": 2
+			"totalTickets": 1
 		},
 		{
 			"account": "0xd075c550f246244a76ecd3ca4a5c992e20690f11",
@@ -7036,72 +7081,37 @@
 			"totalTickets": 1
 		},
 		{
-			"account": "0x12a21203755ea50013fdefe0c8759767bda368ad",
-			"successRate": 0,
-			"totalTickets": 4
-		},
-		{
 			"account": "0xbd17643f082f81a02f0cc13c3590f33cb763c13c",
 			"successRate": 0,
 			"totalTickets": 1
 		},
 		{
-			"account": "0x7d4588c83df708008e5c3f3ece3682e266ff1cc1",
+			"account": "0x72c3fdba4f73b41ec2144a20883536710e14cbbb",
 			"successRate": 100,
 			"totalTickets": 1
 		},
 		{
-			"account": "0x6a639cdd89b178590ab57a163de942e1f8b38411",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0xe3cf9be65fe3e9786e5e85f29f72499190fb3ee5",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0x7bece831cfba324dba85d616ef59a69e07db97c7",
+			"account": "0x5e14c52c105c036c61ac707468f462003dc17c94",
 			"successRate": 0,
 			"totalTickets": 2
 		},
 		{
-			"account": "0x22e81335f9d4a609df42f56ba5b583f565995296",
+			"account": "0xcf4798d0d502139f0d45becf9dfbee8ce9f2c16a",
 			"successRate": 0,
 			"totalTickets": 1
 		},
 		{
-			"account": "0xdf974829f6d977370b21e065ae445390cb9d010c",
-			"successRate": 100,
+			"account": "0xa382c3587185a90706ad1abce475fa803e277a09",
+			"successRate": 0,
 			"totalTickets": 1
 		},
 		{
-			"account": "0x19da1ebbf20c632759dded680b52f98fe87809d8",
+			"account": "0xbf7c4501bb949646fdfcbb61e9bdcec0d663d3f6",
 			"successRate": 0,
-			"totalTickets": 3
-		},
-		{
-			"account": "0x34d4315ce7ef3214d0b412b15afc206027e26cf2",
-			"successRate": 25,
-			"totalTickets": 4
-		},
-		{
-			"account": "0x0163c7b6fa96cd58ac7def93f643f4df3f2f5dfd",
-			"successRate": 0,
-			"totalTickets": 2
-		},
-		{
-			"account": "0x7752f8cba0fccb9aac76f45eae9ec74fdd91bda8",
-			"successRate": 25,
-			"totalTickets": 4
-		},
-		{
-			"account": "0xf1196bf726ed9227507f5a8b7c87ae177124db2b",
-			"successRate": 100,
 			"totalTickets": 1
 		},
 		{
-			"account": "0x716aa68a3d517dd3670737d7965ba655b30792dd",
+			"account": "0xd6a55ce28deb0eb41098dd79b6f965056795135d",
 			"successRate": 0,
 			"totalTickets": 1
 		},
@@ -7159,11 +7169,6 @@
 			"account": "0xf3dc61dfab9ffe72cdfb45a99892b38c7a1edcef",
 			"successRate": 100,
 			"totalTickets": 1
-		},
-		{
-			"account": "0xffcfa5f7b994aeb4c6931e0a6cd95d8984e038ce",
-			"successRate": 100,
-			"totalTickets": 2
 		},
 		{
 			"account": "0x16ff695a6bea60ae7bc61265585617221ce108aa",
@@ -7446,17 +7451,17 @@
 			"totalTickets": 1
 		},
 		{
-			"account": "0xb729973d8c89c3225daf9bc2b2f2e6805f1e641b",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
 			"account": "0xf55a960ab2f047247e06339032c0743c0b8dbd4e",
 			"successRate": 0,
 			"totalTickets": 1
 		},
 		{
 			"account": "0xe1f74c8e6b06dc66baa4816ee846b33fccd99d80",
+			"successRate": 0,
+			"totalTickets": 1
+		},
+		{
+			"account": "0x0163c7b6fa96cd58ac7def93f643f4df3f2f5dfd",
 			"successRate": 0,
 			"totalTickets": 1
 		},
@@ -7541,6 +7546,11 @@
 			"totalTickets": 1
 		},
 		{
+			"account": "0x7752f8cba0fccb9aac76f45eae9ec74fdd91bda8",
+			"successRate": 100,
+			"totalTickets": 1
+		},
+		{
 			"account": "0x3de0657ebbc4961deb23e2a80f1616b0a5e887a2",
 			"successRate": 100,
 			"totalTickets": 1
@@ -7572,16 +7582,6 @@
 		},
 		{
 			"account": "0x45e0e95535dcd652540e0e0d22bcabd2abaad070",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0x0d36f52047e29919227701ba072477578bdb08c1",
-			"successRate": 0,
-			"totalTickets": 1
-		},
-		{
-			"account": "0x48e471103dd4945d146a0e28f4c62f56466b2b6f",
 			"successRate": 0,
 			"totalTickets": 1
 		},
@@ -7707,4 +7707,3 @@
 		}
 	]
 }
-
