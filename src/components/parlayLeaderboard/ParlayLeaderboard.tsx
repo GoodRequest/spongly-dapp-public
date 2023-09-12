@@ -8,10 +8,11 @@ import ParlayLeaderboardRow from './components/ParlayLeaderboardRow'
 import { ParlayLeaderboardItem } from '@/typescript/types'
 import { getReq } from '@/utils/requests'
 import { getCurrentBiweeklyPeriod, getReward, handleErrorMessage } from '@/utils/helpers'
-import { ENDPOINTS, ErrorNotificationTypes, NETWORK_IDS } from '@/utils/constants'
+import { ENDPOINTS, ErrorNotificationTypes, NETWORK_IDS, OddsType } from '@/utils/constants'
 
 import * as SC from './ParlayLeaderboardStyles'
 import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
+import { formatQuote } from '@/utils/formatters/quote'
 
 const ParlayLeaderboard = () => {
 	const { t } = useTranslation()
@@ -34,7 +35,7 @@ const ParlayLeaderboard = () => {
 							rank: data?.[i]?.rank,
 							address: data?.[i]?.account,
 							position: data?.[i]?.numberOfPositions,
-							quote: data?.[i]?.totalQuote ? data?.[i]?.totalQuote?.toFixed(2) : 0,
+							quote: data?.[i]?.totalQuote ? Number(formatQuote(OddsType.DECIMAL, data?.[i]?.totalQuote)) : 0,
 							reward: getReward(i, chain?.id)
 						}
 						newParlayData.push(newItem)
