@@ -199,8 +199,8 @@ export const MAX_TICKET_MATCHES = 10
 export const MAX_TICKETS = 5
 
 export const SOCIAL_LINKS = {
-	DISCORD: 'https://discord.com/invite/qDWSz6Zr',
-	TWITTER: 'https://twitter.com/OvertimeMarkets',
+	DISCORD: 'https://discord.com/invite/7zzg2Y5s',
+	TWITTER: 'https://twitter.com/sponglyio',
 	TERMS: 'https://overtimemarkets.xyz/static/media/thales-terms-of-use.9f69e9a2.pdf'
 }
 
