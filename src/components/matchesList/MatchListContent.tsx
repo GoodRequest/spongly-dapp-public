@@ -76,7 +76,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 						<SC.RadioMobileHeader>
 							<span>{t('Double chance')}</span>
 						</SC.RadioMobileHeader>
-						{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd < MIN_ODD_TRESHOLD && (
+						{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd === 0 && (
 							<SC.WarningText>{t('Coming soon')}</SC.WarningText>
 						)}
 						<SC.RadioMobileGroup>
@@ -223,7 +223,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 					<SC.ExtendedMatchContentItemCol>
 						<SC.ExtendedMatchContentItemHeader>{t('Double chance')}</SC.ExtendedMatchContentItemHeader>
 						<SC.ExtendedRowItemContent>
-							{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd < MIN_ODD_TRESHOLD && (
+							{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd === 0 && (
 								<SC.WarningText>{t('Coming soon')}</SC.WarningText>
 							)}
 							<SC.ExtendedMatchContentRadioButtonGroup>

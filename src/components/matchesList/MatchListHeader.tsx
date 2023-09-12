@@ -273,7 +273,7 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN }) => 
 							!(chain?.id === NETWORK_IDS.OPTIMISM_GOERLI) && (
 								<SC.MatchItemCol span={getSpanNumber(BetType.DOUBLE_CHANCE)}>
 									<SC.Header>{t('Double chance')}</SC.Header>
-									{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd < MIN_ODD_TRESHOLD && (
+									{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd === 0 && (
 										<SC.WarningText>{t('Coming soon')}</SC.WarningText>
 									)}
 									<SC.RowItemContent>
