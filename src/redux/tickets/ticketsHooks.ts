@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { ApolloError, useLazyQuery } from '@apollo/client'
-import { groupBy } from 'lodash'
 import { useDispatch } from 'react-redux'
 import { useNetwork } from 'wagmi'
 
@@ -14,16 +13,10 @@ import { ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
 
 // utils
 import { GET_TICKETS } from '@/utils/queries'
-import {
-	getClosedTicketType,
-	getSuccessRateForTickets,
-	getTicketTotalQuote,
-	getTicketType,
-	removeDuplicatesByGameId,
-	removeDuplicateSubstring
-} from '@/utils/helpers'
+import { getClosedTicketType, getTicketTotalQuote, getTicketType, removeDuplicatesByGameId, removeDuplicateSubstring } from '@/utils/helpers'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
-import { ITicket } from '@/typescript/types'
+import { ISuccessRateData, ITicket } from '@/typescript/types'
+import { ENDPOINTS } from '@/utils/constants'
 
 export interface IDefaultProps {
 	loading: boolean
@@ -35,7 +28,6 @@ const INITIAL_BATCH_SIZE = 10
 
 const useFetchTickets = () => {
 	const dispatch = useDispatch()
-
 	const { chain } = useNetwork()
 	// Apollo fetch data
 	const [fetchTicketsData0] = useLazyQuery(GET_TICKETS)
@@ -44,16 +36,19 @@ const useFetchTickets = () => {
 	const [fetchTicketsData3] = useLazyQuery(GET_TICKETS)
 	const [fetchTicketsData4] = useLazyQuery(GET_TICKETS)
 	const [fetchTicketsData5] = useLazyQuery(GET_TICKETS)
-
-	const getSuccessRateMap = (data: ParlayMarket[]) => {
-		const walletSuccessRateMap = new Map()
-		const usersTickets = groupBy(data, 'account')
-		Object.entries(usersTickets).forEach(([key, value]) => walletSuccessRateMap.set(key, getSuccessRateForTickets(value)))
-		return walletSuccessRateMap
+	const fetchSuccessRateData = async (): Promise<ISuccessRateData> => {
+		try {
+			const response = await fetch(ENDPOINTS.GET_SUCCESS_RATE())
+			return await response.json()
+		} catch (error) {
+			// eslint-disable-next-line no-console
+			console.error(error)
+			throw error
+		}
 	}
-
-	const mapTicketsData = (data: (ParlayMarket | PositionBalance)[]): ITicketContent[] => {
-		const successRateMap = getSuccessRateMap(data as ParlayMarket[])
+	const mapTicketsData = async (data: (ParlayMarket | PositionBalance)[]) => {
+		// TODO: loading state should be also tied up with this calling
+		const responseSuccessRate = await fetchSuccessRateData()
 		return data.map((ticket) => {
 			return {
 				ticket: {
@@ -84,14 +79,14 @@ const useFetchTickets = () => {
 										}
 									}
 							  }),
-					successRate: Number(successRateMap.get(ticket.account)),
+					successRate: responseSuccessRate.stats.find((item: any) => item.account === ticket.account)?.successRate || 0,
 					totalTicketQuote: Number(getTicketTotalQuote(ticket as ITicket, 'positions' in ticket ? ticket.totalQuote : undefined))
 				}
 			} as ITicketContent
 		})
 	}
 
-	const fetchAllTickets = () => {
+	const fetchAllTickets = async () => {
 		dispatch({ type: TICKET_LIST.TICKET_LIST_LOAD_START })
 		const ticketQueryProps = { firstParlay: BATCH_SIZE, firstSingle: BATCH_SIZE }
 		Promise.all([
@@ -160,15 +155,17 @@ const useFetchTickets = () => {
 					...values[5].data.parlayMarkets,
 					...values[5].data.positionBalances
 				]
-				dispatch({
-					type: TICKET_LIST.TICKET_LIST_LOAD_DONE,
-					payload: { data: mapTicketsData(allTickets), successRateMap: getSuccessRateMap(allTickets) }
+				mapTicketsData(allTickets).then((data) => {
+					dispatch({
+						type: TICKET_LIST.TICKET_LIST_LOAD_DONE,
+						payload: { data }
+					})
 				})
 			})
 			.catch(() => {
 				dispatch({
 					type: TICKET_LIST.TICKET_LIST_LOAD_DONE,
-					payload: { data: [], successRateMap: new Map() }
+					payload: { data: [] }
 				})
 			})
 	}

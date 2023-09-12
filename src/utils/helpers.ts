@@ -384,16 +384,6 @@ const isWinningTicket = (market: ParlayMarket | PositionBalance) => {
 	return market.position.claimable
 }
 
-export const getSuccessRateForTickets = (tickets: Array<ParlayMarket | PositionBalance>): string => {
-	const resolvedTickets = tickets.filter((ticket) => {
-		const positions = getPositions(ticket)
-		return positions.every((position) => position.market.isResolved)
-	})
-	const winningTickets = resolvedTickets.filter((ticket) => isWinningTicket(ticket)) // pri singles je to claimable
-	if (!resolvedTickets.length) return '0.00'
-	return floor((winningTickets.length / resolvedTickets.length) * 100, 2).toFixed(2)
-}
-
 export const addDaysToEnteredTimestamp = (numberOfDays: number, timestamp: string) => {
 	return new Date().setTime(new Date(timestamp).getTime() + numberOfDays * 24 * 60 * 60 * 1000)
 }

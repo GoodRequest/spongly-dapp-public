@@ -4,7 +4,6 @@ import { ILoadingAndFailure, ILoadingBatch, RESET_STORE } from '@/redux/generalT
 export const initState = {
 	ticketList: {
 		data: null,
-		successRateMap: null,
 		isLoading: false,
 		isLoadingBatch: false,
 		isFailure: false
@@ -46,8 +45,7 @@ export default (state = initState, action: ITicketActions) => {
 				...state,
 				ticketList: {
 					...initState.ticketList,
-					data: action.payload.data,
-					successRateMap: action.payload.successRateMap
+					data: action.payload.data
 				}
 			}
 		case RESET_STORE:
