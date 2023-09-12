@@ -64,7 +64,7 @@ const ParlayLeaderboardContent = () => {
 	}, [isReady])
 
 	useEffect(() => {
-		router.push(
+		router.replace(
 			{
 				pathname: '/parlay-leaderboard',
 				query: {

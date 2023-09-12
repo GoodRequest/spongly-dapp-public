@@ -45,7 +45,7 @@ const TicketFilter: FC<TicketFilterProps> = ({ onReset, onShowResults, resultsCo
 
 	useEffect(() => {
 		if (router.isReady) {
-			router.push(
+			router.replace(
 				{
 					pathname: router.pathname,
 					query: {

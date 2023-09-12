@@ -133,7 +133,7 @@ const TicketsContent = () => {
 
 	useEffect(() => {
 		if (router.isReady) {
-			router.push(
+			router.replace(
 				{
 					pathname: router.pathname,
 					query: {

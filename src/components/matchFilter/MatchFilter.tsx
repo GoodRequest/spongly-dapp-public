@@ -45,7 +45,7 @@ const MatchFilter: FC<MatchFilterProps> = ({ onReset, onShowResults, resultsCoun
 
 	useEffect(() => {
 		if (router.isReady) {
-			router.push(
+			router.replace(
 				{
 					pathname: router.pathname,
 					query: {
