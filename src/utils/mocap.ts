@@ -2,7 +2,7 @@ export const presentationSliderData = [
 	{
 		text: '',
 		textColor: '#ffffff',
-		image: '/banners/Warsaw_banner.webp',
+		image: '/banners/Barcelona_banner.webp',
 		button: null
 	},
 	{
