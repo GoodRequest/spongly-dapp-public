@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
-import { isEmpty, map } from 'lodash'
+import { groupBy, isEmpty, map, toPairs } from 'lodash'
 import { Col, Row } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import { useDispatch, useSelector } from 'react-redux'
@@ -34,6 +34,7 @@ import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 
 // styles
 import * as SC from './TicketListStyles'
+import { BetType } from '@/utils/tags'
 
 interface ITicketListItem extends ITicketContent {
 	type: string
@@ -130,6 +131,30 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 		// helper variable which says that ticket has matches which were copied
 	}
 
+	const getMatchesWithChildMarkets = () => {
+		const matchesWithChildMarkets = toPairs(groupBy(tempMatches, 'gameId'))
+			.map(([, markets]) => {
+				const [match] = markets
+				const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
+				const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
+				const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD)
+				const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL)
+				const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
+				return {
+					...(winnerTypeMatch ?? tempMatches.find((item: any) => item.gameId === match?.gameId)),
+					winnerTypeMatch,
+					doubleChanceTypeMatches,
+					spreadTypeMatch,
+					totalTypeMatch,
+					combinedTypeMatch
+				}
+			}) // NOTE: remove broken results.
+			.filter((item) => item.winnerTypeMatch)
+
+		console.log(matchesWithChildMarkets)
+		return matchesWithChildMarkets
+	}
+
 	const handleCollapseChange = (e: any) => {
 		setActiveKeysList([...e])
 	}
@@ -155,8 +180,8 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 			<SC.ModalDescriptionWarning>{t('Odds might slightly differ')}</SC.ModalDescriptionWarning>
 			<Row>
 				<SC.MatchContainerRow span={24}>
-					{tempMatches?.map((match: any, key: any) => (
-						<MatchRow readOnly copied key={`matchRow-${key}`} match={match} />
+					{getMatchesWithChildMarkets()?.map((match: any, key: any) => (
+						<MatchRow readOnly copied key={`matchRow-${key}`} match={match} allTicketMatches={getMatchesWithChildMarkets()} />
 					))}
 				</SC.MatchContainerRow>
 			</Row>
