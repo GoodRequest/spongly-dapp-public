@@ -236,3 +236,17 @@ export interface IMatch extends SportMarket, IBonus {
 	betOption?: BET_OPTIONS
 	combinedTypeMatch?: SGPItem
 }
+
+export interface ISuccessRateData {
+	context: {
+		network: string
+		ticketsCount: number
+		uniqueUsersCount: number
+	}
+	processStart: string
+	stats: {
+		account: string
+		successRate: number
+		totalTickets: number
+	}[]
+}
