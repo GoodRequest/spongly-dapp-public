@@ -86,3 +86,12 @@ export const MobileTicketBetWrapper = styled.div`
 		display: flex;
 	}
 `
+
+export const LoadingWrapper = styled.div`
+	display: flex;
+`
+
+export const SpinnerWrapper = styled.div`
+	display: inline-flex;
+	margin-right: 16px !important;
+`

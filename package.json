@@ -25,6 +25,7 @@
     "type-check": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
+	"@ant-design/cssinjs": "1.17.0",
     "@ant-design/icons": "5.0.1",
     "@apollo/client": "3.7.10",
     "@graphql-codegen/cli": "3.2.2",

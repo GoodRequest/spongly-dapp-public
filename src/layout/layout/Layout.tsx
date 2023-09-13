@@ -1,5 +1,7 @@
 import { FC, ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from 'next-export-i18n'
+import { Spin } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
 import LogoImg from '@/assets/icons/sponglyLogo.svg'
 import Footer from '../footer/Footer'
 import Header from '../header/Header'
@@ -26,7 +28,7 @@ const Layout: FC<ILayout> = ({ children }) => {
 	useEffect(() => {
 		setTimeout(() => {
 			setInitialization(false)
-		}, 2000)
+		}, 1000)
 	}, [])
 
 	return (
@@ -44,7 +46,13 @@ const Layout: FC<ILayout> = ({ children }) => {
 			{initialization && (
 				<SC.OverlayLoading>
 					<SC.Logo src={LogoImg} alt={'Spongly'} />
-					<div>{`${t('Loading')}...`}</div>
+					<SC.LoadingWrapper>
+						<SC.SpinnerWrapper>
+							<Spin spinning={true} size={'large'} indicator={<LoadingOutlined spin />} />
+						</SC.SpinnerWrapper>
+						{`${t('Loading')}...`}
+					</SC.LoadingWrapper>
+					<style />
 				</SC.OverlayLoading>
 			)}
 		</SC.LayoutWrapper>
