@@ -47,8 +47,8 @@ const useFetchTickets = () => {
 			throw error
 		}
 	}
-	const mapTicketsData = async (data: (ParlayMarket | PositionBalance)[], successRateMap: Map<string, number>) => {
-		return data.map((ticket) => {
+	const mapTicketsData = async (data: (ParlayMarket | PositionBalance)[], successRateMap: Map<string, number>) =>
+		data.map((ticket) => {
 			return {
 				ticket: {
 					...ticket,
@@ -83,7 +83,6 @@ const useFetchTickets = () => {
 				}
 			} as ITicketContent
 		})
-	}
 
 	const fetchAllTickets = async () => {
 		dispatch({ type: TICKET_LIST.TICKET_LIST_LOAD_START })
