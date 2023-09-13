@@ -63,6 +63,7 @@ const formatMatchCombinedPositionsQuote = (position1: number, position2: number,
 
 export const formattedCombinedTypeMatch = (match: IMatch, customBetOption?: BET_OPTIONS) => {
 	const betOption = customBetOption || match.betOption
+
 	if (betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER) {
 		return formatMatchCombinedPositionsQuote(
 			Number(match.winnerTypeMatch?.homeOdds),

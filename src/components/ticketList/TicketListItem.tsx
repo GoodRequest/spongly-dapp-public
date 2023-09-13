@@ -81,11 +81,13 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 					const data = await sportsAMMContract?.getMarketDefaultOdds(item.market.address, false)
 					return {
 						...item.market,
-						gameId: item.id,
+						gameId: item.market.gameId,
 						homeOdds: bigNumberFormatter(data?.[0] || 0),
 						awayOdds: bigNumberFormatter(data?.[1] || 0),
 						drawOdds: bigNumberFormatter(data?.[2] || 0),
-						betOption: getSymbolText(convertPositionNameToPosition(item.side), item.market)
+						betOption: item?.isCombined
+							? item?.combinedPositionsText?.replace('&', '')
+							: getSymbolText(convertPositionNameToPosition(item.side), item.market)
 					}
 				})
 		)
@@ -124,35 +126,41 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 		await dispatch({ type: ACTIVE_BET_TICKET.ACTIVE_BET_TICKET_SET, payload: { data: { id: (largestId || 1) + 1 } } })
 	}
 
-	const handleCopyTicket = async () => {
-		copyTicketToUnsubmittedTickets(activeMatches as any, unsubmittedTickets, dispatch, activeTicketValues.id)
-		dispatch(change(FORM.BET_TICKET, 'matches', activeMatches))
-		dispatch(change(FORM.BET_TICKET, 'copied', true))
-		// helper variable which says that ticket has matches which were copied
+	const getMatchesWithChildMarkets = () => {
+		const matchesWithChildMarkets = toPairs(groupBy(tempMatches, 'gameId')).map(([, markets]) => {
+			const [match] = markets
+			const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
+			const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
+			const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD)
+			const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL)
+			const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
+			return {
+				...(winnerTypeMatch ?? tempMatches.find((item: any) => item.gameId === match?.gameId)),
+				winnerTypeMatch,
+				doubleChanceTypeMatches,
+				spreadTypeMatch,
+				totalTypeMatch,
+				combinedTypeMatch
+			}
+		})
+
+		return matchesWithChildMarkets?.map((item) => {
+			if (item?.winnerTypeMatch && item?.totalTypeMatch && item?.combinedTypeMatch) {
+				return {
+					...item,
+					betOption: item.winnerTypeMatch.betOption + item.totalTypeMatch.betOption
+				}
+			}
+
+			return item
+		})
 	}
 
-	const getMatchesWithChildMarkets = () => {
-		const matchesWithChildMarkets = toPairs(groupBy(tempMatches, 'gameId'))
-			.map(([, markets]) => {
-				const [match] = markets
-				const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
-				const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
-				const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD)
-				const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL)
-				const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
-				return {
-					...(winnerTypeMatch ?? tempMatches.find((item: any) => item.gameId === match?.gameId)),
-					winnerTypeMatch,
-					doubleChanceTypeMatches,
-					spreadTypeMatch,
-					totalTypeMatch,
-					combinedTypeMatch
-				}
-			}) // NOTE: remove broken results.
-			.filter((item) => item.winnerTypeMatch)
-
-		console.log(matchesWithChildMarkets)
-		return matchesWithChildMarkets
+	const handleCopyTicket = async () => {
+		copyTicketToUnsubmittedTickets(getMatchesWithChildMarkets() as any, unsubmittedTickets, dispatch, activeTicketValues.id)
+		dispatch(change(FORM.BET_TICKET, 'matches', getMatchesWithChildMarkets()))
+		dispatch(change(FORM.BET_TICKET, 'copied', true))
+		// helper variable which says that ticket has matches which were copied
 	}
 
 	const handleCollapseChange = (e: any) => {

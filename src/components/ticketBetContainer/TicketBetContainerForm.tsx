@@ -199,6 +199,10 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 		setError(null)
 	}
 
+	// useEffect(() => {
+	// 	console.log(formValues)
+	// }, [formValues])
+
 	useEffect(
 		() => {
 			getErrorContent()
