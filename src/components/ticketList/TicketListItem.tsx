@@ -105,27 +105,6 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ticket])
 
-	const handleAddTicket = async () => {
-		const largestId = unsubmittedTickets?.reduce((maxId, ticket) => {
-			return Math.max(maxId, ticket.id as number)
-		}, 0)
-		const matches = activeMatches || []
-
-		const data = unsubmittedTickets
-			? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			  [...unsubmittedTickets, { id: (largestId || 1) + 1, matches, copied: true }]
-			: [{ id: 1, matches, copied: true }]
-
-		await dispatch({
-			type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_UPDATE,
-			payload: {
-				data
-			}
-		})
-		// NOTE: set active state for new ticket item in HorizontalScroller id === data.length (actual state of tickets and set active ticket to last item)
-		await dispatch({ type: ACTIVE_BET_TICKET.ACTIVE_BET_TICKET_SET, payload: { data: { id: (largestId || 1) + 1 } } })
-	}
-
 	const getMatchesWithChildMarkets = () => {
 		const matchesWithChildMarkets = toPairs(groupBy(tempMatches, 'gameId')).map(([, markets]) => {
 			const [match] = markets
@@ -154,6 +133,27 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 
 			return item
 		})
+	}
+
+	const handleAddTicket = async () => {
+		const largestId = unsubmittedTickets?.reduce((maxId, ticket) => {
+			return Math.max(maxId, ticket.id as number)
+		}, 0)
+		const matches = getMatchesWithChildMarkets() || []
+
+		const data = unsubmittedTickets
+			? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			  [...unsubmittedTickets, { id: (largestId || 1) + 1, matches, copied: true }]
+			: [{ id: 1, matches, copied: true }]
+
+		await dispatch({
+			type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_UPDATE,
+			payload: {
+				data
+			}
+		})
+		// NOTE: set active state for new ticket item in HorizontalScroller id === data.length (actual state of tickets and set active ticket to last item)
+		await dispatch({ type: ACTIVE_BET_TICKET.ACTIVE_BET_TICKET_SET, payload: { data: { id: (largestId || 1) + 1 } } })
 	}
 
 	const handleCopyTicket = async () => {
