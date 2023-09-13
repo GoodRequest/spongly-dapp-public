@@ -3,26 +3,35 @@ import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { useLazyQuery } from '@apollo/client'
 import { useTranslation } from 'next-export-i18n'
 import { max } from 'lodash'
-
 import { ethers } from 'ethers'
 import dayjs from 'dayjs'
+import { useRouter } from 'next-translate-routes'
+
+// components
 import TicketsStatisticRow from '@/components/ticketsStatisticRow/TicketsStatisticRow'
-import { GET_USERS_STATISTICS } from '@/utils/queries'
-import { UserStatistic, UserTicket } from '@/typescript/types'
-import { ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
 import UserTicketsList from '@/components/userTicketsList/UserTicketsList'
+
+// utils
+import { GET_USERS_STATISTICS } from '@/utils/queries'
 import networkConnector from '@/utils/networkConnector'
 import { getUserTicketType, removeDuplicateSubstring, ticketTypeToWalletType } from '@/utils/helpers'
 import { MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE, USER_TICKET_TYPE } from '@/utils/constants'
-import { useIsMounted } from '@/hooks/useIsMounted'
 import { showNotifications } from '@/utils/tsxHelpers'
-import { WALLET_TICKETS } from '@/utils/enums'
+import { PAGES, WALLET_TICKETS } from '@/utils/enums'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
+
+// hooks
+import { useIsMounted } from '@/hooks/useIsMounted'
+
+// types
+import { UserStatistic, UserTicket } from '@/typescript/types'
+import { ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
 
 const MyWalletContent = () => {
 	const { t } = useTranslation()
 	const { address } = useAccount()
 	const { chain } = useNetwork()
+	const router = useRouter()
 	const provider = useProvider({ chainId: chain?.id || NETWORK_IDS.OPTIMISM })
 	const { signer } = networkConnector
 	const isMounted = useIsMounted()
@@ -185,6 +194,10 @@ const MyWalletContent = () => {
 	}
 
 	useEffect(() => {
+		if (!chain?.id) {
+			router.push(`/${PAGES.DASHBOARD}`)
+		}
+
 		if (address && chain?.id && signer) {
 			fetchStatistics()
 		}
