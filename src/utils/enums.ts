@@ -96,6 +96,11 @@ export enum RESULT_TYPE {
 	LOOSER = '0'
 }
 
+export enum SCROLL_DIRECTION {
+	RIGHT = 'right',
+	LEFT = 'left'
+}
+
 export enum ContractSGPOrder {
 	MONEYLINETOTALS = 0,
 	MONEYLINESPREAD = 1,

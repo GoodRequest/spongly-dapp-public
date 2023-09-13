@@ -1,6 +1,6 @@
 import { change, getFormValues, initialize } from 'redux-form'
 import { ethers } from 'ethers'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAccount, useNetwork } from 'wagmi'
 import { useTranslation } from 'next-export-i18n'
@@ -150,6 +150,7 @@ const TicketBetContainer = () => {
 				setActiveTicketID(data?.[0].id || 1)
 			}
 		}
+		// TODO: scroll to first item (if remove 10th ticket then select 1st ticket but need to be also scrolled left)
 	}
 
 	useEffect(() => {
@@ -548,6 +549,7 @@ const TicketBetContainer = () => {
 		})
 		setActiveTicketID((largestId || 1) + 1)
 		setIsSwitchedTicket(true)
+		// TODO: scroll to last item
 	}
 
 	useEffect(() => {

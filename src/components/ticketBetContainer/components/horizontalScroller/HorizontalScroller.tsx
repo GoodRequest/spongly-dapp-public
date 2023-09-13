@@ -9,6 +9,7 @@ import addIcon from '@/assets/icons/add.svg'
 import { IUnsubmittedBetTicket } from '@/redux/betTickets/betTicketTypes'
 import { MAX_TICKET_MATCHES, MAX_TICKETS } from '@/utils/constants'
 import CloseMenuIcon from '@/assets/icons/close-icon-mobile.svg'
+import { SCROLL_DIRECTION } from '@/utils/enums'
 
 interface IHorizontalScroller {
 	tickets: IUnsubmittedBetTicket[]
@@ -16,11 +17,6 @@ interface IHorizontalScroller {
 	addTicket: () => void
 	setActiveTicket: (ticket: IUnsubmittedBetTicket) => void
 	activeTicket?: IUnsubmittedBetTicket
-}
-
-enum SCROLL_DIRECTION {
-	RIGHT = 'right',
-	LEFT = 'left'
 }
 
 const HorizontalScroller: FC<IHorizontalScroller> = ({ tickets, addTicket, activeTicket, setActiveTicket, removeTicket }) => {
@@ -69,14 +65,14 @@ const HorizontalScroller: FC<IHorizontalScroller> = ({ tickets, addTicket, activ
 
 			{tickets.length > 3 && visibleArrows === SCROLL_DIRECTION.RIGHT && (
 				<SC.GradientLoss direction={SCROLL_DIRECTION.RIGHT}>
-					<SC.TicketChips icon onClick={() => handleTicketScroll(SCROLL_DIRECTION.RIGHT)}>
+					<SC.TicketChips direction={SCROLL_DIRECTION.RIGHT} icon onClick={() => handleTicketScroll(SCROLL_DIRECTION.RIGHT)}>
 						<SC.ImgIcon src={arrowRightIcon} />
 					</SC.TicketChips>
 				</SC.GradientLoss>
 			)}
 			{tickets.length > 3 && visibleArrows === SCROLL_DIRECTION.LEFT && (
 				<SC.GradientLoss direction={SCROLL_DIRECTION.LEFT}>
-					<SC.TicketChips icon onClick={() => handleTicketScroll(SCROLL_DIRECTION.LEFT)}>
+					<SC.TicketChips direction={SCROLL_DIRECTION.LEFT} icon onClick={() => handleTicketScroll(SCROLL_DIRECTION.LEFT)}>
 						<SC.ImgIcon src={arrowRightIcon} />
 					</SC.TicketChips>
 				</SC.GradientLoss>

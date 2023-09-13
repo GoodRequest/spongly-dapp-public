@@ -6,6 +6,7 @@ import { TextMDMedium, TextXSMedium, HeadingXSMedium, TextMDRegular, TextSMMediu
 import { breakpoints } from '@/styles/theme'
 import closeIcon from '@/assets/icons/x-close.svg'
 import { AllPositionsHeader, MobileWrapper, RadioMobileHeader } from '../matchesList/MatchesListStyles'
+import { SCROLL_DIRECTION } from '@/utils/enums'
 
 export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
 	position: sticky;
@@ -202,8 +203,7 @@ export const MatchBetOptionsWrapper = styled.div`
 	}
 `
 
-export const TicketChips = styled.div<{ selected?: boolean; icon?: boolean }>`
-	margin-top: 4px; // for space for CloseIcon
+export const TicketChips = styled.div<{ selected?: boolean; icon?: boolean; direction?: SCROLL_DIRECTION }>`
 	position: relative;
 	pointer-events: all;
 	padding: ${({ icon }) => (icon ? '4px' : '12px 16px')};
@@ -211,6 +211,11 @@ export const TicketChips = styled.div<{ selected?: boolean; icon?: boolean }>`
 		if (selected) return 'fit-content'
 		if (icon) return '32px'
 		return '96px'
+	}};
+	margin: ${({ direction }) => {
+		if (direction === SCROLL_DIRECTION.RIGHT) return '4px 0 0 0'
+		if (direction === SCROLL_DIRECTION.LEFT) return '0 0 4px 0'
+		return '4px 8px 0 0'
 	}};
 	(icon ? '42px' : selected ? 'fit-content' : '106px');
 	height: 32px;
@@ -223,7 +228,6 @@ export const TicketChips = styled.div<{ selected?: boolean; icon?: boolean }>`
 	font-weight: 700;
 	cursor: pointer;
 	border-radius: 8px;
-	margin-right: 8px;
 	display: flex;
 	align-items: center;
 `
@@ -247,18 +251,19 @@ export const CloseIcon = styled.div<{ src: string }>`
 	}
 `
 
-export const GradientLoss = styled.div<{ direction: 'right' | 'left' }>`
+export const GradientLoss = styled.div<{ direction: SCROLL_DIRECTION }>`
 	position: absolute;
 	pointer-events: none;
-	right: ${({ direction }) => (direction === 'right' ? '15px' : 'none')};
-	left: ${({ direction }) => (direction === 'left' ? '15px' : 'none')};
+	margin: 0;
+	right: ${({ direction }) => (direction === 'right' ? '0px' : 'none')};
+	left: ${({ direction }) => (direction === 'left' ? '0px' : 'none')};
 	transform: ${({ direction }) => (direction === 'left' ? 'rotate(180deg)' : 'none')};
 	scrollbar-width: none;
 	&::-webkit-scrollbar {
 		display: none;
 	}
 	z-index: 10;
-	width: 100px;
+	width: 76px;
 	display: flex;
 	flex-direction: row-reverse;
 	background: ${({ theme }) => ` linear-gradient(270deg, ${theme['color-base-surface-secondary']} 53%, rgba(34, 37, 49, 0) 100%`});
