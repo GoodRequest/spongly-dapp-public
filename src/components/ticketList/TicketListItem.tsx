@@ -22,7 +22,7 @@ import { ACTIVE_BET_TICKET, IUnsubmittedBetTicket, UNSUBMITTED_BET_TICKETS } fro
 import { FORM } from '@/utils/enums'
 import { convertPositionNameToPosition, getSymbolText } from '@/utils/markets'
 import networkConnector from '@/utils/networkConnector'
-import { TICKET_TYPE } from '@/utils/constants'
+import { MAX_TICKETS, TICKET_TYPE } from '@/utils/constants'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import { orderPositionsAsSportMarkets, copyTicketToUnsubmittedTickets, getPositionsWithMergedCombinedPositions } from '@/utils/helpers'
 
@@ -55,7 +55,6 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 	const [tempMatches, setTempMatches] = useState<any>()
 	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
 	const [activeMatches, setActiveMatches] = useState<any[]>([])
-
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
 
 	const sgpFeesRaw = useSGPFeesQuery(chain?.id as any, {
@@ -188,6 +187,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 							<Button
 								btnStyle={'primary'}
 								content={<span>{t('Create new ticket')}</span>}
+								disabled={unsubmittedTickets?.length === MAX_TICKETS}
 								onClick={() => {
 									setCopyModal({ visible: false, onlyCopy: false })
 									handleAddTicket()
