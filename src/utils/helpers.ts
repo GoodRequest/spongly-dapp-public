@@ -767,6 +767,7 @@ export const getOddByBetType = (market: IMatch, copied: boolean, customBetOption
 	// customBetOption is used for override match betOption (using in MatchListContent where we need to return odds based on type of odds in dropdown)
 	// TODO: add logic for bonuses or create new function for bonuses
 	const betOption = customBetOption || market.betOption
+
 	switch (betOption) {
 		// 1, 2, X
 		case BET_OPTIONS.WINNER_HOME:
