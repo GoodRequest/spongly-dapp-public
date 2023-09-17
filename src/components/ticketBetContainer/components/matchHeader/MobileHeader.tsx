@@ -22,10 +22,10 @@ const MobileHeader: FC<IMobileHeader> = ({ tickets = [], addTicket, setActiveTic
 	const [options, setOptions] = React.useState<{ value: any; label: string }[]>([])
 
 	const selectOptions = () => {
-		const ticketsToOptions = tickets?.map((ticket) => {
+		const ticketsToOptions = tickets?.map((ticket, index) => {
 			return {
-				value: ticket.id,
-				label: `${t('TICKET')} ${ticket.id}`
+				value: index + 1,
+				label: `${t('TICKET')} ${index + 1}`
 			}
 		})
 
