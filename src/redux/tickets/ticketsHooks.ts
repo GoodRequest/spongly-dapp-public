@@ -36,6 +36,7 @@ const useFetchTickets = () => {
 	const [fetchTicketsData3] = useLazyQuery(GET_TICKETS)
 	const [fetchTicketsData4] = useLazyQuery(GET_TICKETS)
 	const [fetchTicketsData5] = useLazyQuery(GET_TICKETS)
+
 	const fetchSuccessRateData = async (): Promise<ISuccessRateData> => {
 		try {
 			const response = await fetch(ENDPOINTS.GET_SUCCESS_RATE())
@@ -46,10 +47,8 @@ const useFetchTickets = () => {
 			throw error
 		}
 	}
-	const mapTicketsData = async (data: (ParlayMarket | PositionBalance)[]) => {
-		// TODO: loading state should be also tied up with this calling
-		const responseSuccessRate = await fetchSuccessRateData()
-		return data.map((ticket) => {
+	const mapTicketsData = async (data: (ParlayMarket | PositionBalance)[], successRateMap: Map<string, number>) =>
+		data.map((ticket) => {
 			return {
 				ticket: {
 					...ticket,
@@ -79,12 +78,11 @@ const useFetchTickets = () => {
 										}
 									}
 							  }),
-					successRate: responseSuccessRate.stats.find((item: any) => item.account === ticket.account)?.successRate || 0,
+					successRate: successRateMap.get(ticket.account) || 0,
 					totalTicketQuote: Number(getTicketTotalQuote(ticket as ITicket, 'positions' in ticket ? ticket.totalQuote : undefined))
 				}
 			} as ITicketContent
 		})
-	}
 
 	const fetchAllTickets = async () => {
 		dispatch({ type: TICKET_LIST.TICKET_LIST_LOAD_START })
@@ -138,7 +136,8 @@ const useFetchTickets = () => {
 					skipSingle: 5 * BATCH_SIZE
 				},
 				context: { chainId: chain?.id }
-			})
+			}),
+			fetchSuccessRateData()
 		])
 			.then((values) => {
 				const allTickets = [
@@ -155,7 +154,10 @@ const useFetchTickets = () => {
 					...values[5].data.parlayMarkets,
 					...values[5].data.positionBalances
 				]
-				mapTicketsData(allTickets).then((data) => {
+
+				const successRateMap = new Map(values[6].stats.map((obj) => [obj.account, obj.successRate]))
+
+				mapTicketsData(allTickets, successRateMap).then((data) => {
 					dispatch({
 						type: TICKET_LIST.TICKET_LIST_LOAD_DONE,
 						payload: { data }
