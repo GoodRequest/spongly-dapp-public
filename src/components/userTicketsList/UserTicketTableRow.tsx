@@ -140,7 +140,12 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 					refetch()
 				}
 			} catch (e) {
-				showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to claim') }], NOTIFICATION_TYPE.NOTIFICATION)
+				const err: any = e
+				if (err?.code === 'ACTION_REJECTED') {
+					showNotifications([{ type: MSG_TYPE.INFO, message: t('User rejected transaction') }], NOTIFICATION_TYPE.NOTIFICATION)
+				} else {
+					showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to claim') }], NOTIFICATION_TYPE.NOTIFICATION)
+				}
 				// eslint-disable-next-line no-console
 				console.error(e)
 			}
@@ -163,7 +168,12 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 					refetch()
 				}
 			} catch (e) {
-				showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to claim') }], NOTIFICATION_TYPE.NOTIFICATION)
+				const err: any = e
+				if (err?.code === 'ACTION_REJECTED') {
+					showNotifications([{ type: MSG_TYPE.INFO, message: t('User rejected transaction') }], NOTIFICATION_TYPE.NOTIFICATION)
+				} else {
+					showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to claim') }], NOTIFICATION_TYPE.NOTIFICATION)
+				}
 				// eslint-disable-next-line no-console
 				console.error(e)
 			}
