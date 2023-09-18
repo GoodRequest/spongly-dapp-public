@@ -16,11 +16,6 @@ interface IHorizontalScroller {
 	id?: string | number
 }
 
-enum SCROLL_DIRECTION {
-	RIGHT = 'right',
-	LEFT = 'left'
-}
-
 const HorizontalScroller: FC<IHorizontalScroller> = ({ items, setSelectedItem, selectedItem }) => {
 	const ref: any = useRef()
 	const { t } = useTranslation()
