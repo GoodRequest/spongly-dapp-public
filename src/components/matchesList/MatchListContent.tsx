@@ -152,36 +152,28 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 								match={match}
 								isMobilePanel
 								betOption={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER}
-								oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER[0]}&${
-									BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER[1]
-								} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
+								oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
 							/>
 							{/* 1U */}
 							<OddButton
 								match={match}
 								isMobilePanel
 								betOption={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER}
-								oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER[0]}&${
-									BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER[1]
-								} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
+								oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
 							/>
 							{/* 2O */}
 							<OddButton
 								match={match}
 								isMobilePanel
 								betOption={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER}
-								oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER[0]}&${
-									BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER[1]
-								} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
+								oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER[0]} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
 							/>
 							{/* 2U */}
 							<OddButton
 								match={match}
 								isMobilePanel
 								betOption={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER}
-								oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER[0]}&${
-									BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER[1]
-								} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
+								oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER[0]} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
 							/>
 						</SC.RadioMobileGroup>
 						<SC.OddsWrapper>
@@ -297,33 +289,25 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 								<OddButton
 									match={match}
 									betOption={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER}
-									oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER[0]}&${
-										BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER[1]
-									} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
+									oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
 								/>
 								{/* 1U */}
 								<OddButton
 									match={match}
 									betOption={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER}
-									oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER[0]}&${
-										BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER[1]
-									} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
+									oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
 								/>
 								{/* 2O */}
 								<OddButton
 									match={match}
 									betOption={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER}
-									oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER[0]}&${
-										BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER[1]
-									} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
+									oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
 								/>
 								{/* 2U */}
 								<OddButton
 									match={match}
 									betOption={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER}
-									oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER[0]}&${
-										BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER[1]
-									} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
+									oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
 								/>
 							</SC.ExtendedMatchContentRadioButtonGroup>
 							<SC.ExtendedOddsWrapper>
