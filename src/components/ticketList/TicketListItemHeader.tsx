@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { useTranslation } from 'next-export-i18n'
 import { useSelector } from 'react-redux'
-import { Spin } from 'antd'
+import { Spin, Col, Row } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import { round } from 'lodash'
 import { RootState } from '@/redux/rootReducer'
@@ -23,19 +23,16 @@ const TicketListItemHeader: FC<ITicketContent> = ({ ticket }) => {
 	const { t } = useTranslation()
 	const { isLoading } = useSelector((state: RootState) => state.tickets.ticketList)
 	const { account, positions, ticketType, closedTicketType, buyIn, position, totalTicketQuote } = ticket
-
 	return (
 		<SC.TicketItemRow>
-			{/* // Row 1 */}
-			<SC.TicketItemCol $customOrder={ticketType === TICKET_TYPE.OPEN_TICKET ? 1 : 2} md={2} span={8}>
+			<Col md={{ order: 0, span: 2 }} xs={{ span: 8, order: 1 }}>
 				<TicketIcon imageSrc={getWalletImage(account)} />
-			</SC.TicketItemCol>
-			<SC.TicketItemCol $customOrder={ticketType === TICKET_TYPE.OPEN_TICKET ? 1 : 2} md={ticketType === TICKET_TYPE.OPEN_TICKET ? 4 : 3} span={8}>
-				<SC.ColHeader>{t('Wallet')}</SC.ColHeader>
+			</Col>
+			<Col md={{ span: 3, order: 1 }} xs={{ span: 8, order: 2 }}>
 				<SC.ColContent>{formatAccount(account)}</SC.ColContent>
-			</SC.TicketItemCol>
-			<SC.TicketItemCol $customOrder={ticketType === TICKET_TYPE.OPEN_TICKET ? 1 : 2} md={ticketType === TICKET_TYPE.OPEN_TICKET ? 5 : 4} span={8}>
-				<SC.ColHeader>{t('Success rate')}</SC.ColHeader>
+				<SC.ColHeader>{t('Wallet')}</SC.ColHeader>
+			</Col>
+			<Col md={{ span: 4, order: 2 }} xs={{ span: 8, order: 3 }}>
 				{isLoading ? (
 					<SC.ColContent>
 						<Spin indicator={<LoadingOutlined spin />} />
@@ -43,30 +40,27 @@ const TicketListItemHeader: FC<ITicketContent> = ({ ticket }) => {
 				) : (
 					<SC.ColContent>{ticket.successRate}%</SC.ColContent>
 				)}
-			</SC.TicketItemCol>
-			{(closedTicketType || ticketType) &&
-				(ticketType === TICKET_TYPE.OPEN_TICKET ? (
-					<SC.TicketItemCol $customOrder={2} md={2} span={24}>
-						<SC.Separator />
-					</SC.TicketItemCol>
+				<SC.ColHeader>{t('Success rate')}</SC.ColHeader>
+			</Col>
+			<Col md={{ span: 4, order: 3 }} xs={{ span: 24, order: ticketType === TICKET_TYPE.OPEN_TICKET ? 3 : 0 }}>
+				{ticketType === TICKET_TYPE.OPEN_TICKET ? (
+					<SC.Separator />
 				) : (
-					<SC.TicketItemCol $customOrder={1} overflow={'auto'} md={4} span={24} $paddingRight={30}>
-						<SC.TicketType ticketType={closedTicketType || ticketType}>{getTicketTypeName(closedTicketType || ticketType, t)}</SC.TicketType>
-					</SC.TicketItemCol>
-				))}
-			{/* Row 2 */}
-			<SC.TicketItemCol $customOrder={3} md={3} span={8}>
-				<SC.ColHeader>{t('Buy-In')}</SC.ColHeader>
+					<SC.TicketType ticketType={closedTicketType || ticketType}>{getTicketTypeName(closedTicketType || ticketType, t)}</SC.TicketType>
+				)}
+			</Col>
+			<Col md={{ span: 3, order: 4 }} xs={{ span: 8, order: 4 }}>
 				<SC.ColContent>{`${round(buyIn, 2).toFixed(2)} $`}</SC.ColContent>
-			</SC.TicketItemCol>
-			<SC.TicketItemCol $customOrder={3} md={3} span={8}>
-				<SC.ColHeader>{t('Quote')}</SC.ColHeader>
+				<SC.ColHeader>{t('Buy-In')}</SC.ColHeader>
+			</Col>
+			<Col md={{ span: 3, order: 4 }} xs={{ span: 8, order: 5 }}>
 				<SC.ColContent>{round(totalTicketQuote, 2).toFixed(2)}</SC.ColContent>
-			</SC.TicketItemCol>
-			<SC.TicketItemCol $customOrder={3} md={3} span={8}>
-				<SC.ColHeader>{t('Matches')}</SC.ColHeader>
+				<SC.ColHeader>{t('Quote')}</SC.ColHeader>
+			</Col>
+			<Col md={{ span: 3, order: 4 }} xs={{ span: 8, order: 6 }}>
 				<SC.ColContent>{position ? 1 : positions.length}</SC.ColContent>
-			</SC.TicketItemCol>
+				<SC.ColHeader>{t('Matches')}</SC.ColHeader>
+			</Col>
 		</SC.TicketItemRow>
 	)
 }

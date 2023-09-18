@@ -19,7 +19,6 @@ export const TicketItemRow = styled(Row)`
 	border-radius: 12px;
 	overflow: auto;
 	margin-bottom: 0;
-	max-width: 977px;
 	padding: 16px;
 	${TextSMMedium};
 	@media (max-width: ${breakpoints.md}px) {
@@ -45,20 +44,6 @@ export const ColContent = styled.div`
 	}
 `
 
-export const TicketItemCol = styled(Col)<{ $paddingRight?: number; overflow?: string; $customOrder?: number }>`
-	overflow: ${({ overflow }) => overflow};
-	display: flex;
-	padding-right: ${({ $paddingRight }) => $paddingRight};
-	flex-direction: column-reverse;
-	align-items: flex-start;
-	justify-content: center;
-	margin-top: auto;
-	margin-bottom: auto;
-	@media (max-width: ${breakpoints.md}px) {
-		order: ${({ $customOrder }) => $customOrder};
-	}
-`
-
 export const TicketIcon = styled.div<{ imageSrc: number }>`
 	height: 48px;
 	width: 48px;
@@ -70,11 +55,6 @@ export const TicketIcon = styled.div<{ imageSrc: number }>`
 	background-position: center;
 `
 
-export const TipsterRankButton = styled.div`
-	border-radius: 8px;
-	padding: 12px 24px;
-	background: ${({ theme }) => theme['color-base-surface-secondary']};
-`
 export const RowSkeleton = styled(Skeleton)`
 	margin-bottom: 16px;
 	.ant-skeleton-content {
@@ -281,6 +261,7 @@ export const Separator = styled.div`
 	width: 48px;
 	border-bottom: 1.5px solid ${({ theme }) => theme['color-base-surface-quintarny']};
 	transform: rotate(90deg);
+	margin-top: 24px;
 	@media (max-width: ${breakpoints.md}px) {
 		height: 1px;
 		width: 100%;
@@ -330,9 +311,11 @@ export const PCRow = styled(Row)`
 		display: none;
 	}
 `
-export const HorizontalSorters = styled.div`
+export const HorizontalSorters = styled(Row)`
 	display: flex;
 	width: 100%;
+	padding-left: 24px;
+	padding-right: 24px;
 	@media (max-width: ${breakpoints.md}px) {
 		display: none;
 	}
