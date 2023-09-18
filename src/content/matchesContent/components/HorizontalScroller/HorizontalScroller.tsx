@@ -8,6 +8,7 @@ import * as SCS from '@/styles/GlobalStyles'
 import { Icon } from '@/styles/Icons'
 
 import arrowRightIcon from '@/assets/icons/arrow-right.svg'
+import { SCROLL_DIRECTION } from '@/utils/enums'
 
 interface IHorizontalScroller {
 	items: any
