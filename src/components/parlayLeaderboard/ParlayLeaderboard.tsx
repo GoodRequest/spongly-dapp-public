@@ -1,6 +1,6 @@
 import { Col, Row } from 'antd'
 import { useTranslation } from 'next-export-i18n'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNetwork } from 'wagmi'
 import { useRouter } from 'next-translate-routes'
 
@@ -58,7 +58,7 @@ const ParlayLeaderboard = () => {
 	}, [chain?.id])
 
 	// TODO: we do not have empty state in figma atm.
-	const parlayLeaderBoard = () => {
+	const parlayLeaderBoard = useMemo(() => {
 		if (parlayLeaderboardData?.length === 0) {
 			return (
 				<SC.Empty
@@ -75,7 +75,7 @@ const ParlayLeaderboard = () => {
 		return parlayLeaderboardData?.map((data, index) => (
 			<ParlayLeaderboardRow key={index} rank={data.rank} address={data.address} position={data.position} quote={data.quote} reward={data?.reward} />
 		))
-	}
+	}, [parlayLeaderboardData])
 
 	return (
 		<SC.ParlayLeaderboardWrapper>
@@ -100,7 +100,7 @@ const ParlayLeaderboard = () => {
 					</SC.CenterRowContent>
 				</Row>
 			)}
-			<div style={{ minHeight: '200px' }}>{!isLoading ? parlayLeaderBoard() : <SC.Skeleton paragraph={{ rows: 4 }} />}</div>
+			<div style={{ minHeight: '200px' }}>{!isLoading ? parlayLeaderBoard : <SC.Skeleton paragraph={{ rows: 4 }} />}</div>
 			<SC.LeaderboardButton type={'primary'} onClick={() => router.push('/parlay-leaderboard')}>
 				{t('Show more')}
 			</SC.LeaderboardButton>

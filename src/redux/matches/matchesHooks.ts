@@ -21,8 +21,6 @@ export const useFetchAllMatches = () => {
 	const [fetchData1] = useLazyQuery(GET_ALL_SPORT_MARKETS)
 	const [fetchData2] = useLazyQuery(GET_ALL_SPORT_MARKETS)
 	const [fetchData3] = useLazyQuery(GET_ALL_SPORT_MARKETS)
-	const [fetchData4] = useLazyQuery(GET_ALL_SPORT_MARKETS)
-	const [fetchData5] = useLazyQuery(GET_ALL_SPORT_MARKETS)
 
 	const contractOddsAllMatches = async (values: any) => {
 		try {
@@ -31,8 +29,7 @@ export const useFetchAllMatches = () => {
 				...values[0].data.sportMarkets,
 				...values[1].data.sportMarkets,
 				...values[2].data.sportMarkets,
-				...values[3].data.sportMarkets,
-				...values[4].data.sportMarkets
+				...values[3].data.sportMarkets
 			])
 
 			dispatch({
@@ -62,9 +59,7 @@ export const useFetchAllMatches = () => {
 			fetchData0({ variables: { skip: 0 }, context: { chainId: chain?.id } }),
 			fetchData1({ variables: { skip: 1000 }, context: { chainId: chain?.id } }),
 			fetchData2({ variables: { skip: 2000 }, context: { chainId: chain?.id } }),
-			fetchData3({ variables: { skip: 3000 }, context: { chainId: chain?.id } }),
-			fetchData4({ variables: { skip: 4000 }, context: { chainId: chain?.id } }),
-			fetchData5({ variables: { skip: 5000 }, context: { chainId: chain?.id } })
+			fetchData3({ variables: { skip: 3000 }, context: { chainId: chain?.id } })
 		])
 			.then((values) => contractOddsAllMatches(values))
 			.catch((error) => {

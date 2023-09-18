@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { groupBy, isEmpty, map, toPairs } from 'lodash'
 import { Col, Row } from 'antd'
 import { useTranslation } from 'next-export-i18n'
@@ -104,7 +104,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ticket])
 
-	const getMatchesWithChildMarkets = () => {
+	const getMatchesWithChildMarkets = useMemo(() => {
 		const matchesWithChildMarkets = toPairs(groupBy(tempMatches, 'gameId')).map(([, markets]) => {
 			const [match] = markets
 			const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
@@ -132,13 +132,13 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 
 			return item
 		})
-	}
+	}, [sgpFees, tempMatches])
 
 	const handleAddTicket = async () => {
 		const largestId = unsubmittedTickets?.reduce((maxId, ticket) => {
 			return Math.max(maxId, ticket.id as number)
 		}, 0)
-		const matches = getMatchesWithChildMarkets() || []
+		const matches = getMatchesWithChildMarkets || []
 
 		const data = unsubmittedTickets
 			? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -156,8 +156,8 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 	}
 
 	const handleCopyTicket = async () => {
-		copyTicketToUnsubmittedTickets(getMatchesWithChildMarkets() as any, unsubmittedTickets, dispatch, activeTicketValues.id)
-		dispatch(change(FORM.BET_TICKET, 'matches', getMatchesWithChildMarkets()))
+		copyTicketToUnsubmittedTickets(getMatchesWithChildMarkets as any, unsubmittedTickets, dispatch, activeTicketValues.id)
+		dispatch(change(FORM.BET_TICKET, 'matches', getMatchesWithChildMarkets))
 		dispatch(change(FORM.BET_TICKET, 'copied', true))
 		// helper variable which says that ticket has matches which were copied
 	}
@@ -187,8 +187,8 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 			<SC.ModalDescriptionWarning>{t('Odds might slightly differ')}</SC.ModalDescriptionWarning>
 			<Row>
 				<SC.MatchContainerRow span={24}>
-					{getMatchesWithChildMarkets()?.map((match: any, key: any) => (
-						<MatchRow readOnly copied key={`matchRow-${key}`} match={match} allTicketMatches={getMatchesWithChildMarkets()} />
+					{getMatchesWithChildMarkets?.map((match: any, key: any) => (
+						<MatchRow readOnly copied key={`matchRow-${key}`} match={match} allTicketMatches={getMatchesWithChildMarkets} />
 					))}
 				</SC.MatchContainerRow>
 			</Row>

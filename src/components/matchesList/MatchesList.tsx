@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react'
+import { FC, useState, useEffect, useMemo } from 'react'
 import { Col, Row } from 'antd'
 import { groupBy, map, slice, toPairs } from 'lodash'
 import { useTranslation } from 'next-export-i18n'
@@ -31,24 +31,29 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 		enabled: !!chain?.id
 	})
 
-	const matchesWithChildMarkets = toPairs(groupBy(matches, 'gameId'))
-		.map(([, markets]) => {
-			const [match] = markets
-			const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
-			const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
-			const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD)
-			const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL)
-			const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
-			return {
-				...(winnerTypeMatch ?? matches.find((item) => item.gameId === match?.gameId)),
-				winnerTypeMatch,
-				doubleChanceTypeMatches,
-				spreadTypeMatch,
-				totalTypeMatch,
-				combinedTypeMatch
-			}
-		}) // NOTE: remove broken results.
-		.filter((item) => item.winnerTypeMatch)
+	const matchesWithChildMarkets = useMemo(
+		() =>
+			toPairs(groupBy(matches, 'gameId'))
+				.map(([, markets]) => {
+					const [match] = markets
+
+					const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
+					const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
+					const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD)
+					const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL)
+					const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
+					return {
+						...(winnerTypeMatch ?? matches.find((item) => item.gameId === match?.gameId)),
+						winnerTypeMatch,
+						doubleChanceTypeMatches,
+						spreadTypeMatch,
+						totalTypeMatch,
+						combinedTypeMatch
+					}
+				}) // NOTE: remove broken results.
+				.filter((item) => item.winnerTypeMatch),
+		[matches, sgpFees]
+	)
 
 	const [renderList, setRenderList] = useState<any>([])
 	const [hasMore, setHasMore] = useState(matchesWithChildMarkets?.length > MATCHES_OFFSET)

@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { Col, Row } from 'antd'
 import { map, slice } from 'lodash'
 import { useTranslation } from 'next-export-i18n'
@@ -101,6 +101,21 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 		}
 	}
 
+	const ticketList = useMemo(
+		() =>
+			map(renderList, (item: ITicketContent, index: any) => (
+				<TicketListItem
+					type={type}
+					ticket={item.ticket}
+					key={index}
+					index={index}
+					activeKeysList={activeKeysList}
+					setActiveKeysList={setActiveKeysList}
+				/>
+			)),
+		[activeKeysList, renderList, setActiveKeysList, type]
+	)
+
 	return (
 		<SC.TicketListWrapper>
 			<SC.PCRow gutter={0} style={{ marginBottom: '32px' }}>
@@ -153,16 +168,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 								</SC.SelectSorters>
 							</SCS.SorterRow>
 							{renderList.length > 0 ? (
-								map(renderList, (item: ITicketContent, index: any) => (
-									<TicketListItem
-										type={type}
-										ticket={item.ticket}
-										key={index}
-										index={index}
-										activeKeysList={activeKeysList}
-										setActiveKeysList={setActiveKeysList}
-									/>
-								))
+								ticketList
 							) : (
 								<SC.TicketItemEmptyState>
 									<Row>

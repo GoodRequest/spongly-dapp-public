@@ -148,11 +148,7 @@ const useFetchTickets = () => {
 					...values[2].data.parlayMarkets,
 					...values[2].data.positionBalances,
 					...values[3].data.parlayMarkets,
-					...values[3].data.positionBalances,
-					...values[4].data.parlayMarkets,
-					...values[4].data.positionBalances,
-					...values[5].data.parlayMarkets,
-					...values[5].data.positionBalances
+					...values[3].data.positionBalances
 				]
 
 				const successRateMap = new Map(values[6].stats.map((obj) => [obj.account, obj.successRate]))
