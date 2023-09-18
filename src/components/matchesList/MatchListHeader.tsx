@@ -1,17 +1,16 @@
-import { FC, useMemo, useState } from 'react'
+import { FC, useMemo, Dispatch, SetStateAction } from 'react'
 import { includes, toNumber } from 'lodash'
 import { Col, Row } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import { useNetwork } from 'wagmi'
 
 // components
-import Modal from '../modal/Modal'
 import OddButton from '@/components/oddButton/OddButton'
 import OddValue from '@/components/oddButton/OddValue'
 
 // utils
 import { BET_OPTIONS, MATCHES } from '@/utils/enums'
-import { MIN_ODD_TRESHOLD, NETWORK_IDS, NO_TEAM_IMAGE_FALLBACK, SportFilterEnum, TOTAL_WINNER_TAGS } from '@/utils/constants'
+import { NETWORK_IDS, NO_TEAM_IMAGE_FALLBACK, SportFilterEnum, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { BetType, SPORTS_MAP } from '@/utils/tags'
 import { getTeamImageSource } from '@/utils/images'
 import { getOddByBetType } from '@/utils/helpers'
@@ -32,12 +31,12 @@ import * as SCS from '@/styles/GlobalStyles'
 interface IMatchListItem {
 	match: TicketPosition
 	type: MATCHES
+	setVisibleTotalWinnerModal: Dispatch<SetStateAction<boolean>>
 }
 
-const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN }) => {
+const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVisibleTotalWinnerModal }) => {
 	const { t } = useTranslation()
 	const { chain } = useNetwork()
-	const [visibleTotalWinnerModal, setVisibleTotalWinnerModal] = useState(false)
 	const { winnerTypeMatch, doubleChanceTypeMatches, spreadTypeMatch, totalTypeMatch } = match
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(winnerTypeMatch?.tags[0] as any)
 	const isOnlyWinner = winnerTypeMatch && doubleChanceTypeMatches?.length === 0 && !spreadTypeMatch && !totalTypeMatch
@@ -104,6 +103,7 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN }) => 
 		),
 		[match, isTotalWinner]
 	)
+
 	const getContestedTeams = useMemo(
 		() => (
 			<SC.Contest>
@@ -178,19 +178,6 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN }) => 
 		// router.push(`/matches/${1}`)
 	}
 
-	const modals = (
-		<Modal
-			open={visibleTotalWinnerModal}
-			onCancel={() => {
-				setVisibleTotalWinnerModal(false)
-			}}
-			title={t('Parlay Validation')}
-			centered
-		>
-			<SC.ModalDescriptionText>{t('Only one participant per event is supported.')}</SC.ModalDescriptionText>
-		</Modal>
-	)
-
 	return (
 		<>
 			<SC.MobileContentWrapper>
@@ -201,7 +188,6 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN }) => 
 				</SC.MatchItemRow>
 				{type === MATCHES.OPEN && includes(getBaseBetTypes(), BetType.WINNER) && (
 					<>
-						{modals}
 						<SC.MobileDivider />
 						<SC.RadioMobileHeader>
 							<span>{t('Winner')}</span>
@@ -238,7 +224,6 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN }) => 
 				)}
 			</SC.MobileContentWrapper>
 			<SC.PCContentWrapper>
-				{modals}
 				{type === MATCHES.OPEN && (
 					<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.OPEN}`} onClick={handleOnClickRow}>
 						<SC.MatchItemCol $alignItems={'flex-start'} span={8 + getPushNumber()}>

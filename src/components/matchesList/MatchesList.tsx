@@ -15,6 +15,7 @@ import { BetType } from '@/utils/tags'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 import { SGPItem } from '@/typescript/types'
 import { MATCHES_OFFSET } from '@/utils/constants'
+import Modal from '@/components/modal/Modal'
 
 interface IMatchesList {
 	matches: SportMarket[]
@@ -26,6 +27,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 	const { chain } = useNetwork()
 	const { t } = useTranslation()
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
+	const [visibleTotalWinnerModal, setVisibleTotalWinnerModal] = useState(false)
 
 	const sgpFeesRaw = useSGPFeesQuery(chain?.id as any, {
 		enabled: !!chain?.id
@@ -89,6 +91,22 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 		}
 	}
 
+	const modals = useMemo(
+		() => (
+			<Modal
+				open={visibleTotalWinnerModal}
+				onCancel={() => {
+					setVisibleTotalWinnerModal(false)
+				}}
+				title={t('Parlay Validation')}
+				centered
+			>
+				<SC.ModalDescriptionText>{t('Only one participant per event is supported.')}</SC.ModalDescriptionText>
+			</Modal>
+		),
+		[visibleTotalWinnerModal]
+	)
+
 	return (
 		<SC.MatchListWrapper>
 			<Row>
@@ -98,7 +116,14 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 					) : (
 						<>
 							{renderList.length > 0 ? (
-								map(renderList, (match, key) => <MatchListItem match={match} keyValue={`match-${match.address}-${key}`} filter={filter} />)
+								map(renderList, (match, key) => (
+									<MatchListItem
+										match={match}
+										keyValue={`match-${match.address}-${key}`}
+										filter={filter}
+										setVisibleTotalWinnerModal={setVisibleTotalWinnerModal}
+									/>
+								))
 							) : (
 								<SC.MatchItemEmptyState>
 									<Row>
@@ -122,6 +147,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 					)}
 				</Col>
 			</Row>
+			{modals}
 		</SC.MatchListWrapper>
 	)
 }

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useState, Dispatch, SetStateAction } from 'react'
 
 // components
 import MatchListContent from './MatchListContent'
@@ -30,9 +30,10 @@ interface IMatchListItem {
 	}
 	keyValue: string | number
 	loading?: boolean
+	setVisibleTotalWinnerModal: Dispatch<SetStateAction<boolean>>
 }
 
-const MatchListItem: FC<IMatchListItem> = ({ match, keyValue, filter, loading = false }) => {
+const MatchListItem: FC<IMatchListItem> = ({ match, keyValue, filter, loading = false, setVisibleTotalWinnerModal }) => {
 	const [isExpanded, setIsExpanded] = useState(false)
 
 	const collapsible =
@@ -47,7 +48,10 @@ const MatchListItem: FC<IMatchListItem> = ({ match, keyValue, filter, loading = 
 			isExpanded={isExpanded}
 			key={keyValue}
 		>
-			<SC.CollapsePanel header={<MatchListHeader match={match as any} type={filter.status} />} key={match.maturityDate}>
+			<SC.CollapsePanel
+				header={<MatchListHeader match={match as any} type={filter.status} setVisibleTotalWinnerModal={setVisibleTotalWinnerModal} />}
+				key={match.maturityDate}
+			>
 				{!loading && match.isOpen && (
 					<SC.PanelContent>
 						<MatchListContent match={match as any} />
