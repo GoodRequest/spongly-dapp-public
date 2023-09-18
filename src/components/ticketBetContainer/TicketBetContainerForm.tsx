@@ -269,7 +269,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	}, [formValues?.matches?.length])
 
 	return (
-		<form onSubmit={handleSubmit} style={{ display: rolledUp ? 'block' : 'none' }}>
+		<SC.FormWrapper onSubmit={handleSubmit} style={{ display: rolledUp ? 'block' : 'none' }}>
 			{hasAtLeastOneMatch ? (
 				<SC.TicketMatchesFaded>
 					<SC.TicketMatchesWrapper ref={listRef}>
@@ -363,7 +363,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 					</>
 				)}
 			</Row>
-		</form>
+		</SC.FormWrapper>
 	)
 }
 
