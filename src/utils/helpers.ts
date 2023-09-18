@@ -768,11 +768,11 @@ export const getOddByBetType = (market: IMatch, copied: boolean, customBetOption
 	// TODO: add logic for bonuses or create new function for bonuses
 	const betOption = customBetOption || market.betOption
 
-	if (market.id === '0x6d23886dd67720b929ce0ab071341308905d05d4' && customBetOption) {
-		console.log(betOption)
-		console.log(formattedCombinedTypeMatch(market, betOption))
-		console.log()
-	}
+	// if (market.id === '0x6d23886dd67720b929ce0ab071341308905d05d4' && customBetOption) {
+	// 	console.log(betOption)
+	// 	console.log(formattedCombinedTypeMatch(market, betOption))
+	// 	console.log()
+	// }
 
 	switch (betOption) {
 		// 1, 2, X

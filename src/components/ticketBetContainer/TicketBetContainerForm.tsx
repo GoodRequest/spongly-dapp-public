@@ -73,27 +73,6 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	const buyIn = Number(round(Number(formValues?.buyIn), 2).toFixed(2))
 	const availableBalance = Number(round(Number(available), 2).toFixed(2))
 
-	console.log('***')
-	console.log(formValues?.matches)
-	formValues?.matches?.forEach((match, key) => {
-		console.log(
-			getOddByBetType(
-				match as any,
-				false,
-				// @ts-ignore
-				match.combinedTypeMatch ? `${match.winnerTypeMatch.betOption}&${match.totalTypeMatch.betOption}` : undefined
-			)
-		)
-		// <MatchRow key={`matchRow-${key}-${match.gameId}`} match={match} allTicketMatches={matches} deleteHandler={handleDeleteItem} />
-	})
-
-	// getOddByBetType(
-	// 	match as any,
-	// 	copied ? true : !!formValues.copied,
-	// 	// @ts-ignore
-	// 	match.combinedTypeMatch ? `${match.winnerTypeMatch.betOption}&${match.totalTypeMatch.betOption}` : undefined
-	// ).formattedOdd
-
 	const payWithOptions = [
 		{
 			label: (
