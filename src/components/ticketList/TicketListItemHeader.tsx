@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { useTranslation } from 'next-export-i18n'
 import { useSelector } from 'react-redux'
-import { Spin, Col, Row } from 'antd'
+import { Spin, Col } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import { round } from 'lodash'
 import { RootState } from '@/redux/rootReducer'
