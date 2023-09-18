@@ -36,6 +36,7 @@ const Header = () => {
 				<SC.MenuItem key={PAGES.TICKETS}>{t('Tickets')}</SC.MenuItem>
 				<SC.MenuItem key={PAGES.MATCHES}>{t('Matches')}</SC.MenuItem>
 				{isMounted && chain?.id && <SC.MenuItem key={PAGES.MY_WALLET}>{t('My wallet')}</SC.MenuItem>}
+				<SC.MenuItem key={PAGES.PARLAY_LEADERBOARD}>{t('Parlay Leaderboard')}</SC.MenuItem>
 			</>
 		),
 		[t, isMounted, chain?.id]

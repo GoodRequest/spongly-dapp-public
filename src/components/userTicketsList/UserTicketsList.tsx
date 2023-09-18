@@ -88,7 +88,7 @@ const UserTicketsList = ({ tickets, isLoading, refetch }: Props) => {
 
 	useEffect(() => {
 		setShownTickets(sortedTickets?.slice(0, pagination.page * 10))
-		router.push(
+		router.replace(
 			{
 				pathname: '/my-wallet',
 				query: {

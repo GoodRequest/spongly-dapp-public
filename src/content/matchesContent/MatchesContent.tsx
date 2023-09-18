@@ -203,7 +203,7 @@ const MatchesContent = () => {
 
 	useEffect(() => {
 		if (router.isReady) {
-			router.push(
+			router.replace(
 				{
 					pathname: router.pathname,
 					query: {
@@ -347,7 +347,7 @@ const MatchesContent = () => {
 						<Button
 							btnStyle={'secondary'}
 							onClick={() =>
-								router.push({
+								router.replace({
 									pathname: 'matches',
 									query: {
 										status: 'open'

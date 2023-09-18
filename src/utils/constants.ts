@@ -199,8 +199,8 @@ export const MAX_TICKET_MATCHES = 10
 export const MAX_TICKETS = 5
 
 export const SOCIAL_LINKS = {
-	DISCORD: 'https://discord.com/invite/qDWSz6Zr',
-	TWITTER: 'https://twitter.com/OvertimeMarkets',
+	DISCORD: 'https://discord.com/invite/7zzg2Y5s',
+	TWITTER: 'https://twitter.com/sponglyio',
 	TERMS: 'https://overtimemarkets.xyz/static/media/thales-terms-of-use.9f69e9a2.pdf'
 }
 
@@ -210,7 +210,8 @@ export const THALES_URL_GOERLI = 'https://api.thegraph.com/subgraphs/name/thales
 export const THALES_URL_OPTIMISM_GOERLI = 'https://api.thegraph.com/subgraphs/name/thales-markets/sport-markets-optimism-goerli'
 
 export const ENDPOINTS = {
-	GET_PARLAY_LEADERBOARD: (networkID: number, period: number) => `https://api.thalesmarket.io/parlay-leaderboard/${networkID}/${period}`
+	GET_PARLAY_LEADERBOARD: (networkID: number, period: number) => `https://api.thalesmarket.io/parlay-leaderboard/${networkID}/${period}`,
+	GET_SUCCESS_RATE: () => 'https://ipfs.synthetix.io/ipns/k2k4r8oeszqrv8tnl0k3bvo8j9f63sci60mp4rms8iy77o9vq96gad29'
 }
 
 export const EXTERNAL_SCRIPTS = {

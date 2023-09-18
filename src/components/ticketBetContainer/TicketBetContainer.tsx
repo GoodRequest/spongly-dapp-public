@@ -132,6 +132,26 @@ const TicketBetContainer = () => {
 		setIsSwitchedTicket(true)
 	}
 
+	const handleRemoveTicket = (id: number) => {
+		// NOTE: If there is only one ticket, we need to reset it and set UNSUBMITTED_BET_TICKETS and BET_TICKET matches to empty array (after submit ticket)
+		if (unsubmittedTickets && unsubmittedTickets.length === 1) {
+			dispatch({ type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_INIT, payload: { data: [{ id: 1, matches: [], copied: false }] } })
+			dispatch(change(FORM.BET_TICKET, 'matches', []))
+			setActiveTicketID(1)
+		} else {
+			// Otherwise we need to remove whole ticket from list
+			const data = unsubmittedTickets && unsubmittedTickets.filter((ticket) => Number(ticket.id) !== id)
+			dispatch({
+				type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_UPDATE,
+				payload: { data }
+			})
+			if (activeTicketValues.id === id || data?.length === 1) {
+				// NOTE: If selected ticket will be removed, we need to set active ticket to first ticket in list
+				setActiveTicketID(data?.[0].id || 1)
+			}
+		}
+	}
+
 	useEffect(() => {
 		if (!unsubmittedTickets || unsubmittedTickets?.length === 0) {
 			dispatch({ type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_INIT, payload: { data: [{ id: 1, matches: [], copied: false }] } })
@@ -457,7 +477,7 @@ const TicketBetContainer = () => {
 				)) as ethers.ContractTransaction
 			}
 			await data?.wait().then(() => {
-				dispatch(change(FORM.BET_TICKET, 'matches', []))
+				handleRemoveTicket(Number(values.id))
 				showNotifications([{ type: MSG_TYPE.SUCCESS, message: t('The ticket was successfully submitted') }], NOTIFICATION_TYPE.NOTIFICATION)
 			})
 		} catch (e) {
@@ -526,19 +546,8 @@ const TicketBetContainer = () => {
 					: [{ id: 1, matches: [], copied: false }]
 			}
 		})
-	}
-
-	const handleRemoveTicket = (id: number) => {
-		const data = unsubmittedTickets && unsubmittedTickets.filter((ticket) => Number(ticket.id) !== id)
-		dispatch({
-			type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_UPDATE,
-			payload: { data }
-		})
-		if (activeTicketValues.id === id || data?.length === 1) {
-			// NOTE: If selected ticket will be removed, we need to set active ticket to first ticket in list
-			setActiveTicketID(data?.[0].id || 1)
-			dispatch(initialize(FORM.BET_TICKET, { ...data?.[0] }))
-		}
+		setActiveTicketID((largestId || 1) + 1)
+		setIsSwitchedTicket(true)
 	}
 
 	useEffect(() => {

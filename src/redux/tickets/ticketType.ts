@@ -12,7 +12,6 @@ export type ITicketActions = IResetStore | IGetTicketList
 
 export interface ITicketListPayload {
 	data: ITicketContent[] | null
-	successRateMap: Map<string, string> | null
 }
 export interface IGetTicketList {
 	type: TICKET_LIST
