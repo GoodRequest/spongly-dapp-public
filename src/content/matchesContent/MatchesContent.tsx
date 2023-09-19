@@ -397,11 +397,7 @@ const MatchesContent = () => {
 								}}
 							>
 								<SCS.FilterIcon src={FilterIcon} />
-								{getFilterCount.showCount && (
-									<SCS.FilterCount>
-										<span>{getFilterCount.filterCount}</span>
-									</SCS.FilterCount>
-								)}
+								{getFilterCount.showCount && <SCS.FilterCount>{getFilterCount.filterCount}</SCS.FilterCount>}
 							</SCS.FilterBtn>
 						</>
 					)}

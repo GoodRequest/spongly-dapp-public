@@ -206,11 +206,7 @@ const TicketsContent = () => {
 							}}
 						>
 							<SC.FilterIcon src={FilterIcon} />
-							{getFilterCount.showCount && (
-								<SC.FilterCount>
-									<span>{getFilterCount.filterCount}</span>
-								</SC.FilterCount>
-							)}
+							{getFilterCount.showCount && <SC.FilterCount>{getFilterCount.filterCount}</SC.FilterCount>}
 						</SC.FilterBtn>
 					</SC.MobileSelectionHeader>
 
@@ -230,11 +226,7 @@ const TicketsContent = () => {
 						style={{ marginLeft: '8px' }}
 					>
 						<SC.FilterIcon src={FilterIcon} />
-						{getFilterCount.showCount && (
-							<SC.FilterCount>
-								<span>{getFilterCount.filterCount}</span>
-							</SC.FilterCount>
-						)}
+						{getFilterCount.showCount && <SC.FilterCount>{getFilterCount.filterCount}</SC.FilterCount>}
 					</SC.FilterBtn>
 				</SC.PCWrapper>
 			</SC.ListHeader>

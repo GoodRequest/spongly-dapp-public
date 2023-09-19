@@ -87,7 +87,7 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 			if (match.market.homeScore === RESULT_TYPE.WINNER) return t('Winner')
 			return t('No win')
 		}
-		return <span>{`${match.market.homeScore || '?'} : ${match.market.awayScore || '?'}`}</span>
+		return `${match.market.homeScore || '?'} : ${match.market.awayScore || '?'}`
 	}
 
 	return (
@@ -97,7 +97,7 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 					<Icon style={{ marginRight: 0, color: 'white' }} className={`icon icon--${SPORTS_MAP[Number(match?.market.tags?.[0])]?.toLowerCase()}`} />
 				</SC.SportLogo>
 				<SC.TicketStatus matchStatus={getParlayItemStatus(match, isPlayedNow(), t).status}>
-					<span>{getParlayItemStatus(match, isPlayedNow(), t).text}</span>
+					{getParlayItemStatus(match, isPlayedNow(), t).text}
 				</SC.TicketStatus>
 			</SC.TicketHeader>
 			<Row gutter={8}>
