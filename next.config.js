@@ -2,6 +2,7 @@
 
 const { withSentryConfig } = require('@sentry/nextjs')
 const withImages = require('next-images')
+const { PAGES } = require("./src/utils/enums");
 
 const nextConfig = {
 	webpack(config) {
@@ -46,6 +47,17 @@ const exportPathMap = (defaultPathMap, { dev, dir, outDir, distDir, buildId }) =
  }
 }
 
+// Define the redirection rule
+const redirects = async () => {
+	return [
+		{
+			source: '/',
+			destination: PAGES.DASHBOARD,
+			permanent: true, // Set to true if it's a permanent redirect (301), false for temporary (302).
+		},
+	];
+};
+
 module.exports = (_phase, { defaultConfig }) => {
 	const plugins = [[withSentryConfig, sentryWebpackPluginOptions], [withImages]]
 	return plugins.reduce(
@@ -55,6 +67,6 @@ module.exports = (_phase, { defaultConfig }) => {
 			}
 			return plugin(acc);
 		},
-		{ ...nextConfig, exportPathMap, trailingSlash: true }
+		{ ...nextConfig, exportPathMap, redirects, trailingSlash: true }
 	)
 }

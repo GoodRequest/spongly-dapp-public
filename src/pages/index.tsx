@@ -17,9 +17,6 @@ export const getStaticProps: GetStaticProps<{ page: IPage<{}> }> = async () => {
 	if (!page) return { notFound: true }
 
 	return {
-		redirect: {
-			destination: `/${PAGES.DASHBOARD}`
-		},
 		props: {
 			page
 		}
