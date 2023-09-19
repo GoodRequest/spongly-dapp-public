@@ -128,15 +128,8 @@ export const AvailableBalance = styled.span<{ value?: number }>`
 
 export const TicketMatchesWrapper = styled.div`
 	position: relative;
-	max-height: 336px;
 	min-height: 66px;
 	overflow-y: auto;
-	@media (max-height: 930px) {
-		max-height: calc(100vh - 588px);
-	}
-	@media (max-width: 993px) {
-		max-height: calc(100vh - 465px);
-	}
 `
 
 export const EmptyState = styled(Empty)`
@@ -312,4 +305,11 @@ export const Fade = styled.div<{ show: boolean; direction: 'above' | 'under' }>`
 
 export const TicketMatchesFaded = styled.div`
 	position: relative;
+`
+export const FormWrapper = styled.form`
+	overflow: auto;
+	max-height: calc(100vh - 216px);
+	@media (max-width: ${breakpoints.md}px) {
+		max-height: calc(100vh - 100px);
+	}
 `
