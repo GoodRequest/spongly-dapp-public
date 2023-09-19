@@ -40,11 +40,22 @@ const translateRoutesOptions = {
 	disableLocaleBasedRouting: true
 }
 
-const exportPathMap = (defaultPathMap, { dev, dir, outDir, distDir, buildId }) => {
- return {
-     '/': { page: '/' }
- }
-}
+// const exportPathMap = (defaultPathMap, { dev, dir, outDir, distDir, buildId }) => {
+//  return {
+//      '/': { page: '/' }
+//  }
+// }
+
+// Define the redirection rule
+// const redirects = async () => {
+// 	return [
+// 		{
+// 			source: '/',
+// 			destination: '/dashboard',
+// 			permanent: true, // Set to true if it's a permanent redirect (301), false for temporary (302).
+// 		},
+// 	];
+// };
 
 module.exports = (_phase, { defaultConfig }) => {
 	const plugins = [[withSentryConfig, sentryWebpackPluginOptions], [withImages]]
@@ -55,6 +66,6 @@ module.exports = (_phase, { defaultConfig }) => {
 			}
 			return plugin(acc);
 		},
-		{ ...nextConfig, exportPathMap, trailingSlash: true }
+		{ ...nextConfig, trailingSlash: true }
 	)
 }

@@ -126,7 +126,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 			if (item?.winnerTypeMatch && item?.totalTypeMatch && item?.combinedTypeMatch) {
 				return {
 					...item,
-					betOption: item.winnerTypeMatch.betOption + item.totalTypeMatch.betOption
+					betOption: `${item.winnerTypeMatch.betOption}&${item.totalTypeMatch.betOption}`
 				}
 			}
 

@@ -27,10 +27,11 @@ export const getStaticProps: GetStaticProps<{ page: IPage<{}> }> = async () => {
 
 const HomePage = () => {
 	const router = useRouter()
+
 	useEffect(() => {
-		router.push(PAGES.DASHBOARD)
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		router.push('/dashboard')
 	}, [])
+
 	return <h1>{PAGES.HOMEPAGE}</h1>
 }
 

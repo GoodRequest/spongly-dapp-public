@@ -143,7 +143,7 @@ export const Sorter = styled.div<{ sorterName: any }>`
 	align-items: center;
 	height: 32px;
 	border-radius: 4px;
-	padding: 4px 8px;
+	padding: 4px 8px 4px 0;
 	cursor: ${({ sorterName }) => (sorterName ? 'pointer' : 'default')};
 	${(p) =>
 		p.sorterName &&

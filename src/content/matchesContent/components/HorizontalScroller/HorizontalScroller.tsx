@@ -8,17 +8,13 @@ import * as SCS from '@/styles/GlobalStyles'
 import { Icon } from '@/styles/Icons'
 
 import arrowRightIcon from '@/assets/icons/arrow-right.svg'
+import { SCROLL_DIRECTION } from '@/utils/enums'
 
 interface IHorizontalScroller {
 	items: any
 	setSelectedItem: any
 	selectedItem: any
 	id?: string | number
-}
-
-enum SCROLL_DIRECTION {
-	RIGHT = 'right',
-	LEFT = 'left'
 }
 
 const HorizontalScroller: FC<IHorizontalScroller> = ({ items, setSelectedItem, selectedItem }) => {

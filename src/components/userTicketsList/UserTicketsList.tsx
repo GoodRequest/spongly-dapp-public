@@ -2,6 +2,7 @@ import { useTranslation } from 'next-export-i18n'
 import { Row, Col } from 'antd'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next-translate-routes'
+import { useNetwork } from 'wagmi'
 
 import { UserTicket } from '@/typescript/types'
 import UserTicketTableRow from './UserTicketTableRow'
@@ -25,6 +26,7 @@ const UserTicketsList = ({ tickets, isLoading, refetch }: Props) => {
 	const { t } = useTranslation()
 	const router = useRouter()
 	const { query, isReady } = useRouter()
+	const { chain } = useNetwork()
 
 	const [pagination, setPagination] = useState<{ page: number }>({ page: 1 })
 	const [shownTickets, setShownTickets] = useState<UserTicket[] | undefined>([])
@@ -88,19 +90,22 @@ const UserTicketsList = ({ tickets, isLoading, refetch }: Props) => {
 
 	useEffect(() => {
 		setShownTickets(sortedTickets?.slice(0, pagination.page * 10))
-		router.replace(
-			{
-				pathname: '/my-wallet',
-				query: {
-					page: pagination?.page,
-					status: filter.status
-				}
-			},
-			undefined,
-			{ scroll: false }
-		)
+		// NOTE: Do not update query when wallet is not connected -> instead useEffect in WalletContent will redirect to dashboard
+		if (chain?.id) {
+			router.replace(
+				{
+					pathname: '/my-wallet',
+					query: {
+						page: pagination?.page,
+						status: filter.status
+					}
+				},
+				undefined,
+				{ scroll: false }
+			)
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [pagination, sortedTickets])
+	}, [pagination, sortedTickets, chain?.id])
 
 	useEffect(() => {
 		if (tickets) {
