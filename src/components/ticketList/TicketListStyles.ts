@@ -106,7 +106,7 @@ export const LoadMore = styled.div`
 		background: ${({ theme }) => theme['color-base-surface-quaternary']};
 	}
 `
-export const TicketCollapse = styled(Collapse)`
+export const TicketCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	border-radius: 12px;
 	margin-bottom: 24px;

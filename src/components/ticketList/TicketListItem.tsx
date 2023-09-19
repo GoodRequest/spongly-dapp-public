@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux'
 import { getFormValues } from 'redux-form'
 
 // components
-import { useNetwork } from 'wagmi'
 import TicketListItemHeader from '@/components/ticketList/TicketListItemHeader'
 import { ITicketContent } from '@/content/ticketsContent/TicketsContent'
 import Button from '@/atoms/button/Button'
@@ -27,9 +26,6 @@ import { orderPositionsAsSportMarkets, getPositionsWithMergedCombinedPositions }
 // types
 import { SGPItem } from '@/typescript/types'
 
-// hooks
-import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
-
 // styles
 import * as SC from './TicketListStyles'
 
@@ -49,6 +45,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 	const { sportsAMMContract } = networkConnector
 	const betTicket: Partial<IUnsubmittedBetTicket> = useSelector((state: RootState) => getFormValues(FORM.BET_TICKET)(state))
 	const [activeMatches, setActiveMatches] = useState<any[]>([])
+	const [isExpanded, setIsExpanded] = useState(false)
 
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 
@@ -88,12 +85,19 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 
 	const handleCollapseChange = (e: any) => {
 		setActiveKeysList([...e])
+		setIsExpanded((c) => !c)
 	}
 
 	return (
-		<SC.TicketCollapse collapsible={'icon'} expandIconPosition={'end'} onChange={(e) => handleCollapseChange(e)} activeKey={activeKeysList}>
+		<SC.TicketCollapse
+			collapsible={'icon'}
+			expandIconPosition={'end'}
+			onChange={(e) => handleCollapseChange(e)}
+			isExpanded={isExpanded}
+			activeKey={activeKeysList}
+		>
 			<SC.ColapsePanel header={<TicketListItemHeader ticket={ticket} />} key={`${ticket.account}-${index}`}>
-				{!loading && (
+				{!loading && isExpanded && (
 					<SC.PanelContent>
 						<Row gutter={[16, 16]}>
 							{map(positionsWithMergedCombinedPositions, (item, index) => (
