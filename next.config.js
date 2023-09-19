@@ -2,7 +2,6 @@
 
 const { withSentryConfig } = require('@sentry/nextjs')
 const withImages = require('next-images')
-const { PAGES } = require("./src/utils/enums");
 
 const nextConfig = {
 	webpack(config) {
@@ -52,7 +51,7 @@ const redirects = async () => {
 	return [
 		{
 			source: '/',
-			destination: PAGES.DASHBOARD,
+			destination: '/dashboard',
 			permanent: true, // Set to true if it's a permanent redirect (301), false for temporary (302).
 		},
 	];
