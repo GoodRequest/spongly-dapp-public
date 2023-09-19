@@ -20,16 +20,9 @@ interface ILayout {
 
 const Layout: FC<ILayout> = ({ children }) => {
 	const { t } = useTranslation()
-	const [initialization, setInitialization] = useState(true)
 
 	useFetchTickets()
 	useFetchAllMatches()
-
-	useEffect(() => {
-		setTimeout(() => {
-			setInitialization(false)
-		}, 1000)
-	}, [])
 
 	return (
 		<SC.LayoutWrapper id={'modal-container'}>
@@ -43,18 +36,6 @@ const Layout: FC<ILayout> = ({ children }) => {
 				<TicketBetContainer />
 			</SC.MobileTicketBetWrapper>
 			<Footer />
-			{initialization && (
-				<SC.OverlayLoading>
-					<SC.Logo src={LogoImg} alt={'Spongly'} />
-					<SC.LoadingWrapper>
-						<SC.SpinnerWrapper>
-							<Spin spinning={true} size={'large'} indicator={<LoadingOutlined spin />} />
-						</SC.SpinnerWrapper>
-						{`${t('Loading')}...`}
-					</SC.LoadingWrapper>
-					<style />
-				</SC.OverlayLoading>
-			)}
 		</SC.LayoutWrapper>
 	)
 }
