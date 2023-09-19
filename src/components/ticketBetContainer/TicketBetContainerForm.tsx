@@ -37,6 +37,7 @@ import DAIIcon from '@/assets/icons/dai-icon.svg'
 import USDCIcon from '@/assets/icons/usdc-icon.svg'
 import USDTIcon from '@/assets/icons/usdt-icon.svg'
 import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
+import { getOddByBetType } from '@/utils/helpers'
 
 interface IComponentProps {
 	handleDeleteItem: (position: TicketPosition) => void
