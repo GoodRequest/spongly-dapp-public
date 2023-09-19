@@ -1,6 +1,4 @@
 import { GetStaticProps } from 'next'
-import { useEffect } from 'react'
-import { useRouter } from 'next-translate-routes'
 import Layout from '@/layout/layout/Layout'
 import SEOHelmet from '@/atoms/SEOHelmet'
 import { IPage } from '@/typescript/types'
@@ -26,11 +24,6 @@ export const getStaticProps: GetStaticProps<{ page: IPage<{}> }> = async () => {
 }
 
 const HomePage = () => {
-	const router = useRouter()
-	useEffect(() => {
-		router.push(PAGES.DASHBOARD)
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
 	return <h1>{PAGES.HOMEPAGE}</h1>
 }
 

@@ -195,7 +195,7 @@ export const SGPCombinationsFromContractOrderMapping: Record<ContractSGPOrder, B
 }
 
 export const MATCHES_OFFSET = 5
-export const MAX_TICKET_MATCHES = 10
+export const MAX_TICKET_MATCHES = 5
 export const MAX_TICKETS = 5
 
 export const SOCIAL_LINKS = {

@@ -46,6 +46,17 @@ const exportPathMap = (defaultPathMap, { dev, dir, outDir, distDir, buildId }) =
  }
 }
 
+// Define the redirection rule
+const redirects = async () => {
+	return [
+		{
+			source: '/',
+			destination: '/dashboard',
+			permanent: true, // Set to true if it's a permanent redirect (301), false for temporary (302).
+		},
+	];
+};
+
 module.exports = (_phase, { defaultConfig }) => {
 	const plugins = [[withSentryConfig, sentryWebpackPluginOptions], [withImages]]
 	return plugins.reduce(
@@ -55,6 +66,6 @@ module.exports = (_phase, { defaultConfig }) => {
 			}
 			return plugin(acc);
 		},
-		{ ...nextConfig, exportPathMap, trailingSlash: true }
+		{ ...nextConfig, exportPathMap, redirects, trailingSlash: true }
 	)
 }
