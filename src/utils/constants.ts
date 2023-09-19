@@ -94,7 +94,7 @@ export const MIN_BUY_IN = 5
 export const MAX_BUY_IN = 1000
 
 export const MAX_SELECTED_ALLOWANCE = 100000000
-export const NO_TEAM_IMAGE_FALLBACK = '/logos/defaultTeamLogo.png'
+export const NO_TEAM_IMAGE_FALLBACK = '/logos/defaultTeamLogo.webp'
 // PLACEHOLDER TO DO
 export const INFURA_ID = 'fcf608e4430142f38338b55efef2c7e5' // '6052c0bd83aa437b8cf98c47d3b12cc7'
 
