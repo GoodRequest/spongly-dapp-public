@@ -4,7 +4,7 @@ import { ethers } from 'ethers'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 import { map } from 'lodash'
-import { Col, Row } from 'antd'
+import { Col, Row, Spin } from 'antd'
 
 // components
 import Button from '@/atoms/button/Button'
@@ -221,17 +221,20 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 				)}
 			</SC.CenterRowContent>
 			<SC.ClaimColContent show={ticket.isClaimable} md={{ span: 4, order: 5 }} xs={{ span: 24, order: 5 }}>
-				<Button
-					btnStyle={'primary'}
-					onClick={() => handleClaim()}
-					disabled={isClaiming}
-					content={
-						<SC.ClaimButtonWrapper>
-							<SC.ClaimText>{t('Claim')}</SC.ClaimText>
-							<SC.ClaimValue>{claimableUntil}</SC.ClaimValue>
-						</SC.ClaimButtonWrapper>
-					}
-				/>
+				{!isClaiming ? (
+					<Button
+						btnStyle={'primary'}
+						onClick={() => handleClaim()}
+						content={
+							<SC.ClaimButtonWrapper>
+								<SC.ClaimText>{t('Claim')}</SC.ClaimText>
+								<SC.ClaimValue>{claimableUntil}</SC.ClaimValue>
+							</SC.ClaimButtonWrapper>
+						}
+					/>
+				) : (
+					<Spin />
+				)}
 			</SC.ClaimColContent>
 			<SC.TicketDivider showClaimed={ticket.isClaimable} />
 		</SC.UserTicketTableRow>
