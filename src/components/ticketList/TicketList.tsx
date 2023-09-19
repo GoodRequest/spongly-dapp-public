@@ -121,19 +121,19 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 						<>
 							<SCS.SorterRow>
 								<SC.HorizontalSorters>
-									<Col md={5} span={0}>
+									<Col span={5}>
 										<Sorter title={t('Wallet')} />
 									</Col>
-									<Col md={7} span={6}>
+									<Col span={8}>
 										<Sorter title={t('Success rate')} name={TICKET_SORTING.SUCCESS_RATE} />
 									</Col>
-									<Col md={3} span={6}>
+									<Col span={3}>
 										<Sorter title={t('Buy in')} name={TICKET_SORTING.BUY_IN} />
 									</Col>
-									<Col md={3} span={6}>
+									<Col span={3}>
 										<Sorter title={t('Quote')} name={TICKET_SORTING.TOTAL_TICKET_QUOTE} />
 									</Col>
-									<Col md={6} span={6}>
+									<Col span={3}>
 										<Sorter title={t('Matches')} name={TICKET_SORTING.MATCHES} />
 									</Col>
 								</SC.HorizontalSorters>
