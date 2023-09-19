@@ -194,12 +194,10 @@ const MyWalletContent = () => {
 	}
 
 	useEffect(() => {
-		if (!chain?.id) {
-			router.push(`/${PAGES.DASHBOARD}`)
-		}
-
 		if (address && chain?.id && signer) {
 			fetchStatistics()
+		} else {
+			router.push(`/${PAGES.DASHBOARD}`)
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [address, chain?.id, signer])
