@@ -440,7 +440,3 @@ export const PCContentWrapper = styled.div`
 		display: none;
 	}
 `
-
-export const CanceledIcon = styled.svg`
-	background-color: red !important;
-`
