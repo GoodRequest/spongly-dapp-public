@@ -338,7 +338,7 @@ const ParlayLeaderboardContent = () => {
 									onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.RANK)}
 								>
 									<SC.ButtonContent>
-										<span>{t('Rank')}</span>
+										{t('Rank')}
 										{getIcon(PARLAY_LEADERBOARD_SORTING.RANK)}
 									</SC.ButtonContent>
 								</SC.OrderButton>
@@ -350,7 +350,7 @@ const ParlayLeaderboardContent = () => {
 									onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.POSITION)}
 								>
 									<SC.ButtonContent>
-										<span>{t('Positions')}</span>
+										{t('Positions')}
 										{getIcon(PARLAY_LEADERBOARD_SORTING.POSITION)}
 									</SC.ButtonContent>
 								</SC.OrderButton>

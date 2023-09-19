@@ -203,7 +203,7 @@ const UserTicketsList = ({ tickets, isLoading, refetch }: Props) => {
 					<Col span={24}>
 						<SC.ShowMoreButton type={'primary'} onClick={showMore}>
 							<SC.ButtonContent>
-								<span>{t('Show more')}</span>
+								{t('Show more')}
 								<SC.ButtonIcon src={ArrowDownIcon} />
 							</SC.ButtonContent>
 						</SC.ShowMoreButton>

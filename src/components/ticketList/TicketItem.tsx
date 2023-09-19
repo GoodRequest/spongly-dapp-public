@@ -84,8 +84,8 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 
 	const getTicketResults = () => {
 		if (match.market?.tags && isTotalWinner) {
-			if (match.market.homeScore === RESULT_TYPE.WINNER) return <span>{t('Winner')}</span>
-			return <span>{t('No win')}</span>
+			if (match.market.homeScore === RESULT_TYPE.WINNER) return t('Winner')
+			return t('No win')
 		}
 		return <span>{`${match.market.homeScore || '?'} : ${match.market.awayScore || '?'}`}</span>
 	}

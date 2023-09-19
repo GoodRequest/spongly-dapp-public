@@ -44,15 +44,13 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 	)
 
 	return (
-		<div>
+		<SC.PanelContent>
 			<SC.SmallMatchContentWrapper>
 				{modals}
 				<SC.AllPositionsHeader>{t('All positions')}</SC.AllPositionsHeader>
 				{winnerTypeMatch && (
 					<SC.MobileWrapper>
-						<SC.RadioMobileHeader>
-							<span>{t('Winner')}</span>
-						</SC.RadioMobileHeader>
+						<SC.RadioMobileHeader>{t('Winner')}</SC.RadioMobileHeader>
 						<SC.RadioMobileGroup>
 							<OddButton
 								match={match}
@@ -73,9 +71,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 				)}
 				{doubleChanceTypeMatches && doubleChanceTypeMatches.length > 0 && !(chain?.id === NETWORK_IDS.OPTIMISM_GOERLI) && (
 					<SC.MobileWrapper>
-						<SC.RadioMobileHeader>
-							<span>{t('Double chance')}</span>
-						</SC.RadioMobileHeader>
+						<SC.RadioMobileHeader>{t('Double chance')}</SC.RadioMobileHeader>
 						{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd === 0 && (
 							<SC.WarningText>{t('Coming soon')}</SC.WarningText>
 						)}
@@ -93,9 +89,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 				)}
 				{spreadTypeMatch && (
 					<SC.MobileWrapper>
-						<SC.RadioMobileHeader>
-							<span>{t('Handicap')}</span>
-						</SC.RadioMobileHeader>
+						<SC.RadioMobileHeader>{t('Handicap')}</SC.RadioMobileHeader>
 						<SC.RadioMobileGroup>
 							<OddButton
 								match={match}
@@ -118,9 +112,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 				)}
 				{totalTypeMatch && (
 					<SC.MobileWrapper>
-						<SC.RadioMobileHeader>
-							<span>{t('Total')}</span>
-						</SC.RadioMobileHeader>
+						<SC.RadioMobileHeader>{t('Total')}</SC.RadioMobileHeader>
 						<SC.RadioMobileGroup>
 							<OddButton
 								match={match}
@@ -143,9 +135,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 				)}
 				{combinedTypeMatch && totalTypeMatch && (
 					<SC.MobileWrapper>
-						<SC.RadioMobileHeader>
-							<span>{t('Combined')}</span>
-						</SC.RadioMobileHeader>
+						<SC.RadioMobileHeader>{t('Combined')}</SC.RadioMobileHeader>
 						<SC.RadioMobileGroup>
 							{/* // 1O */}
 							<OddButton
@@ -321,7 +311,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 				)}
 				{modals}
 			</SC.ExtendedMatchContentWrapper>
-		</div>
+		</SC.PanelContent>
 	)
 }
 

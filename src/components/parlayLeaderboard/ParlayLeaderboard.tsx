@@ -64,11 +64,7 @@ const ParlayLeaderboard = () => {
 				<SC.Empty
 					image={EmptyStateImage}
 					imageStyle={{ height: 70 }}
-					description={
-						<div>
-							<span>{t('There are no superstars in current biweekly period')}</span>
-						</div>
-					}
+					description={<div>{t('There are no superstars in current biweekly period')}</div>}
 				/>
 			)
 		}

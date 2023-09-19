@@ -374,11 +374,7 @@ const MatchesContent = () => {
 								<SCS.ContentTitle>{t('Matches')}</SCS.ContentTitle>
 								<SCS.FilterBtn onClick={() => setFilterOpened(!isFilterOpened)}>
 									<SCS.FilterIcon src={FilterIcon} />
-									{getFilterCount.showCount && (
-										<SCS.FilterCount>
-											<span>{getFilterCount.filterCount}</span>
-										</SCS.FilterCount>
-									)}
+									{getFilterCount.showCount && <SCS.FilterCount>{getFilterCount.filterCount}</SCS.FilterCount>}
 								</SCS.FilterBtn>
 							</SCS.MobileSelectionHeader>
 							<div style={{ marginBottom: '16px' }}>

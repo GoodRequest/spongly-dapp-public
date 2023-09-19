@@ -85,7 +85,7 @@ const MobileMenu = ({ selected }: Props) => {
 													btnStyle={'primary'}
 													style={{ marginBottom: '16px' }}
 													onClick={() => openConnectModal()}
-													content={<span>{t('Connect Wallet')}</span>}
+													content={t('Connect Wallet')}
 												/>
 											)
 										}
@@ -96,11 +96,7 @@ const MobileMenu = ({ selected }: Props) => {
 													<SC.LogoImg src={LogoImg} />
 													{isMounted && <SC.AddressText>{formatAddress(address)}</SC.AddressText>}
 												</SC.AddressWrapper>
-												<Button
-													btnStyle={'secondary'}
-													onClick={() => openAccountModal()}
-													content={<span>{t('Disconnect Wallet')}</span>}
-												/>
+												<Button btnStyle={'secondary'} onClick={() => openAccountModal()} content={t('Disconnect Wallet')} />
 											</SC.DisconnectWrapper>
 										)
 									}}

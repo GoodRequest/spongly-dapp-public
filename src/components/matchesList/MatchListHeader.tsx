@@ -44,11 +44,11 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 	const formatFinishedResults = () => {
 		if (isTotalWinner) {
 			if (match.winnerTypeMatch?.homeScore === '1') {
-				return <span>{t('Winner')}</span>
+				return t('Winner')
 			}
-			return <span>{t('No win')}</span>
+			return t('No win')
 		}
-		return <span>{`${match.homeScore || '?'} : ${match.awayScore || '?'}`}</span>
+		return `${match.homeScore || '?'} : ${match.awayScore || '?'}`
 	}
 
 	const images = useMemo(
@@ -189,9 +189,7 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 				{type === MATCHES.OPEN && includes(getBaseBetTypes(), BetType.WINNER) && (
 					<>
 						<SC.MobileDivider />
-						<SC.RadioMobileHeader>
-							<span>{t('Winner')}</span>
-						</SC.RadioMobileHeader>
+						<SC.RadioMobileHeader>{t('Winner')}</SC.RadioMobileHeader>
 						<SC.RadioMobileGroup>
 							<OddButton
 								isHeader
@@ -211,17 +209,9 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 						</SC.OddsWrapper>
 					</>
 				)}
-				{type === MATCHES.ONGOING && (
-					<SC.MobileStatusWrapper type={MATCHES.ONGOING}>
-						<span>{t('ONGOING')}</span>
-					</SC.MobileStatusWrapper>
-				)}
+				{type === MATCHES.ONGOING && <SC.MobileStatusWrapper type={MATCHES.ONGOING}>{t('ONGOING')}</SC.MobileStatusWrapper>}
 				{type === MATCHES.FINISHED && <SC.MobileStatusWrapper type={MATCHES.FINISHED}>{formatFinishedResults()}</SC.MobileStatusWrapper>}
-				{type === MATCHES.PAUSED && (
-					<SC.MobileStatusWrapper type={MATCHES.FINISHED}>
-						<span>{t('PAUSED')}</span>
-					</SC.MobileStatusWrapper>
-				)}
+				{type === MATCHES.PAUSED && <SC.MobileStatusWrapper type={MATCHES.FINISHED}>{t('PAUSED')}</SC.MobileStatusWrapper>}
 			</SC.MobileContentWrapper>
 			<SC.PCContentWrapper>
 				{type === MATCHES.OPEN && (
@@ -314,12 +304,10 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 						</SC.MatchItemCol>
 						<SC.MatchItemCol span={8}>
 							<SC.Header>{t('Status')}</SC.Header>
-							<SC.RowItemContent>
-								<SC.StatusWrapper>
-									<SCS.Icon icon={ClockIcon} />
-									{t('Ongoing')}
-								</SC.StatusWrapper>
-							</SC.RowItemContent>
+							<SC.StatusWrapper>
+								<SCS.Icon icon={ClockIcon} />
+								{t('Ongoing')}
+							</SC.StatusWrapper>
 						</SC.MatchItemCol>
 					</SC.MatchItemRow>
 				)}
@@ -330,9 +318,7 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 						</SC.MatchItemCol>
 						<SC.MatchItemCol span={8}>
 							<SC.Header>{t('Results')}</SC.Header>
-							<SC.RowItemContent>
-								<SC.StatusWrapper>{formatFinishedResults()}</SC.StatusWrapper>
-							</SC.RowItemContent>
+							<SC.StatusWrapper>{formatFinishedResults()}</SC.StatusWrapper>
 						</SC.MatchItemCol>
 					</SC.MatchItemRow>
 				)}
@@ -341,12 +327,10 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 						<SC.MatchItemCol span={16}>{getContestedTeams}</SC.MatchItemCol>
 						<SC.MatchItemCol span={8}>
 							<SC.Header>{t('Status')}</SC.Header>
-							<SC.RowItemContent>
-								<SC.StatusWrapper>
-									<SCS.Icon icon={PauseIcon} />
-									{t('Paused')}
-								</SC.StatusWrapper>
-							</SC.RowItemContent>
+							<SC.StatusWrapper>
+								<SCS.Icon icon={PauseIcon} />
+								{t('Paused')}
+							</SC.StatusWrapper>
 						</SC.MatchItemCol>
 					</SC.MatchItemRow>
 				)}

@@ -38,7 +38,7 @@ const Footer = () => {
 			<SC.FooterHead>
 				<img src={LogoImg} alt={'Spongly logo'} />
 				<SC.CopyrightDesktop>
-					<span>{'© All rights reserved'}</span>
+					{'© All rights reserved'}
 					<span onClick={handleThrowError} onKeyUp={handleThrowError} aria-hidden='true'>{`v ${packageInfo.version}`}</span>
 				</SC.CopyrightDesktop>
 				<SC.ButtonWrapper>
@@ -53,15 +53,15 @@ const Footer = () => {
 			<SC.CopyrightMobile>
 				{`© All rights reserved`}
 				&nbsp;
-				<span>{`v.${packageInfo.version}`}</span>
+				{`v.${packageInfo.version}`}
 			</SC.CopyrightMobile>
 			<SC.FooterDivider />
 			<SC.FooterContent>
-				<span>{t('footerTerms')}</span>
+				{t('footerTerms')}
 				<SC.TermsLink href={SOCIAL_LINKS.TERMS} target={'_blank'}>
 					{t('footerTermsLink')}
 				</SC.TermsLink>
-				<span>{t('footerTerms2')}</span>
+				{t('footerTerms2')}
 			</SC.FooterContent>
 		</SC.Footer>
 	)

@@ -96,7 +96,7 @@ const MatchFilter: FC<MatchFilterProps> = ({ onReset, onShowResults, resultsCoun
 		<SC.ButtonsWrapper>
 			<Button
 				btnStyle={'tertiary'}
-				content={<span>{t('Clear filter')}</span>}
+				content={t('Clear filter')}
 				onClick={() => {
 					setSelectedSport(DEFAULT_SELECTED_SPORT)
 					setSelectedLeague(DEFAULT_SELECTED_LEAGUE)
@@ -107,7 +107,7 @@ const MatchFilter: FC<MatchFilterProps> = ({ onReset, onShowResults, resultsCoun
 				disabled={resultsCount === 0}
 				btnStyle={'primary'}
 				isLoading={isLoading}
-				content={<span>{t('Show results ({{ resultsCount}})', { resultsCount })}</span>}
+				content={t('Show results ({{ resultsCount}})', { resultsCount })}
 				onClick={() => {
 					if (resultsCount) {
 						setIsLoading(true)

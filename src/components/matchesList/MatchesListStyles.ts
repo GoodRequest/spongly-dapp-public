@@ -250,6 +250,11 @@ export const ExtendedMatchContentRadioButtonGroup = styled(RadioGroup)`
 `
 
 export const StatusWrapper = styled.div`
+	display: flex;
+	gap: 4px;
+	flex-direction: column;
+	align-items: center;
+	flex-wrap: nowrap;
 	padding: 20px;
 	text-align: center;
 	width: 216px;

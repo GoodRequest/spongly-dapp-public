@@ -116,51 +116,51 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	]
 	const getErrorContent = async () => {
 		if (!isWalletConnected) {
-			setError(() => <span>{t('Please connect your wallet')}</span>)
+			setError(() => <>{t('Please connect your wallet')}</>)
 			return
 		}
 		if (buyIn < MIN_BUY_IN) {
 			setError(() => (
-				<span>
+				<>
 					{t('Minimum buy-in is')}{' '}
 					<SC.Highlight>
 						{MIN_BUY_IN.toFixed(2)} {formValues?.selectedStablecoin}
 					</SC.Highlight>
-				</span>
+				</>
 			))
 			return
 		}
 		if (buyIn > MAX_BUY_IN) {
 			setError(() => (
-				<span>
+				<>
 					{t('Maximum buy-in is')}{' '}
 					<SC.Highlight>
 						{MAX_BUY_IN.toFixed(2)} {formValues?.selectedStablecoin}
 					</SC.Highlight>
-				</span>
+				</>
 			))
 			return
 		}
 		if (!allowance) {
 			setError(() => (
-				<span>
+				<>
 					{t('You need to approve allowance for')} <SC.Highlight>{formValues?.selectedStablecoin}</SC.Highlight> {t('to continue')}
-				</span>
+				</>
 			))
 			return
 		}
 		if (allowance < buyIn) {
 			setError(() => (
-				<span>
+				<>
 					{t('You dont have enough allowance for')} <SC.Highlight>{formValues?.selectedStablecoin}</SC.Highlight> {t('to continue')}
-				</span>
+				</>
 			))
 			return
 		}
 
 		if (availableBalance < buyIn) {
 			setError(() => (
-				<span>
+				<>
 					{t('Available balance is')}{' '}
 					<SC.Highlight>
 						{availableBalance} {formValues?.selectedStablecoin}
@@ -169,32 +169,32 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 					<SC.Highlight>
 						{buyIn} {formValues?.selectedStablecoin}
 					</SC.Highlight>
-				</span>
+				</>
 			))
 			return
 		}
 
 		if (toNumber(formValues?.totalQuote) > MAX_TOTAL_QUOTE) {
 			setError(() => (
-				<span>
+				<>
 					{t('Maximum total quote supported is')} <SC.Highlight>{MAX_TOTAL_QUOTE.toFixed(2)}</SC.Highlight>
-				</span>
+				</>
 			))
 			return
 		}
 		if (Number(formValues?.maxBuyIn) < buyIn) {
 			setError(() => (
-				<span>
+				<>
 					{t('Maximum buy-in supported is')} <SC.Highlight>{formValues?.maxBuyIn}</SC.Highlight>
-				</span>
+				</>
 			))
 			return
 		}
 		if (matches.length > MAX_TICKET_MATCHES) {
 			setError(() => (
-				<span>
+				<>
 					{t('Maximum')} <SC.Highlight>{MAX_TICKET_MATCHES}</SC.Highlight> {t(' matches per ticket')}
-				</span>
+				</>
 			))
 		}
 		setError(null)
