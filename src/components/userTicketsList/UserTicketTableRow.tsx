@@ -48,6 +48,7 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 
 	const [expiryDate, setExpiryDate] = useState(0)
 	const [isExpanded, setIsExpanded] = useState(false)
+	const [isClaiming, setIsClaiming] = useState(false)
 
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
 
@@ -122,6 +123,7 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 
 	const handleClaim = async () => {
 		const { parlayMarketsAMMContract, signer } = networkConnector
+		setIsClaiming(true)
 
 		if (isParlay && ticket.id && signer && parlayMarketsAMMContract) {
 			try {
@@ -178,6 +180,7 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 				console.error(e)
 			}
 		}
+		setIsClaiming(false)
 	}
 
 	const ticketHeader = (
@@ -221,6 +224,7 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 				<Button
 					btnStyle={'primary'}
 					onClick={() => handleClaim()}
+					disabled={isClaiming}
 					content={
 						<SC.ClaimButtonWrapper>
 							<SC.ClaimText>{t('Claim')}</SC.ClaimText>
