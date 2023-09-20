@@ -83,7 +83,7 @@ const TicketsContent = () => {
 		if (!data) return []
 		if (!includes([STATIC.ALL, undefined], filter.sport) || !includes([STATIC.ALL, undefined], filter.league)) {
 			return orderBy(
-				data?.filter(
+				data.filter(
 					(item) =>
 						item.ticket.ticketType === filter.status &&
 						item.ticket.positions.some((position) => includes([...selectedSport.map((sport) => sport.id.toString())], position.market.tags?.at(0)))
@@ -94,7 +94,7 @@ const TicketsContent = () => {
 		}
 
 		return orderBy(
-			data?.filter((item) => item.ticket.ticketType === filter.status),
+			data.filter((item) => item.ticket.ticketType === filter.status),
 			[`ticket.${TICKET_SORTING.SUCCESS_RATE}`],
 			[ORDER_DIRECTION.DESCENDENT]
 		)

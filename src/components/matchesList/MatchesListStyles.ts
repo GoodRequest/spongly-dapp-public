@@ -151,9 +151,6 @@ export const ExtendedMatchContentItemHeader = styled.div`
 	${TextMDMedium}
 `
 
-export const Contest = styled.div`
-	width: 100%;
-`
 export const ModalDescriptionText = styled.div`
 	color: ${({ theme }) => theme['color-base-content-tertiary']};
 `

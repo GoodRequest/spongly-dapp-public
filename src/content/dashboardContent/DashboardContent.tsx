@@ -20,7 +20,7 @@ const DashboardContent = () => {
 	const onlyOpenTickets = useMemo(
 		() =>
 			orderBy(
-				data?.filter((ticket) => ticket.ticket.ticketType === TICKET_TYPE.OPEN_TICKET),
+				data.filter((ticket) => ticket.ticket.ticketType === TICKET_TYPE.OPEN_TICKET),
 				[`ticket.${TICKET_SORTING.SUCCESS_RATE}`],
 				[ORDER_DIRECTION.DESCENDENT]
 			),

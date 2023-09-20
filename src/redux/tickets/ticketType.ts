@@ -11,7 +11,7 @@ export enum TICKET_LIST {
 export type ITicketActions = IResetStore | IGetTicketList
 
 export interface ITicketListPayload {
-	data: ITicketContent[] | null
+	data: ITicketContent[]
 }
 export interface IGetTicketList {
 	type: TICKET_LIST

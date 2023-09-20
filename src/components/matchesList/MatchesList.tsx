@@ -1,6 +1,6 @@
 import { FC, useState, useEffect, useMemo } from 'react'
 import { Col, Row } from 'antd'
-import { groupBy, map, slice, toPairs } from 'lodash'
+import { groupBy, includes, map, slice, toPairs } from 'lodash'
 import { useTranslation } from 'next-export-i18n'
 import { useNetwork } from 'wagmi'
 
@@ -12,10 +12,12 @@ import * as SCS from '@/styles/GlobalStyles'
 
 import { SportMarket } from '@/__generated__/resolvers-types'
 import { BetType } from '@/utils/tags'
+import { useMedia } from '@/hooks/useMedia'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 import { SGPItem } from '@/typescript/types'
-import { MATCHES_OFFSET } from '@/utils/constants'
+import { MATCHES_OFFSET, MATCHES_OFFSET_MOBILE } from '@/utils/constants'
 import Modal from '@/components/modal/Modal'
+import { RESOLUTIONS } from '@/utils/enums'
 
 interface IMatchesList {
 	matches: SportMarket[]
@@ -26,8 +28,19 @@ interface IMatchesList {
 const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 	const { chain } = useNetwork()
 	const { t } = useTranslation()
+	const size = useMedia()
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
 	const [visibleTotalWinnerModal, setVisibleTotalWinnerModal] = useState(false)
+
+	const [matchOffsetByResolution, setMatchOffsetByResolution] = useState(0)
+
+	useEffect(() => {
+		if (includes([RESOLUTIONS.SM, RESOLUTIONS.MD], size)) {
+			setMatchOffsetByResolution(MATCHES_OFFSET_MOBILE)
+		} else {
+			setMatchOffsetByResolution(MATCHES_OFFSET)
+		}
+	}, [])
 
 	const sgpFeesRaw = useSGPFeesQuery(chain?.id as any, {
 		enabled: !!chain?.id
@@ -58,7 +71,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 	)
 
 	const [renderList, setRenderList] = useState<any>([])
-	const [hasMore, setHasMore] = useState(matchesWithChildMarkets?.length > MATCHES_OFFSET)
+	const [hasMore, setHasMore] = useState(matchesWithChildMarkets?.length > matchOffsetByResolution)
 
 	useEffect(() => {
 		if (sgpFeesRaw.isSuccess && sgpFeesRaw.data) {
@@ -67,9 +80,9 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 	}, [sgpFeesRaw.data, sgpFeesRaw.isSuccess])
 
 	useEffect(() => {
-		setRenderList(slice(matchesWithChildMarkets, 0, MATCHES_OFFSET))
+		setRenderList(slice(matchesWithChildMarkets, 0, matchOffsetByResolution))
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sgpFees])
+	}, [sgpFees, matchOffsetByResolution])
 
 	useEffect(() => {
 		if (renderList?.length < matchesWithChildMarkets.length) {
@@ -82,10 +95,10 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 
 	const addMatchesToList = () => {
 		if (hasMore) {
-			if (renderList.length < matchesWithChildMarkets.length && renderList.length + MATCHES_OFFSET < matchesWithChildMarkets.length) {
-				setRenderList([...renderList, ...slice(matchesWithChildMarkets, renderList.length, renderList.length + MATCHES_OFFSET)])
+			if (renderList.length < matchesWithChildMarkets.length && renderList.length + matchOffsetByResolution < matchesWithChildMarkets.length) {
+				setRenderList([...renderList, ...slice(matchesWithChildMarkets, renderList.length, renderList.length + matchOffsetByResolution)])
 			}
-			if (renderList.length < matchesWithChildMarkets.length && renderList.length + MATCHES_OFFSET >= matchesWithChildMarkets.length) {
+			if (renderList.length < matchesWithChildMarkets.length && renderList.length + matchOffsetByResolution >= matchesWithChildMarkets.length) {
 				setRenderList([...matchesWithChildMarkets])
 			}
 		}

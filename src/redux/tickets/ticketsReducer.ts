@@ -3,7 +3,7 @@ import { ILoadingAndFailure, ILoadingBatch, RESET_STORE } from '@/redux/generalT
 
 export const initState = {
 	ticketList: {
-		data: null,
+		data: [],
 		isLoading: false,
 		isLoadingBatch: false,
 		isFailure: false

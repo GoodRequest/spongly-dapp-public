@@ -12,7 +12,6 @@ export const useFetchAllMatches = () => {
 	const dispatch = useDispatch()
 	const rawMatches = useSelector((state: RootState) => state.matches.rawMatches)
 	const [fetchMeta, setFetchMeta] = useState({
-		isInit: true,
 		fallbackTry: 0 // NOTE: try to fetch data from contract 3 times if isFailed
 	})
 
@@ -70,8 +69,8 @@ export const useFetchAllMatches = () => {
 	}
 
 	useEffect(() => {
-		if (fetchMeta.isInit || (rawMatches.isFailed && fetchMeta.fallbackTry < 3)) {
-			setFetchMeta((current) => ({ isInit: false, fallbackTry: current.fallbackTry + 1 }))
+		if ((rawMatches.matches.length === 0 || rawMatches.isFailed) && fetchMeta.fallbackTry < 3) {
+			setFetchMeta((current) => ({ fallbackTry: current.fallbackTry + 1 }))
 			fetchAllMatches()
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
