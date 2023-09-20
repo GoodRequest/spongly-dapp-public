@@ -52,7 +52,7 @@ const MatchListItem: FC<IMatchListItem> = ({ match, keyValue, filter, loading = 
 				header={<MatchListHeader match={match as any} type={filter.status} setVisibleTotalWinnerModal={setVisibleTotalWinnerModal} />}
 				key={match.maturityDate}
 			>
-				{!loading && match.isOpen && isExpanded && <MatchListContent match={match as any} />}
+				{!loading && match.isOpen && isExpanded && <MatchListContent match={match as any} setVisibleTotalWinnerModal={setVisibleTotalWinnerModal} />}
 			</SC.CollapsePanel>
 			{filter.status === MATCHES.OPEN && (
 				<SC.CollapseButtonWrapper>

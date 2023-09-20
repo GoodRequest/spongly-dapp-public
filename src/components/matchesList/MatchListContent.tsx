@@ -1,9 +1,9 @@
-import { FC, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useState } from 'react'
 import { useNetwork } from 'wagmi'
 import { useTranslation } from 'next-export-i18n'
 
 // utils
-import { MIN_ODD_TRESHOLD, NETWORK_IDS, TOTAL_WINNER_TAGS } from '@/utils/constants'
+import { NETWORK_IDS, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { BET_OPTIONS } from '@/utils/enums'
 import { getHandicapValue, getOddByBetType } from '@/utils/helpers'
 import { roundToTwoDecimals } from '@/utils/formatters/number'
@@ -21,32 +21,18 @@ import * as SC from './MatchesListStyles'
 
 interface IMatchListContent {
 	match: TicketPosition
+	setVisibleTotalWinnerModal?: Dispatch<SetStateAction<boolean>>
 }
 
-const MatchListContent: FC<IMatchListContent> = ({ match }) => {
+const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleTotalWinnerModal }) => {
 	const { t } = useTranslation()
 	const { chain } = useNetwork()
 	const { winnerTypeMatch, doubleChanceTypeMatches, spreadTypeMatch, totalTypeMatch, combinedTypeMatch } = match
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(winnerTypeMatch?.tags[0] as any)
-	const [visibleTotalWinnerModal, setVisibleTotalWinnerModal] = useState(false)
-
-	const modals = (
-		<Modal
-			open={visibleTotalWinnerModal}
-			onCancel={() => {
-				setVisibleTotalWinnerModal(false)
-			}}
-			title={t('Parlay Validation') as string}
-			centered
-		>
-			<SC.ModalDescriptionText>{t('Only one participant per event is supported.')}</SC.ModalDescriptionText>
-		</Modal>
-	)
 
 	return (
 		<SC.PanelContent>
 			<SC.SmallMatchContentWrapper>
-				{modals}
 				<SC.AllPositionsHeader>{t('All positions')}</SC.AllPositionsHeader>
 				{winnerTypeMatch && (
 					<SC.MobileWrapper>
@@ -309,7 +295,6 @@ const MatchListContent: FC<IMatchListContent> = ({ match }) => {
 						</SC.ExtendedRowItemContent>
 					</SC.ExtendedMatchContentItemCol>
 				)}
-				{modals}
 			</SC.ExtendedMatchContentWrapper>
 		</SC.PanelContent>
 	)

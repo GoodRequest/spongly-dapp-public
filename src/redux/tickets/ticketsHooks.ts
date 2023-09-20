@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { ApolloError, useLazyQuery } from '@apollo/client'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useNetwork } from 'wagmi'
 
 import { TICKET_LIST } from '@/redux/tickets/ticketType'
@@ -17,7 +17,6 @@ import { getClosedTicketType, getTicketTotalQuote, getTicketType, removeDuplicat
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import { ISuccessRateData, ITicket } from '@/typescript/types'
 import { ENDPOINTS } from '@/utils/constants'
-import { RootState } from '../rootReducer'
 
 export interface IDefaultProps {
 	loading: boolean
@@ -30,12 +29,10 @@ const INITIAL_BATCH_SIZE = 10
 const useFetchTickets = () => {
 	const dispatch = useDispatch()
 	const { chain } = useNetwork()
-	const { data } = useSelector((state: RootState) => state.tickets.ticketList)
 	// Apollo fetch data
 	const [fetchTicketsData0] = useLazyQuery(GET_TICKETS)
 	const [fetchTicketsData1] = useLazyQuery(GET_TICKETS)
 	const [fetchTicketsData2] = useLazyQuery(GET_TICKETS)
-	const [fetchTicketsData3] = useLazyQuery(GET_TICKETS)
 
 	const fetchSuccessRateData = async (): Promise<ISuccessRateData> => {
 		try {
@@ -113,30 +110,6 @@ const useFetchTickets = () => {
 				},
 				context: { chainId: chain?.id }
 			}),
-			fetchTicketsData3({
-				variables: {
-					...ticketQueryProps,
-					skipParlay: 3 * BATCH_SIZE,
-					skipSingle: 3 * BATCH_SIZE
-				},
-				context: { chainId: chain?.id }
-			}),
-			// fetchTicketsData4({
-			// 	variables: {
-			// 		...ticketQueryProps,
-			// 		skipParlay: 4 * BATCH_SIZE,
-			// 		skipSingle: 4 * BATCH_SIZE
-			// 	},
-			// 	context: { chainId: chain?.id }
-			// }),
-			// fetchTicketsData5({
-			// 	variables: {
-			// 		...ticketQueryProps,
-			// 		skipParlay: 5 * BATCH_SIZE,
-			// 		skipSingle: 5 * BATCH_SIZE
-			// 	},
-			// 	context: { chainId: chain?.id }
-			// }),
 			fetchSuccessRateData()
 		])
 			.then((values) => {
@@ -146,12 +119,10 @@ const useFetchTickets = () => {
 					...values[1].data.parlayMarkets,
 					...values[1].data.positionBalances,
 					...values[2].data.parlayMarkets,
-					...values[2].data.positionBalances,
-					...values[3].data.parlayMarkets,
-					...values[3].data.positionBalances
+					...values[2].data.positionBalances
 				]
 
-				const successRateMap = new Map(values[4].stats.map((obj) => [obj.account, obj.successRate]))
+				const successRateMap = new Map(values[3].stats.map((obj) => [obj.account, obj.successRate]))
 
 				mapTicketsData(allTickets, successRateMap).then((data) => {
 					dispatch({

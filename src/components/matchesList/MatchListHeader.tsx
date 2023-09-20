@@ -121,7 +121,7 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 						</SC.NoWrapCenterRow>
 					</SC.XXLWrapper>
 				)}
-				{includes([RESOLUTIONS.SEMIXXL, RESOLUTIONS.LG], size) ? (
+				{includes([RESOLUTIONS.SEMIXXL, RESOLUTIONS.XL, RESOLUTIONS.LG], size) ? (
 					<SC.SEMIXXLWrapper>
 						<Row>{images}</Row>
 						<Row>

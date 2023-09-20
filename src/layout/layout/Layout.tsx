@@ -2,6 +2,7 @@ import { FC, ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from 'next-export-i18n'
 import { Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
+import { includes } from 'lodash'
 import LogoImg from '@/assets/icons/sponglyLogo.svg'
 import Footer from '../footer/Footer'
 import Header from '../header/Header'
@@ -10,9 +11,11 @@ import TicketBetContainer from '@/components/ticketBetContainer/TicketBetContain
 
 import useFetchTickets from '@/redux/tickets/ticketsHooks'
 import { useFetchAllMatches } from '@/redux/matches/matchesHooks'
+import { useMedia } from '@/hooks/useMedia'
 
 import * as SC from './LayoutStyles'
 import * as PSC from '../content/ContentStyles'
+import { RESOLUTIONS } from '@/utils/enums'
 
 interface ILayout {
 	children: ReactNode
@@ -21,6 +24,7 @@ interface ILayout {
 const Layout: FC<ILayout> = ({ children }) => {
 	const { t } = useTranslation()
 	const [initialization, setInitialization] = useState(true)
+	const size = useMedia()
 
 	useFetchTickets()
 	useFetchAllMatches()
@@ -39,9 +43,11 @@ const Layout: FC<ILayout> = ({ children }) => {
 			<PSC.MinWidthContainer>
 				<Content>{children}</Content>
 			</PSC.MinWidthContainer>
-			<SC.MobileTicketBetWrapper>
-				<TicketBetContainer />
-			</SC.MobileTicketBetWrapper>
+			{includes([RESOLUTIONS.SM, RESOLUTIONS.MD, RESOLUTIONS.LG, RESOLUTIONS.XL], size) && (
+				<SC.MobileTicketBetWrapper>
+					<TicketBetContainer />
+				</SC.MobileTicketBetWrapper>
+			)}
 			<Footer />
 			{initialization && (
 				<SC.OverlayLoading>

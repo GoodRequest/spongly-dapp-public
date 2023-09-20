@@ -104,7 +104,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 		}
 	}
 
-	const modals = useMemo(
+	const modalParlayValidation = useMemo(
 		() => (
 			<Modal
 				open={visibleTotalWinnerModal}
@@ -160,7 +160,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 					)}
 				</Col>
 			</Row>
-			{modals}
+			{modalParlayValidation}
 		</SC.MatchListWrapper>
 	)
 }
