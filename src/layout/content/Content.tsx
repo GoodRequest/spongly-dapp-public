@@ -28,12 +28,10 @@ const Content: FC<ILayout> = ({ children }) => {
 				) : (
 					<>
 						<SC.MainContentContainer>{children}</SC.MainContentContainer>
-						{includes([RESOLUTIONS.SEMIXXL, RESOLUTIONS.XXL], size) && (
-							<SC.MobileHiddenCol span={8}>
-								{router.pathname === `/${PAGES.DASHBOARD}` && <ParlayLeaderboard />}
-								<TicketBetContainer />
-							</SC.MobileHiddenCol>
-						)}
+						<SC.MobileHiddenCol span={8}>
+							{router.pathname === `/${PAGES.DASHBOARD}` && <ParlayLeaderboard />}
+							<TicketBetContainer />
+						</SC.MobileHiddenCol>
 					</>
 				)}
 			</Row>
