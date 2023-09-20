@@ -11,7 +11,7 @@ import OddValue from '@/components/oddButton/OddValue'
 
 // utils
 import { BET_OPTIONS, MATCHES } from '@/utils/enums'
-import { MIN_ODD_TRESHOLD, NETWORK_IDS, NO_TEAM_IMAGE_FALLBACK, SportFilterEnum, TOTAL_WINNER_TAGS } from '@/utils/constants'
+import { NETWORK_IDS, NO_TEAM_IMAGE_FALLBACK, SportFilterEnum, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { BetType, SPORTS_MAP } from '@/utils/tags'
 import { getTeamImageSource } from '@/utils/images'
 import { getOddByBetType } from '@/utils/helpers'
@@ -21,6 +21,7 @@ import { getFormatDate } from '@/utils/formatters/string'
 // icons
 import PauseIcon from '@/assets/icons/pause.svg'
 import ClockIcon from '@/assets/icons/clock.svg'
+import CanceledIcon from '@/assets/icons/canceled-icon.svg'
 
 // redux
 import { TicketPosition } from '@/redux/betTickets/betTicketTypes'
@@ -233,7 +234,7 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN }) => 
 				{type === MATCHES.FINISHED && <SC.MobileStatusWrapper type={MATCHES.FINISHED}>{formatFinishedResults()}</SC.MobileStatusWrapper>}
 				{type === MATCHES.PAUSED && (
 					<SC.MobileStatusWrapper type={MATCHES.FINISHED}>
-						<span>{t('PAUSED')}</span>
+						{match.isPaused ? <span>{t('PAUSED')}</span> : <span>{t('CANCELED')}</span>}
 					</SC.MobileStatusWrapper>
 				)}
 			</SC.MobileContentWrapper>
@@ -357,10 +358,17 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN }) => 
 						<SC.MatchItemCol span={8}>
 							<SC.Header>{t('Status')}</SC.Header>
 							<SC.RowItemContent>
-								<SC.StatusWrapper>
-									<SCS.Icon icon={PauseIcon} />
-									{t('Paused')}
-								</SC.StatusWrapper>
+								{match?.isPaused ? (
+									<SC.StatusWrapper>
+										<SCS.Icon icon={PauseIcon} />
+										{t('Paused')}
+									</SC.StatusWrapper>
+								) : (
+									<SC.StatusWrapper>
+										<SCS.Icon icon={CanceledIcon} />
+										{t('Canceled')}
+									</SC.StatusWrapper>
+								)}
 							</SC.RowItemContent>
 						</SC.MatchItemCol>
 					</SC.MatchItemRow>
