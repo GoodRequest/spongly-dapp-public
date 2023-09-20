@@ -21,6 +21,7 @@ import { useMedia } from '@/hooks/useMedia'
 // icons
 import PauseIcon from '@/assets/icons/pause.svg'
 import ClockIcon from '@/assets/icons/clock.svg'
+import CanceledIcon from '@/assets/icons/canceled-icon.svg'
 
 // redux
 import { TicketPosition } from '@/redux/betTickets/betTicketTypes'
@@ -301,10 +302,17 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 					<SC.MatchItemCol span={16}>{getContestedTeams}</SC.MatchItemCol>
 					<SC.MatchItemCol span={8}>
 						<SC.Header>{t('Status')}</SC.Header>
-						<SC.StatusWrapper>
-							<SCS.Icon icon={PauseIcon} />
-							{t('Paused')}
-						</SC.StatusWrapper>
+						{match?.isPaused ? (
+							<SC.StatusWrapper>
+								<SCS.Icon icon={PauseIcon} />
+								{t('Paused')}
+							</SC.StatusWrapper>
+						) : (
+							<SC.StatusWrapper>
+								<SCS.Icon icon={CanceledIcon} />
+								{t('Canceled')}
+							</SC.StatusWrapper>
+						)}
 					</SC.MatchItemCol>
 				</SC.MatchItemRow>
 			)}
@@ -341,7 +349,9 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 			)}
 			{type === MATCHES.ONGOING && <SC.MobileStatusWrapper type={MATCHES.ONGOING}>{t('ONGOING')}</SC.MobileStatusWrapper>}
 			{type === MATCHES.FINISHED && <SC.MobileStatusWrapper type={MATCHES.FINISHED}>{formatFinishedResults()}</SC.MobileStatusWrapper>}
-			{type === MATCHES.PAUSED && <SC.MobileStatusWrapper type={MATCHES.FINISHED}>{t('PAUSED')}</SC.MobileStatusWrapper>}
+			{type === MATCHES.PAUSED && (
+				<SC.MobileStatusWrapper type={MATCHES.FINISHED}> {match.isPaused ? t('PAUSED') : t('CANCELED')}</SC.MobileStatusWrapper>
+			)}
 		</SC.MobileContentWrapper>
 	)
 }
