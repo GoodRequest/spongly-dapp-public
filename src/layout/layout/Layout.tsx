@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useState } from 'react'
+import { FC, ReactElement, ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from 'next-export-i18n'
 import { Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
@@ -24,7 +24,6 @@ interface ILayout {
 const Layout: FC<ILayout> = ({ children }) => {
 	const { t } = useTranslation()
 	const [initialization, setInitialization] = useState(true)
-	const size = useMedia()
 
 	useFetchTickets()
 	useFetchAllMatches()
@@ -43,11 +42,9 @@ const Layout: FC<ILayout> = ({ children }) => {
 			<PSC.MinWidthContainer>
 				<Content>{children}</Content>
 			</PSC.MinWidthContainer>
-			{includes([RESOLUTIONS.SM, RESOLUTIONS.MD, RESOLUTIONS.LG, RESOLUTIONS.XL], size) && (
-				<SC.MobileTicketBetWrapper>
-					<TicketBetContainer />
-				</SC.MobileTicketBetWrapper>
-			)}
+			<SC.MobileTicketBetWrapper>
+				<TicketBetContainer />
+			</SC.MobileTicketBetWrapper>
 			<Footer />
 			{initialization && (
 				<SC.OverlayLoading>
