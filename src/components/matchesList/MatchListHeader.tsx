@@ -115,10 +115,10 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 				{size === RESOLUTIONS.XXL && (
 					<SC.XXLWrapper>
 						<SC.NoWrapCenterRow gutter={16}>
-							<Col span={isOnlyWinner || isTotalWinner || type !== MATCHES.OPEN ? 5 : 12}>
+							<Col span={12}>
 								<Row style={{ flexWrap: 'nowrap' }}>{images}</Row>
 							</Col>
-							<Col span={isOnlyWinner || isTotalWinner || type !== MATCHES.OPEN ? 19 : 12}>{teamNames}</Col>
+							<Col span={12}>{teamNames}</Col>
 						</SC.NoWrapCenterRow>
 					</SC.XXLWrapper>
 				)}
