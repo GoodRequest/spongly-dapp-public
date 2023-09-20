@@ -1,10 +1,11 @@
-import { FC, useMemo, Dispatch, SetStateAction } from 'react'
+import { FC, useMemo, Dispatch, SetStateAction, useState } from 'react'
 import { includes, toNumber } from 'lodash'
 import { Col, Row } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import { useNetwork } from 'wagmi'
 
 // components
+import Image from 'next/image'
 import OddButton from '@/components/oddButton/OddButton'
 import OddValue from '@/components/oddButton/OddValue'
 
@@ -43,6 +44,8 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 	const { winnerTypeMatch, doubleChanceTypeMatches, spreadTypeMatch, totalTypeMatch } = match
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(winnerTypeMatch?.tags[0] as any)
 	const isOnlyWinner = winnerTypeMatch && doubleChanceTypeMatches?.length === 0 && !spreadTypeMatch && !totalTypeMatch
+	const [imgSrcHome, setImgSrcHome] = useState<string>(getTeamImageSource(match?.homeTeam || '', toNumber(match?.tags?.[0])))
+	const [imgSrcAway, setImgSrcAway] = useState<string>(getTeamImageSource(match?.awayTeam || '', toNumber(match?.tags?.[0])))
 
 	const formatFinishedResults = () => {
 		if (isTotalWinner) {
@@ -58,19 +61,33 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 		() => (
 			<>
 				<SC.TeamImage>
-					<img
-						src={getTeamImageSource(match?.homeTeam || '', toNumber(match?.tags?.[0]))}
-						onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
-							e.target.src = NO_TEAM_IMAGE_FALLBACK
+					<Image
+						src={imgSrcHome}
+						alt={match?.homeTeam}
+						onLoadingComplete={(result) => {
+							if (result.naturalWidth === 0) {
+								// Broken image
+								setImgSrcHome(NO_TEAM_IMAGE_FALLBACK)
+							}
+						}}
+						onError={() => {
+							setImgSrcHome(NO_TEAM_IMAGE_FALLBACK)
 						}}
 					/>
 				</SC.TeamImage>
 				{!isTotalWinner && (
 					<SC.TeamImage>
-						<img
-							src={getTeamImageSource(match?.awayTeam || '', toNumber(match?.tags?.[0]))}
-							onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
-								e.target.src = NO_TEAM_IMAGE_FALLBACK
+						<Image
+							src={imgSrcAway}
+							alt={match?.awayTeam}
+							onLoadingComplete={(result) => {
+								if (result.naturalWidth === 0) {
+									// Broken image
+									setImgSrcAway(NO_TEAM_IMAGE_FALLBACK)
+								}
+							}}
+							onError={() => {
+								setImgSrcAway(NO_TEAM_IMAGE_FALLBACK)
 							}}
 						/>
 					</SC.TeamImage>
@@ -78,7 +95,7 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 			</>
 		),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[match]
+		[match, imgSrcHome, imgSrcAway]
 	)
 
 	const teamNames = useMemo(
@@ -139,7 +156,7 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 			</>
 		),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[match, size]
+		[match, size, imgSrcHome, imgSrcAway]
 	)
 
 	const getBaseBetTypes = () => {

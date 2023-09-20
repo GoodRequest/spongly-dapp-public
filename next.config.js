@@ -14,6 +14,7 @@ const nextConfig = {
 	distDir: 'dist',
 	images: {
 		// minimumCacheTTL: 31536000, // cachovanie obrazka na 1 rok
+		formats: ['image/webp'],
 		disableStaticImages: true
 	},
 	sentry: {
