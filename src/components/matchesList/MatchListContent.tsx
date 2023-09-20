@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useState } from 'react'
+import { Dispatch, FC, SetStateAction } from 'react'
 import { useNetwork } from 'wagmi'
 import { useTranslation } from 'next-export-i18n'
 
@@ -12,7 +12,6 @@ import { roundToTwoDecimals } from '@/utils/formatters/number'
 import { TicketPosition } from '@/redux/betTickets/betTicketTypes'
 
 // components
-import Modal from '@/components/modal/Modal'
 import OddButton from '@/components/oddButton/OddButton'
 import OddValue from '@/components/oddButton/OddValue'
 
