@@ -107,7 +107,7 @@ export const SPORTS_MAP: SportsMap = {
 	9014: 'Soccer',
 	9015: 'Soccer',
 	9016: 'Soccer',
-	9017: 'Soccer',
+	// 9017: 'Soccer',
 	9018: 'Soccer',
 	9019: 'Soccer',
 	9445: 'Motosport',
@@ -149,7 +149,7 @@ export const JSON_ODDS_SPORTS = [109021, 109121]
 export const FIFA_WC_TAG = 9018
 export const FIFA_WC_U20_TAG = 9296
 export const IIHF_WC_TAG = 9033
-export const UEFA_TAGS = [9016, 9017, 18806, 18821, 9288, 9042, 19216, 9076]
+export const UEFA_TAGS = [9016 /* , 9017 */, 18806, 18821, 9288, 9042, 19216, 9076]
 export const MOTOSPORT_TAGS = [9445, 9497]
 export const GOLF_TAGS = [109021, 109121]
 export const GOLF_TOURNAMENT_WINNER_TAG = 109121
@@ -159,7 +159,9 @@ export const SPORTS_TAGS_MAP: SportsTagsMap = {
 	Baseball: [9003],
 	Basketball: [9004, 9005, 9008, 9399, 9409],
 	Hockey: [9006, 9033],
-	Soccer: [9010, 9011, 9012, 9013, 9014, 9015, 9016, 9017, 9018, 9019, 9057, 9061, 9045, 9296, 9050, 18806, 18821, 9288, 9042, 19216, 9076, 9073, 9536, 9268],
+	Soccer: [
+		9010, 9011, 9012, 9013, 9014, 9015, 9016 /* , 9017 */, 9018, 9019, 9057, 9061, 9045, 9296, 9050, 18806, 18821, 9288, 9042, 19216, 9076, 9073, 9536, 9268
+	],
 	MMA: [9007, 18196],
 	Motosport: [9445, 9497],
 	Tennis: [9153, 9156],
@@ -184,7 +186,8 @@ export enum TAGS_FLAGS {
 	LA_LIGA = 9014,
 	SERIE_A = 9015,
 	UEFA_CL = 9016,
-	UEFA_EL = 9017,
+	UEFA_EL = 9073,
+	// UEFA_EL = 9017,
 	J1_LEAGUE = 9019,
 	FORMULA1 = 9100,
 	MOTOGP = 9101,

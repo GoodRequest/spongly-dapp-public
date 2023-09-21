@@ -106,7 +106,7 @@ const MatchesContent = () => {
 				allLeagues,
 				(item) =>
 					includes(
-						selectedSport.map((sport) => sport.id),
+						selectedSport.map((sport) => sport?.id),
 						item.id
 					) && item[filter.status].length > 0
 			)

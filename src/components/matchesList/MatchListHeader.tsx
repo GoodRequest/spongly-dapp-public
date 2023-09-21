@@ -44,17 +44,9 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 		() => (
 			<>
 				<SC.TeamImage>
-					<Image
+					<img
 						src={imgSrcHome}
-						width={30}
-						height={30}
 						alt={match?.homeTeam}
-						onLoadingComplete={(result) => {
-							if (result.naturalWidth === 0) {
-								// Broken image
-								setImgSrcHome(NO_TEAM_IMAGE_FALLBACK)
-							}
-						}}
 						onError={() => {
 							setImgSrcHome(NO_TEAM_IMAGE_FALLBACK)
 						}}
@@ -62,17 +54,11 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 				</SC.TeamImage>
 				{!isTotalWinner && (
 					<SC.TeamImage>
-						<Image
+						<img
 							src={imgSrcAway}
 							width={30}
 							height={30}
 							alt={match?.awayTeam}
-							onLoadingComplete={(result) => {
-								if (result.naturalWidth === 0) {
-									// Broken image
-									setImgSrcAway(NO_TEAM_IMAGE_FALLBACK)
-								}
-							}}
 							onError={() => {
 								setImgSrcAway(NO_TEAM_IMAGE_FALLBACK)
 							}}
