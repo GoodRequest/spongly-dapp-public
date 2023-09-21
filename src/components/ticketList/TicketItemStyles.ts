@@ -49,21 +49,15 @@ export const ResultsWrapper = styled(Col)`
 	white-space: nowrap;
 	align-items: center;
 	${TextSMMedium};
-
-	@media (max-width: ${breakpoints.md}px) {
-		margin-top: 14px;
-		justify-content: right;
-	}
+	margin-top: 14px;
+	justify-content: right;
 `
 
 export const OddsWrapper = styled(Col)`
 	display: flex;
 	align-items: center;
-	justify-content: right;
-	@media (max-width: ${breakpoints.md}px) {
-		justify-content: left;
-		margin-top: 14px;
-	}
+	justify-content: left;
+	margin-top: 14px;
 `
 export const TicketHeader = styled.div`
 	display: flex;

@@ -97,10 +97,10 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 							) : (
 								<SC.MatchItemEmptyState>
 									<Row>
-										<Col span={5}>
+										<Col md={{ span: 5 }} xs={{ span: 0 }}>
 											<SC.EmptyImage />
 										</Col>
-										<Col span={19}>
+										<Col md={{ span: 19 }} xs={{ span: 24 }}>
 											<h4>{t('There are currently no matches being played')}</h4>
 											<p>{t('You can try other leagues')}</p>
 										</Col>

@@ -142,11 +142,11 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 					)}
 				</Col>
 				{isFinished && (
-					<SC.ResultsWrapper md={{ span: 2, order: 2 }} sm={{ span: 12, order: 3 }} xs={{ span: 12, order: 3 }}>
+					<SC.ResultsWrapper md={{ span: 12, order: 3 }} sm={{ span: 12, order: 3 }} xs={{ span: 12, order: 3 }}>
 						{getTicketResults()}
 					</SC.ResultsWrapper>
 				)}
-				<SC.OddsWrapper md={{ span: 4, order: 3 }} sm={{ span: 12, order: 2 }} xs={{ span: 12, order: 2 }}>
+				<SC.OddsWrapper md={{ span: 12, order: 2 }} sm={{ span: 12, order: 2 }} xs={{ span: 12, order: 2 }}>
 					<SC.TeamText>{oddsSymbol}</SC.TeamText>
 					{oddsDataFromContract ? (
 						<SCS.FlexColumn>
