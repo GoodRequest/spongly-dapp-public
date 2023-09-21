@@ -85,8 +85,6 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, copie
 		[isTotalWinner, match, teamImages]
 	)
 
-	console.log(match)
-
 	return (
 		<>
 			<SC.MatchRow gutter={[0, 0]} readOnly={readOnly}>
