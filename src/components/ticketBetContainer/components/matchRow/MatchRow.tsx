@@ -126,7 +126,7 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, copie
 								match as any,
 								copied ? true : !!formValues.copied,
 								// @ts-ignore
-								match.combinedTypeMatch && match.winnerTypeMatch.betOption && match.totalTypeMatch.betOption
+								match.combinedTypeMatch && match.winnerTypeMatch?.betOption && match.totalTypeMatch?.betOption
 									? // @ts-ignore
 									  `${match.winnerTypeMatch.betOption}&${match.totalTypeMatch.betOption}`
 									: undefined
