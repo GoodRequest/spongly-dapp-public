@@ -1,4 +1,4 @@
-import { Button, Col, Row, Empty as AntdEmpty } from 'antd'
+import { Button, Col, Row, Empty as AntdEmpty, Skeleton } from 'antd'
 import styled from 'styled-components'
 
 import {
@@ -206,5 +206,21 @@ export const PCRow = styled(Row)`
 
 	@media (max-width: ${breakpoints.xl}px) {
 		display: none;
+	}
+`
+
+export const RowSkeleton = styled(Skeleton)`
+	margin-bottom: 16px;
+	.ant-skeleton-content {
+		padding: 40px 60px;
+		background: ${({ theme }) => theme['color-base-surface-secondary']};
+		margin: 16px 0 16px 0;
+		border-radius: 12px;
+		h3,
+		ul li {
+			&::after {
+				background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(0, 0, 0, 0.2) 37%, rgba(255, 255, 255, 0.05) 63%) !important;
+			}
+		}
 	}
 `

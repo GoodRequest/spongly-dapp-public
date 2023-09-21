@@ -273,7 +273,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 					setTempMatches={setTempMatches}
 				/>
 			)),
-		[activeKeysList, renderList, setActiveKeysList, type]
+		[activeKeysList, renderList, setActiveKeysList, type, sgpFees]
 	)
 
 	return (
