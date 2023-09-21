@@ -2,27 +2,17 @@ import { FC, useMemo, Dispatch, SetStateAction, useState } from 'react'
 import { includes, toNumber } from 'lodash'
 import { Col, Row } from 'antd'
 import { useTranslation } from 'next-export-i18n'
-import { useNetwork } from 'wagmi'
+import dynamic from 'next/dynamic'
 
 // components
 import Image from 'next/image'
-import OddButton from '@/components/oddButton/OddButton'
-import OddValue from '@/components/oddButton/OddValue'
 
 // utils
-import { BET_OPTIONS, MATCHES, RESOLUTIONS } from '@/utils/enums'
-import { NETWORK_IDS, NO_TEAM_IMAGE_FALLBACK, SportFilterEnum, TOTAL_WINNER_TAGS } from '@/utils/constants'
-import { BetType, SPORTS_MAP } from '@/utils/tags'
+import { MATCHES, RESOLUTIONS } from '@/utils/enums'
+import { NO_TEAM_IMAGE_FALLBACK, SportFilterEnum, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { getTeamImageSource } from '@/utils/images'
-import { getOddByBetType } from '@/utils/helpers'
-import { roundToTwoDecimals } from '@/utils/formatters/number'
 import { getFormatDate } from '@/utils/formatters/string'
 import { useMedia } from '@/hooks/useMedia'
-
-// icons
-import PauseIcon from '@/assets/icons/pause.svg'
-import ClockIcon from '@/assets/icons/clock.svg'
-import CanceledIcon from '@/assets/icons/canceled-icon.svg'
 
 // redux
 import { TicketPosition } from '@/redux/betTickets/betTicketTypes'
@@ -30,6 +20,10 @@ import { TicketPosition } from '@/redux/betTickets/betTicketTypes'
 // styles
 import * as SC from './MatchesListStyles'
 import * as SCS from '@/styles/GlobalStyles'
+import { BetType, SPORTS_MAP } from '@/utils/tags'
+
+const MatchHeaderPC = dynamic(() => import('./components/MatchHeaderPC'))
+const MatchHeaderMobile = dynamic(() => import('./components/MatchHeaderMobile'))
 
 interface IMatchListItem {
 	match: TicketPosition
@@ -39,24 +33,12 @@ interface IMatchListItem {
 
 const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVisibleTotalWinnerModal }) => {
 	const { t } = useTranslation()
-	const { chain } = useNetwork()
 	const size = useMedia()
 
-	const { winnerTypeMatch, doubleChanceTypeMatches, spreadTypeMatch, totalTypeMatch } = match
+	const { winnerTypeMatch } = match
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(winnerTypeMatch?.tags[0] as any)
-	const isOnlyWinner = winnerTypeMatch && doubleChanceTypeMatches?.length === 0 && !spreadTypeMatch && !totalTypeMatch
 	const [imgSrcHome, setImgSrcHome] = useState<string>(getTeamImageSource(match?.homeTeam || '', toNumber(match?.tags?.[0])))
 	const [imgSrcAway, setImgSrcAway] = useState<string>(getTeamImageSource(match?.awayTeam || '', toNumber(match?.tags?.[0])))
-
-	const formatFinishedResults = () => {
-		if (isTotalWinner) {
-			if (match.winnerTypeMatch?.homeScore === '1') {
-				return t('Winner')
-			}
-			return t('No win')
-		}
-		return `${match.homeScore || '?'} : ${match.awayScore || '?'}`
-	}
 
 	const images = useMemo(
 		() => (
@@ -184,192 +166,35 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 				return [BetType.WINNER, BetType.DOUBLE_CHANCE]
 		}
 	}
-	const getPushNumber = () => {
-		if (isTotalWinner) return 10
-		if (isOnlyWinner) return 10
-		return 0
-	}
-	const getSpanNumber = (betType: BetType) => {
-		if (isOnlyWinner) return 5
-		if (getBaseBetTypes().length > 2) {
-			if (betType === BetType.WINNER && match.drawOdds && Number(match.drawOdds) !== 0) return 7
-			return 5
-		}
-		if (getBaseBetTypes().length === 2) return 8
-		return 16
-	}
 
-	const handleOnClickRow = () => {
-		// TODO: route by match id
-		// router.push(`/matches/${1}`)
+	const formatFinishedResults = () => {
+		if (isTotalWinner) {
+			if (match.winnerTypeMatch?.homeScore === '1') {
+				return t('Winner')
+			}
+			return t('No win')
+		}
+		return `${match.homeScore || '?'} : ${match.awayScore || '?'}`
 	}
 
 	return includes([RESOLUTIONS.LG, RESOLUTIONS.SEMIXXL, RESOLUTIONS.XL, RESOLUTIONS.XXL], size) ? (
-		<SC.PCContentWrapper>
-			{type === MATCHES.OPEN && (
-				<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.OPEN}`} onClick={handleOnClickRow}>
-					<SC.MatchItemCol $alignItems={'flex-start'} span={8 + getPushNumber()}>
-						{getContestedTeams}
-					</SC.MatchItemCol>
-					{includes(getBaseBetTypes(), BetType.WINNER) && (
-						<SC.MatchItemCol span={getSpanNumber(BetType.WINNER)}>
-							<SC.Header>{t('Winner')}</SC.Header>
-							<SC.RowItemContent>
-								<SC.RadioGroup>
-									<OddButton
-										isHeader
-										match={match}
-										setVisibleTotalWinnerModal={isTotalWinner ? setVisibleTotalWinnerModal : undefined}
-										betOption={BET_OPTIONS.WINNER_HOME}
-										oddName={isTotalWinner ? t('YES') : BET_OPTIONS.WINNER_HOME}
-									/>
-									<OddButton isHeader match={match} betOption={BET_OPTIONS.WINNER_DRAW} />
-									<OddButton isHeader match={match} betOption={BET_OPTIONS.WINNER_AWAY} />
-								</SC.RadioGroup>
-								<SC.OddsWrapper>
-									<OddValue match={match} betOption={BET_OPTIONS.WINNER_HOME} />
-									<OddValue match={match} betOption={BET_OPTIONS.WINNER_DRAW} />
-									<OddValue match={match} betOption={BET_OPTIONS.WINNER_AWAY} />
-								</SC.OddsWrapper>
-							</SC.RowItemContent>
-						</SC.MatchItemCol>
-					)}
-					{includes(getBaseBetTypes(), BetType.DOUBLE_CHANCE) &&
-						match.doubleChanceTypeMatches &&
-						match.doubleChanceTypeMatches?.length > 0 &&
-						!(chain?.id === NETWORK_IDS.OPTIMISM_GOERLI) && (
-							<SC.MatchItemCol span={getSpanNumber(BetType.DOUBLE_CHANCE)}>
-								<SC.Header>{t('Double chance')}</SC.Header>
-								{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd === 0 && (
-									<SC.WarningText>{t('Coming soon')}</SC.WarningText>
-								)}
-								<SC.RowItemContent>
-									<SC.RadioGroup>
-										<OddButton isHeader match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_HOME} />
-										<OddButton isHeader match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_DRAW} />
-										<OddButton isHeader match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_AWAY} />
-									</SC.RadioGroup>
-									<SC.OddsWrapper>
-										<OddValue match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_HOME} />
-										<OddValue match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_DRAW} />
-										<OddValue match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_AWAY} />
-									</SC.OddsWrapper>
-								</SC.RowItemContent>
-							</SC.MatchItemCol>
-						)}
-					{includes(getBaseBetTypes(), BetType.SPREAD) && spreadTypeMatch && (
-						<SC.MatchItemCol span={getSpanNumber(BetType.SPREAD)}>
-							<SC.Header>{t('Handicap ({{ spread }})', { spread: roundToTwoDecimals(spreadTypeMatch?.spread || 0) })}</SC.Header>
-							<SC.RowItemContent>
-								<SC.RadioGroup>
-									<OddButton isHeader match={match} betOption={BET_OPTIONS.HANDICAP_HOME} />
-									<OddButton isHeader match={match} betOption={BET_OPTIONS.HANDICAP_AWAY} />
-								</SC.RadioGroup>
-								<SC.OddsWrapper>
-									<OddValue match={match} betOption={BET_OPTIONS.HANDICAP_HOME} />
-									<OddValue match={match} betOption={BET_OPTIONS.HANDICAP_AWAY} />
-								</SC.OddsWrapper>
-							</SC.RowItemContent>
-						</SC.MatchItemCol>
-					)}
-					{includes(getBaseBetTypes(), BetType.TOTAL) && totalTypeMatch && (
-						<SC.MatchItemCol span={getSpanNumber(BetType.TOTAL)}>
-							<SC.Header>{t('Total ({{ total }})', { total: roundToTwoDecimals(totalTypeMatch?.total || 0) })}</SC.Header>
-							<SC.RowItemContent>
-								<SC.RadioGroup>
-									<OddButton isHeader match={match} betOption={BET_OPTIONS.TOTAL_OVER} />
-									<OddButton isHeader match={match} betOption={BET_OPTIONS.TOTAL_UNDER} />
-								</SC.RadioGroup>
-								<SC.OddsWrapper>
-									<OddValue match={match} betOption={BET_OPTIONS.TOTAL_OVER} />
-									<OddValue match={match} betOption={BET_OPTIONS.TOTAL_UNDER} />
-								</SC.OddsWrapper>
-							</SC.RowItemContent>
-						</SC.MatchItemCol>
-					)}
-				</SC.MatchItemRow>
-			)}
-			{type === MATCHES.ONGOING && (
-				<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.ONGOING}`}>
-					<SC.MatchItemCol $alignItems={'flex-start'} span={16}>
-						{getContestedTeams}
-					</SC.MatchItemCol>
-					<SC.MatchItemCol span={8}>
-						<SC.Header>{t('Status')}</SC.Header>
-						<SC.StatusWrapper>
-							<SCS.Icon icon={ClockIcon} />
-							{t('Ongoing')}
-						</SC.StatusWrapper>
-					</SC.MatchItemCol>
-				</SC.MatchItemRow>
-			)}
-			{type === MATCHES.FINISHED && (
-				<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.FINISHED}`}>
-					<SC.MatchItemCol $alignItems={'flex-start'} span={16}>
-						{getContestedTeams}
-					</SC.MatchItemCol>
-					<SC.MatchItemCol span={8}>
-						<SC.Header>{t('Results')}</SC.Header>
-						<SC.StatusWrapper>{formatFinishedResults()}</SC.StatusWrapper>
-					</SC.MatchItemCol>
-				</SC.MatchItemRow>
-			)}
-			{type === MATCHES.PAUSED && (
-				<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.PAUSED}`}>
-					<SC.MatchItemCol span={16}>{getContestedTeams}</SC.MatchItemCol>
-					<SC.MatchItemCol span={8}>
-						<SC.Header>{t('Status')}</SC.Header>
-						{match?.isPaused ? (
-							<SC.StatusWrapper>
-								<SCS.Icon icon={PauseIcon} />
-								{t('Paused')}
-							</SC.StatusWrapper>
-						) : (
-							<SC.StatusWrapper>
-								<SCS.Icon icon={CanceledIcon} />
-								{t('Canceled')}
-							</SC.StatusWrapper>
-						)}
-					</SC.MatchItemCol>
-				</SC.MatchItemRow>
-			)}
-		</SC.PCContentWrapper>
+		<MatchHeaderPC
+			match={match}
+			type={type}
+			setVisibleTotalWinnerModal={setVisibleTotalWinnerModal}
+			getContestedTeams={getContestedTeams}
+			getBaseBetTypes={getBaseBetTypes}
+			formatFinishedResults={formatFinishedResults}
+		/>
 	) : (
-		<SC.MobileContentWrapper>
-			<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.OPEN}`} onClick={handleOnClickRow}>
-				<SC.MatchItemCol $alignItems={'flex-start'} span={24}>
-					{getContestedTeams}
-				</SC.MatchItemCol>
-			</SC.MatchItemRow>
-			{type === MATCHES.OPEN && includes(getBaseBetTypes(), BetType.WINNER) && (
-				<>
-					<SC.MobileDivider />
-					<SC.RadioMobileHeader>{t('Winner')}</SC.RadioMobileHeader>
-					<SC.RadioMobileGroup>
-						<OddButton
-							isHeader
-							match={match}
-							setVisibleTotalWinnerModal={isTotalWinner ? setVisibleTotalWinnerModal : undefined}
-							betOption={BET_OPTIONS.WINNER_HOME}
-							oddName={isTotalWinner ? t('YES') : BET_OPTIONS.WINNER_HOME}
-							isMobilePanel
-						/>
-						<OddButton isHeader match={match} betOption={BET_OPTIONS.WINNER_DRAW} isMobilePanel />
-						<OddButton isHeader match={match} betOption={BET_OPTIONS.WINNER_AWAY} isMobilePanel />
-					</SC.RadioMobileGroup>
-					<SC.OddsWrapper>
-						<OddValue match={match} betOption={BET_OPTIONS.WINNER_HOME} />
-						<OddValue match={match} betOption={BET_OPTIONS.WINNER_DRAW} />
-						<OddValue match={match} betOption={BET_OPTIONS.WINNER_AWAY} />
-					</SC.OddsWrapper>
-				</>
-			)}
-			{type === MATCHES.ONGOING && <SC.MobileStatusWrapper type={MATCHES.ONGOING}>{t('ONGOING')}</SC.MobileStatusWrapper>}
-			{type === MATCHES.FINISHED && <SC.MobileStatusWrapper type={MATCHES.FINISHED}>{formatFinishedResults()}</SC.MobileStatusWrapper>}
-			{type === MATCHES.PAUSED && (
-				<SC.MobileStatusWrapper type={MATCHES.FINISHED}> {match.isPaused ? t('PAUSED') : t('CANCELED')}</SC.MobileStatusWrapper>
-			)}
-		</SC.MobileContentWrapper>
+		<MatchHeaderMobile
+			match={match}
+			type={type}
+			setVisibleTotalWinnerModal={setVisibleTotalWinnerModal}
+			getContestedTeams={getContestedTeams}
+			getBaseBetTypes={getBaseBetTypes}
+			formatFinishedResults={formatFinishedResults}
+		/>
 	)
 }
 
