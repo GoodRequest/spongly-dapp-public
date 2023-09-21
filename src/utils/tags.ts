@@ -63,7 +63,7 @@ export const TAGS_LIST: Tags = [
 	{ id: 9016, label: 'UEFA Champions League', logo: uclIcon, country: 'WORLD', logoClass: 'icon-league league--ucl' },
 	{ id: 9017, label: 'UEFA Europa League', country: 'WORLD', logoClass: 'icon-league league--uel' },
 	{ id: 19216, label: 'UEFA Conference League qualification', country: 'WORLD', logoClass: '' },
-	{ id: 9073, label: 'UEFA Europa League Qualification', country: 'WORLD', logoClass: 'icon-league league--uel' },
+	{ id: 9073, label: 'UEFA Europa League', country: 'WORLD', logoClass: 'icon-league league--uel' },
 	{ id: 9076, label: 'FIFA World Cup Women', country: 'WORLD', logoClass: '' },
 	{ id: 9296, label: 'FIFA World Cup U20', country: 'WORLD', logoClass: 'icon-league league--fifa-world-cup-u20' },
 	{ id: 9409, label: 'FIBA World Cup', logoClass: '', country: 'WORLD' },
