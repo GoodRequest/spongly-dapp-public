@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Col, Collapse, Divider, Radio, Row, Skeleton } from 'antd'
 import Ticket from '@/assets/images/empty_state_ticket.png'
-import { HeadingXXSMedium, TextMDMedium, TextMDRegular, TextSMMedium, TextXSMedium } from '@/styles/typography'
+import { HeadingXXSMedium, TextMDMedium, TextMDRegular, TextSMMedium, TextSMRegular, TextXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 import { MATCHES } from '@/utils/enums'
 
@@ -313,10 +313,21 @@ export const MatchItemEmptyState = styled.div`
 	color: white;
 	border-radius: 12px;
 	h4 {
-		${HeadingXXSMedium}
+		${HeadingXXSMedium};
 	}
 	p {
-		${TextMDRegular}
+		${TextMDRegular};
+	}
+
+	@media (max-width: ${breakpoints.md}px) {
+		h4 {
+			margin-top: -12px;
+			font-size: 1.25rem;
+		}
+		p {
+			margin-top: 12px;
+			${TextSMRegular};
+		}
 	}
 `
 
