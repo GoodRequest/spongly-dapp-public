@@ -54,7 +54,8 @@ export const PeriodDiv = styled.div`
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	margin-top: 8px;
+	margin-top: 16px;
+	margin-bottom: 16px;
 `
 
 export const CenterRowContent = styled(Col)`

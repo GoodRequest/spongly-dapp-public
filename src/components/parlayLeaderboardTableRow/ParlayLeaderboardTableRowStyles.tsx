@@ -25,7 +25,7 @@ export const BadgeCol = styled(Col)`
 `
 
 export const AddressCol = styled(Col)`
-	padding-left: 16px;
+	padding-left: 24px;
 `
 
 export const BadgeIcon = styled.img`
@@ -47,9 +47,13 @@ export const CenterDiv = styled.div`
 `
 
 export const ParlayLeaderboardTableText = styled.span`
-	${TextMDMedium}
+	${TextMDMedium};
 `
-
+export const ParlayLeaderboardTableRankText = styled.span`
+	${TextMDMedium};
+	width: 12px;
+	margin-left: 8px;
+`
 export const AddressText = styled(Typography.Text)`
 	${TextMDMedium}
 `

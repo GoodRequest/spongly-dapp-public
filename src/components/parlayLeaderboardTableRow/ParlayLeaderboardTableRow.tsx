@@ -21,9 +21,9 @@ const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, 
 
 	const rankContent = (
 		<>
-			<SC.BadgeCol flex={'87px'}>
+			<SC.BadgeCol>
 				<SC.BadgeIcon src={BadgeIcon} />
-				{isLoading ? skeletonPreset(15) : <SC.ParlayLeaderboardTableText>{rank}</SC.ParlayLeaderboardTableText>}
+				{isLoading ? skeletonPreset(15) : <SC.ParlayLeaderboardTableRankText>{rank}</SC.ParlayLeaderboardTableRankText>}
 			</SC.BadgeCol>
 			<SC.AddressCol flex={'auto'}>
 				{isLoading ? (
@@ -41,8 +41,8 @@ const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, 
 	return (
 		<>
 			<SC.ParlayLeaderboardTableRow align={'middle'}>
-				<Col md={{ span: 6, order: 1 }} xs={{ span: 12, order: 1 }}>
-					<Row align={'middle'} justify={'center'} wrap={false}>
+				<Col md={{ span: 6, order: 1 }} xs={{ span: 18, order: 1 }}>
+					<Row align={'middle'} justify={'start'} wrap={false}>
 						{isBellowOrEqualResolution(size, RESOLUTIONS.MD) ? <SC.CenterDiv>{rankContent}</SC.CenterDiv> : rankContent}
 					</Row>
 				</Col>
@@ -86,20 +86,20 @@ const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, 
 						</>
 					)}
 				</SC.CenterRowContent>
-				<SC.CenterRowContent md={{ span: 4, order: 6 }} xs={{ span: 12, order: 2 }}>
-					{isLoading ? (
-						skeletonPreset(50)
-					) : (
-						<>
-							<SC.ColumnNameText>{t('Reward')}</SC.ColumnNameText>
-							<div style={{ display: 'flex', flexDirection: 'row' }}>
-								<SC.ParlayLeaderboardTableText>{reward?.value}</SC.ParlayLeaderboardTableText>
-								{reward?.iconUrl && (
-									<img src={reward?.iconUrl} style={{ width: '24px', height: '24px', marginLeft: '8px' }} alt={'Network icon'} />
-								)}
-							</div>
-						</>
-					)}
+				<SC.CenterRowContent md={{ span: 4, order: 6 }} xs={{ span: 6, order: 2 }}>
+					{isLoading
+						? skeletonPreset(50)
+						: reward && (
+								<>
+									<SC.ColumnNameText>{t('Reward')}</SC.ColumnNameText>
+									<div style={{ display: 'flex', flexDirection: 'row' }}>
+										<SC.ParlayLeaderboardTableText>{reward?.value}</SC.ParlayLeaderboardTableText>
+										{reward?.iconUrl && (
+											<img src={reward?.iconUrl} style={{ width: '24px', height: '24px', marginLeft: '8px' }} alt={'Network icon'} />
+										)}
+									</div>
+								</>
+						  )}
 				</SC.CenterRowContent>
 			</SC.ParlayLeaderboardTableRow>
 			<SC.ParlayDivider />
