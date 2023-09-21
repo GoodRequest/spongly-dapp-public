@@ -6,7 +6,6 @@ import { useRouter } from 'next-translate-routes'
 import Flag from 'react-world-flags'
 import dayjs from 'dayjs'
 import { useSelector } from 'react-redux'
-import Button from '@/atoms/button/Button'
 import { FlagWorld } from '@/styles/GlobalStyles'
 
 // types
@@ -18,6 +17,7 @@ import { useIsMounted } from '@/hooks/useIsMounted'
 
 // atoms
 import RadioButtons from '@/atoms/radioButtons/RadioButtons'
+import Button from '@/atoms/button/Button'
 import Select from '@/atoms/select/Select'
 
 // components

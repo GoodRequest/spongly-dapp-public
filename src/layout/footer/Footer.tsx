@@ -3,7 +3,6 @@
 
 import { useTranslation } from 'next-export-i18n'
 import dayjs from 'dayjs'
-import Image from 'next/image'
 import LogoImg from '@/assets/icons/sponglyLogo.svg'
 import DiscordIcon from '@/assets/icons/discord.svg'
 import TwitterIcon from '@/assets/icons/twitter.svg'
@@ -37,7 +36,7 @@ const Footer = () => {
 	return (
 		<SC.Footer>
 			<SC.FooterHead>
-				<Image src={LogoImg} alt={'Spongly logo'} />
+				<img src={LogoImg} alt={'Spongly logo'} />
 				<SC.CopyrightDesktop>
 					{'© All rights reserved'}
 					<span onClick={handleThrowError} onKeyUp={handleThrowError} aria-hidden='true'>{`v ${packageInfo.version}`}</span>

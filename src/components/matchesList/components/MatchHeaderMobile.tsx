@@ -32,14 +32,9 @@ const MatchHeaderMobile = ({
 	const { winnerTypeMatch } = match
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(winnerTypeMatch?.tags[0] as any)
 
-	const handleOnClickRow = () => {
-		// TODO: route by match id
-		// router.push(`/matches/${1}`)
-	}
-
 	return (
 		<SC.MobileContentWrapper>
-			<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.OPEN}`} onClick={handleOnClickRow}>
+			<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.OPEN}`}>
 				<SC.MatchItemCol $alignItems={'flex-start'} span={24}>
 					{getContestedTeams}
 				</SC.MatchItemCol>

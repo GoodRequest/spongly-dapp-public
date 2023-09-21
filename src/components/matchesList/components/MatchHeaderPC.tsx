@@ -58,15 +58,10 @@ const MatchHeaderPC = ({
 		return 0
 	}
 
-	const handleOnClickRow = () => {
-		// TODO: route by match id
-		// router.push(`/matches/${1}`)
-	}
-
 	return (
 		<SC.PCContentWrapper>
 			{type === MATCHES.OPEN && (
-				<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.OPEN}`} onClick={handleOnClickRow}>
+				<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.OPEN}`}>
 					<SC.MatchItemCol $alignItems={'flex-start'} span={8 + getPushNumber()}>
 						{getContestedTeams}
 					</SC.MatchItemCol>

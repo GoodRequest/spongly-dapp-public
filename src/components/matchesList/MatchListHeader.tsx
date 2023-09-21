@@ -46,6 +46,8 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 				<SC.TeamImage>
 					<Image
 						src={imgSrcHome}
+						width={30}
+						height={30}
 						alt={match?.homeTeam}
 						onLoadingComplete={(result) => {
 							if (result.naturalWidth === 0) {
@@ -62,6 +64,8 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 					<SC.TeamImage>
 						<Image
 							src={imgSrcAway}
+							width={30}
+							height={30}
 							alt={match?.awayTeam}
 							onLoadingComplete={(result) => {
 								if (result.naturalWidth === 0) {
