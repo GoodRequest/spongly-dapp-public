@@ -51,11 +51,9 @@ const TicketsContent = () => {
 
 	const size = useMedia()
 
-	// const { data, isLoadingBatch: isLoading } = useSelector((state: RootState) => state.tickets.ticketList)
-	const { data, isLoadingBatch } = useSelector((state: RootState) => state.tickets.ticketList)
+	const { data, isLoading, isFailure } = useSelector((state: RootState) => state.tickets.ticketList)
 
-	const [isLoading, setIsLoading] = useState(true)
-	const [initialized, setIsInitialized] = useState(false)
+	const [loading, setLoading] = useState(false)
 	const [isFilterOpened, setFilterOpened] = useState(false)
 	const [selectedSport, setSelectedSport] = useState(TAGS_LIST)
 	const [activeKeysList, setActiveKeysList] = useState<string[]>([])
@@ -136,16 +134,15 @@ const TicketsContent = () => {
 	}, [filter.sport, filter.league])
 
 	useEffect(() => {
-		setIsLoading(isLoadingBatch)
-	}, [isLoadingBatch])
-
-	useEffect(() => {
-		if (data && data?.length > 0) {
+		if (isLoading) {
+			setLoading(true)
+		} else {
+			// NOTE: give some time to parse through data
 			setTimeout(() => {
-				setIsInitialized(true)
+				setLoading(false)
 			}, 100)
 		}
-	}, [data])
+	}, [isLoading])
 
 	useEffect(() => {
 		if (router.isReady) {
@@ -262,7 +259,8 @@ const TicketsContent = () => {
 				<TicketList
 					type={filter.status || DEFAULT_TICKET_TYPE}
 					list={filteredTickets}
-					loading={isLoading || !initialized}
+					loading={loading}
+					failure={isFailure}
 					activeKeysList={activeKeysList}
 					setActiveKeysList={setActiveKeysList}
 				/>

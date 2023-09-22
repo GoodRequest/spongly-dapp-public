@@ -311,7 +311,16 @@ const MatchesContent = () => {
 			</SC.ErrorStateNoData>
 		) : (
 			<SCS.LeagueWrapper>
-				{filtered.matches.length === 0 && filter.status !== MATCHES.ONGOING ? (
+				{filtered.matches.length === 0 && filter.status !== MATCHES.ONGOING && (
+					<>
+						<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
+						<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
+						<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
+						<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
+						<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
+					</>
+				)}
+				{/* {filtered.matches.length === 0 && filter.status !== MATCHES.ONGOING ? (
 					<>
 						<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
 						<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
@@ -358,7 +367,7 @@ const MatchesContent = () => {
 							style={{ maxWidth: '220px' }}
 						/>
 					</SC.ErrorStateNoData>
-				)}
+				)} */}
 			</SCS.LeagueWrapper>
 		)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
