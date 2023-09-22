@@ -277,11 +277,6 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 		[activeKeysList, renderList, setActiveKeysList, type, sgpFees]
 	)
 
-	// console.log('LOADING')
-	// console.log(loading)
-	// console.log('FAILURE')
-	// console.log(failure)
-
 	return (
 		<>
 			<SC.TicketListWrapper>
