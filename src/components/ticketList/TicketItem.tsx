@@ -59,7 +59,7 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 
 	const isPlayedNow = () => {
 		if (oddsDataFromContract) {
-			if (match.market.isOpen && getMatchOddsContract(match.side, oddsDataFromContract) === '0') return true
+			if (match.market.isOpen && getMatchOddsContract(match.side, oddsDataFromContract) === '0' && !match.market.isPaused) return true
 		}
 
 		return false
