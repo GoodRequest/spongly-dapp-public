@@ -19,7 +19,7 @@ export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
 	@media (max-width: ${breakpoints.semixxl}px) {
 		top: unset;
 		display: flex;
-		overflow-y: auto;
+		overflow-y: ${({ rolledUp }) => (rolledUp ? 'auto' : 'hidden')};
 		flex-direction: column;
 		transition: height 0.5s;
 		height: ${({ rolledUp }) => (rolledUp ? '100%' : '80px')};
@@ -267,6 +267,7 @@ export const TicketMatchesFaded = styled.div`
 `
 export const FormWrapper = styled.form`
 	overflow: auto;
+	margin-top: 16px;
 	max-height: calc(100vh - 216px);
 	@media (max-width: ${breakpoints.md}px) {
 		max-height: calc(100vh - 100px);
