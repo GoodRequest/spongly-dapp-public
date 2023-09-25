@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useMemo, useRef, useCallback } from 'react'
+import React, { memo, useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { Row, Col } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import { map, filter as lodashFilter, includes, find, toString, sortBy } from 'lodash'
@@ -35,6 +35,7 @@ import * as SCS from './MatchesContentStyles'
 import FilterIcon from '@/assets/icons/filter-icon.svg'
 import { RootState } from '@/redux/rootReducer'
 import { isBellowOrEqualResolution } from '@/utils/helpers'
+import { breakpoints } from '@/styles/theme'
 
 interface ILeague {
 	id: number
@@ -303,6 +304,16 @@ const MatchesContent = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filter.status])
 
+	const bodyStyle = `
+		<style>
+			body {
+				@media (max-width: ${breakpoints.md}px) {
+	            	overflow: hidden;
+				}
+	         }
+		</style>
+	`
+
 	const memoizedList = useMemo(() => {
 		return rawMatches.isFailed ? (
 			<SC.ErrorStateNoData>
@@ -404,16 +415,19 @@ const MatchesContent = () => {
 				</SCS.ListHeader>
 			)}
 			{isFilterOpened && (
-				<MatchFilter
-					resultsCount={resultsCount}
-					onReset={() => {
-						setFilter((currentFilter: any) => ({ ...currentFilter, league: STATIC.ALL, sport: STATIC.ALL }))
-					}}
-					onShowResults={onShowResults}
-					onCloseMobileFilter={() => {
-						setFilterOpened(false)
-					}}
-				/>
+				<>
+					<div dangerouslySetInnerHTML={{ __html: bodyStyle }} />
+					<MatchFilter
+						resultsCount={resultsCount}
+						onReset={() => {
+							setFilter((currentFilter: any) => ({ ...currentFilter, league: STATIC.ALL, sport: STATIC.ALL }))
+						}}
+						onShowResults={onShowResults}
+						onCloseMobileFilter={() => {
+							setFilterOpened(false)
+						}}
+					/>
+				</>
 			)}
 			<Row gutter={16} ref={contentRef}>
 				<Col span={24}>{memoizedList}</Col>

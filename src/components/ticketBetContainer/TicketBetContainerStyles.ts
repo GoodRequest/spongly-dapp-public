@@ -1,10 +1,9 @@
 import styled from 'styled-components'
 import { Empty, Row, Spin } from 'antd'
-import infoIconPurple from '@/assets/icons/info-circle.svg'
 
+import infoIconPurple from '@/assets/icons/info-circle.svg'
 import { TextMDMedium, TextXSMedium, HeadingXSMedium, TextMDRegular, TextSMMedium, HeadingSMMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
-import closeIcon from '@/assets/icons/x-close.svg'
 import { AllPositionsHeader, MobileWrapper, RadioMobileHeader } from '../matchesList/MatchesListStyles'
 import { SCROLL_DIRECTION } from '@/utils/enums'
 
@@ -54,19 +53,6 @@ export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
 	${TextMDMedium}
 `
 
-export const SummaryRow = styled(Row)`
-	margin-bottom: 16px;
-	${TextMDMedium};
-`
-
-export const PayWithRow = styled(Row)`
-	margin: 32px 0px 0px 0px;
-	${TextMDMedium}
-	.ant-col {
-		margin-bottom: 12px;
-	}
-`
-
 export const InfoBox = styled.div`
 	position: relative;
 	display: flex;
@@ -96,19 +82,6 @@ export const Highlight = styled.span`
 	color: white;
 `
 
-export const InfoBoxCloseIcon = styled.div`
-	position: absolute;
-	width: 24px;
-	height: 24px;
-	right: 12px;
-	background-image: url('${closeIcon}');
-	background-size: cover;
-	border-radius: 4px;
-	&:hover {
-		background-color: ${({ theme }) => theme['color-base-surface-secondary']};
-	}
-`
-
 export const Fee = styled.span`
 	${TextXSMedium};
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
@@ -116,14 +89,6 @@ export const Fee = styled.span`
 
 export const BuyInTitle = styled.span`
 	${TextMDMedium}
-`
-
-export const AvailableBalanceTitle = styled.span`
-	${TextMDMedium}
-`
-
-export const AvailableBalance = styled.span<{ value?: number }>`
-	${TextMDMedium};
 `
 
 export const TicketMatchesWrapper = styled.div`
@@ -268,12 +233,6 @@ export const GradientLoss = styled.div<{ direction: SCROLL_DIRECTION }>`
 export const ImgIcon = styled.img`
 	height: 24px;
 	width: 24px;
-`
-
-export const SpinWithoutSpinner = styled(Spin)`
-	.ant-spin-dot {
-		display: none;
-	}
 `
 
 export const SubmittingSpinner = styled(Spin)`
