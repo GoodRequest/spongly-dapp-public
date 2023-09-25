@@ -28,6 +28,7 @@ import { SGPItem } from '@/typescript/types'
 
 // styles
 import * as SC from './TicketListStyles'
+import { StylesRow } from './TicketListStyles'
 
 interface ITicketListItem extends ITicketContent {
 	type: string
@@ -99,7 +100,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 			<SC.ColapsePanel header={<TicketListItemHeader ticket={ticket} />} key={`${ticket.account}-${index}`}>
 				{!loading && isExpanded && (
 					<SC.PanelContent>
-						<Row gutter={[16, 16]}>
+						<SC.StylesRow>
 							{map(positionsWithMergedCombinedPositions, (item, index) => (
 								<Col key={item.id} span={24} lg={12}>
 									<TicketItem
@@ -113,8 +114,8 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 									/>
 								</Col>
 							))}
-						</Row>
-						<SC.StylesRow gutter={[16, 16]}>
+						</SC.StylesRow>
+						<SC.StylesRow>
 							{/* <Col md={type === TICKET_TYPE.CLOSED_TICKET ? 24 : 12} span={24}>
 									<Button
 										btnStyle={'secondary'}
