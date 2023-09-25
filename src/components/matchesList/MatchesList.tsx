@@ -124,7 +124,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 		<SC.MatchListWrapper>
 			<Row>
 				<Col span={24}>
-					{loading ? (
+					{loading || renderList?.length === 0 ? (
 						<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
 					) : (
 						<>

@@ -64,7 +64,7 @@ const MatchesContent = () => {
 
 	const { data, isLoading, isFailure } = useSelector((state: RootState) => state.matches.matchesList)
 
-	const [loading, setLoading] = useState(false)
+	const [loading, setLoading] = useState(true)
 	const [selectedSport, setSelectedSport] = useState(TAGS_LIST)
 	const [allLeagues, setAllLeagues] = useState<ILeague[]>([])
 	const [isFilterOpened, setFilterOpened] = useState(false)
@@ -359,7 +359,7 @@ const MatchesContent = () => {
 			</SCS.LeagueWrapper>
 		)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [filtered.matches, filtered.sport, filter, isLoading, isFailure])
+	}, [filtered.matches, filtered.sport, filter, isLoading, isFailure, loading])
 
 	return (
 		<>
