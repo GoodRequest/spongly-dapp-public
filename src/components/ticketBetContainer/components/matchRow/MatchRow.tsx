@@ -45,6 +45,7 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, copie
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(match?.winnerTypeMatch?.tags[0] as any)
 	const formValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
 	const unsubmittedTickets = useSelector((state: RootState) => state.betTickets.unsubmittedBetTickets.data)
+	const [visible, setVisible] = useState(false)
 
 	const [teamImages] = useState({
 		awayTeam: getTeamImageSource(match?.awayTeam || '', toNumber(match?.tags?.[0])),
@@ -87,6 +88,9 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, copie
 
 	return (
 		<>
+			<Modal open={visible} onCancel={() => setVisible(false)}>
+				<MatchListContent match={match as any} />
+			</Modal>
 			<SC.MatchRow gutter={[0, 0]} readOnly={readOnly}>
 				<Col xs={readOnly ? 16 : 14} sm={readOnly ? 18 : 16} md={readOnly ? 18 : 14} xl={readOnly ? 18 : 14}>
 					<SC.StartCenteredRow>
@@ -103,7 +107,10 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, copie
 					</SC.BetOptionButton>
 				</Col>
 				<Col xs={0} sm={0} md={3} xl={3}>
-					<SelectField
+					<div style={{ border: '1px solid red' }} onClick={() => setVisible(true)}>
+						<span>{match.betOption}</span>
+					</div>
+					{/* <SelectField
 						value={match.betOption}
 						useBodyAsPopupContainer={true}
 						popupClassName={'odds-select'}
@@ -117,7 +124,7 @@ const MatchRow: FC<IMatchRow> = ({ match, allTicketMatches, deleteHandler, copie
 								</Option>
 							)) as any
 						}
-					/>
+					/> */}
 				</Col>
 				<SC.OddCol xs={5} sm={3} md={readOnly ? 3 : 5} xl={readOnly ? 3 : 5}>
 					<SC.MatchOdd>
