@@ -28,7 +28,7 @@ export const TicketItemRow = styled(Row)`
 }
 `
 export const StylesRow = styled(Row)`
-	margin-top: 32px;
+	margin-top: 16px;
 	@media (max-width: ${breakpoints.md}px) {
 		margin-top: 16px;
 	}
@@ -168,7 +168,7 @@ export const TicketCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 export const ColapsePanel = styled(Panel)`
 	padding: 0px 8px 0px 8px !important;
 	.ant-collapse-header {
-		padding-bottom: 0 !important;
+		padding: 0 !important;
 		@media (max-width: ${breakpoints.md}px) {
 			padding-bottom: 44px !important;
 			padding-left: 0 !important;
