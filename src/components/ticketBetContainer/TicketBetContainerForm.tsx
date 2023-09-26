@@ -37,7 +37,6 @@ import DAIIcon from '@/assets/icons/dai-icon.svg'
 import USDCIcon from '@/assets/icons/usdc-icon.svg'
 import USDTIcon from '@/assets/icons/usdt-icon.svg'
 import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
-import { getOddByBetType } from '@/utils/helpers'
 
 interface IComponentProps {
 	handleDeleteItem: (position: TicketPosition) => void
@@ -275,7 +274,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 				<SC.TicketMatchesFaded>
 					<SC.TicketMatchesWrapper ref={listRef}>
 						{formValues?.matches?.map((match, key) => (
-							<MatchRow key={`matchRow-${key}-${match.gameId}`} match={match} allTicketMatches={matches} deleteHandler={handleDeleteItem} />
+							<MatchRow key={`matchRow-${key}-${match.gameId}`} match={match} deleteHandler={handleDeleteItem} />
 						))}
 					</SC.TicketMatchesWrapper>
 					<SC.Fade show={fadeTop} direction={'above'} />
