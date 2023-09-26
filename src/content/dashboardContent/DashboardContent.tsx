@@ -12,9 +12,8 @@ import { ITicketContent } from '@/content/ticketsContent/TicketsContent'
 
 const DashboardContent = () => {
 	const router = useRouter()
-	const { data, isLoadingBatch } = useSelector((state: RootState) => state.tickets.ticketList)
-	const [loading, setLoading] = useState(true)
-	const [initialized, setInitialized] = useState(false)
+	const { data, isLoading, isFailure } = useSelector((state: RootState) => state.tickets.ticketList)
+	const [loading, setLoading] = useState(false)
 	const [activeKeysList, setActiveKeysList] = useState<string[]>([])
 
 	const onlyOpenTickets = useMemo(
@@ -29,16 +28,6 @@ const DashboardContent = () => {
 	const [onlyOpenTicketsSorted, setOnlyOpenTicketsSorted] = useState<ITicketContent[] | undefined>(onlyOpenTickets)
 
 	useEffect(() => {
-		if (onlyOpenTicketsSorted && onlyOpenTicketsSorted.length > 0) {
-			setInitialized(true)
-		}
-	}, [onlyOpenTicketsSorted])
-
-	useEffect(() => {
-		setLoading(isLoadingBatch)
-	}, [isLoadingBatch])
-
-	useEffect(() => {
 		const { direction, property } = decodeSorter()
 		if (direction && property) {
 			const ordered = orderBy(onlyOpenTickets, [`ticket.${property}`], [direction])
@@ -49,6 +38,17 @@ const DashboardContent = () => {
 		}
 	}, [onlyOpenTickets, router.query.sorter])
 
+	useEffect(() => {
+		if (isLoading) {
+			setLoading(true)
+		} else {
+			// NOTE: give some time to parse through data
+			setTimeout(() => {
+				setLoading(false)
+			}, 100)
+		}
+	}, [isLoading])
+
 	return (
 		<>
 			<PresentationSlider />
@@ -56,7 +56,8 @@ const DashboardContent = () => {
 				<TicketList
 					type={TICKET_TYPE.HOT_TICKET}
 					list={onlyOpenTicketsSorted || []}
-					loading={loading || !initialized}
+					loading={loading}
+					failure={isFailure}
 					activeKeysList={activeKeysList}
 					setActiveKeysList={setActiveKeysList}
 				/>

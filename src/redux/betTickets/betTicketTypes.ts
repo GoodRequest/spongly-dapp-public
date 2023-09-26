@@ -1,5 +1,5 @@
 import { SportMarket } from '@/__generated__/resolvers-types'
-import { IResetStore } from '../generalTypes'
+import { IResetStore } from '@/redux/generalType'
 import { SGPItem, SportMarketInfo } from '@/typescript/types'
 import { BET_OPTIONS } from '@/utils/enums'
 

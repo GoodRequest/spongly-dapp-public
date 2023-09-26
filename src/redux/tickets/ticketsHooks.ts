@@ -133,7 +133,7 @@ const useFetchTickets = () => {
 			})
 			.catch(() => {
 				dispatch({
-					type: TICKET_LIST.TICKET_LIST_LOAD_DONE,
+					type: TICKET_LIST.TICKET_LIST_LOAD_FAIL,
 					payload: { data: [] }
 				})
 			})

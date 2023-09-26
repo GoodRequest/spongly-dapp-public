@@ -177,18 +177,11 @@ const ParlayLeaderboardContent = () => {
 	}
 	const parlayLeaderBoard = () => {
 		if (isLoading) {
-			const props = { rank: 1, address: '', paid: 1, quote: 1, won: 1, position: 1, reward: undefined }
 			return (
 				<>
-					<ParlayLeaderboardTableRow isLoading {...props} />
-					<ParlayLeaderboardTableRow isLoading {...props} />
-					<ParlayLeaderboardTableRow isLoading {...props} />
-					<ParlayLeaderboardTableRow isLoading {...props} />
-					<ParlayLeaderboardTableRow isLoading {...props} />
-					<ParlayLeaderboardTableRow isLoading {...props} />
-					<ParlayLeaderboardTableRow isLoading {...props} />
-					<ParlayLeaderboardTableRow isLoading {...props} />
-					<ParlayLeaderboardTableRow isLoading {...props} />
+					<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
+					<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
+					<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
 				</>
 			)
 		}

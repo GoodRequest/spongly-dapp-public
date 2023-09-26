@@ -1,4 +1,4 @@
-import { RESET_STORE } from '../generalTypes'
+import { RESET_STORE } from '@/redux/generalType'
 import {
 	ACTIVE_TICKET_PROCESSING,
 	IBetTicketActions,

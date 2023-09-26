@@ -1,34 +1,42 @@
-import { RESET_STORE } from '../generalTypes'
-import { SET_ALL_MATCHES, IMatchesActions, IMatchesPayload } from './matchesTypes'
+import { ILoadingAndFailure, RESET_STORE } from '@/redux/generalType'
+import { IMatchesActions, IMatchesListPayload, MATCHES_LIST } from './matchesTypes'
 
 export const initState = {
-	rawMatches: {
-		matches: [],
-		isFailed: false,
-		isLoading: true
-	} as IMatchesPayload
+	matchesList: {
+		data: [],
+		isLoading: true,
+		isFailure: false
+	} as IMatchesListPayload & ILoadingAndFailure
 }
 
-// eslint-disable-next-line @typescript-eslint/default-param-last
+// eslint-disable-next-line default-param-last, @typescript-eslint/default-param-last
 export default (state = initState, action: IMatchesActions) => {
 	switch (action.type) {
-		case SET_ALL_MATCHES.SET_ALL_MATCHES_ARRAY:
+		// matches list
+		case MATCHES_LIST.MATCHES_LIST_LOAD_START:
 			return {
 				...state,
-				rawMatches: action.payload
+				matchesList: {
+					...state.matchesList,
+					isLoading: true,
+					isFailure: false
+				}
 			}
-		case SET_ALL_MATCHES.SET_ALL_MATCHES_ARRAY_START:
+		case MATCHES_LIST.MATCHES_LIST_LOAD_FAIL:
 			return {
 				...state,
-				isFailed: false
+				matchesList: {
+					...initState.matchesList,
+					isFailure: true
+				}
 			}
-		case SET_ALL_MATCHES.STATE:
+		case MATCHES_LIST.MATCHES_LIST_LOAD_DONE:
 			return {
 				...state,
-				rawMatches: {
-					...state.rawMatches,
-					isLoading: action.payload.isLoading,
-					isFailed: action.payload.isFailed
+				matchesList: {
+					...initState.matchesList,
+					isLoading: false,
+					data: action.payload.data
 				}
 			}
 		case RESET_STORE:
