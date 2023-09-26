@@ -316,11 +316,11 @@ export const Icon = styled.span`
 	}
 
 	&.icon--esports::before {
-		content: '\\0085';
+		content: '\\003D';
 	}
 
 	&.icon--cricket::before {
-		content: '\\0082';
+		content: '\\003C';
 	}
 
 	&.icon--golf::before {
