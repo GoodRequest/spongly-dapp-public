@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'next-export-i18n'
 import { useRouter } from 'next-translate-routes'
@@ -31,6 +31,7 @@ import { ORDER_DIRECTION, STATIC, TICKET_SORTING, TICKET_TYPE } from '@/utils/co
 import { RESOLUTIONS } from '@/utils/enums'
 import { SPORTS_TAGS_MAP, TAGS_LIST } from '@/utils/tags'
 import { decodeSorter, isBellowOrEqualResolution } from '@/utils/helpers'
+import { breakpoints } from '@/styles/theme'
 
 export interface ITicketContent {
 	ticket: ITicket
@@ -194,6 +195,16 @@ const TicketsContent = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedSport])
 
+	const bodyStyle = `
+		<style>
+			body {
+	            @media (max-width: ${breakpoints.md}px) {
+	            	overflow: hidden;
+				}
+	         }
+		</style>
+	`
+
 	return isMounted ? (
 		<>
 			<SC.ListHeader>
@@ -231,16 +242,19 @@ const TicketsContent = () => {
 				</SC.PCWrapper>
 			</SC.ListHeader>
 			{isFilterOpened && (
-				<TicketFilter
-					resultsCount={resultsCount}
-					onReset={() => {
-						setFilter((currentFilter: any) => ({ ...currentFilter, league: STATIC.ALL, sport: STATIC.ALL }))
-					}}
-					onShowResults={onShowResults}
-					onCloseMobileFilter={() => {
-						setFilterOpened(false)
-					}}
-				/>
+				<>
+					<div dangerouslySetInnerHTML={{ __html: bodyStyle }} />
+					<TicketFilter
+						resultsCount={resultsCount}
+						onReset={() => {
+							setFilter((currentFilter: any) => ({ ...currentFilter, league: STATIC.ALL, sport: STATIC.ALL }))
+						}}
+						onShowResults={onShowResults}
+						onCloseMobileFilter={() => {
+							setFilterOpened(false)
+						}}
+					/>
+				</>
 			)}
 			<div ref={contentRef}>
 				<TicketList
