@@ -597,7 +597,7 @@ const TicketBetContainer = () => {
 					handleDeleteItem={handleRemoveMatch}
 					getAllowance={getAllowance}
 					available={available}
-					rolledUp={!isBellowOrEqualResolution(size, RESOLUTIONS.SEMIXXL) || rolledUp}
+					rolledUp={isMounted ? !isBellowOrEqualResolution(size, RESOLUTIONS.SEMIXXL) || rolledUp : false}
 				/>
 			</SC.SubmittingSpinner>
 		</SC.TicketBetWrapper>
