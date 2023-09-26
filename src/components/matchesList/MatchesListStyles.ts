@@ -375,6 +375,9 @@ export const MobileWrapper = styled.div`
 	background: ${({ theme }) => theme['color-base-surface-quaternary']};
 	padding: 12px 12px 12px 12px;
 	margin-bottom: 16px;
+	&:last-child {
+		margin-bottom: 0;
+	}
 `
 
 export const AllPositionsHeader = styled.div`

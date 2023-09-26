@@ -57,7 +57,7 @@ export const OddsWrapper = styled(Col)`
 	display: flex;
 	align-items: center;
 	justify-content: left;
-	margin-top: 14px;
+	margin-top: 8px;
 `
 export const TicketHeader = styled.div`
 	display: flex;

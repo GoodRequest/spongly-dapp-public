@@ -1,10 +1,9 @@
 import styled from 'styled-components'
 import { Empty, Row, Spin } from 'antd'
-import infoIconPurple from '@/assets/icons/info-circle.svg'
 
+import infoIconPurple from '@/assets/icons/info-circle.svg'
 import { TextMDMedium, TextXSMedium, HeadingXSMedium, TextMDRegular, TextSMMedium, HeadingSMMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
-import closeIcon from '@/assets/icons/x-close.svg'
 import { AllPositionsHeader, MobileWrapper, RadioMobileHeader } from '../matchesList/MatchesListStyles'
 import { SCROLL_DIRECTION } from '@/utils/enums'
 
@@ -20,7 +19,7 @@ export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
 	@media (max-width: ${breakpoints.semixxl}px) {
 		top: unset;
 		display: flex;
-		overflow-y: auto;
+		overflow-y: ${({ rolledUp }) => (rolledUp ? 'auto' : 'hidden')};
 		flex-direction: column;
 		transition: height 0.5s;
 		height: ${({ rolledUp }) => (rolledUp ? '100%' : '80px')};
@@ -54,19 +53,6 @@ export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
 	${TextMDMedium}
 `
 
-export const SummaryRow = styled(Row)`
-	margin-bottom: 16px;
-	${TextMDMedium};
-`
-
-export const PayWithRow = styled(Row)`
-	margin: 32px 0px 0px 0px;
-	${TextMDMedium}
-	.ant-col {
-		margin-bottom: 12px;
-	}
-`
-
 export const InfoBox = styled.div`
 	position: relative;
 	display: flex;
@@ -96,19 +82,6 @@ export const Highlight = styled.span`
 	color: white;
 `
 
-export const InfoBoxCloseIcon = styled.div`
-	position: absolute;
-	width: 24px;
-	height: 24px;
-	right: 12px;
-	background-image: url('${closeIcon}');
-	background-size: cover;
-	border-radius: 4px;
-	&:hover {
-		background-color: ${({ theme }) => theme['color-base-surface-secondary']};
-	}
-`
-
 export const Fee = styled.span`
 	${TextXSMedium};
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
@@ -116,14 +89,6 @@ export const Fee = styled.span`
 
 export const BuyInTitle = styled.span`
 	${TextMDMedium}
-`
-
-export const AvailableBalanceTitle = styled.span`
-	${TextMDMedium}
-`
-
-export const AvailableBalance = styled.span<{ value?: number }>`
-	${TextMDMedium};
 `
 
 export const TicketMatchesWrapper = styled.div`
@@ -270,12 +235,6 @@ export const ImgIcon = styled.img`
 	width: 24px;
 `
 
-export const SpinWithoutSpinner = styled(Spin)`
-	.ant-spin-dot {
-		display: none;
-	}
-`
-
 export const SubmittingSpinner = styled(Spin)`
 	backdrop-filter: blur(2px);
 	background: ${({ theme }) => ` linear-gradient(270deg, ${theme['color-base-surface-secondary']} 53%, rgba(34, 37, 49, 0) 100%`});;
@@ -308,6 +267,7 @@ export const TicketMatchesFaded = styled.div`
 `
 export const FormWrapper = styled.form`
 	overflow: auto;
+	margin-top: 16px;
 	max-height: calc(100vh - 216px);
 	@media (max-width: ${breakpoints.md}px) {
 		max-height: calc(100vh - 100px);

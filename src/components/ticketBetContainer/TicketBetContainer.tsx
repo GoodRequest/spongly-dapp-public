@@ -1,6 +1,6 @@
 import { change, getFormValues, initialize } from 'redux-form'
 import { ethers } from 'ethers'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAccount, useNetwork } from 'wagmi'
 import { useTranslation } from 'next-export-i18n'
@@ -72,6 +72,7 @@ import { updateActiveTicketMatches } from '@/redux/betTickets/betTicketsActions'
 
 // styles
 import * as SC from './TicketBetContainerStyles'
+import { breakpoints } from '@/styles/theme'
 
 const TicketBetContainer = () => {
 	const dispatch = useDispatch()
@@ -560,47 +561,59 @@ const TicketBetContainer = () => {
 		}
 	}, [isSwitchedTicket])
 
+	const bodyStyle = `
+		<style>
+			body {
+	            @media (max-width: ${breakpoints.md}px) {
+	            	overflow: hidden;
+				}
+	         }
+		</style>
+	`
 	return (
-		<SC.TicketBetWrapper rolledUp={rolledUp}>
-			<SC.SubmittingSpinner
-				spinning={isSubmitting || isApproving}
-				size='large'
-				indicator={<LoadingOutlined spin />}
-				tip={isApproving ? t('Approving allowance..') : t('Submitting ticket...')}
-			>
-				<Spin spinning={isProcessing} size='small' indicator={<LoadingOutlined spin />}>
-					<HorizontalScroller
-						tickets={unsubmittedTickets ?? []}
-						addTicket={handleAddTicket}
-						setActiveTicket={handleSetActiveTicket}
-						activeTicket={activeTicketValues}
-						removeTicket={handleRemoveTicket}
+		<>
+			{rolledUp && <div dangerouslySetInnerHTML={{ __html: bodyStyle }} />}
+			<SC.TicketBetWrapper rolledUp={rolledUp}>
+				<SC.SubmittingSpinner
+					spinning={isSubmitting || isApproving}
+					size='large'
+					indicator={<LoadingOutlined spin />}
+					tip={isApproving ? t('Approving allowance..') : t('Submitting ticket...')}
+				>
+					<Spin spinning={isProcessing} size='small' indicator={<LoadingOutlined spin />}>
+						<HorizontalScroller
+							tickets={unsubmittedTickets ?? []}
+							addTicket={handleAddTicket}
+							setActiveTicket={handleSetActiveTicket}
+							activeTicket={activeTicketValues}
+							removeTicket={handleRemoveTicket}
+						/>
+						<MobileHeader
+							rolledUp={rolledUp}
+							setRolledUp={setRolledUp}
+							tickets={unsubmittedTickets ?? []}
+							addTicket={handleAddTicket}
+							setActiveTicket={handleSetActiveTicket}
+							activeTicket={activeTicketValues}
+						/>
+					</Spin>
+					<TicketBetContainerForm
+						fetchTicketData={
+							(activeTicketValues?.matches?.length || 0) === 1 && !isCombined(activeTicketValues?.matches?.[0].betOption)
+								? fetchSinglesTicketData
+								: fetchParleyTicketData
+						}
+						isWalletConnected={isWalletConnected}
+						handleApprove={handleApproveAllowance}
+						onSubmit={handleConfirmTicket}
+						handleDeleteItem={handleRemoveMatch}
+						getAllowance={getAllowance}
+						available={available}
+						rolledUp={!isBellowOrEqualResolution(size, RESOLUTIONS.SEMIXXL) || rolledUp}
 					/>
-					<MobileHeader
-						rolledUp={rolledUp}
-						setRolledUp={setRolledUp}
-						tickets={unsubmittedTickets ?? []}
-						addTicket={handleAddTicket}
-						setActiveTicket={handleSetActiveTicket}
-						activeTicket={activeTicketValues}
-					/>
-				</Spin>
-				<TicketBetContainerForm
-					fetchTicketData={
-						(activeTicketValues?.matches?.length || 0) === 1 && !isCombined(activeTicketValues?.matches?.[0].betOption)
-							? fetchSinglesTicketData
-							: fetchParleyTicketData
-					}
-					isWalletConnected={isWalletConnected}
-					handleApprove={handleApproveAllowance}
-					onSubmit={handleConfirmTicket}
-					handleDeleteItem={handleRemoveMatch}
-					getAllowance={getAllowance}
-					available={available}
-					rolledUp={isMounted ? !isBellowOrEqualResolution(size, RESOLUTIONS.SEMIXXL) || rolledUp : false}
-				/>
-			</SC.SubmittingSpinner>
-		</SC.TicketBetWrapper>
+				</SC.SubmittingSpinner>
+			</SC.TicketBetWrapper>
+		</>
 	)
 }
 

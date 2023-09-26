@@ -22,13 +22,16 @@ export const TicketItemRow = styled(Row)`
 	padding: 16px;
 	${TextSMMedium};
 	@media (max-width: ${breakpoints.md}px) {
-		padding-bottom: 48px; // priestor pre tlaidlo ktore je dole na celu sirku na mobile
+		padding: 0;
 		top: 160px;
 	}
 }
 `
 export const StylesRow = styled(Row)`
-	margin-top: 32px;
+	margin-top: 16px;
+	@media (max-width: ${breakpoints.md}px) {
+		margin-top: 16px;
+	}
 `
 export const ColHeader = styled.div`
 	${TextSMMedium};
@@ -116,7 +119,9 @@ export const TicketCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 		border-bottom: none;
 		border: 2px solid transparent;
 	}
-
+	@media (max-width: ${breakpoints.md}px) {
+		padding: 16px;
+	}
 	.ant-collapse-expand-icon {
 		color: white;
 		font-size: 24px;
@@ -143,8 +148,8 @@ export const TicketCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 			justify-content: center;
 			left: 0;
 			right: 0;
+			width: 100%;
 			margin: 0 auto;
-			width: calc(100% - 32px);
 			top: unset;
 			bottom: 0;
 			height: 32px !important;
@@ -164,6 +169,11 @@ export const ColapsePanel = styled(Panel)`
 	padding: 0px 8px 0px 8px !important;
 	.ant-collapse-header {
 		padding: 0 !important;
+		@media (max-width: ${breakpoints.md}px) {
+			padding-bottom: 44px !important;
+			padding-left: 0 !important;
+			padding-right: 0 !important;
+		}
 	}
 	.ant-collapse-content {
 		background: ${({ theme }) => theme['color-base-surface-secondary']};
@@ -172,10 +182,13 @@ export const ColapsePanel = styled(Panel)`
 	.ant-collapse-content-box {
 		background: ${({ theme }) => theme['color-base-surface-secondary']};
 		border-radius: 12px;
+		@media (max-width: ${breakpoints.md}px) {
+			padding: 0 !important;
+		}
 	}
 
 	@media (max-width: ${breakpoints.md}px) {
-		padding-bottom: 16px !important;
+		padding: 0 !important;
 	}
 `
 export const MatchContainerRow = styled(Col)`
