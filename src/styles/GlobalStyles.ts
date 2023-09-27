@@ -1,6 +1,6 @@
 import styled, { createGlobalStyle, css } from 'styled-components'
-import { Row, Typography } from 'antd'
-import { TextMDMedium, TextSMMedium, TextSorter } from '@/styles/typography'
+import { Row, Typography, Empty as AntdEmpty } from 'antd'
+import { HeadingXSMedium, TextMDMedium, TextMDRegular, TextSMMedium, TextSorter } from '@/styles/typography'
 import worldFlag from '@/assets/icons/world-flag.png'
 import { decodeSorter } from '@/utils/helpers'
 import { TextLGMedium } from './typography'
@@ -192,4 +192,22 @@ export const EllipsisText = styled(Paragraph)`
 	${TextMDMedium};
 	margin-bottom: 0 !important;
 	color: ${({ theme }) => theme['color-base-content-top']};
+`
+export const Empty = styled(AntdEmpty)`
+	background: ${({ theme }) => theme['color-base-surface-secondary']};
+	margin: 16px 0px 16px 0px;
+	border-radius: 12px;
+	padding: 52px;
+	.ant-empty-description {
+		div {
+			margin-top: 28px;
+			p {
+				margin-bottom: 16px;
+				${HeadingXSMedium}
+			}
+			span {
+				${TextMDRegular}
+			}
+		}
+	}
 `
