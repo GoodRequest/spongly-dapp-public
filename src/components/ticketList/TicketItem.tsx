@@ -6,7 +6,7 @@ import { LoadingOutlined } from '@ant-design/icons'
 
 // utils
 import { getTeamImageSource } from '@/utils/images'
-import { getParlayItemStatus } from '@/utils/helpers'
+import { getHandicapValue, getParlayItemStatus } from '@/utils/helpers'
 import { SPORTS_MAP } from '@/utils/tags'
 import { convertPositionNameToPosition, getMatchOddsContract, getSymbolText } from '@/utils/markets'
 import networkConnector from '@/utils/networkConnector'
@@ -19,6 +19,7 @@ import { formatParlayQuote, formatPositionOdds } from '@/utils/formatters/quote'
 import * as SC from './TicketItemStyles'
 import { Icon } from '@/styles/Icons'
 import * as SCS from '@/styles/GlobalStyles'
+import { roundToTwoDecimals } from '@/utils/formatters/number'
 
 type Props = {
 	match: Position
@@ -89,7 +90,16 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 		}
 		return `${match.market.homeScore || '?'} : ${match.market.awayScore || '?'}`
 	}
-
+	// Extra values number for bet info (H1 / H2, U / T)
+	const betInfoValues = () => {
+		if (match.market.spread) {
+			return `(${getHandicapValue(Number(match.market.spread) || 0, oddsSymbol as any)})`
+		}
+		if (match.market.total) {
+			return `(${roundToTwoDecimals(Number(match.market.total) || 0)})`
+		}
+		return ''
+	}
 	return (
 		<SC.TicketItemWrapper>
 			<SC.TicketHeader>
@@ -147,7 +157,7 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 					</SC.ResultsWrapper>
 				)}
 				<SC.OddsWrapper md={{ span: 12, order: 2 }} sm={{ span: 12, order: 2 }} xs={{ span: 12, order: 2 }}>
-					<SC.TeamText>{oddsSymbol}</SC.TeamText>
+					<SC.TeamText>{`${oddsSymbol} ${betInfoValues()}`}</SC.TeamText>
 					{oddsDataFromContract ? (
 						<SCS.FlexColumn>
 							<SC.OddText>{getOdds()}</SC.OddText>

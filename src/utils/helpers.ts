@@ -669,7 +669,7 @@ export const orderPositionsAsSportMarkets = (ticket: UserTicket | ITicket) => {
 
 export const getHandicapValue = (number: number, type: BET_OPTIONS.HANDICAP_AWAY | BET_OPTIONS.HANDICAP_HOME) => {
 	if (type === BET_OPTIONS.HANDICAP_HOME) {
-		return roundToTwoDecimals(number)
+		return `+${roundToTwoDecimals(number)}`
 	}
 	const oppositeNumber = -number
 	const prefix = oppositeNumber >= 0 ? '+' : '-'
