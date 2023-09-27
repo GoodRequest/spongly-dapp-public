@@ -31,6 +31,7 @@ const Modal: FC<Props> = ({
 	`
 	return (
 		<>
+			{/* eslint-disable-next-line react/no-danger */}
 			{open && <div dangerouslySetInnerHTML={{ __html: bodyStyle }} />}
 			<SC.NewModal
 				open={open}

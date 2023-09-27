@@ -4,9 +4,6 @@ import { Col, Row } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import dynamic from 'next/dynamic'
 
-// components
-import Image from 'next/image'
-
 // utils
 import { MATCHES, RESOLUTIONS } from '@/utils/enums'
 import { NO_TEAM_IMAGE_FALLBACK, SportFilterEnum, TOTAL_WINNER_TAGS } from '@/utils/constants'

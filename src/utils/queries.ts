@@ -195,6 +195,8 @@ export const GET_TICKETS = gql`
 					timestamp
 					resultDetails
 					tags
+					spread
+					total
 					maturityDate
 					gameId
 				}

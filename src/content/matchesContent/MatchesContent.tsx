@@ -413,6 +413,7 @@ const MatchesContent = () => {
 			)}
 			{isFilterOpened && (
 				<>
+					{/* eslint-disable-next-line react/no-danger */}
 					<div dangerouslySetInnerHTML={{ __html: bodyStyle }} />
 					<MatchFilter
 						resultsCount={resultsCount}

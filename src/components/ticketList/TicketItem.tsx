@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { toNumber } from 'lodash'
-import { Spin, Row, Col } from 'antd'
+import { Col, Row, Spin } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import { LoadingOutlined } from '@ant-design/icons'
 
@@ -12,14 +12,13 @@ import { convertPositionNameToPosition, getMatchOddsContract, getSymbolText } fr
 import networkConnector from '@/utils/networkConnector'
 import { Position } from '@/__generated__/resolvers-types'
 import { NO_TEAM_IMAGE_FALLBACK, TOTAL_WINNER_TAGS } from '@/utils/constants'
-import { RESULT_TYPE } from '@/utils/enums'
 import { formatParlayQuote, formatPositionOdds } from '@/utils/formatters/quote'
+import { roundToTwoDecimals } from '@/utils/formatters/number'
 
 // styles
 import * as SC from './TicketItemStyles'
 import { Icon } from '@/styles/Icons'
 import * as SCS from '@/styles/GlobalStyles'
-import { roundToTwoDecimals } from '@/utils/formatters/number'
 
 type Props = {
 	match: Position
@@ -38,6 +37,7 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 
 	const oddsSymbol = oddsInfo?.isCombined ? oddsInfo?.combinedPositionsText : getSymbolText(convertPositionNameToPosition(match.side), match.market)
 	const isTotalWinner = match.market?.tags && TOTAL_WINNER_TAGS.includes(match.market.tags?.[0])
+
 	const fetchOddsData = async () => {
 		try {
 			const data = await sportsAMMContract?.getMarketDefaultOdds(match.market.address, false)
@@ -50,8 +50,6 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 			console.error('error', error)
 		}
 	}
-
-	const isFinished = !match.market.isOpen && match.market.isResolved && !match.market.isCanceled
 
 	useEffect(() => {
 		fetchOddsData()
@@ -83,13 +81,6 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 		return ''
 	}
 
-	const getTicketResults = () => {
-		if (match.market?.tags && isTotalWinner) {
-			if (match.market.homeScore === RESULT_TYPE.WINNER) return t('Winner')
-			return t('No win')
-		}
-		return `${match.market.homeScore || '?'} : ${match.market.awayScore || '?'}`
-	}
 	// Extra values number for bet info (H1 / H2, U / T)
 	const betInfoValues = () => {
 		if (match.market.spread) {
@@ -111,7 +102,7 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 				</SC.TicketStatus>
 			</SC.TicketHeader>
 			<Row gutter={8}>
-				<Col xxl={6} xl={6} lg={6} md={4} sm={4} xs={7}>
+				<Col xxl={6} xl={6} lg={6} md={4} sm={4} xs={6}>
 					<SC.MatchIcon>
 						<img
 							src={getTeamImageSource(match?.market.homeTeam || '', toNumber(match?.market.tags?.[0]))}
@@ -131,7 +122,7 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 						</SC.MatchIcon>
 					)}
 				</Col>
-				<Col xxl={14} xl={12} lg={14} md={16} sm={18} xs={16}>
+				<Col xxl={11} xl={11} lg={10} md={16} sm={15} xs={18}>
 					<SCS.EllipsisText
 						ellipsis={{
 							rows: 1
@@ -151,12 +142,7 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 						</SCS.EllipsisText>
 					)}
 				</Col>
-				{isFinished && (
-					<SC.ResultsWrapper md={{ span: 12, order: 3 }} sm={{ span: 12, order: 3 }} xs={{ span: 12, order: 3 }}>
-						{getTicketResults()}
-					</SC.ResultsWrapper>
-				)}
-				<SC.OddsWrapper md={{ span: 12, order: 2 }} sm={{ span: 12, order: 2 }} xs={{ span: 12, order: 2 }}>
+				<SC.OddsWrapper xxl={7} xl={7} lg={8} md={4} sm={5} xs={24}>
 					<SC.TeamText>{`${oddsSymbol} ${betInfoValues()}`}</SC.TeamText>
 					{oddsDataFromContract ? (
 						<SCS.FlexColumn>

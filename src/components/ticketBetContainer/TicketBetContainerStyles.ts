@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Empty, Row, Spin } from 'antd'
+import { Empty, Spin } from 'antd'
 
 import infoIconPurple from '@/assets/icons/info-circle.svg'
 import { TextMDMedium, TextXSMedium, HeadingXSMedium, TextMDRegular, TextSMMedium, HeadingSMMedium } from '@/styles/typography'
