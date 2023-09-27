@@ -26,7 +26,7 @@ import MatchesList from '@/components/matchesList/MatchesList'
 
 // utils
 import { MATCHES, RESOLUTIONS } from '@/utils/enums'
-import { STATIC } from '@/utils/constants'
+import { STATIC, SportFilterEnum } from '@/utils/constants'
 import { BetType, SPORTS_TAGS_MAP, TAGS_LIST } from '@/utils/tags'
 
 import * as SC from '../../layout/layout/LayoutStyles'
@@ -226,7 +226,8 @@ const MatchesContent = () => {
 			setSelectedSport(TAGS_LIST)
 		}
 		if (!includes([STATIC.ALL, undefined], filter.sport) && includes([STATIC.ALL, undefined], filter.league)) {
-			setSelectedSport(lodashFilter(TAGS_LIST, (item) => includes(SPORTS_TAGS_MAP[filter.sport as string], item.id)))
+			const sportName = filter.sport === SportFilterEnum.MMA ? 'MMA' : (filter.sport as SportFilterEnum)
+			setSelectedSport(lodashFilter(TAGS_LIST, (item) => includes(SPORTS_TAGS_MAP[sportName], item.id)))
 		}
 		if (!includes([STATIC.ALL, undefined], filter.league)) {
 			setSelectedSport([find(TAGS_LIST, (item) => toString(item.id) === filter.league) as any])

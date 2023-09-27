@@ -66,7 +66,7 @@ const MatchFilter: FC<MatchFilterProps> = ({ onReset, onShowResults, resultsCoun
 			return map(TAGS_LIST, (item) => ({ name: item?.label, country: item?.country, id: item?.id } as IFilterCategoryItem))
 		}
 
-		const sportName = selectedSport.name === 'Fighting sports' ? 'MMA' : (selectedSport.name as SportFilterEnum)
+		const sportName = selectedSport.name === SportFilterEnum.MMA ? 'MMA' : (selectedSport.name as SportFilterEnum)
 		return map(SPORTS_TAGS_MAP[sportName as SportFilterEnum], (sportId) => {
 			const crntLeagueItem = find(TAGS_LIST, (item) => includes(item, sportId as any))
 			return {
