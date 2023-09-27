@@ -63,9 +63,7 @@ export const Empty = styled(AntdEmpty)`
 	.ant-empty-description {
 		div {
 			margin-top: 28px;
-			span {
-				${TextMDRegular}
-			}
+			${TextMDRegular}
 		}
 	}
 `
