@@ -4,7 +4,7 @@ import { Field, getFormValues, InjectedFormProps, reduxForm } from 'redux-form'
 import { Chain } from 'wagmi'
 import { useTranslation } from 'next-export-i18n'
 import { useSelector } from 'react-redux'
-import { debounce, round, toNumber } from 'lodash'
+import { debounce, round } from 'lodash'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { LoadingOutlined } from '@ant-design/icons'
 import { RootState } from '@/redux/rootReducer'
@@ -37,7 +37,6 @@ import DAIIcon from '@/assets/icons/dai-icon.svg'
 import USDCIcon from '@/assets/icons/usdc-icon.svg'
 import USDTIcon from '@/assets/icons/usdt-icon.svg'
 import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
-import { getOddByBetType } from '@/utils/helpers'
 
 interface IComponentProps {
 	handleDeleteItem: (position: TicketPosition) => void
@@ -65,10 +64,8 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	const hasAtLeastOneMatch = matches.length > 0
 	const { openConnectModal } = useConnectModal()
 	const listRef = useRef<ElementRef<'div'>>(null)
-
 	const [fadeTop, setFadeTop] = useState(false)
 	const [fadeBottom, setFadeBottom] = useState(true)
-
 	const allowance = Number(round(Number(formValues?.allowance), 2).toFixed(2))
 	const buyIn = Number(round(Number(formValues?.buyIn), 2).toFixed(2))
 	const availableBalance = Number(round(Number(available), 2).toFixed(2))
@@ -169,15 +166,6 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 					<SC.Highlight>
 						{buyIn} {formValues?.selectedStablecoin}
 					</SC.Highlight>
-				</>
-			))
-			return
-		}
-
-		if (toNumber(formValues?.totalQuote) > MAX_TOTAL_QUOTE) {
-			setError(() => (
-				<>
-					{t('Maximum total quote supported is')} <SC.Highlight>{MAX_TOTAL_QUOTE.toFixed(2)}</SC.Highlight>
 				</>
 			))
 			return
@@ -322,7 +310,10 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 						</Col>
 						<Spin spinning={isProcessing} size='small' indicator={<LoadingOutlined spin />}>
 							<Row gutter={[0, 12]}>
-								<SummaryCol title={t('Total Quote')} value={formValues?.totalQuote || 0} />
+								<SummaryCol
+									title={t('Total Quote')}
+									value={`${formValues?.totalQuote || 0} ${Number(formValues?.totalQuote) === MAX_TOTAL_QUOTE ? '(MAX)' : ''}`}
+								/>
 								<SummaryCol title={t('Total Bonus')} value={formValues?.totalBonus ? `${formValues?.totalBonus}%` : '0.00%'} align={'right'} />
 								<SummaryCol title={t('Payout')} value={`${formValues.payout} ${formValues?.selectedStablecoin}`} />
 								<SummaryCol

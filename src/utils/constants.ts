@@ -87,7 +87,7 @@ export const NETWORK_IDS = {
 	OPTIMISM_GOERLI: 420,
 	ARBITRUM: 42161
 }
-export const MAX_TOTAL_QUOTE = 69
+export const MAX_TOTAL_QUOTE = 100
 
 export const MIN_BUY_IN = 5
 
