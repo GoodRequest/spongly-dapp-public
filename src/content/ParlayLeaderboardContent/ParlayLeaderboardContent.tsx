@@ -23,6 +23,7 @@ import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
 import SortIcon from '@/assets/icons/sort-icon.svg'
 
 import * as SC from './ParlayLeaderboardContentStyles'
+import * as SCS from '@/styles/GlobalStyles'
 import { formatQuote } from '@/utils/formatters/quote'
 
 type ParlayLeaderboardFilter = {
@@ -192,7 +193,7 @@ const ParlayLeaderboardContent = () => {
 		}
 		if (shownData?.length === 0) {
 			return (
-				<SC.Empty
+				<SCS.Empty
 					image={EmptyStateImage}
 					description={
 						<div>

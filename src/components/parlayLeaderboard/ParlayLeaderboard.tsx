@@ -11,6 +11,7 @@ import { getCurrentBiweeklyPeriod, getReward, handleErrorMessage } from '@/utils
 import { ENDPOINTS, ErrorNotificationTypes, NETWORK_IDS, OddsType } from '@/utils/constants'
 
 import * as SC from './ParlayLeaderboardStyles'
+import * as SCS from '@/styles/GlobalStyles'
 import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
 import { formatQuote } from '@/utils/formatters/quote'
 
@@ -61,10 +62,15 @@ const ParlayLeaderboard = () => {
 	const parlayLeaderBoard = useMemo(() => {
 		if (parlayLeaderboardData?.length === 0) {
 			return (
-				<SC.Empty
+				<SCS.Empty
 					image={EmptyStateImage}
 					imageStyle={{ height: 70 }}
-					description={<div>{t('There are no superstars in current biweekly period')}</div>}
+					description={
+						<div>
+							<p>{t('Leaderboard is empty')}</p>
+							<span>{t('Leaderboard is empty for chosen bi-weekly period')}</span>
+						</div>
+					}
 				/>
 			)
 		}
