@@ -4,7 +4,7 @@ import { breakpoints } from '@/styles/theme'
 
 export const ListHeader = styled.div`
 	gap: 12px;
-
+	margin-bottom: 16px;
 	.ant-form {
 		width: 100%;
 	}

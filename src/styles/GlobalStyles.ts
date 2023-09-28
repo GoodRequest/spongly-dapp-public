@@ -180,12 +180,14 @@ export const FlagWorld = styled.div`
 	background-repeat: no-repeat;
 	background-position: center;
 `
-export const Icon = styled.span<{ icon: string }>`
+export const Icon = styled.span<{ icon: string; degree?: number }>`
 	padding: 20px;
 	background-image: url('${({ icon }) => icon}');
 	background-size: 20px;
 	background-position: center;
 	background-repeat: no-repeat;
+	display: inline-block;
+	transform: rotate(${({ degree }) => degree}deg);
 `
 export const EllipsisText = styled(Paragraph)`
 	// NOTE: Use  <SCS.EllipsisText title={title} ellipsis={{ rows: 1, expandable: false }}>{title}</SCS.EllipsisText>
