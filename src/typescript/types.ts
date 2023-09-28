@@ -87,7 +87,7 @@ export type ITicket = ParlayMarket &
 	PositionBalance &
 	SportMarket & {
 		successRate: number
-		matches: number
+		matchesCount: number
 		ticketType: TICKET_TYPE
 		closedTicketType: CLOSED_TICKET_TYPE
 		buyIn: number
