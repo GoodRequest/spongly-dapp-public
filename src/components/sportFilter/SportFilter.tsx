@@ -13,12 +13,12 @@ import { SportFilterEnum, STATIC } from '@/utils/constants'
 import { SPORTS_TAGS_MAP, TAGS_LIST } from '@/utils/tags'
 import { RESOLUTIONS } from '@/utils/enums'
 
-import * as SC from './TicketFilterStyles'
+import * as SC from './SportFilterStyles'
 
 import CloseIcon from '@/assets/icons/close-icon-mobile.svg'
 import { isBellowOrEqualResolution } from '@/utils/helpers'
 
-export interface TicketFilterProps {
+export interface SportFilterProps {
 	onReset: () => void
 	onShowResults: () => void
 	resultsCount: number
@@ -27,7 +27,7 @@ export interface TicketFilterProps {
 
 export const DEFAULT_SELECTED_SPORT = { name: STATIC.ALL }
 export const DEFAULT_SELECTED_LEAGUE = { id: STATIC.ALL }
-const TicketFilter: FC<TicketFilterProps> = ({ onReset, onShowResults, resultsCount, onCloseMobileFilter }: TicketFilterProps) => {
+const SportFilter: FC<SportFilterProps> = ({ onReset, onShowResults, resultsCount, onCloseMobileFilter }: SportFilterProps) => {
 	const router = useRouter()
 	const { t } = useTranslation()
 	const size = useMedia()
@@ -124,11 +124,11 @@ const TicketFilter: FC<TicketFilterProps> = ({ onReset, onShowResults, resultsCo
 			{isBellowOrEqualResolution(size, RESOLUTIONS.MD) ? (
 				<SC.MobileFilter>
 					<SC.MobileFilterContent>
+						test
 						<SC.FilterTitle>{t('Filter')}</SC.FilterTitle>
 						<SC.CloseBtn onClick={onCloseMobileFilter}>
 							<SC.CloseIcon src={CloseIcon} style={{ strokeWidth: '2px' }} />
 						</SC.CloseBtn>
-
 						<MobileSelect
 							options={[
 								{
@@ -207,4 +207,4 @@ const TicketFilter: FC<TicketFilterProps> = ({ onReset, onShowResults, resultsCo
 	)
 }
 
-export default TicketFilter
+export default SportFilter
