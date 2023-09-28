@@ -69,7 +69,7 @@ export enum TICKET_SORTING {
 	SUCCESS_RATE = 'successRate',
 	BUY_IN = 'buyIn',
 	TOTAL_TICKET_QUOTE = 'totalTicketQuote',
-	MATCHES = 'matches'
+	MATCHES = 'matchesCount'
 }
 
 export const MIN_ODD_TRESHOLD = '1'

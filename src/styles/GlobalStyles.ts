@@ -149,21 +149,14 @@ export const Sorter = styled.div<{ sorterName: any }>`
 		p.sorterName &&
 		p.sorterName === decodeSorter().property &&
 		css`
-			color: ${({ theme }) => theme['color-base-content-top']};
-			background: ${({ theme }) => theme['color-base-surface-quaternary']};
+			color: ${({ theme }) => theme['color-base-action-primary-default']};
 		`}
-	&:hover {
-		${(p) =>
-			p.sorterName &&
-			css`
-				color: ${({ theme }) => theme['color-base-content-top']};
-			`}
-	}
+
 	img {
 		padding: 0;
 		margin-right: 8px;
-		width: 16px;
-		height: 16px;
+		width: 20px;
+		height: 20px;
 	}
 `
 

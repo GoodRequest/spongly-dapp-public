@@ -13,7 +13,8 @@ import { NOTIFICATION_TYPE, ORDER_DIRECTION } from '@/utils/constants'
 import InfoIcon from '@/assets/icons/asComponent/InfoIcon'
 import SuccessIcon from '@/assets/icons/asComponent/SuccessIcon'
 import * as SC from '@/content/ParlayLeaderboardContent/ParlayLeaderboardContentStyles'
-import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
+import SortAscIcon from '@/assets/icons/sort-asc-icon.svg'
+import SortDescIcon from '@/assets/icons/sort-desc-icon.svg'
 import { decodeSorter } from '@/utils/helpers'
 
 // NOTE: helpere ktore potrebuju pracovat s JSX.Element cize potrebuju aby bol importnuty react a mali priponu jsx/tsx lebo TS nedovoli aby React component bol js/ts neda sa to ignorovat
@@ -62,7 +63,7 @@ export const getSortIcon = (sorterName: any) => {
 
 	if (!direction || sorterName !== property) return undefined
 	if (direction === ORDER_DIRECTION.ASCENDENT) {
-		return <SC.ButtonIcon src={ArrowDownIcon} style={{ transform: 'rotate(180deg)' }} />
+		return <SC.ButtonIcon src={SortAscIcon} />
 	}
-	return <SC.ButtonIcon src={ArrowDownIcon} />
+	return <SC.ButtonIcon src={SortDescIcon} />
 }
