@@ -252,7 +252,7 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 			<SC.ColapsePanel header={ticketHeader} key={ticket.id}>
 				<Row gutter={[16, 16]}>
 					{map(positionsWithMergedCombinedPositions, (item, index) => (
-						<Col key={item?.id} xxl={12} span={24}>
+						<Col key={item?.id} span={24} lg={12}>
 							<TicketItem
 								match={item as any}
 								oddsInfo={{

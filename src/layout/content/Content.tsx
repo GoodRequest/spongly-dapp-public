@@ -6,8 +6,7 @@ import { includes } from 'lodash'
 import * as SC from './ContentStyles'
 import TicketBetContainer from '@/components/ticketBetContainer/TicketBetContainer'
 import ParlayLeaderboard from '@/components/parlayLeaderboard/ParlayLeaderboard'
-import { PAGES, RESOLUTIONS } from '@/utils/enums'
-import { useMedia } from '@/hooks/useMedia'
+import { PAGES } from '@/utils/enums'
 
 interface ILayout {
 	children: ReactNode
@@ -15,7 +14,6 @@ interface ILayout {
 
 const Content: FC<ILayout> = ({ children }) => {
 	const router = useRouter()
-	const size = useMedia()
 	const fullWidthPages = [`/${PAGES.PARLAY_LEADERBOARD}`]
 
 	return (

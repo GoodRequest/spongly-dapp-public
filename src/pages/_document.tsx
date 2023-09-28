@@ -23,6 +23,7 @@ export default class MyDocument extends Document {
 			const initialProps = await Document.getInitialProps(ctx)
 			return {
 				...initialProps,
+				// eslint-disable-next-line react/no-danger
 				styles: [initialProps.styles, <style dangerouslySetInnerHTML={{ __html: style }} />, sheet.getStyleElement()]
 			}
 		} finally {

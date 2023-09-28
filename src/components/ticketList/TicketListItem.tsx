@@ -1,6 +1,6 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { isEmpty, map } from 'lodash'
-import { Col, Row } from 'antd'
+import { Col } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import { useSelector } from 'react-redux'
 import { getFormValues } from 'redux-form'
@@ -28,7 +28,6 @@ import { SGPItem } from '@/typescript/types'
 
 // styles
 import * as SC from './TicketListStyles'
-import { StylesRow } from './TicketListStyles'
 
 interface ITicketListItem extends ITicketContent {
 	type: string

@@ -572,6 +572,7 @@ const TicketBetContainer = () => {
 	`
 	return (
 		<>
+			{/* eslint-disable-next-line react/no-danger */}
 			{rolledUp && <div dangerouslySetInnerHTML={{ __html: bodyStyle }} />}
 			<SC.TicketBetWrapper rolledUp={rolledUp}>
 				<SC.SubmittingSpinner
