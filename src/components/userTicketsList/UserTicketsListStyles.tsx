@@ -1,29 +1,10 @@
-import { Empty as AntdEmpty, Button, Skeleton } from 'antd'
+import { Button, Skeleton } from 'antd'
 import styled from 'styled-components'
-import { HeadingXSMedium, TextMDMedium, TextMDRegular } from '@/styles/typography'
+import { TextMDMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
 export const ContentWrapper = styled.div`
 	margin-top: 32px;
-`
-
-export const Empty = styled(AntdEmpty)`
-	background: ${({ theme }) => theme['color-base-surface-secondary']};
-	margin: 16px 0px 16px 0px;
-	border-radius: 12px;
-	padding: 52px;
-	.ant-empty-description {
-		div {
-			margin-top: 28px;
-			p {
-				margin-bottom: 16px;
-				${HeadingXSMedium}
-			}
-			span {
-				${TextMDRegular}
-			}
-		}
-	}
 `
 
 export const ShowMoreButton = styled(Button)`

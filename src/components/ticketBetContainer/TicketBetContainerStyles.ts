@@ -1,8 +1,8 @@
 import styled from 'styled-components'
-import { Empty, Spin } from 'antd'
+import { Spin } from 'antd'
 
 import infoIconPurple from '@/assets/icons/info-circle.svg'
-import { TextMDMedium, TextXSMedium, HeadingXSMedium, TextMDRegular, TextSMMedium, HeadingSMMedium } from '@/styles/typography'
+import { TextMDMedium, TextXSMedium, TextSMMedium, HeadingSMMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 import { AllPositionsHeader, MobileWrapper, RadioMobileHeader } from '../matchesList/MatchesListStyles'
 import { SCROLL_DIRECTION } from '@/utils/enums'
@@ -95,26 +95,6 @@ export const TicketMatchesWrapper = styled.div`
 	position: relative;
 	min-height: 66px;
 	overflow-y: auto;
-`
-
-export const EmptyState = styled(Empty)`
-	background: ${({ theme }) => theme['color-base-surface-secondary']};
-	margin: 0px 0px 16px 0px;
-	border-radius: 12px;
-	padding: 52px;
-	.ant-empty-description {
-		div {
-			margin-top: 28px;
-			p {
-				margin-bottom: 12px;
-				line-height: 1.275em;
-				${HeadingXSMedium}
-			}
-			span {
-				${TextMDRegular}
-			}
-		}
-	}
 `
 
 export const DeleteButton = styled.button<{ icon: string }>`

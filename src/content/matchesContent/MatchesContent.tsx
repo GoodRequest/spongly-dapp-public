@@ -21,12 +21,11 @@ import Button from '@/atoms/button/Button'
 import Select from '@/atoms/select/Select'
 
 // components
-import MatchFilter from '@/components/matchFilter/MatchFilter'
 import MatchesList from '@/components/matchesList/MatchesList'
 
 // utils
 import { MATCHES, RESOLUTIONS } from '@/utils/enums'
-import { STATIC } from '@/utils/constants'
+import { STATIC, SportFilterEnum } from '@/utils/constants'
 import { BetType, SPORTS_TAGS_MAP, TAGS_LIST } from '@/utils/tags'
 
 import * as SC from '../../layout/layout/LayoutStyles'
@@ -36,6 +35,7 @@ import FilterIcon from '@/assets/icons/filter-icon.svg'
 import { RootState } from '@/redux/rootReducer'
 import { isBellowOrEqualResolution } from '@/utils/helpers'
 import { breakpoints } from '@/styles/theme'
+import SportFilter from '@/components/sportFilter/SportFilter'
 
 interface ILeague {
 	id: number
@@ -226,7 +226,8 @@ const MatchesContent = () => {
 			setSelectedSport(TAGS_LIST)
 		}
 		if (!includes([STATIC.ALL, undefined], filter.sport) && includes([STATIC.ALL, undefined], filter.league)) {
-			setSelectedSport(lodashFilter(TAGS_LIST, (item) => includes(SPORTS_TAGS_MAP[filter.sport as string], item.id)))
+			const sportName = filter.sport === SportFilterEnum.MMA ? 'MMA' : (filter.sport as SportFilterEnum)
+			setSelectedSport(lodashFilter(TAGS_LIST, (item) => includes(SPORTS_TAGS_MAP[sportName], item.id)))
 		}
 		if (!includes([STATIC.ALL, undefined], filter.league)) {
 			setSelectedSport([find(TAGS_LIST, (item) => toString(item.id) === filter.league) as any])
@@ -415,7 +416,7 @@ const MatchesContent = () => {
 				<>
 					{/* eslint-disable-next-line react/no-danger */}
 					<div dangerouslySetInnerHTML={{ __html: bodyStyle }} />
-					<MatchFilter
+					<SportFilter
 						resultsCount={resultsCount}
 						onReset={() => {
 							setFilter((currentFilter: any) => ({ ...currentFilter, league: STATIC.ALL, sport: STATIC.ALL }))

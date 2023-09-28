@@ -44,15 +44,15 @@ const useFetchTickets = () => {
 			throw error
 		}
 	}
-	const mapTicketsData = async (dataa: (ParlayMarket | PositionBalance)[], successRateMap: Map<string, number>) =>
-		dataa.map((ticket) => {
+	const mapTicketsData = async (data: (ParlayMarket | PositionBalance)[], successRateMap: Map<string, number>) =>
+		data.map((ticket) => {
 			return {
 				ticket: {
 					...ticket,
 					ticketType: getTicketType(ticket),
 					closedTicketType: getClosedTicketType(ticket),
 					buyIn: ticket?.sUSDPaid ? Number(bigNumberFormatter(ticket.sUSDPaid as string)) : 0,
-					matches: 'positions' in ticket ? removeDuplicatesByGameId(ticket.positions) : 1,
+					matchesCount: 'positions' in ticket ? removeDuplicatesByGameId(ticket.positions) : 1,
 					positions:
 						'positions' in ticket
 							? ticket.positions.map((item) => {
@@ -122,7 +122,7 @@ const useFetchTickets = () => {
 					...values[2].data.positionBalances
 				]
 
-				const successRateMap = new Map(values[3].stats.map((obj) => [obj.account, obj.successRate]))
+				const successRateMap = new Map(values[3].stats.map((obj) => [obj.ac, obj.sr]))
 
 				mapTicketsData(allTickets, successRateMap).then((data) => {
 					dispatch({

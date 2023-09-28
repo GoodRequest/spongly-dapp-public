@@ -26,18 +26,10 @@ env:
 jobs:
   Build-and-Publish:
     if: |
-      ${{ github.event_name == 'workflow_dispatch' && github.triggering_actor == 'morrien' }} ||
+      ${{ github.event_name == 'workflow_dispatch' }} ||
       ${{ github.event_name == 'push' && github.ref == 'refs/heads/production' }}
 
     runs-on: ubuntu-latest
-
-    services:
-      ipfs:
-        image: 'ipfs/go-ipfs'
-        ports:
-          - 4001:4001
-          - 5001:5001
-          - 8080:8080
 
     steps:
       - name: Check out repository
@@ -57,31 +49,23 @@ jobs:
         run: |
           CI=false npm run build-ipfs
 
-      - name: Install IPFS
+      - name: Recognize latest IPFS version
+        id: ipfs_version
         run: |
           LATEST_VERSION=$(curl -sSL https://dist.ipfs.tech/go-ipfs/versions | tail -n 1)
-          LATEST_VERSION_NUMBER=${LATEST_VERSION#*v}
+          echo "LATEST_VERSION_NUMBER=${LATEST_VERSION#*v}" >> $GITHUB_ENV
 
-          DOWNLOAD_URL="https://dist.ipfs.tech/go-ipfs/${LATEST_VERSION}/go-ipfs_${LATEST_VERSION}_linux-amd64.tar.gz"
-          echo "DOWNLOAD_URL=$DOWNLOAD_URL"
+      - name: Set up IPFS version ${{ env.LATEST_VERSION_NUMBER }}
+        uses: ibnesayeed/setup-ipfs@master
+        id: ipfs_setup
+        with:
+          ipfs_version: ${{ env.LATEST_VERSION_NUMBER }}
+          run_daemon: true
 
-          curl -sSL -o ipfs.tar.gz $DOWNLOAD_URL
-          tar -xzf ipfs.tar.gz
-          cp -f ./go-ipfs/ipfs /usr/local/bin/
-          ipfs init
-
-      # IPFS daemon is running as a containerized service
-
-      - name: Wait for daemon to start
+      - name: Test IPFS version ${{ steps.ipfs_setup.outputs.resolved_ipfs_version }} CLI and API
+        shell: bash
         run: |
-          wget \
-            --retry-connrefused \
-            --waitretry=20 \
-            --read-timeout=20 \
-            --timeout=15 \
-            -t 10 \
-            --post-data '' \
-            "http://localhost:5001/api/v0/version"
+          curl -sX POST http://localhost:5001/api/v0/version | jq -e '(.Version=="${{ steps.ipfs_setup.outputs.resolved_ipfs_version }}")'
 
       - name: Add files to IPFS
         run: |
@@ -91,7 +75,7 @@ jobs:
             --recursive \
             "./dist"
 
-      - name: Set IPFS hash for projet folder to env
+      - name: Set IPFS hash for dist folder to env
         run: |
           echo "IPFS_CID=$(ipfs add --progress=false --pin=true --recursive --quieter ./dist)" >> $GITHUB_ENV
 
