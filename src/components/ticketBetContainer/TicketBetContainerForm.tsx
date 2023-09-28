@@ -207,7 +207,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	const emptyTicketState = (
 		<Row justify={'center'}>
 			<Col span={24}>
-				<SC.EmptyState
+				<SCS.Empty
 					image={EmptyStateImage}
 					imageStyle={{ height: 93 }}
 					description={

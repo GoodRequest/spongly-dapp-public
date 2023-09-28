@@ -1,16 +1,7 @@
-import { Button, Col, Row, Empty as AntdEmpty, Skeleton } from 'antd'
+import { Button, Col, Row, Skeleton } from 'antd'
 import styled from 'styled-components'
 
-import {
-	TextMDMedium,
-	TextLGRegular,
-	TextLGMedium,
-	HeadingXSMedium,
-	TextMDRegular,
-	HeadingXXSMedium,
-	HeadingXLMedium,
-	HeadingMDMedium
-} from '@/styles/typography'
+import { TextMDMedium, TextLGRegular, TextLGMedium, HeadingXXSMedium, HeadingXLMedium, HeadingMDMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
 export const ParlayLeaderboardTextCol = styled(Col)`
@@ -179,25 +170,6 @@ export const ParlayLeaderboardTableText = styled.p`
 	${HeadingXXSMedium};
 	@media (max-width: ${breakpoints.md}px) {
 		display: block;
-	}
-`
-
-export const Empty = styled(AntdEmpty)`
-	background: ${({ theme }) => theme['color-base-surface-secondary']};
-	margin: 16px 0px 16px 0px;
-	border-radius: 12px;
-	padding: 52px;
-	.ant-empty-description {
-		div {
-			margin-top: 28px;
-			p {
-				margin-bottom: 16px;
-				${HeadingXSMedium}
-			}
-			span {
-				${TextMDRegular}
-			}
-		}
 	}
 `
 

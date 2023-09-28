@@ -9,6 +9,7 @@ import UserTicketTableRow from './UserTicketTableRow'
 import { WALLET_TICKETS } from '@/utils/enums'
 
 import * as SC from './UserTicketsListStyles'
+import * as SCS from '@/styles/GlobalStyles'
 
 import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
 import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
@@ -149,7 +150,7 @@ const UserTicketsList = ({ tickets, isLoading, refetch }: Props) => {
 		}
 		if (!shownTickets || shownTickets?.length === 0) {
 			return (
-				<SC.Empty
+				<SCS.Empty
 					image={EmptyStateImage}
 					description={
 						<div>

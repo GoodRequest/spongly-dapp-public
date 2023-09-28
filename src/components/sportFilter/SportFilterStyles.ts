@@ -40,7 +40,7 @@ export const MobileFilter = styled.div`
 export const MobileFilterContent = styled.div`
 	margin: 20px 15px;
 	padding: 24px 12px;
-	background: ${({ theme }) => theme['color-base-surface-quaternary']};
+	background: ${({ theme }) => theme['color-base-surface-primary']};
 	box-shadow: 0 24px 34px rgba(8, 9, 15, 0.2);
 	border-radius: 12px;
 `
@@ -54,11 +54,12 @@ export const CloseBtn = styled.div`
 	width: 32px;
 	height: 32px;
 	border-radius: 100px;
-	background: ${({ theme }) => theme['color-base-surface-primary']};
+	background: ${({ theme }) => theme['color-base-surface-quaternary']};
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	position: fixed;
 	top: 32px;
 	right: 28px;
+	cursor: pointer;
 `
