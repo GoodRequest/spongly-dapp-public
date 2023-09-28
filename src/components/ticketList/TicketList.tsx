@@ -1,12 +1,13 @@
 import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react'
-import { map, slice, groupBy, toPairs } from 'lodash'
+import { groupBy, map, slice, toPairs } from 'lodash'
 import { useTranslation } from 'next-export-i18n'
 import { useDispatch, useSelector } from 'react-redux'
 import { change, getFormValues } from 'redux-form'
 import { Col, Row } from 'antd'
+import { useNetwork } from 'wagmi'
+import { useRouter } from 'next/router'
 
 // components
-import { useNetwork } from 'wagmi'
 import { ITicketContent } from '@/content/ticketsContent/TicketsContent'
 import TicketListItem from '@/components/ticketList/TicketListItem'
 import Sorter from '@/components/Sorter'
@@ -23,10 +24,10 @@ import MatchRow from '@/components/ticketBetContainer/components/matchRow/MatchR
 import { ACTIVE_BET_TICKET, IUnsubmittedBetTicket, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 
 // utils
-import { ORDER_DIRECTION, TICKET_SORTING, MAX_TICKETS, TICKET_TYPE } from '@/utils/constants'
-import { getTicketsTypeName, setSort, copyTicketToUnsubmittedTickets } from '@/utils/helpers'
+import { MAX_TICKETS, ORDER_DIRECTION, TICKET_SORTING, TICKET_TYPE } from '@/utils/constants'
+import { copyTicketToUnsubmittedTickets, getTicketsTypeName, setSort } from '@/utils/helpers'
 import { BetType } from '@/utils/tags'
-import { FORM } from '@/utils/enums'
+import { FORM, PAGES } from '@/utils/enums'
 
 // styles
 import * as SC from './TicketListStyles'
@@ -36,7 +37,7 @@ import { SGPItem } from '@/typescript/types'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 
 interface ITicketList {
-	type: string
+	type: TICKET_TYPE
 	list: ITicketContent[]
 	loading: boolean
 	failure: boolean
@@ -51,6 +52,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 	const { t } = useTranslation()
 	const dispatch = useDispatch()
 	const { chain } = useNetwork()
+	const router = useRouter()
 
 	const [hasMore, setHasMore] = useState(list.length > LIST_SIZE)
 	const unsubmittedTickets = useSelector((state: RootState) => state.betTickets.unsubmittedBetTickets.data)
@@ -80,7 +82,9 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 	}, [renderList])
 
 	const addTicketsToList = () => {
-		if (hasMore) {
+		if (type === TICKET_TYPE.HOT_TICKET) {
+			router.push(`/${PAGES.TICKETS}`)
+		} else if (hasMore) {
 			if (renderList.length < list.length && renderList.length + LIST_SIZE < list.length) {
 				setRenderList([...renderList, ...slice(list, renderList.length, renderList.length + LIST_SIZE)])
 			}
@@ -280,9 +284,10 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 	return (
 		<>
 			<SC.TicketListWrapper>
-				<SC.PCRow gutter={0} style={{ marginBottom: '32px' }}>
+				<SC.PCRow type={type} gutter={0}>
 					<Col span={20}>
 						<h1>{getTicketsTypeName(type, t)}</h1>
+						{type === TICKET_TYPE.HOT_TICKET && <SC.HotTicketDescription>{t('Top 10 tickets you shouldn’t miss!')}</SC.HotTicketDescription>}
 					</Col>
 				</SC.PCRow>
 
@@ -296,39 +301,41 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 							</>
 						) : (
 							<>
-								<SCS.SorterRow>
-									<SC.HorizontalSorters>
-										<Col span={5}>
-											<Sorter title={t('Wallet')} />
-										</Col>
-										<Col span={8}>
-											<Sorter title={t('Success rate')} name={TICKET_SORTING.SUCCESS_RATE} />
-										</Col>
-										<Col span={3}>
-											<Sorter title={t('Buy in')} name={TICKET_SORTING.BUY_IN} />
-										</Col>
-										<Col span={3}>
-											<Sorter title={t('Quote')} name={TICKET_SORTING.TOTAL_TICKET_QUOTE} />
-										</Col>
-										<Col span={3}>
-											<Sorter title={t('Matches')} name={TICKET_SORTING.MATCHES} />
-										</Col>
-									</SC.HorizontalSorters>
-									<SC.SelectSorters>
-										<Select
-											title={
-												<SC.SelectTitle>
-													<img src={SortIcon} alt={'Sorter'} />
-													{t('Sort by')}
-												</SC.SelectTitle>
-											}
-											allowClear
-											options={sortOptions}
-											placeholder={t('Sort by')}
-											onChange={handleSubmitSort}
-										/>
-									</SC.SelectSorters>
-								</SCS.SorterRow>
+								{type !== TICKET_TYPE.HOT_TICKET && (
+									<SCS.SorterRow>
+										<SC.HorizontalSorters>
+											<Col span={5}>
+												<Sorter title={t('Wallet')} />
+											</Col>
+											<Col span={8}>
+												<Sorter title={t('Success rate')} name={TICKET_SORTING.SUCCESS_RATE} />
+											</Col>
+											<Col span={3}>
+												<Sorter title={t('Buy in')} name={TICKET_SORTING.BUY_IN} />
+											</Col>
+											<Col span={3}>
+												<Sorter title={t('Quote')} name={TICKET_SORTING.TOTAL_TICKET_QUOTE} />
+											</Col>
+											<Col span={3}>
+												<Sorter title={t('Matches')} name={TICKET_SORTING.MATCHES} />
+											</Col>
+										</SC.HorizontalSorters>
+										<SC.SelectSorters>
+											<Select
+												title={
+													<SC.SelectTitle>
+														<img src={SortIcon} alt={'Sorter'} />
+														{t('Sort by')}
+													</SC.SelectTitle>
+												}
+												allowClear
+												options={sortOptions}
+												placeholder={t('Sort by')}
+												onChange={handleSubmitSort}
+											/>
+										</SC.SelectSorters>
+									</SCS.SorterRow>
+								)}
 								{renderList.length > 0 ? (
 									ticketList
 								) : (
@@ -348,8 +355,8 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 								)}
 								{hasMore && (
 									<SC.LoadMore onClick={addTicketsToList}>
-										<SCS.Icon icon={ArrowIcon} />
-										{t('Show more')}
+										{type === TICKET_TYPE.HOT_TICKET ? t('Show all tickets') : t('Show more')}
+										<SCS.Icon degree={type === TICKET_TYPE.HOT_TICKET ? 270 : 0} icon={ArrowIcon} />
 									</SC.LoadMore>
 								)}
 							</>

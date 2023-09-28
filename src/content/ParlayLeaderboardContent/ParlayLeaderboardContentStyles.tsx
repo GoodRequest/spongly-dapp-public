@@ -119,10 +119,9 @@ export const ButtonContent = styled.div`
 `
 
 export const ButtonIcon = styled.img`
-	margin-right: 0 !important;
-	margin-left: 4px;
-	width: 16px;
-	height: 16px;
+	margin-right: 8px;
+	width: 20px;
+	height: 20px;
 `
 
 export const ParlayLeaderboardFilterRow = styled(Row)`

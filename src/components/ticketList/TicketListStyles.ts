@@ -1,6 +1,16 @@
 import styled, { css, keyframes } from 'styled-components'
 import { Row, Col, Skeleton, Collapse } from 'antd'
-import { HeadingSMMedium, HeadingXSMedium, HeadingXXSMedium, TextLGMedium, TextMDMedium, TextMDRegular, TextSMMedium, TextXSMedium } from '@/styles/typography'
+import {
+	HeadingSMMedium,
+	HeadingXSMedium,
+	HeadingXXSMedium,
+	TextLGMedium,
+	TextLGRegular,
+	TextMDMedium,
+	TextMDRegular,
+	TextSMMedium,
+	TextXSMedium
+} from '@/styles/typography'
 import Ticket from '@/assets/images/empty_state_ticket.png'
 import { CLOSED_TICKET_TYPE, TICKET_TYPE } from '@/utils/constants'
 import { breakpoints } from '@/styles/theme'
@@ -99,14 +109,20 @@ export const EmptyImage = styled.div`
 `
 
 export const LoadMore = styled.div`
-	padding: 18px;
-	text-align: center;
+	height: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	${TextMDMedium};
 	cursor: pointer;
 	border-radius: 12px;
-	background: ${({ theme }) => theme['color-base-surface-secondary']};
+	background: ${({ theme }) => theme['color-base-action-secondary-default']};
+	transition: background 300ms;
 	&:hover {
-		background: ${({ theme }) => theme['color-base-surface-quaternary']};
+		background: ${({ theme }) => theme['color-base-action-primary-default']};
+	}
+	@media (max-width: ${breakpoints.md}px) {
+		height: 48px;
 	}
 `
 export const TicketCollapse = styled(Collapse)<{ isExpanded: boolean }>`
@@ -317,12 +333,17 @@ export const TicketType = styled.div<{ ticketType: TICKET_TYPE | CLOSED_TICKET_T
 		`}
 `
 
-export const PCRow = styled(Row)`
+export const PCRow = styled(Row)<{ type: TICKET_TYPE }>`
 	display: flex;
-
+	margin-bottom: 16px;
 	@media (max-width: ${breakpoints.md}px) {
-		display: none;
+		display: ${({ type }) => (type === TICKET_TYPE.HOT_TICKET ? 'block' : 'none')};
 	}
+`
+
+export const HotTicketDescription = styled.span`
+	${TextLGRegular};
+	color: ${({ theme }) => theme['color-base-content-quaternary']};
 `
 export const HorizontalSorters = styled(Row)`
 	display: flex;

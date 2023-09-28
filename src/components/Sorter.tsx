@@ -15,9 +15,9 @@ const Sorter = (props: Props) => {
 	const { property } = decodeSorter()
 	return (
 		<SCS.Sorter sorterName={name} onClick={() => name && setSort(name)}>
+			{getSortIcon(name)}
 			{name && property !== name && <img src={SortIcon} alt={'Sorter'} />}
 			{title}
-			{getSortIcon(name)}
 		</SCS.Sorter>
 	)
 }

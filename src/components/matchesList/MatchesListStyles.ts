@@ -269,14 +269,19 @@ export const IconWrapper = styled.div`
 `
 
 export const LoadMore = styled.div`
-	padding: 18px;
-	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 60px;
 	${TextMDMedium};
 	cursor: pointer;
 	border-radius: 12px;
-	background: ${({ theme }) => theme['color-base-surface-secondary']};
+	background: ${({ theme }) => theme['color-base-action-secondary-default']};
 	&:hover {
-		background: ${({ theme }) => theme['color-base-surface-quaternary']};
+		background: ${({ theme }) => theme['color-base-action-primary-default']};
+	}
+	@media (max-width: ${breakpoints.md}px) {
+		height: 48px;
 	}
 `
 
