@@ -18,7 +18,6 @@ import Select from '@/atoms/select/Select'
 // components
 import TicketsRadioButtonsForm from '@/components/ticketsRadioButtonsForm/TicketsRadioButtonsForm'
 import TicketList from '@/components/ticketList/TicketList'
-import TicketFilter from '@/components/ticketFilter/TicketFilter'
 
 // styles
 import * as SC from './TicketsContentStyles'
@@ -32,6 +31,7 @@ import { RESOLUTIONS } from '@/utils/enums'
 import { SPORTS_TAGS_MAP, TAGS_LIST } from '@/utils/tags'
 import { decodeSorter, isBellowOrEqualResolution } from '@/utils/helpers'
 import { breakpoints } from '@/styles/theme'
+import SportFilter from '@/components/sportFilter/SportFilter'
 
 export interface ITicketContent {
 	ticket: ITicket
@@ -257,7 +257,7 @@ const TicketsContent = () => {
 			{isFilterOpened && (
 				<>
 					<div dangerouslySetInnerHTML={{ __html: bodyStyle }} />
-					<TicketFilter
+					<SportFilter
 						resultsCount={resultsCount}
 						onReset={() => {
 							setFilter((currentFilter: any) => ({ ...currentFilter, league: STATIC.ALL, sport: STATIC.ALL }))

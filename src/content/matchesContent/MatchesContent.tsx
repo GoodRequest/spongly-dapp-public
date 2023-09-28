@@ -21,7 +21,6 @@ import Button from '@/atoms/button/Button'
 import Select from '@/atoms/select/Select'
 
 // components
-import MatchFilter from '@/components/matchFilter/MatchFilter'
 import MatchesList from '@/components/matchesList/MatchesList'
 
 // utils
@@ -36,6 +35,7 @@ import FilterIcon from '@/assets/icons/filter-icon.svg'
 import { RootState } from '@/redux/rootReducer'
 import { isBellowOrEqualResolution } from '@/utils/helpers'
 import { breakpoints } from '@/styles/theme'
+import SportFilter from '@/components/sportFilter/SportFilter'
 
 interface ILeague {
 	id: number
@@ -415,7 +415,7 @@ const MatchesContent = () => {
 			{isFilterOpened && (
 				<>
 					<div dangerouslySetInnerHTML={{ __html: bodyStyle }} />
-					<MatchFilter
+					<SportFilter
 						resultsCount={resultsCount}
 						onReset={() => {
 							setFilter((currentFilter: any) => ({ ...currentFilter, league: STATIC.ALL, sport: STATIC.ALL }))

@@ -92,18 +92,18 @@ export const GlobalStyle = createGlobalStyle`
 
 	.ticket-select, .odds-select {
 		&.ant-select-dropdown {
-			background-color: ${({ theme }) => theme['color-base-surface-secondary']};
+			background-color: ${({ theme }) => theme['color-base-surface-quaternary']};
 		}
 
 		.ant-select-item-option {
 			${TextLGMedium};
 			:hover {
-				background-color: rgba(8, 9, 15, 0.6); // #08090f; TODO placeholder color
+				background-color: ${({ theme }) => theme['color-base-surface-secondary']} !important;
 			}
 		}
 
 		.ant-select-item-option-selected {
-			background-color: ${({ theme }) => theme['color-base-surface-quintarny']} !important;
+			background-color: ${({ theme }) => theme['color-base-surface-secondary']} !important;
 			color: ${({ theme }) => theme['color-base-content-top']} !important;
 		}
 	}
