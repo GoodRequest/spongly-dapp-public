@@ -263,7 +263,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 				<SC.TicketMatchesFaded>
 					<SC.TicketMatchesWrapper ref={listRef}>
 						{formValues?.matches?.map((match, key) => (
-							<MatchRow key={`matchRow-${key}-${match.gameId}`} match={match} allTicketMatches={matches} deleteHandler={handleDeleteItem} />
+							<MatchRow key={`matchRow-${key}-${match.gameId}`} match={match} deleteHandler={handleDeleteItem} />
 						))}
 					</SC.TicketMatchesWrapper>
 					<SC.Fade show={fadeTop} direction={'above'} />

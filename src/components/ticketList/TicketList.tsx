@@ -214,7 +214,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 			<Row>
 				<SC.MatchContainerRow span={24}>
 					{getMatchesWithChildMarkets?.map((match: any, key: any) => (
-						<MatchRow readOnly copied key={`matchRow-${key}`} match={match} allTicketMatches={getMatchesWithChildMarkets} />
+						<MatchRow readOnly copied key={`matchRow-${key}`} match={match} />
 					))}
 				</SC.MatchContainerRow>
 			</Row>
