@@ -124,7 +124,6 @@ const SportFilter: FC<SportFilterProps> = ({ onReset, onShowResults, resultsCoun
 			{isBellowOrEqualResolution(size, RESOLUTIONS.MD) ? (
 				<SC.MobileFilter>
 					<SC.MobileFilterContent>
-						test
 						<SC.FilterTitle>{t('Filter')}</SC.FilterTitle>
 						<SC.CloseBtn onClick={onCloseMobileFilter}>
 							<SC.CloseIcon src={CloseIcon} style={{ strokeWidth: '2px' }} />
