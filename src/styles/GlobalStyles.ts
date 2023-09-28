@@ -90,7 +90,7 @@ export const GlobalStyle = createGlobalStyle`
 
 	}
 
-	.ticket-select, .odds-select {
+	.ticket-select {
 		&.ant-select-dropdown {
 			background-color: ${({ theme }) => theme['color-base-surface-quaternary']};
 		}
