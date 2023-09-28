@@ -153,8 +153,8 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 							)}
 							{hasMore && (
 								<SC.LoadMore onClick={addMatchesToList}>
-									<SCS.Icon icon={ArrowIcon} />
 									{t('Show more')}
+									<SCS.Icon icon={ArrowIcon} />
 								</SC.LoadMore>
 							)}
 						</>
