@@ -8,7 +8,3 @@ export interface ILoadingAndFailure {
 	isLoading: boolean
 	isFailure: boolean
 }
-
-export interface ILoadingBatch {
-	isLoadingBatch: boolean
-}

@@ -1,13 +1,12 @@
 import { ITicketActions, ITicketListPayload, TICKET_LIST } from '@/redux/tickets/ticketType'
-import { ILoadingAndFailure, ILoadingBatch, RESET_STORE } from '@/redux/generalType'
+import { ILoadingAndFailure, RESET_STORE } from '@/redux/generalType'
 
 export const initState = {
 	ticketList: {
 		data: [],
-		isLoading: false,
-		isLoadingBatch: false,
+		isLoading: true,
 		isFailure: false
-	} as ITicketListPayload & ILoadingAndFailure & ILoadingBatch
+	} as ITicketListPayload & ILoadingAndFailure
 }
 
 // eslint-disable-next-line default-param-last, @typescript-eslint/default-param-last
@@ -20,7 +19,7 @@ export default (state = initState, action: ITicketActions) => {
 				ticketList: {
 					...state.ticketList,
 					isLoading: true,
-					isLoadingBatch: true
+					isFailure: false
 				}
 			}
 		case TICKET_LIST.TICKET_LIST_LOAD_FAIL:
@@ -31,20 +30,12 @@ export default (state = initState, action: ITicketActions) => {
 					isFailure: true
 				}
 			}
-		case TICKET_LIST.TICKET_LIST_LOAD_BATCH_DONE:
-			return {
-				...state,
-				ticketList: {
-					...state.ticketList,
-					isLoadingBatch: false,
-					data: action.payload.data
-				}
-			}
 		case TICKET_LIST.TICKET_LIST_LOAD_DONE:
 			return {
 				...state,
 				ticketList: {
 					...initState.ticketList,
+					isLoading: false,
 					data: action.payload.data
 				}
 			}

@@ -32,7 +32,17 @@ import {
 	TOTAL_WINNER_TAGS,
 	USER_TICKET_TYPE
 } from './constants'
-import { BET_OPTIONS, COMBINED_BET_OPTIONS, ContractSGPOrder, DoubleChanceMarketType, LIST_TYPE, MARKET_PROPERTY, RESOLUTIONS, WALLET_TICKETS } from './enums'
+import {
+	BET_OPTIONS,
+	COMBINED_BET_OPTIONS,
+	ContractSGPOrder,
+	DoubleChanceMarketType,
+	LIST_TYPE,
+	MARKET_PROPERTY,
+	RESOLUTIONS,
+	RESULT_TYPE,
+	WALLET_TICKETS
+} from './enums'
 import { ParlayMarket, Position, PositionBalance, PositionType } from '@/__generated__/resolvers-types'
 
 import {
@@ -332,12 +342,21 @@ export const getParlayItemStatus = (position: Position, isPlayedNow: boolean, t:
 	if (isPlayedNow) {
 		return { status: MATCH_STATUS.ONGOING, text: t('Playing now') }
 	}
-
 	if (position.market.isCanceled) return { status: MATCH_STATUS.CANCELED, text: t('Canceled {{ date }}', { date }) }
 	if (position.market.isPaused) return { status: MATCH_STATUS.PAUSED, text: t('Paused {{ date }}', { date }) }
 	if (position.market.isResolved) {
-		if (position.claimable) return { status: MATCH_STATUS.SUCCESS, text: t('Success {{ date }}', { date }) }
-		return { status: MATCH_STATUS.MISS, text: t('Miss {{ date }}', { date }) }
+		let result = ''
+		if (position.market?.tags && position.market?.tags && TOTAL_WINNER_TAGS.includes(position.market.tags?.[0])) {
+			if (position.market.homeScore === RESULT_TYPE.WINNER) {
+				result = t('Winner')
+			} else {
+				result = t('No win')
+			}
+		} else {
+			result = `${position.market.homeScore || '?'} : ${position.market.awayScore || '?'}`
+		}
+		if (position.claimable) return { status: MATCH_STATUS.SUCCESS, text: t('Success {{ date }} ({{ result }})', { date, result }) }
+		return { status: MATCH_STATUS.MISS, text: t('Miss {{ date }} ({{ result }})', { date, result }) }
 	}
 	return { status: MATCH_STATUS.OPEN, text: dayjs(toNumber(position.market.maturityDate) * 1000).format('MMM DD | HH:mm') }
 }
@@ -668,11 +687,11 @@ export const orderPositionsAsSportMarkets = (ticket: UserTicket | ITicket) => {
 }
 
 export const getHandicapValue = (number: number, type: BET_OPTIONS.HANDICAP_AWAY | BET_OPTIONS.HANDICAP_HOME) => {
-	if (type === BET_OPTIONS.HANDICAP_HOME) {
-		return roundToTwoDecimals(number)
-	}
 	const oppositeNumber = -number
 	const prefix = oppositeNumber >= 0 ? '+' : '-'
+	if (type === BET_OPTIONS.HANDICAP_HOME) {
+		return `${roundToTwoDecimals(number)}`
+	}
 	return prefix + roundToTwoDecimals(Math.abs(oppositeNumber))
 }
 

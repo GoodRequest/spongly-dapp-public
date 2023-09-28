@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { Button, Col, Row, Skeleton as AntdSkeleton, Empty as AntdEmpty } from 'antd'
-import { TextMDMedium, TextMDRegular, TextXLMedium, TextXSMedium } from '@/styles/typography'
+import { Button, Col, Row, Skeleton as AntdSkeleton } from 'antd'
+import { TextMDMedium, TextXLMedium, TextXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
 export const ParlayLeaderboardWrapper = styled.div`
@@ -52,18 +52,4 @@ export const ParlayLeaderboardHeader = styled.span`
 export const ParlayLeaderboardTableTitle = styled.span`
 	${TextXSMedium};
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
-`
-
-export const Empty = styled(AntdEmpty)`
-	background: ${({ theme }) => theme['color-base-surface-secondary']};
-	margin: 0px 0px 16px 0px;
-	border-radius: 12px;
-	height: 250px;
-	padding: 32px 16px 16px 16px;
-	.ant-empty-description {
-		div {
-			margin-top: 28px;
-			${TextMDRegular}
-		}
-	}
 `

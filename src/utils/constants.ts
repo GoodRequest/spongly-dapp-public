@@ -87,7 +87,7 @@ export const NETWORK_IDS = {
 	OPTIMISM_GOERLI: 420,
 	ARBITRUM: 42161
 }
-export const MAX_TOTAL_QUOTE = 69
+export const MAX_TOTAL_QUOTE = 100
 
 export const MIN_BUY_IN = 5
 
@@ -196,11 +196,11 @@ export const SGPCombinationsFromContractOrderMapping: Record<ContractSGPOrder, B
 
 export const MATCHES_OFFSET = 5
 export const MATCHES_OFFSET_MOBILE = 3
-export const MAX_TICKET_MATCHES = 5
+export const MAX_TICKET_MATCHES = 10
 export const MAX_TICKETS = 5
 
 export const SOCIAL_LINKS = {
-	DISCORD: 'https://discord.gg/EU2HcptM',
+	DISCORD: 'https://discord.gg/PBegHeVA5c',
 	TWITTER: 'https://twitter.com/sponglyio',
 	TERMS: 'https://overtimemarkets.xyz/static/media/thales-terms-of-use.9f69e9a2.pdf'
 }

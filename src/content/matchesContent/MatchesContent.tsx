@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useMemo, useRef, useCallback } from 'react'
+import React, { memo, useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { Row, Col } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import { map, filter as lodashFilter, includes, find, toString, sortBy } from 'lodash'
@@ -21,12 +21,11 @@ import Button from '@/atoms/button/Button'
 import Select from '@/atoms/select/Select'
 
 // components
-import MatchFilter from '@/components/matchFilter/MatchFilter'
 import MatchesList from '@/components/matchesList/MatchesList'
 
 // utils
 import { MATCHES, RESOLUTIONS } from '@/utils/enums'
-import { STATIC } from '@/utils/constants'
+import { STATIC, SportFilterEnum } from '@/utils/constants'
 import { BetType, SPORTS_TAGS_MAP, TAGS_LIST } from '@/utils/tags'
 
 import * as SC from '../../layout/layout/LayoutStyles'
@@ -35,6 +34,8 @@ import * as SCS from './MatchesContentStyles'
 import FilterIcon from '@/assets/icons/filter-icon.svg'
 import { RootState } from '@/redux/rootReducer'
 import { isBellowOrEqualResolution } from '@/utils/helpers'
+import { breakpoints } from '@/styles/theme'
+import SportFilter from '@/components/sportFilter/SportFilter'
 
 interface ILeague {
 	id: number
@@ -62,7 +63,9 @@ const MatchesContent = () => {
 		sport: STATIC.ALL
 	})
 
-	const rawMatches = useSelector((state: RootState) => state.matches.rawMatches)
+	const { data, isLoading, isFailure } = useSelector((state: RootState) => state.matches.matchesList)
+
+	const [loading, setLoading] = useState(true)
 	const [selectedSport, setSelectedSport] = useState(TAGS_LIST)
 	const [allLeagues, setAllLeagues] = useState<ILeague[]>([])
 	const [isFilterOpened, setFilterOpened] = useState(false)
@@ -124,14 +127,14 @@ const MatchesContent = () => {
 		() =>
 			map(TAGS_LIST, (item) => ({
 				id: item.id,
-				list: filterLeagueMatches(rawMatches.matches, item.id)
+				list: filterLeagueMatches(data, item.id)
 			})),
-		[rawMatches.matches]
+		[data]
 	)
 
 	// NOTE: this is heavy comuted function, look for optimalization if needed
 	const mapMatchesByLeagueByStatus = useCallback(() => {
-		if (rawMatches.matches.length > 0) {
+		if (data.length > 0) {
 			const withStatusSeparation = map(mapMatchesByLeague, (item) => {
 				return {
 					id: item.id,
@@ -187,7 +190,7 @@ const MatchesContent = () => {
 			setAllLeagues(withStatusSeparation as ILeague[])
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [rawMatches.matches])
+	}, [data])
 
 	// Set filter from url
 	useEffect(() => {
@@ -223,7 +226,8 @@ const MatchesContent = () => {
 			setSelectedSport(TAGS_LIST)
 		}
 		if (!includes([STATIC.ALL, undefined], filter.sport) && includes([STATIC.ALL, undefined], filter.league)) {
-			setSelectedSport(lodashFilter(TAGS_LIST, (item) => includes(SPORTS_TAGS_MAP[filter.sport as string], item.id)))
+			const sportName = filter.sport === SportFilterEnum.MMA ? 'MMA' : (filter.sport as SportFilterEnum)
+			setSelectedSport(lodashFilter(TAGS_LIST, (item) => includes(SPORTS_TAGS_MAP[sportName], item.id)))
 		}
 		if (!includes([STATIC.ALL, undefined], filter.league)) {
 			setSelectedSport([find(TAGS_LIST, (item) => toString(item.id) === filter.league) as any])
@@ -269,9 +273,11 @@ const MatchesContent = () => {
 	}
 
 	useEffect(() => {
+		setLoading(true)
 		mapMatchesByLeagueByStatus()
+		setLoading(false)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [rawMatches.matches])
+	}, [data])
 
 	useEffect(() => {
 		if (allLeagues.length !== 0) {
@@ -303,18 +309,21 @@ const MatchesContent = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filter.status])
 
+	const bodyStyle = `
+		<style>
+			body {
+				@media (max-width: ${breakpoints.md}px) {
+	            	overflow: hidden;
+				}
+	         }
+		</style>
+	`
+
 	const memoizedList = useMemo(() => {
-		return rawMatches.isFailed ? (
-			<SC.ErrorStateNoData>
-				<h3>{t('Failed to fetch data')}</h3>
-				<p>{t('Please refresh the page or come back later')}</p>
-			</SC.ErrorStateNoData>
-		) : (
+		return (
 			<SCS.LeagueWrapper>
-				{filtered.matches.length === 0 && filter.status !== MATCHES.ONGOING ? (
+				{isLoading || isFailure || loading ? (
 					<>
-						<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
-						<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
 						<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
 						<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
 						<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
@@ -362,7 +371,7 @@ const MatchesContent = () => {
 			</SCS.LeagueWrapper>
 		)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [filtered.matches, filtered.sport, filter, rawMatches.isLoading, rawMatches.isFailed])
+	}, [filtered.matches, filtered.sport, filter, isLoading, isFailure, loading])
 
 	return (
 		<>
@@ -404,16 +413,20 @@ const MatchesContent = () => {
 				</SCS.ListHeader>
 			)}
 			{isFilterOpened && (
-				<MatchFilter
-					resultsCount={resultsCount}
-					onReset={() => {
-						setFilter((currentFilter: any) => ({ ...currentFilter, league: STATIC.ALL, sport: STATIC.ALL }))
-					}}
-					onShowResults={onShowResults}
-					onCloseMobileFilter={() => {
-						setFilterOpened(false)
-					}}
-				/>
+				<>
+					{/* eslint-disable-next-line react/no-danger */}
+					<div dangerouslySetInnerHTML={{ __html: bodyStyle }} />
+					<SportFilter
+						resultsCount={resultsCount}
+						onReset={() => {
+							setFilter((currentFilter: any) => ({ ...currentFilter, league: STATIC.ALL, sport: STATIC.ALL }))
+						}}
+						onShowResults={onShowResults}
+						onCloseMobileFilter={() => {
+							setFilterOpened(false)
+						}}
+					/>
+				</>
 			)}
 			<Row gutter={16} ref={contentRef}>
 				<Col span={24}>{memoizedList}</Col>

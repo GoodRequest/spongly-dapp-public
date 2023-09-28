@@ -22,7 +22,7 @@ import { TicketIcon } from '@/components/ticketList/TicketListStyles'
 const TicketListItemHeader: FC<ITicketContent> = ({ ticket }) => {
 	const { t } = useTranslation()
 	const { isLoading } = useSelector((state: RootState) => state.tickets.ticketList)
-	const { account, positions, ticketType, closedTicketType, buyIn, position, totalTicketQuote } = ticket
+	const { account, ticketType, closedTicketType, buyIn, matchesCount, totalTicketQuote } = ticket
 	return (
 		<SC.TicketItemRow>
 			<Col md={{ order: 0, span: 2 }} xs={{ span: 8, order: 1 }}>
@@ -58,7 +58,7 @@ const TicketListItemHeader: FC<ITicketContent> = ({ ticket }) => {
 				<SC.ColHeader>{t('Quote')}</SC.ColHeader>
 			</Col>
 			<Col md={{ span: 3, order: 4 }} xs={{ span: 8, order: 6 }}>
-				<SC.ColContent>{position ? 1 : positions.length}</SC.ColContent>
+				<SC.ColContent>{matchesCount}</SC.ColContent>
 				<SC.ColHeader>{t('Matches')}</SC.ColHeader>
 			</Col>
 		</SC.TicketItemRow>

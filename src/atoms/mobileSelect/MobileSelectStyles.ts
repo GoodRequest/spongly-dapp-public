@@ -12,7 +12,7 @@ export const MobileSelect = styled(AntdSelect)`
 
 	.ant-select-selector {
 		border: none !important;
-		background-color: ${({ theme }) => theme['color-base-surface-secondary']} !important;
+		background-color: ${({ theme }) => theme['color-base-surface-quaternary']} !important;
 		box-shadow: ${({ theme }) => theme['drop-shadow-xs']};
 		height: 48px !important;
 		display: flex !important;
@@ -45,13 +45,13 @@ export const MobileSelectWrapper = styled.div`
 	}
 
 	.ant-select-dropdown {
-		background-color: ${({ theme }) => theme['color-base-surface-secondary']};
+		background-color: ${({ theme }) => theme['color-base-surface-quaternary']}; !important;
 	}
 
 	.ant-select-item-option {
 		${TextLGMedium};
 		:hover {
-			background-color: rgba(8, 9, 15, 0.6); // #08090f; TODO placeholder color
+			background-color: ${({ theme }) => theme['color-base-surface-secondary']} !important;
 		}
 	}
 

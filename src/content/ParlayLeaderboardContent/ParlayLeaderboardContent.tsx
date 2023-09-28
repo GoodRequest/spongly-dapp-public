@@ -23,6 +23,7 @@ import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
 import SortIcon from '@/assets/icons/sort-icon.svg'
 
 import * as SC from './ParlayLeaderboardContentStyles'
+import * as SCS from '@/styles/GlobalStyles'
 import { formatQuote } from '@/utils/formatters/quote'
 
 type ParlayLeaderboardFilter = {
@@ -177,18 +178,11 @@ const ParlayLeaderboardContent = () => {
 	}
 	const parlayLeaderBoard = () => {
 		if (isLoading) {
-			const props = { rank: 1, address: '', paid: 1, quote: 1, won: 1, position: 1, reward: undefined }
 			return (
 				<>
-					<ParlayLeaderboardTableRow isLoading {...props} />
-					<ParlayLeaderboardTableRow isLoading {...props} />
-					<ParlayLeaderboardTableRow isLoading {...props} />
-					<ParlayLeaderboardTableRow isLoading {...props} />
-					<ParlayLeaderboardTableRow isLoading {...props} />
-					<ParlayLeaderboardTableRow isLoading {...props} />
-					<ParlayLeaderboardTableRow isLoading {...props} />
-					<ParlayLeaderboardTableRow isLoading {...props} />
-					<ParlayLeaderboardTableRow isLoading {...props} />
+					<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
+					<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
+					<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
 				</>
 			)
 		}
@@ -199,7 +193,7 @@ const ParlayLeaderboardContent = () => {
 		}
 		if (shownData?.length === 0) {
 			return (
-				<SC.Empty
+				<SCS.Empty
 					image={EmptyStateImage}
 					description={
 						<div>

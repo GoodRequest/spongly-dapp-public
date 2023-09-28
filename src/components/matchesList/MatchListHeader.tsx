@@ -4,9 +4,6 @@ import { Col, Row } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import dynamic from 'next/dynamic'
 
-// components
-import Image from 'next/image'
-
 // utils
 import { MATCHES, RESOLUTIONS } from '@/utils/enums'
 import { NO_TEAM_IMAGE_FALLBACK, SportFilterEnum, TOTAL_WINNER_TAGS } from '@/utils/constants'
@@ -21,8 +18,8 @@ import { TicketPosition } from '@/redux/betTickets/betTicketTypes'
 import * as SC from './MatchesListStyles'
 import * as SCS from '@/styles/GlobalStyles'
 import { BetType, SPORTS_MAP } from '@/utils/tags'
+import MatchHeaderPC from './components/MatchHeaderPC'
 
-const MatchHeaderPC = dynamic(() => import('./components/MatchHeaderPC'))
 const MatchHeaderMobile = dynamic(() => import('./components/MatchHeaderMobile'))
 
 interface IMatchListItem {

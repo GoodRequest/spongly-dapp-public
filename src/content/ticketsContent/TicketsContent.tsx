@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'next-export-i18n'
 import { useRouter } from 'next-translate-routes'
@@ -18,7 +18,6 @@ import Select from '@/atoms/select/Select'
 // components
 import TicketsRadioButtonsForm from '@/components/ticketsRadioButtonsForm/TicketsRadioButtonsForm'
 import TicketList from '@/components/ticketList/TicketList'
-import TicketFilter from '@/components/ticketFilter/TicketFilter'
 
 // styles
 import * as SC from './TicketsContentStyles'
@@ -31,6 +30,8 @@ import { ORDER_DIRECTION, STATIC, TICKET_SORTING, TICKET_TYPE } from '@/utils/co
 import { RESOLUTIONS } from '@/utils/enums'
 import { SPORTS_TAGS_MAP, TAGS_LIST } from '@/utils/tags'
 import { decodeSorter, isBellowOrEqualResolution } from '@/utils/helpers'
+import { breakpoints } from '@/styles/theme'
+import SportFilter from '@/components/sportFilter/SportFilter'
 
 export interface ITicketContent {
 	ticket: ITicket
@@ -51,7 +52,9 @@ const TicketsContent = () => {
 
 	const size = useMedia()
 
-	const { data, isLoadingBatch: isLoading } = useSelector((state: RootState) => state.tickets.ticketList)
+	const { data, isLoading, isFailure } = useSelector((state: RootState) => state.tickets.ticketList)
+
+	const [loading, setLoading] = useState(false)
 	const [isFilterOpened, setFilterOpened] = useState(false)
 	const [selectedSport, setSelectedSport] = useState(TAGS_LIST)
 	const [activeKeysList, setActiveKeysList] = useState<string[]>([])
@@ -132,6 +135,17 @@ const TicketsContent = () => {
 	}, [filter.sport, filter.league])
 
 	useEffect(() => {
+		if (isLoading) {
+			setLoading(true)
+		} else {
+			// NOTE: give some time to parse through data
+			setTimeout(() => {
+				setLoading(false)
+			}, 100)
+		}
+	}, [isLoading])
+
+	useEffect(() => {
 		if (router.isReady) {
 			router.replace(
 				{
@@ -194,6 +208,16 @@ const TicketsContent = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedSport])
 
+	const bodyStyle = `
+		<style>
+			body {
+	            @media (max-width: ${breakpoints.md}px) {
+	            	overflow: hidden;
+				}
+	         }
+		</style>
+	`
+
 	return isMounted ? (
 		<>
 			<SC.ListHeader>
@@ -231,22 +255,26 @@ const TicketsContent = () => {
 				</SC.PCWrapper>
 			</SC.ListHeader>
 			{isFilterOpened && (
-				<TicketFilter
-					resultsCount={resultsCount}
-					onReset={() => {
-						setFilter((currentFilter: any) => ({ ...currentFilter, league: STATIC.ALL, sport: STATIC.ALL }))
-					}}
-					onShowResults={onShowResults}
-					onCloseMobileFilter={() => {
-						setFilterOpened(false)
-					}}
-				/>
+				<>
+					<div dangerouslySetInnerHTML={{ __html: bodyStyle }} />
+					<SportFilter
+						resultsCount={resultsCount}
+						onReset={() => {
+							setFilter((currentFilter: any) => ({ ...currentFilter, league: STATIC.ALL, sport: STATIC.ALL }))
+						}}
+						onShowResults={onShowResults}
+						onCloseMobileFilter={() => {
+							setFilterOpened(false)
+						}}
+					/>
+				</>
 			)}
 			<div ref={contentRef}>
 				<TicketList
 					type={filter.status || DEFAULT_TICKET_TYPE}
 					list={filteredTickets}
-					loading={isLoading}
+					loading={loading}
+					failure={isFailure}
 					activeKeysList={activeKeysList}
 					setActiveKeysList={setActiveKeysList}
 				/>

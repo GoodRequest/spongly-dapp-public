@@ -39,13 +39,14 @@ interface ITicketList {
 	type: string
 	list: ITicketContent[]
 	loading: boolean
+	failure: boolean
 	activeKeysList: any[]
 	setActiveKeysList: Dispatch<SetStateAction<string[]>>
 }
 
 const LIST_SIZE = 10
 
-const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = [], loading, activeKeysList, setActiveKeysList }) => {
+const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = [], loading, failure, activeKeysList, setActiveKeysList }) => {
 	const [renderList, setRenderList] = useState<ITicketContent[]>(slice(list, 0, LIST_SIZE))
 	const { t } = useTranslation()
 	const dispatch = useDispatch()
@@ -273,7 +274,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 					setTempMatches={setTempMatches}
 				/>
 			)),
-		[activeKeysList, renderList, setActiveKeysList, type]
+		[activeKeysList, renderList, setActiveKeysList, type, sgpFees]
 	)
 
 	return (
@@ -287,7 +288,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 
 				<Row>
 					<Col span={24}>
-						{loading ? (
+						{loading || failure ? (
 							<>
 								<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
 								<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />

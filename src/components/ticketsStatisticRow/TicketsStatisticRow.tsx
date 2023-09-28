@@ -9,6 +9,7 @@ import { getWalletImage } from '@/utils/images'
 import { roundPrice } from '@/utils/formatters/currency'
 
 import * as SC from './TicketsStatisticRowStyles'
+import * as SCS from '@/styles/GlobalStyles'
 
 import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
 import SuccessIcon from '@/assets/icons/success-rate-statistics-icon.png'
@@ -68,7 +69,7 @@ const TicketsStatisticRow = ({ isLoading, user }: Props) => {
 				</>
 			)}
 			{!chain?.id && (
-				<SC.Empty
+				<SCS.Empty
 					image={EmptyStateImage}
 					description={
 						<div>

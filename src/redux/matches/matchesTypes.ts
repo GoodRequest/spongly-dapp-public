@@ -1,25 +1,18 @@
-import { IResetStore } from '../generalTypes'
+import { IResetStore } from '@/redux/generalType'
 
-export enum SET_ALL_MATCHES {
-	SET_ALL_MATCHES_ARRAY = 'SET_ALL_MATCHES_ARRAY',
-	SET_ALL_MATCHES_ARRAY_START = 'SET_ALL_MATCHES_ARRAY_START',
-	STATE = 'STATE'
+export enum MATCHES_LIST {
+	MATCHES_LIST_LOAD_START = 'MATCHES_LIST_LOAD_START',
+	MATCHES_LIST_LOAD_DONE = 'MATCHES_LIST_LOAD_DONE',
+	MATCHES_LIST_LOAD_FAIL = 'MATCHES_LIST_LOAD_FAIL'
 }
 
-export interface IState {
-	isLoading: boolean
-	isFailed: boolean
+export type IMatchesActions = IResetStore | IGetMatchesList
+
+export interface IMatchesListPayload {
+	data: any
 }
 
-export interface IMatchesPayload {
-	matches: any
-	isLoading: boolean
-	isFailed: boolean
+export interface IGetMatchesList {
+	type: MATCHES_LIST
+	payload: IMatchesListPayload
 }
-
-export interface ISetAllMatches {
-	type: SET_ALL_MATCHES
-	payload: IMatchesPayload
-}
-
-export type IMatchesActions = IResetStore | ISetAllMatches

@@ -56,19 +56,19 @@ export const TAGS_LIST: Tags = [
 	{ id: 109021, label: 'Golf head-to-head', country: 'WORLD', logoClass: 'icon-league league--pga' },
 	{ id: 109121, label: 'Golf Tournament Winner', country: 'WORLD', logoClass: 'icon-league league--pga' },
 	{ id: 18821, label: 'CONCACAF Nations League', country: 'WORLD', logoClass: 'icon-league league--concacaf-nations' },
-	{ id: 9288, label: 'UEFA EURO U21', country: 'WORLD', logoClass: '' },
 	{ id: 18806, label: 'UEFA Nations League', country: 'WORLD', logoClass: 'icon-league league--uefa-nations' },
 	{ id: 9050, label: 'UEFA EURO Qualifications', country: 'WORLD', logoClass: 'icon-league league--uefa' },
-	{ id: 9042, label: 'UEFA Champions League Qualification', country: 'WORLD', logoClass: 'icon-league league--ucl' },
 	{ id: 9016, label: 'UEFA Champions League', logo: uclIcon, country: 'WORLD', logoClass: 'icon-league league--ucl' },
-	// { id: 9017, label: 'UEFA Europa League', country: 'WORLD', logoClass: 'icon-league league--uel' },
-	{ id: 19216, label: 'UEFA Conference League Qualification', country: 'WORLD', logoClass: '' },
 	{ id: 9073, label: 'UEFA Europa League', country: 'WORLD', logoClass: 'icon-league league--uel' },
 	{ id: 9076, label: 'FIFA World Cup Women', country: 'WORLD', logoClass: '' },
-	{ id: 9296, label: 'FIFA World Cup U20', country: 'WORLD', logoClass: 'icon-league league--fifa-world-cup-u20' },
 	{ id: 9409, label: 'FIBA World Cup', logoClass: '', country: 'WORLD' },
 	{ id: 9536, label: 'Saudi Professional League', logoClass: '', country: 'SA' },
 	{ id: 9268, label: 'Serie A', logoClass: '', country: 'BR' }
+	// NOTE: old { id: 9042, label: 'UEFA Champions League Qualification', country: 'WORLD', logoClass: 'icon-league league--ucl' },
+	// NOTE: old { id: 9017, label: 'UEFA Europa League', country: 'WORLD', logoClass: 'icon-league league--uel' },
+	// NOTE: old { id: 19216, label: 'UEFA Conference League Qualification', country: 'WORLD', logoClass: '' },
+	// NOTE: old { id: 9288, label: 'UEFA EURO U21', country: 'WORLD', logoClass: '' },
+	// NOTE: old { id: 9296, label: 'FIFA World Cup U20', country: 'WORLD', logoClass: 'icon-league league--fifa-world-cup-u20' },
 ]
 
 export enum BetType {
@@ -107,7 +107,6 @@ export const SPORTS_MAP: SportsMap = {
 	9014: 'Soccer',
 	9015: 'Soccer',
 	9016: 'Soccer',
-	// 9017: 'Soccer',
 	9018: 'Soccer',
 	9019: 'Soccer',
 	9445: 'Motosport',
@@ -124,16 +123,17 @@ export const SPORTS_MAP: SportsMap = {
 	9061: 'Soccer',
 	9045: 'Soccer',
 	9033: 'Hockey',
-	9296: 'Soccer',
 	9021: 'Cricket',
 	9050: 'Soccer',
 	109021: 'Golf',
 	109121: 'Golf',
 	18806: 'Soccer',
 	18821: 'Soccer',
-	9288: 'Soccer',
-	9042: 'Soccer',
-	19216: 'Soccer',
+	// 9288: 'Soccer',
+	// 9042: 'Soccer',
+	// 19216: 'Soccer',
+	// 9296: 'Soccer',
+	// 9017: 'Soccer',
 	9076: 'Soccer',
 	9073: 'Soccer',
 	9409: 'Basketball',
@@ -142,14 +142,14 @@ export const SPORTS_MAP: SportsMap = {
 }
 
 export const ENETPULSE_SPORTS = [
-	9153, 9156, 18977, 18983, 19138, 9399, 18196, 9057, 9061, 9045, 9445, 9033, 9296, 9050, 9497, 18806, 18821, 9288, 9042, 19216, 9076, 9073, 9409, 9536, 9268
+	9153, 9156, 18977, 18983, 19138, 9399, 18196, 9057, 9061, 9045, 9445, 9033, 9050, 9497, 18806, 18821, 9268, 9076, 9073, 9409,
+	9536 /* 9288,  9042, 9296, 19216 */
 ]
 
 export const JSON_ODDS_SPORTS = [109021, 109121]
 export const FIFA_WC_TAG = 9018
-export const FIFA_WC_U20_TAG = 9296
 export const IIHF_WC_TAG = 9033
-export const UEFA_TAGS = [9016 /* , 9017 */, 18806, 18821, 9288, 9042, 19216, 9076]
+export const UEFA_TAGS = [9016, 18806, 18821, 9076 /* , 9288 , 9042, 9017, 19216 */]
 export const MOTOSPORT_TAGS = [9445, 9497]
 export const GOLF_TAGS = [109021, 109121]
 export const GOLF_TOURNAMENT_WINNER_TAG = 109121
@@ -160,7 +160,7 @@ export const SPORTS_TAGS_MAP: SportsTagsMap = {
 	Basketball: [9004, 9005, 9008, 9399, 9409],
 	Hockey: [9006, 9033],
 	Soccer: [
-		9010, 9011, 9012, 9013, 9014, 9015, 9016 /* , 9017 */, 9018, 9019, 9057, 9061, 9045, 9296, 9050, 18806, 18821, 9288, 9042, 19216, 9076, 9073, 9536, 9268
+		9010, 9011, 9012, 9013, 9014, 9015, 9016, 9018, 9019, 9057, 9061, 9045, 9050, 18806, 18821, 9076, 9073, 9536, 9268 /* , 9296, 9017, 9288, 9042, 19216 */
 	],
 	MMA: [9007, 18196],
 	Motosport: [9445, 9497],

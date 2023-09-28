@@ -1,19 +1,14 @@
-import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { useLazyQuery } from '@apollo/client'
 import { useNetwork } from 'wagmi'
 
-import { SET_ALL_MATCHES } from './matchesTypes'
 import { GET_ALL_SPORT_MARKETS } from '@/utils/queries'
 import { getMarketOddsFromContract } from '@/utils/markets'
-import { RootState } from '../rootReducer'
+import { MATCHES_LIST } from './matchesTypes'
 
 export const useFetchAllMatches = () => {
 	const dispatch = useDispatch()
-	const rawMatches = useSelector((state: RootState) => state.matches.rawMatches)
-	const [fetchMeta, setFetchMeta] = useState({
-		fallbackTry: 0 // NOTE: try to fetch data from contract 3 times if isFailed
-	})
 
 	const { chain } = useNetwork()
 	const [fetchData0] = useLazyQuery(GET_ALL_SPORT_MARKETS)
@@ -23,7 +18,6 @@ export const useFetchAllMatches = () => {
 
 	const contractOddsAllMatches = async (values: any) => {
 		try {
-			dispatch({ type: SET_ALL_MATCHES.SET_ALL_MATCHES_ARRAY_START })
 			const marketOddsFromContract = await getMarketOddsFromContract([
 				...values[0].data.sportMarkets,
 				...values[1].data.sportMarkets,
@@ -31,29 +25,15 @@ export const useFetchAllMatches = () => {
 				...values[3].data.sportMarkets
 			])
 
-			dispatch({
-				type: SET_ALL_MATCHES.SET_ALL_MATCHES_ARRAY,
-				payload: {
-					matches: marketOddsFromContract,
-					isLoading: false,
-					isFailed: false
-				}
-			})
+			dispatch({ type: MATCHES_LIST.MATCHES_LIST_LOAD_DONE, payload: { data: marketOddsFromContract } })
 		} catch (err) {
-			dispatch({
-				type: SET_ALL_MATCHES.SET_ALL_MATCHES_ARRAY,
-				payload: {
-					matches: [],
-					isLoading: false,
-					isFailed: true
-				}
-			})
+			dispatch({ type: MATCHES_LIST.MATCHES_LIST_LOAD_FAIL, payload: { data: [] } })
 		}
 	}
 
 	const fetchAllMatches = () => {
 		// NOTE: maximum 1000 matches per query, 6000 matches in total
-		dispatch({ type: SET_ALL_MATCHES.STATE, payload: { isLoading: true, isFailed: false } })
+		dispatch({ type: MATCHES_LIST.MATCHES_LIST_LOAD_START })
 		Promise.all([
 			fetchData0({ variables: { skip: 0 }, context: { chainId: chain?.id } }),
 			fetchData1({ variables: { skip: 1000 }, context: { chainId: chain?.id } }),
@@ -61,20 +41,18 @@ export const useFetchAllMatches = () => {
 			fetchData3({ variables: { skip: 3000 }, context: { chainId: chain?.id } })
 		])
 			.then((values) => contractOddsAllMatches(values))
-			.catch((error) => {
-				// TODO: handle error notification
-				// eslint-disable-next-line no-console
-				console.error('Fetch paralel request', error)
+			.catch(() => {
+				dispatch({
+					type: MATCHES_LIST.MATCHES_LIST_LOAD_FAIL,
+					payload: { data: [] }
+				})
 			})
 	}
 
 	useEffect(() => {
-		if ((rawMatches.matches.length === 0 || rawMatches.isFailed) && fetchMeta.fallbackTry < 3) {
-			setFetchMeta((current) => ({ fallbackTry: current.fallbackTry + 1 }))
-			fetchAllMatches()
-		}
+		fetchAllMatches()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [chain?.id, rawMatches.isFailed])
+	}, [chain?.id])
 
 	return null
 }
