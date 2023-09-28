@@ -21,7 +21,6 @@ export const GET_ALL_SPORT_MARKETS = gql`
 			homeTeam
 			maturityDate
 			tags
-			total
 			homeOdds
 			awayOdds
 			drawOdds
@@ -146,6 +145,8 @@ export const GET_TICKETS = gql`
 					awayScore
 					awayTeam
 					betType
+					total
+					spread
 					finalResult
 					isCanceled
 					isOpen
@@ -194,6 +195,8 @@ export const GET_TICKETS = gql`
 					timestamp
 					resultDetails
 					tags
+					spread
+					total
 					maturityDate
 					gameId
 				}

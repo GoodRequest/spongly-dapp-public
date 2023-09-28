@@ -45,6 +45,7 @@ const MobileMenu = ({ selected }: Props) => {
 
 	return (
 		<>
+			{/* eslint-disable-next-line react/no-danger */}
 			{isOpen && <div dangerouslySetInnerHTML={{ __html: style }} />}
 			<SC.MenuWrapper onClick={() => setIsOpen(!isOpen)}>
 				<SC.MenuLogo src={isOpen ? CloseMenuIcon : OpenMenuIcon} />

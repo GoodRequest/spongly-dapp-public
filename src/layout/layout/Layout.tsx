@@ -1,8 +1,8 @@
-import { FC, ReactElement, ReactNode, useEffect, useState } from 'react'
+import { FC, ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from 'next-export-i18n'
 import { Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
-import { includes } from 'lodash'
+
 import LogoImg from '@/assets/icons/sponglyLogo.svg'
 import Footer from '../footer/Footer'
 import Header from '../header/Header'
@@ -11,11 +11,9 @@ import TicketBetContainer from '@/components/ticketBetContainer/TicketBetContain
 
 import useFetchTickets from '@/redux/tickets/ticketsHooks'
 import { useFetchAllMatches } from '@/redux/matches/matchesHooks'
-import { useMedia } from '@/hooks/useMedia'
 
 import * as SC from './LayoutStyles'
 import * as PSC from '../content/ContentStyles'
-import { RESOLUTIONS } from '@/utils/enums'
 
 interface ILayout {
 	children: ReactNode

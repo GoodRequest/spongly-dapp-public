@@ -1,5 +1,5 @@
 import styled, { css, keyframes } from 'styled-components'
-import { Col, Row } from 'antd'
+import { Col } from 'antd'
 import { TextSMMedium, TextXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 import { FlexItemCenter } from '@/styles/GlobalStyles'
@@ -56,8 +56,11 @@ export const ResultsWrapper = styled(Col)`
 export const OddsWrapper = styled(Col)`
 	display: flex;
 	align-items: center;
-	justify-content: left;
+	justify-content: end;
 	margin-top: 8px;
+	@media (max-width: ${breakpoints.sm}px) {
+		justify-content: start;
+	}
 `
 export const TicketHeader = styled.div`
 	display: flex;
