@@ -245,8 +245,8 @@ export interface ISuccessRateData {
 	}
 	processStart: string
 	stats: {
-		account: string
-		successRate: number
-		totalTickets: number
+		ac: string
+		sr: number
+		tt: number
 	}[]
 }

@@ -122,7 +122,7 @@ const useFetchTickets = () => {
 					...values[2].data.positionBalances
 				]
 
-				const successRateMap = new Map(values[3].stats.map((obj) => [obj.account, obj.successRate]))
+				const successRateMap = new Map(values[3].stats.map((obj) => [obj.ac, obj.sr]))
 
 				mapTicketsData(allTickets, successRateMap).then((data) => {
 					dispatch({
