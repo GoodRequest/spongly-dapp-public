@@ -277,6 +277,7 @@ export const LoadMore = styled.div`
 	cursor: pointer;
 	border-radius: 12px;
 	background: ${({ theme }) => theme['color-base-action-secondary-default']};
+	transition: background 300ms;
 	&:hover {
 		background: ${({ theme }) => theme['color-base-action-primary-default']};
 	}
