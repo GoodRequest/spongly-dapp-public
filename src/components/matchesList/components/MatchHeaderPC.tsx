@@ -61,7 +61,7 @@ const MatchHeaderPC = ({
 	return (
 		<SC.PCContentWrapper>
 			{type === MATCHES.OPEN && (
-				<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.OPEN}`}>
+				<SC.MatchItemRow type={MATCHES.OPEN} key={`${match.maturityDate}-${MATCHES.OPEN}`}>
 					<SC.MatchItemCol $alignItems={'flex-start'} span={8 + getPushNumber()}>
 						{getContestedTeams}
 					</SC.MatchItemCol>
@@ -144,11 +144,11 @@ const MatchHeaderPC = ({
 				</SC.MatchItemRow>
 			)}
 			{type === MATCHES.ONGOING && (
-				<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.ONGOING}`}>
-					<SC.MatchItemCol $alignItems={'flex-start'} span={16}>
+				<SC.MatchItemRow gutter={16} type={MATCHES.ONGOING} key={`${match.maturityDate}-${MATCHES.ONGOING}`}>
+					<SC.MatchItemCol $alignItems={'flex-start'} span={18}>
 						{getContestedTeams}
 					</SC.MatchItemCol>
-					<SC.MatchItemCol span={8}>
+					<SC.MatchItemCol span={6}>
 						<SC.Header>{t('Status')}</SC.Header>
 						<SC.StatusWrapper>
 							<SCS.Icon icon={ClockIcon} />
@@ -158,20 +158,22 @@ const MatchHeaderPC = ({
 				</SC.MatchItemRow>
 			)}
 			{type === MATCHES.FINISHED && (
-				<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.FINISHED}`}>
-					<SC.MatchItemCol $alignItems={'flex-start'} span={16}>
+				<SC.MatchItemRow gutter={16} type={MATCHES.FINISHED} key={`${match.maturityDate}-${MATCHES.FINISHED}`}>
+					<SC.MatchItemCol $alignItems={'flex-start'} span={18}>
 						{getContestedTeams}
 					</SC.MatchItemCol>
-					<SC.MatchItemCol span={8}>
+					<SC.MatchItemCol span={6}>
 						<SC.Header>{t('Results')}</SC.Header>
 						<SC.StatusWrapper>{formatFinishedResults()}</SC.StatusWrapper>
 					</SC.MatchItemCol>
 				</SC.MatchItemRow>
 			)}
 			{type === MATCHES.PAUSED && (
-				<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.PAUSED}`}>
-					<SC.MatchItemCol span={16}>{getContestedTeams}</SC.MatchItemCol>
-					<SC.MatchItemCol span={8}>
+				<SC.MatchItemRow gutter={16} type={MATCHES.PAUSED} key={`${match.maturityDate}-${MATCHES.PAUSED}`}>
+					<SC.MatchItemCol $alignItems={'flex-start'} span={18}>
+						{getContestedTeams}
+					</SC.MatchItemCol>
+					<SC.MatchItemCol span={6}>
 						<SC.Header>{t('Status')}</SC.Header>
 						{match?.isPaused ? (
 							<SC.StatusWrapper>

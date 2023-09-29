@@ -95,36 +95,57 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 	)
 
 	const getContestedTeams = useMemo(
-		() => (
-			<>
-				<SC.Header>{getFormatDate(type, match.maturityDate, t)}</SC.Header>
-				{size === RESOLUTIONS.XXL && (
-					<SC.XXLWrapper>
-						<SC.NoWrapCenterRow gutter={16}>
-							<Col span={12}>
+		() =>
+			type === MATCHES.OPEN ? (
+				<>
+					<SC.Header>{getFormatDate(type, match.maturityDate, t)}</SC.Header>
+					{size === RESOLUTIONS.XXL && (
+						<SC.XXLWrapper>
+							<SC.NoWrapCenterRow gutter={16}>
+								<Col span={12}>
+									<Row style={{ flexWrap: 'nowrap' }}>{images}</Row>
+								</Col>
+								<Col span={12}>{teamNames}</Col>
+							</SC.NoWrapCenterRow>
+						</SC.XXLWrapper>
+					)}
+					{includes([RESOLUTIONS.SEMIXXL, RESOLUTIONS.XL, RESOLUTIONS.LG], size) ? (
+						<SC.SEMIXXLWrapper>
+							<Row>{images}</Row>
+							<Row>
+								<SC.MobileTeamsContent>{teamNames}</SC.MobileTeamsContent>
+							</Row>
+						</SC.SEMIXXLWrapper>
+					) : (
+						<SC.MDWrapper>
+							<Row gutter={16}>
+								<SC.FlexCol isTotalWinner={isTotalWinner}>{images}</SC.FlexCol>
+								<SC.FlexCenterCol>{teamNames}</SC.FlexCenterCol>
+							</Row>
+						</SC.MDWrapper>
+					)}
+				</>
+			) : (
+				// ONGOING, PAUSED, FINISHED
+				<>
+					<SC.Header>{getFormatDate(type, match.maturityDate, t)}</SC.Header>
+					{includes([RESOLUTIONS.SEMIXXL, RESOLUTIONS.XL, RESOLUTIONS.LG, RESOLUTIONS.XXL], size) ? (
+						<SC.NoWrapCenterRow style={{ width: '100%' }} gutter={16}>
+							<Col span={6}>
 								<Row style={{ flexWrap: 'nowrap' }}>{images}</Row>
 							</Col>
-							<Col span={12}>{teamNames}</Col>
+							<Col span={18}>{teamNames}</Col>
 						</SC.NoWrapCenterRow>
-					</SC.XXLWrapper>
-				)}
-				{includes([RESOLUTIONS.SEMIXXL, RESOLUTIONS.XL, RESOLUTIONS.LG], size) ? (
-					<SC.SEMIXXLWrapper>
-						<Row>{images}</Row>
-						<Row>
-							<SC.MobileTeamsContent>{teamNames}</SC.MobileTeamsContent>
-						</Row>
-					</SC.SEMIXXLWrapper>
-				) : (
-					<SC.MDWrapper>
-						<Row gutter={16}>
-							<SC.FlexCol isTotalWinner={isTotalWinner}>{images}</SC.FlexCol>
-							<SC.FlexCenterCol>{teamNames}</SC.FlexCenterCol>
-						</Row>
-					</SC.MDWrapper>
-				)}
-			</>
-		),
+					) : (
+						<SC.MDWrapper>
+							<Row gutter={16}>
+								<SC.FlexCol isTotalWinner={isTotalWinner}>{images}</SC.FlexCol>
+								<SC.FlexCenterCol>{teamNames}</SC.FlexCenterCol>
+							</Row>
+						</SC.MDWrapper>
+					)}
+				</>
+			),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[match, size, imgSrcHome, imgSrcAway]
 	)

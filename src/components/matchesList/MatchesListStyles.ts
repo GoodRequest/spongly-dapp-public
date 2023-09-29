@@ -91,14 +91,14 @@ export const PanelContent = styled.div`
 	${TextXSMedium}
 `
 
-export const MatchItemRow = styled(Row)`
+export const MatchItemRow = styled(Row)<{ type: MATCHES }>`
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	border-radius: 12px;
-	max-width: 977px;
+	max-width: ${({ type }) => (type === MATCHES.OPEN ? '977px;' : '100%')};
 	${TextSMMedium};
-	width: calc(100% - 40px);
+	width: ${({ type }) => (type === MATCHES.OPEN ? 'calc(100% - 48px)' : '100%')};
 	@media (max-width: ${breakpoints.semixxl}px) {
-		width: calc(100% - 72px);
+		width: ${({ type }) => (type === MATCHES.OPEN ? 'calc(100% - 72px)' : '100%')};
 	}
 	@media (max-width: ${breakpoints.md}px) {
 		width: 100%;
@@ -255,7 +255,7 @@ export const StatusWrapper = styled.div`
 	flex-wrap: nowrap;
 	padding: 20px;
 	text-align: center;
-	width: 216px;
+	width: 100%;
 	height: 60px;
 	border-radius: 6px;
 	background: ${({ theme }) => theme['color-base-surface-quaternary']};
@@ -421,11 +421,11 @@ export const CollapseButtonWrapper = styled.div`
 `
 
 export const XXLWrapper = styled.div`
-	display: block;
+	//display: block;
 
-	@media (max-width: ${breakpoints.semixxl}px) {
-		display: none;
-	}
+	// @media (max-width: ${breakpoints.semixxl}px) {
+	// 	display: none;
+	// }
 `
 
 export const SEMIXXLWrapper = styled.div`
