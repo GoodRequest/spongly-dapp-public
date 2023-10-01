@@ -20,7 +20,7 @@ type Props = {
 	betOption: BET_OPTIONS
 	match: TicketPosition
 	oddName?: string
-	setVisibleParlayValidationModal: Dispatch<SetStateAction<{ visible: boolean; message: string }>>
+	setVisibleParlayValidationModal?: Dispatch<SetStateAction<{ visible: boolean; message: string }>>
 	isMobilePanel?: boolean
 	isHeader?: boolean
 }
@@ -42,7 +42,7 @@ const OddButton = (props: Props) => {
 			active={isMatchInActiveTicket?.betOption === betOption}
 			onClick={() => {
 				// Parlay validations - if matches exist and match is not already in ticket (then do update if user remove match)
-				if (activeTicketValues.matches && !activeTicketValues.matches.find((m) => m.gameId === match.gameId)) {
+				if (setVisibleParlayValidationModal && activeTicketValues.matches && !activeTicketValues.matches.find((m) => m.gameId === match.gameId)) {
 					if (checkTotalWinnerBetExist(activeTicketValues, match)) {
 						setVisibleParlayValidationModal({ visible: true, message: t('Only one participant per event is supported.') })
 						return

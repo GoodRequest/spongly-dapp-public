@@ -20,7 +20,7 @@ import * as SC from './MatchesListStyles'
 
 interface IMatchListContent {
 	match: TicketPosition
-	setVisibleParlayValidationModal: Dispatch<SetStateAction<{ visible: boolean; message: string }>>
+	setVisibleParlayValidationModal?: Dispatch<SetStateAction<{ visible: boolean; message: string }>>
 }
 
 const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleParlayValidationModal }) => {
