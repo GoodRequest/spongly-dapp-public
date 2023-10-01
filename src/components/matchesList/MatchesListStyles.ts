@@ -1,9 +1,10 @@
 import styled from 'styled-components'
 import { Col, Collapse, Divider, Radio, Row, Skeleton } from 'antd'
 import Ticket from '@/assets/images/empty_state_ticket.png'
-import { HeadingXXSMedium, TextMDMedium, TextMDRegular, TextSMMedium, TextSMRegular, TextXSMedium } from '@/styles/typography'
+import { HeadingXSMedium, HeadingXXSMedium, TextMDMedium, TextMDRegular, TextSMMedium, TextSMRegular, TextXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 import { MATCHES } from '@/utils/enums'
+import { FlagWorld } from '@/styles/GlobalStyles'
 
 const { Panel } = Collapse
 
@@ -113,6 +114,20 @@ export const MatchItemCol = styled(Col)<{ $alignItems?: string }>`
 	margin-top: auto;
 	margin-bottom: auto;
 	flex-direction: column;
+`
+export const LeagueHeader = styled.div`
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	${HeadingXSMedium}
+
+	${FlagWorld} {
+		width: 28px;
+	}
+`
+export const FlagWrapper = styled.div`
+	width: 28px;
+	margin-right: 12px;
 `
 
 export const ExtendedMatchContentWrapper = styled.div`
