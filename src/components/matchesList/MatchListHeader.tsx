@@ -25,10 +25,10 @@ const MatchHeaderMobile = dynamic(() => import('./components/MatchHeaderMobile')
 interface IMatchListItem {
 	match: TicketPosition
 	type: MATCHES
-	setVisibleTotalWinnerModal: Dispatch<SetStateAction<boolean>>
+	setVisibleParlayValidationModal: Dispatch<SetStateAction<{ visible: boolean; message: string }>>
 }
 
-const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVisibleTotalWinnerModal }) => {
+const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVisibleParlayValidationModal }) => {
 	const { t } = useTranslation()
 	const size = useMedia()
 
@@ -168,7 +168,7 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 		<MatchHeaderPC
 			match={match}
 			type={type}
-			setVisibleTotalWinnerModal={setVisibleTotalWinnerModal}
+			setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 			getContestedTeams={getContestedTeams}
 			getBaseBetTypes={getBaseBetTypes}
 			formatFinishedResults={formatFinishedResults}
@@ -177,7 +177,7 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 		<MatchHeaderMobile
 			match={match}
 			type={type}
-			setVisibleTotalWinnerModal={setVisibleTotalWinnerModal}
+			setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 			getContestedTeams={getContestedTeams}
 			getBaseBetTypes={getBaseBetTypes}
 			formatFinishedResults={formatFinishedResults}

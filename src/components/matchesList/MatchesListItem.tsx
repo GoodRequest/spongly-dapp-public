@@ -30,10 +30,10 @@ interface IMatchListItem {
 	}
 	keyValue: string | number
 	loading?: boolean
-	setVisibleTotalWinnerModal: Dispatch<SetStateAction<boolean>>
+	setVisibleParlayValidationModal: Dispatch<SetStateAction<{ visible: boolean; message: string }>>
 }
 
-const MatchListItem: FC<IMatchListItem> = ({ match, keyValue, filter, loading = false, setVisibleTotalWinnerModal }) => {
+const MatchListItem: FC<IMatchListItem> = ({ match, keyValue, filter, loading = false, setVisibleParlayValidationModal }) => {
 	const [isExpanded, setIsExpanded] = useState(false)
 
 	const collapsible =
@@ -49,10 +49,12 @@ const MatchListItem: FC<IMatchListItem> = ({ match, keyValue, filter, loading = 
 			key={keyValue}
 		>
 			<SC.CollapsePanel
-				header={<MatchListHeader match={match as any} type={filter.status} setVisibleTotalWinnerModal={setVisibleTotalWinnerModal} />}
+				header={<MatchListHeader match={match as any} type={filter.status} setVisibleParlayValidationModal={setVisibleParlayValidationModal} />}
 				key={match.maturityDate}
 			>
-				{!loading && match.isOpen && isExpanded && <MatchListContent match={match as any} setVisibleTotalWinnerModal={setVisibleTotalWinnerModal} />}
+				{!loading && match.isOpen && isExpanded && (
+					<MatchListContent match={match as any} setVisibleParlayValidationModal={setVisibleParlayValidationModal} />
+				)}
 			</SC.CollapsePanel>
 			{filter.status === MATCHES.OPEN && (
 				<SC.CollapseButtonWrapper>

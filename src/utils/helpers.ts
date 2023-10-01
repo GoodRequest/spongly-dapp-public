@@ -705,6 +705,13 @@ export const checkTotalWinnerBetExist = (activeTicketValues: IUnsubmittedBetTick
 	}
 	return false
 }
+export const checkTeamExistInBet = (matches: TicketPosition[], match: TicketPosition) => {
+	const foundMatch = matches.find((team) => {
+		return team.homeTeam === match.homeTeam || team.awayTeam === match.awayTeam
+	})
+
+	return foundMatch ? foundMatch.homeTeam || foundMatch.awayTeam : false
+}
 
 export const getCanceledClaimAmount = (ticket: UserTicket) => {
 	// parlay
