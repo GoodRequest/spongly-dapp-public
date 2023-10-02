@@ -43,7 +43,7 @@ const MatchHeaderPC = ({
 	const isOnlyWinner = winnerTypeMatch && doubleChanceTypeMatches?.length === 0 && !spreadTypeMatch && !totalTypeMatch
 
 	const getSpanNumber = (betType: BetType) => {
-		if (isOnlyWinner) return 5
+		if (isOnlyWinner) return 15
 		if (getBaseBetTypes().length > 2) {
 			if (betType === BetType.WINNER && match.drawOdds && Number(match.drawOdds) !== 0) return 7
 			return 5
@@ -52,17 +52,11 @@ const MatchHeaderPC = ({
 		return 16
 	}
 
-	const getPushNumber = () => {
-		if (isTotalWinner) return 10
-		if (isOnlyWinner) return 10
-		return 0
-	}
-
 	return (
 		<SC.PCContentWrapper>
 			{type === MATCHES.OPEN && (
 				<SC.MatchItemRow type={MATCHES.OPEN} key={`${match.maturityDate}-${MATCHES.OPEN}`}>
-					<SC.MatchItemCol $alignItems={'flex-start'} span={8 + getPushNumber()}>
+					<SC.MatchItemCol $alignItems={'flex-start'} span={8}>
 						{getContestedTeams}
 					</SC.MatchItemCol>
 					{includes(getBaseBetTypes(), BetType.WINNER) && (
