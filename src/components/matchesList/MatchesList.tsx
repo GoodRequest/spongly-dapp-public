@@ -30,8 +30,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 	const { t } = useTranslation()
 	const size = useMedia()
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
-	const [visibleTotalWinnerModal, setVisibleTotalWinnerModal] = useState(false)
-
+	const [visibleParlayValidationModal, setVisibleParlayValidationModal] = useState({ visible: false, message: '' })
 	const [matchOffsetByResolution, setMatchOffsetByResolution] = useState(0)
 
 	useEffect(() => {
@@ -107,17 +106,17 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 	const modalParlayValidation = useMemo(
 		() => (
 			<Modal
-				open={visibleTotalWinnerModal}
+				open={visibleParlayValidationModal.visible}
 				onCancel={() => {
-					setVisibleTotalWinnerModal(false)
+					setVisibleParlayValidationModal({ visible: false, message: '' })
 				}}
 				title={t('Parlay Validation')}
 				centered
 			>
-				<SC.ModalDescriptionText>{t('Only one participant per event is supported.')}</SC.ModalDescriptionText>
+				<SC.ModalDescriptionText>{visibleParlayValidationModal.message}</SC.ModalDescriptionText>
 			</Modal>
 		),
-		[visibleTotalWinnerModal]
+		[visibleParlayValidationModal]
 	)
 
 	return (
@@ -135,7 +134,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 										match={match}
 										keyValue={`match-${match.address}-${key}`}
 										filter={filter}
-										setVisibleTotalWinnerModal={setVisibleTotalWinnerModal}
+										setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 									/>
 								))
 							) : (

@@ -14,7 +14,7 @@ import { TicketPosition } from '@/redux/betTickets/betTicketTypes'
 interface IMatchListItem {
 	match: TicketPosition
 	type: MATCHES
-	setVisibleTotalWinnerModal: Dispatch<SetStateAction<boolean>>
+	setVisibleParlayValidationModal: Dispatch<SetStateAction<{ visible: boolean; message: string }>>
 	getContestedTeams: any
 	getBaseBetTypes: any
 	formatFinishedResults: any
@@ -23,7 +23,7 @@ interface IMatchListItem {
 const MatchHeaderMobile = ({
 	match,
 	type = MATCHES.OPEN,
-	setVisibleTotalWinnerModal,
+	setVisibleParlayValidationModal,
 	getContestedTeams,
 	getBaseBetTypes,
 	formatFinishedResults
@@ -47,13 +47,25 @@ const MatchHeaderMobile = ({
 						<OddButton
 							isHeader
 							match={match}
-							setVisibleTotalWinnerModal={isTotalWinner ? setVisibleTotalWinnerModal : undefined}
+							setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 							betOption={BET_OPTIONS.WINNER_HOME}
 							oddName={isTotalWinner ? t('YES') : BET_OPTIONS.WINNER_HOME}
 							isMobilePanel
 						/>
-						<OddButton isHeader match={match} betOption={BET_OPTIONS.WINNER_DRAW} isMobilePanel />
-						<OddButton isHeader match={match} betOption={BET_OPTIONS.WINNER_AWAY} isMobilePanel />
+						<OddButton
+							setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+							isHeader
+							match={match}
+							betOption={BET_OPTIONS.WINNER_DRAW}
+							isMobilePanel
+						/>
+						<OddButton
+							setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+							isHeader
+							match={match}
+							betOption={BET_OPTIONS.WINNER_AWAY}
+							isMobilePanel
+						/>
 					</SC.RadioMobileGroup>
 					<SC.OddsWrapper>
 						<OddValue match={match} betOption={BET_OPTIONS.WINNER_HOME} />

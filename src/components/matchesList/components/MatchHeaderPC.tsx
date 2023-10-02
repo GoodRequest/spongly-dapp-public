@@ -22,7 +22,7 @@ import { TicketPosition } from '@/redux/betTickets/betTicketTypes'
 interface IMatchListItem {
 	match: TicketPosition
 	type: MATCHES
-	setVisibleTotalWinnerModal: Dispatch<SetStateAction<boolean>>
+	setVisibleParlayValidationModal: Dispatch<SetStateAction<{ visible: boolean; message: string }>>
 	getContestedTeams: any
 	getBaseBetTypes: any
 	formatFinishedResults: any
@@ -31,7 +31,7 @@ interface IMatchListItem {
 const MatchHeaderPC = ({
 	match,
 	type = MATCHES.OPEN,
-	setVisibleTotalWinnerModal,
+	setVisibleParlayValidationModal,
 	getContestedTeams,
 	getBaseBetTypes,
 	formatFinishedResults
@@ -73,12 +73,22 @@ const MatchHeaderPC = ({
 									<OddButton
 										isHeader
 										match={match}
-										setVisibleTotalWinnerModal={isTotalWinner ? setVisibleTotalWinnerModal : undefined}
+										setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 										betOption={BET_OPTIONS.WINNER_HOME}
 										oddName={isTotalWinner ? t('YES') : BET_OPTIONS.WINNER_HOME}
 									/>
-									<OddButton isHeader match={match} betOption={BET_OPTIONS.WINNER_DRAW} />
-									<OddButton isHeader match={match} betOption={BET_OPTIONS.WINNER_AWAY} />
+									<OddButton
+										setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+										isHeader
+										match={match}
+										betOption={BET_OPTIONS.WINNER_DRAW}
+									/>
+									<OddButton
+										setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+										isHeader
+										match={match}
+										betOption={BET_OPTIONS.WINNER_AWAY}
+									/>
 								</SC.RadioGroup>
 								<SC.OddsWrapper>
 									<OddValue match={match} betOption={BET_OPTIONS.WINNER_HOME} />
@@ -99,9 +109,24 @@ const MatchHeaderPC = ({
 								)}
 								<SC.RowItemContent>
 									<SC.RadioGroup>
-										<OddButton isHeader match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_HOME} />
-										<OddButton isHeader match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_DRAW} />
-										<OddButton isHeader match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_AWAY} />
+										<OddButton
+											setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+											isHeader
+											match={match}
+											betOption={BET_OPTIONS.DOUBLE_CHANCE_HOME}
+										/>
+										<OddButton
+											setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+											isHeader
+											match={match}
+											betOption={BET_OPTIONS.DOUBLE_CHANCE_DRAW}
+										/>
+										<OddButton
+											setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+											isHeader
+											match={match}
+											betOption={BET_OPTIONS.DOUBLE_CHANCE_AWAY}
+										/>
 									</SC.RadioGroup>
 									<SC.OddsWrapper>
 										<OddValue match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_HOME} />
@@ -116,8 +141,18 @@ const MatchHeaderPC = ({
 							<SC.Header>{t('Handicap ({{ spread }})', { spread: roundToTwoDecimals(spreadTypeMatch?.spread || 0) })}</SC.Header>
 							<SC.RowItemContent>
 								<SC.RadioGroup>
-									<OddButton isHeader match={match} betOption={BET_OPTIONS.HANDICAP_HOME} />
-									<OddButton isHeader match={match} betOption={BET_OPTIONS.HANDICAP_AWAY} />
+									<OddButton
+										setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+										isHeader
+										match={match}
+										betOption={BET_OPTIONS.HANDICAP_HOME}
+									/>
+									<OddButton
+										setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+										isHeader
+										match={match}
+										betOption={BET_OPTIONS.HANDICAP_AWAY}
+									/>
 								</SC.RadioGroup>
 								<SC.OddsWrapper>
 									<OddValue match={match} betOption={BET_OPTIONS.HANDICAP_HOME} />
@@ -131,8 +166,18 @@ const MatchHeaderPC = ({
 							<SC.Header>{t('Total ({{ total }})', { total: roundToTwoDecimals(totalTypeMatch?.total || 0) })}</SC.Header>
 							<SC.RowItemContent>
 								<SC.RadioGroup>
-									<OddButton isHeader match={match} betOption={BET_OPTIONS.TOTAL_OVER} />
-									<OddButton isHeader match={match} betOption={BET_OPTIONS.TOTAL_UNDER} />
+									<OddButton
+										setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+										isHeader
+										match={match}
+										betOption={BET_OPTIONS.TOTAL_OVER}
+									/>
+									<OddButton
+										setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+										isHeader
+										match={match}
+										betOption={BET_OPTIONS.TOTAL_UNDER}
+									/>
 								</SC.RadioGroup>
 								<SC.OddsWrapper>
 									<OddValue match={match} betOption={BET_OPTIONS.TOTAL_OVER} />
