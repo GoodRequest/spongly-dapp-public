@@ -436,11 +436,11 @@ export const CollapseButtonWrapper = styled.div`
 `
 
 export const XXLWrapper = styled.div`
-	//display: block;
+	display: block;
 
-	// @media (max-width: ${breakpoints.semixxl}px) {
-	// 	display: none;
-	// }
+	@media (max-width: ${breakpoints.semixxl}px) {
+		display: none;
+	}
 `
 
 export const SEMIXXLWrapper = styled.div`
