@@ -10,11 +10,6 @@ export enum ENVIROMENT {
 	DEVELOPMENT = 'development'
 }
 
-export enum ErrorNotificationTypes {
-	TABLE = 'TABLE',
-	PARLAY_LEADERBOARD = 'PARLAY_LEADERBOARD'
-}
-
 // NOTE: if more tags are added, the tag from match.winnerTypeMatch.match[0] must be added
 export const TOTAL_WINNER_TAGS = ['109121', '9445', '9497'] // Golf, motosport, formula
 export enum MSG_TYPE {
