@@ -7,13 +7,14 @@ import { useRouter } from 'next-translate-routes'
 import ParlayLeaderboardRow from './components/ParlayLeaderboardRow'
 import { ParlayLeaderboardItem } from '@/typescript/types'
 import { getReq } from '@/utils/requests'
-import { getCurrentBiweeklyPeriod, getReward, handleErrorMessage } from '@/utils/helpers'
-import { ENDPOINTS, ErrorNotificationTypes, NETWORK_IDS, OddsType } from '@/utils/constants'
+import { getCurrentBiweeklyPeriod, getReward } from '@/utils/helpers'
+import { ENDPOINTS, MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE, OddsType } from '@/utils/constants'
 
 import * as SC from './ParlayLeaderboardStyles'
 import * as SCS from '@/styles/GlobalStyles'
 import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
 import { formatQuote } from '@/utils/formatters/quote'
+import { showNotifications } from '@/utils/tsxHelpers'
 
 const ParlayLeaderboard = () => {
 	const { t } = useTranslation()
@@ -47,7 +48,7 @@ const ParlayLeaderboard = () => {
 			}
 			setParlayLeaderboardData(newParlayData)
 		} catch (e) {
-			handleErrorMessage(ErrorNotificationTypes.PARLAY_LEADERBOARD, t)
+			showNotifications([{ type: MSG_TYPE.ERROR, message: t('Could not load parley leaderboard') }], NOTIFICATION_TYPE.NOTIFICATION)
 		} finally {
 			setIsLoading(false)
 		}

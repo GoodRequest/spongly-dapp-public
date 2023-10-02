@@ -1,5 +1,4 @@
 import dayjs from 'dayjs'
-import { notification } from 'antd'
 import Router from 'next/router'
 import { floor, groupBy, toNumber, toPairs } from 'lodash'
 import { AnyAction, Dispatch } from 'redux'
@@ -8,7 +7,6 @@ import { IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '
 import {
 	CLOSED_TICKET_TYPE,
 	COLLATERALS,
-	ErrorNotificationTypes,
 	ETHERSCAN_TX_URL_ARBITRUM,
 	ETHERSCAN_TX_URL_OPTIMISM,
 	ETHERSCAN_TX_URL_OPTIMISM_GOERLI,
@@ -66,29 +64,6 @@ import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
 
 import { formatParlayQuote, formatQuote, formattedCombinedTypeMatch } from './formatters/quote'
 import { roundToTwoDecimals } from './formatters/number'
-
-export const handleErrorMessage = (errorType: ErrorNotificationTypes, t: any) => {
-	let message
-	if (errorType) {
-		switch (errorType) {
-			case ErrorNotificationTypes.TABLE: {
-				message = t(`Could not load table data`)
-				break
-			}
-			case ErrorNotificationTypes.PARLAY_LEADERBOARD: {
-				message = t('Could not load parley leaderboard')
-				break
-			}
-			default:
-				message = t(`Unknown error`)
-		}
-	} else {
-		message = t(`Unknown error`)
-	}
-	notification.error({
-		message
-	})
-}
 
 export const getCurrentBiweeklyPeriod = () => {
 	const startOfPeriod = dayjs(START_OF_BIWEEKLY_PERIOD)
