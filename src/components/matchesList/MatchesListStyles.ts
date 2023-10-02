@@ -437,7 +437,7 @@ export const CollapseButtonWrapper = styled.div`
 
 export const XXLWrapper = styled.div`
 	display: block;
-
+	width: 100%;
 	@media (max-width: ${breakpoints.semixxl}px) {
 		display: none;
 	}
@@ -457,7 +457,6 @@ export const SEMIXXLWrapper = styled.div`
 
 export const MDWrapper = styled.div`
 	display: none;
-
 	@media (max-width: ${breakpoints.md}px) {
 		display: flex;
 	}
