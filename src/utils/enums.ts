@@ -13,6 +13,10 @@ export enum MATCHES {
 	FINISHED = 'finished',
 	PAUSED = 'paused'
 }
+export enum SWITCH_BUTTON_OPTIONS {
+	OPTION_1 = 'OPTION_1',
+	OPTION_2 = 'OPTION_2'
+}
 
 export enum WALLET_TICKETS {
 	ALL = 'ALL',

@@ -1,4 +1,6 @@
 import { FC, useState, Dispatch, SetStateAction } from 'react'
+import { useRouter } from 'next-translate-routes'
+import { useTranslation } from 'next-export-i18n'
 
 // components
 import MatchListContent from './MatchListContent'
@@ -9,7 +11,7 @@ import Button from '@/atoms/button/Button'
 import { SportMarket } from '@/__generated__/resolvers-types'
 
 // utils
-import { MATCHES } from '@/utils/enums'
+import { MATCHES, PAGES } from '@/utils/enums'
 
 // styles
 import * as SC from './MatchesListStyles'
@@ -35,7 +37,8 @@ interface IMatchListItem {
 
 const MatchListItem: FC<IMatchListItem> = ({ match, keyValue, filter, loading = false, setVisibleTotalWinnerModal }) => {
 	const [isExpanded, setIsExpanded] = useState(false)
-
+	const router = useRouter()
+	const { t } = useTranslation()
 	const collapsible =
 		filter.status === MATCHES.OPEN || (match.isOpen && !match.isCanceled && !match.isResolved && !match.isPaused && filter.status !== MATCHES.ONGOING)
 
@@ -53,6 +56,14 @@ const MatchListItem: FC<IMatchListItem> = ({ match, keyValue, filter, loading = 
 				key={match.maturityDate}
 			>
 				{!loading && match.isOpen && isExpanded && <MatchListContent match={match as any} setVisibleTotalWinnerModal={setVisibleTotalWinnerModal} />}
+				<Button
+					style={{ marginTop: '24px' }}
+					type={'primary'}
+					btnStyle={'secondary'}
+					size={'middle'}
+					onClick={() => router.push(`/${PAGES.MATCHES}/${match.id}`)}
+					content={<span>{t('Show match details')}</span>}
+				/>
 			</SC.CollapsePanel>
 			{filter.status === MATCHES.OPEN && (
 				<SC.CollapseButtonWrapper>
