@@ -15,7 +15,7 @@ import { BetType } from '@/utils/tags'
 import { useMedia } from '@/hooks/useMedia'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 import { SGPItem } from '@/typescript/types'
-import { MATCHES_OFFSET, MATCHES_OFFSET_MOBILE } from '@/utils/constants'
+import { MATCHES_OFFSET, MATCHES_OFFSET_MOBILE, PLAYER_PROPS_BET_TYPES } from '@/utils/constants'
 import Modal from '@/components/modal/Modal'
 import { RESOLUTIONS } from '@/utils/enums'
 
@@ -46,17 +46,50 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 		enabled: !!chain?.id
 	})
 
+	const isPlayerProps = (betType: BetType) => {
+		return PLAYER_PROPS_BET_TYPES.includes(betType)
+	}
+
+	const isTwoSportMarketsFromSameParent = (firstMarket: SportMarket, secondMarket: SportMarket) => {
+		// @ts-ignore
+		if (isPlayerProps((firstMarket?.betType as BetType) || BetType.WINNER) || isPlayerProps((secondMarket?.betType as BetType) || BetType.WINNER))
+			return false
+		if (firstMarket.gameId && secondMarket.gameId) return firstMarket.gameId === secondMarket.gameId
+
+		return false
+	}
+
 	const matchesWithChildMarkets = useMemo(
 		() =>
 			toPairs(groupBy(matches, 'gameId'))
 				.map(([, markets]) => {
 					const [match] = markets
 
+					const combinedMarkets: string[] = []
+					if (match.gameId === '0x3761353862343463303330366661626330363165643833306665343961313431') {
+						console.log(markets.length)
+						console.log(markets)
+						for (let i = 0; i < markets.length - 1; i += 1) {
+							for (let j = i + 1; j < markets?.length; j += 1) {
+								if (isTwoSportMarketsFromSameParent(markets[i], markets[j])) {
+									if (!combinedMarkets.includes(markets[i].id)) {
+										combinedMarkets.push(markets[i].id)
+									}
+									if (!combinedMarkets.includes(markets[j].id)) {
+										combinedMarkets.push(markets[j].id)
+									}
+								}
+							}
+						}
+						console.log(combinedMarkets)
+					}
+
 					const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
 					const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
 					const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD)
 					const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL)
-					const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
+					const combinedTypeMatch =
+						sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0]))) || markets.find((market) => combinedMarkets.includes(market.id))
 					return {
 						...(winnerTypeMatch ?? matches.find((item) => item.gameId === match?.gameId)),
 						winnerTypeMatch,

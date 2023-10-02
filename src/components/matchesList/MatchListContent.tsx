@@ -29,8 +29,12 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleTotalWinnerM
 	const { winnerTypeMatch, doubleChanceTypeMatches, spreadTypeMatch, totalTypeMatch, combinedTypeMatch } = match
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(winnerTypeMatch?.tags[0] as any)
 
+	if (match.id === '0x975c36db306192af347508e4acfab6abe5ab1885') {
+		console.log(match)
+	}
+
 	return (
-		<SC.PanelContent>
+		<SC.PanelContent onClick={() => console.log(match)}>
 			<SC.SmallMatchContentWrapper>
 				<SC.AllPositionsHeader>{t('All positions')}</SC.AllPositionsHeader>
 				{winnerTypeMatch && (
