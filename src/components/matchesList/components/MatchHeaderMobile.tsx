@@ -34,7 +34,7 @@ const MatchHeaderMobile = ({
 
 	return (
 		<SC.MobileContentWrapper>
-			<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.OPEN}`}>
+			<SC.MatchItemRow type={type} key={`${match.maturityDate}-${MATCHES.OPEN}`}>
 				<SC.MatchItemCol $alignItems={'flex-start'} span={24}>
 					{getContestedTeams}
 				</SC.MatchItemCol>
