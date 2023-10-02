@@ -31,7 +31,6 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 	const size = useMedia()
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
 	const [visibleTotalWinnerModal, setVisibleTotalWinnerModal] = useState(false)
-
 	const [matchOffsetByResolution, setMatchOffsetByResolution] = useState(0)
 
 	useEffect(() => {
