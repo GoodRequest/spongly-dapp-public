@@ -3,105 +3,130 @@ import { useTranslation } from 'next-export-i18n'
 import React, { useEffect, useState } from 'react'
 import { useLazyQuery } from '@apollo/client'
 import { useRouter } from 'next-translate-routes'
-import { toNumber } from 'lodash'
+import { groupBy, toNumber, toPairs } from 'lodash'
+import Flag from 'react-world-flags'
+
 import BackButton from '@/atoms/backButton/BackButton'
 import { PAGES, SWITCH_BUTTON_OPTIONS } from '@/utils/enums'
 import * as SC from './MatchDetailContentStyles'
+import * as SCS from '@/styles/GlobalStyles'
 import SwitchButton from '@/components/switchButton/SwitchButton'
 import { GET_MATCH_DETAIL } from '@/utils/queries'
 import { getTeamImageSource } from '@/utils/images'
-import { MSG_TYPE, NO_TEAM_IMAGE_FALLBACK, NOTIFICATION_TYPE } from '@/utils/constants'
+import { MSG_TYPE, NO_TEAM_IMAGE_FALLBACK, NOTIFICATION_TYPE, STATIC } from '@/utils/constants'
 import { showNotifications } from '@/utils/tsxHelpers'
-import { useIsMounted } from '@/hooks/useIsMounted'
+import { getMatchStatus } from '@/utils/helpers'
+import { BetType, TAGS_LIST } from '@/utils/tags'
+import MatchListContent from '@/components/matchesList/MatchListContent'
+import { getMarketOddsFromContract } from '@/utils/markets'
 
-const MatchDetail = (props: any) => {
+const MatchDetail = () => {
 	// TODO: Match detail
 	const { t } = useTranslation()
 	const router = useRouter()
 	const [tab, setTab] = useState(SWITCH_BUTTON_OPTIONS.OPTION_1)
 	const [matchDetailData, setMatchDetailData] = useState<any>(null)
-	const [loading, setLoading] = useState(false)
-	const isMounted = useIsMounted()
 	const onChangeSwitch = (option: SWITCH_BUTTON_OPTIONS) => {
 		setTab(option)
 	}
 	console.log('matchDetailData', matchDetailData)
 	const [fetchMatchDetail] = useLazyQuery(GET_MATCH_DETAIL)
 	const fetchData = () => {
-		setLoading(true)
 		setTimeout(() => {
 			fetchMatchDetail({
 				variables: {
-					id: router.query.id
+					gameId: router.query.id
 				}
 			})
 				.then((res) => {
-					setMatchDetailData(res.data.sportMarket)
+					const league = TAGS_LIST.find((item) => item.id === Number(res.data.sportMarkets[0].tags[0]))
+					getMarketOddsFromContract(res?.data?.sportMarkets).then((matches) => {
+						const matchesWithChildMarkets = toPairs(groupBy(matches, 'gameId'))
+							.map(([, markets]) => {
+								const [match] = markets
+								const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
+								const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
+								const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD)
+								const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL)
+								// TODO:
+								// const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
+								return {
+									...(winnerTypeMatch ?? matches.find((item: any) => item.gameId === match?.gameId)),
+									winnerTypeMatch,
+									doubleChanceTypeMatches,
+									spreadTypeMatch,
+									totalTypeMatch
+									// TODO: combined
+									// combinedTypeMatch
+								}
+							}) // NOTE: remove broken results.
+							.filter((item) => item.winnerTypeMatch)
+						setMatchDetailData({ ...matchesWithChildMarkets[0], league })
+					})
 				})
 				.catch((e) => {
 					// eslint-disable-next-line no-console
-					console.error('eerrr', { e })
+					console.error(e)
 					showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while loading detail of match') }], NOTIFICATION_TYPE.NOTIFICATION)
 				})
-				.finally(() => {
-					setLoading(false)
-				})
 		}, 500)
-		setLoading(false)
 	}
 
 	useEffect(() => {
 		fetchData()
 	}, [])
+
 	return (
 		<Row gutter={30}>
 			<Col span={24}>
 				<BackButton backUrl={`/${PAGES.MATCHES}`} />
 			</Col>
-			{loading && isMounted && !matchDetailData ? (
-				// TODO: zistit preco nejde loading empty state
-				<div>laoding</div>
-			) : (
-				<SC.MatchDetailWrapper>
-					<SC.MatchDetailHeader>
-						<Row gutter={[16, 16]}>
-							<SC.HeaderCol span={12}>
-								<SC.MatchIcon>
-									<img
-										src={getTeamImageSource(matchDetailData?.homeTeam || '', toNumber(matchDetailData?.tags?.[0]))}
-										onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
-											e.target.src = NO_TEAM_IMAGE_FALLBACK
-										}}
-									/>
-								</SC.MatchIcon>
-								<SC.HeaderTeam>{matchDetailData?.homeTeam}</SC.HeaderTeam>
-							</SC.HeaderCol>
-							<div
-								style={{
-									background: 'red',
-									position: 'absolute'
-								}}
-							>
-								test
-							</div>
-							<SC.HeaderCol span={12}>
-								<SC.MatchIcon>
-									<img
-										src={getTeamImageSource(matchDetailData?.awayTeam || '', toNumber(matchDetailData?.tags?.[0]))}
-										onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
-											e.target.src = NO_TEAM_IMAGE_FALLBACK
-										}}
-									/>
-								</SC.MatchIcon>
-								<SC.HeaderTeam>{matchDetailData?.awayTeam}</SC.HeaderTeam>
-							</SC.HeaderCol>
-						</Row>
-					</SC.MatchDetailHeader>
-					<SwitchButton option1={t('Positions')} option2={t('Stats')} onClick={onChangeSwitch} />
-					{SWITCH_BUTTON_OPTIONS.OPTION_1 === tab && <h1>{'Positions'}</h1>}
-					{SWITCH_BUTTON_OPTIONS.OPTION_2 === tab && <h1>{'Stats'}</h1>}
-				</SC.MatchDetailWrapper>
-			)}
+			<SC.MatchDetailWrapper>
+				{!matchDetailData ? (
+					<SC.RowSkeleton active loading paragraph={{ rows: 10 }} />
+				) : (
+					<>
+						<SC.MatchDetailHeader>
+							<Row justify={'center'}>
+								<SC.HeaderCol span={8} order={2} md={{ order: 1 }}>
+									<SC.MatchIcon>
+										<img
+											src={getTeamImageSource(matchDetailData?.homeTeam || '', toNumber(matchDetailData?.tags?.[0]))}
+											onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
+												e.target.src = NO_TEAM_IMAGE_FALLBACK
+											}}
+										/>
+									</SC.MatchIcon>
+									<SC.HeaderTeam>{matchDetailData?.homeTeam}</SC.HeaderTeam>
+								</SC.HeaderCol>
+								<SC.HeaderCol span={8} order={3} md={{ order: 2 }}>
+									<SCS.LeagueIcon className={matchDetailData.league.logoClass} />
+									<SC.HeaderVersusText>VS</SC.HeaderVersusText>
+									{/* <SC.HeaderStatus>{getMatchStatus(matchDetailData, false, t).text}</SC.HeaderStatus> */}
+								</SC.HeaderCol>
+								<SC.HeaderCol span={8} order={3} md={{ order: 3 }}>
+									<SC.MatchIcon>
+										<img
+											src={getTeamImageSource(matchDetailData?.awayTeam || '', toNumber(matchDetailData?.tags?.[0]))}
+											onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
+												e.target.src = NO_TEAM_IMAGE_FALLBACK
+											}}
+										/>
+									</SC.MatchIcon>
+									<SC.HeaderTeam>{matchDetailData?.awayTeam}</SC.HeaderTeam>
+								</SC.HeaderCol>
+								<Col span={24} order={1} md={{ order: 4, span: 6 }}>
+									<SC.HeaderStatus>{getMatchStatus(matchDetailData, false, t).text}</SC.HeaderStatus>
+								</Col>
+							</Row>
+						</SC.MatchDetailHeader>
+						<SwitchButton option1={t('Positions')} option2={t('Stats')} onClick={onChangeSwitch} />
+						{SWITCH_BUTTON_OPTIONS.OPTION_1 === tab && matchDetailData && <MatchListContent match={matchDetailData} />}
+						{/* // TODO: stats */}
+						{/* {SWITCH_BUTTON_OPTIONS.OPTION_2 === tab && <h1>{'Stats'}</h1>} */}
+					</>
+				)}
+			</SC.MatchDetailWrapper>
 		</Row>
 	)
 }

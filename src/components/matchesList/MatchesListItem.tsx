@@ -61,7 +61,7 @@ const MatchListItem: FC<IMatchListItem> = ({ match, keyValue, filter, loading = 
 					type={'primary'}
 					btnStyle={'secondary'}
 					size={'middle'}
-					onClick={() => router.push(`/${PAGES.MATCHES}/${match.id}`)}
+					onClick={() => router.push(`/${PAGES.MATCHES}/${match.gameId}`)}
 					content={<span>{t('Show match details')}</span>}
 				/>
 			</SC.CollapsePanel>

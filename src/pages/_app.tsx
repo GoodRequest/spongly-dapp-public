@@ -47,6 +47,7 @@ import { isAndroid, isMetamask, isMobile } from '@/utils/device'
 import useWidgetBotScript from '@/hooks/useWidgetBotScript'
 
 import '../styles/fonts.css'
+import '../styles/league-icons.css'
 
 const spageGroteskFont = Space_Grotesk({ subsets: ['latin', 'latin-ext'], variable: '--space-grotesk-font' })
 const overtimeIcons = CustomFont({

@@ -205,8 +205,8 @@ export const GET_TICKETS = gql`
 	}
 `
 export const GET_MATCH_DETAIL = gql`
-	query getMatch($id: String!) {
-		sportMarket(id: $id) {
+	query getMatch($gameId: String!) {
+		sportMarkets(where: { gameId: $gameId }) {
 			address
 			arePostQualifyingOddsFetched
 			awayOdds

@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { breakpoints } from '@/styles/theme'
 
 export const SwitchContainer = styled.div`
 	display: flex;
@@ -11,6 +10,7 @@ export const SwitchContainer = styled.div`
 	background: ${({ theme }) => theme['color-base-surface-top']};
 	height: 48px;
 	overflow: hidden;
+	margin-bottom: 40px;
 `
 
 export const Segment = styled.div<{ active: boolean }>`
