@@ -706,11 +706,15 @@ export const checkTotalWinnerBetExist = (activeTicketValues: IUnsubmittedBetTick
 	return false
 }
 export const checkTeamExistInBet = (matches: TicketPosition[], match: TicketPosition) => {
-	const foundMatch = matches.find((team) => {
-		return team.homeTeam === match.homeTeam || team.awayTeam === match.awayTeam
-	})
-
-	return foundMatch ? foundMatch.homeTeam || foundMatch.awayTeam : false
+	for (let i = 0; i < matches.length; i += 1) {
+		if (matches[i].homeTeam === match.homeTeam) {
+			return matches[i].homeTeam
+		}
+		if (matches[i].awayTeam === match.awayTeam) {
+			return matches[i].awayTeam
+		}
+	}
+	return false
 }
 
 export const getCanceledClaimAmount = (ticket: UserTicket) => {
