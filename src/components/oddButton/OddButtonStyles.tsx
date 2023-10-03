@@ -48,9 +48,9 @@ export const OddButton = styled(Button)<{ active?: boolean; isMobilePanel?: bool
 		background: ${({ theme }) => theme['color-base-surface-secondary']} !important;
 		color: white !important;
 		border-color: ${({ theme }) => theme['color-base-surface-quaternary']};
-		border-color: ${({ theme, active }) => (active ? theme['color-base-action-primary-default'] : theme['color-base-surface-quaternary'])};
+		border-color: ${({ theme, active }) => (active ? theme['color-base-action-primary-default'] : theme['color-base-action-primary-default'])};
 		&:hover {
-			border-color: ${({ theme }) => theme['color-base-surface-quaternary']};
+			border-color: unset;
 		}
 	}
 	@media (max-width: ${breakpoints.md}px) {
@@ -65,9 +65,6 @@ export const MatchContentOddButton = styled(OddButton)<{ isHeader?: boolean }>`
 	align-items: center;
 	flex: 1;
 	${TextXSMedium}
-	&:disabled {
-		background: ${({ theme }) => theme['color-base-surface-quaternary']} !important;
-	}
 `
 export const Odd = styled.div`
 	flex: 1;

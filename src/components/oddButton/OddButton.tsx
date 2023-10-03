@@ -37,7 +37,13 @@ const OddButton = (props: Props) => {
 			isHeader={isHeader}
 			isMobilePanel={isMobilePanel}
 			value={betOption}
-			disabled={disabled || match.status === MATCH_STATUS.PAUSED || match.status === MATCH_STATUS.CANCELED || match.status === MATCH_STATUS.ONGOING}
+			disabled={
+				disabled ||
+				match.status === MATCH_STATUS.PAUSED ||
+				match.status === MATCH_STATUS.CANCELED ||
+				match.status === MATCH_STATUS.ONGOING ||
+				match.status === MATCH_STATUS.SUCCESS
+			}
 			active={isMatchInActiveTicket?.betOption === betOption}
 			onClick={() => {
 				if (setVisibleTotalWinnerModal && checkTotalWinnerBetExist(activeTicketValues, match)) {
