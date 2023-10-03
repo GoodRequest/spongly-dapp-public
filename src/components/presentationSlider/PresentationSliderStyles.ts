@@ -40,6 +40,13 @@ export const PresentationSliderWrapper = styled.div`
 	@media (max-width: ${breakpoints.sm}px) {
 		height: 160px;
 	}
+
+	@media (max-width: ${breakpoints.smsx}px) {
+		height: 300px;
+	}
+	@media (max-width: 370px) {
+		height: 250px;
+	}
 `
 
 export const SlideCard = styled.div<{ image: string }>`
@@ -68,6 +75,15 @@ export const SlideCard = styled.div<{ image: string }>`
 	@media (max-width: ${breakpoints.sm}px) {
 		height: 180px;
 	}
+	@media (max-width: ${breakpoints.smsx}px) {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 300px;
+	}
+	@media (max-width: 370px) {
+		height: 250px;
+	}
 `
 
 export const SliderText = styled.div<{ textColor?: string }>`
@@ -94,5 +110,11 @@ export const SliderButton = styled.div`
 	@media (max-width: ${breakpoints.sm}px) {
 		right: 24px;
 		bottom: 12px;
+	}
+
+	@media (max-width: ${breakpoints.smsx}px) {
+		right: unset;
+		width: 90%;
+		bottom: 20px;
 	}
 `

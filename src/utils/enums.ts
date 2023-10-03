@@ -75,6 +75,8 @@ export enum DoubleChanceMarketType {
 }
 
 export enum RESOLUTIONS {
+	SX = 'SX',
+	SMSX = 'SMSX',
 	SM = 'SM',
 	MD = 'MD',
 	LG = 'LG',
