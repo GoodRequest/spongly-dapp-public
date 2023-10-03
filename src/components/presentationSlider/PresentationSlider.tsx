@@ -39,7 +39,7 @@ const PresentationSlider = () => {
 		() =>
 			presentationSliderData.map(({ text, textColor, image, mobileImage, button = undefined }, index) => (
 				<SwiperSlide key={`slider-${index}`}>
-					<SC.SlideCard image={size === RESOLUTIONS.SX || size === RESOLUTIONS.SMSX ? mobileImage : image}>
+					<SC.SlideCard image={size === RESOLUTIONS.XS || size === RESOLUTIONS.SMSX ? mobileImage : image}>
 						<SC.SliderText textColor={textColor}>{text}</SC.SliderText>
 						{button && (
 							<SC.SliderButton>
