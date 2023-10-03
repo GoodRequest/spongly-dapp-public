@@ -39,11 +39,12 @@ import {
 	DoubleChanceMarketType,
 	LIST_TYPE,
 	MARKET_PROPERTY,
+	MATCH_RESULT,
 	RESOLUTIONS,
 	RESULT_TYPE,
 	WALLET_TICKETS
 } from './enums'
-import { ParlayMarket, Position, PositionBalance, PositionType } from '@/__generated__/resolvers-types'
+import { ParlayMarket, Position, PositionBalance, PositionType, SportMarket } from '@/__generated__/resolvers-types'
 
 import {
 	CombinedMarketsPositionName,
@@ -361,14 +362,12 @@ export const getParlayItemStatus = (position: Position, isPlayedNow: boolean, t:
 	return { status: MATCH_STATUS.OPEN, text: dayjs(toNumber(position.market.maturityDate) * 1000).format('MMM DD | HH:mm') }
 }
 
-export const getMatchStatus = (match: any, isPlayedNow: boolean, t: any) => {
+export const getMatchStatus = (match: any, t: any) => {
 	const date = dayjs(toNumber(match?.maturityDate) * 1000).format('| MMM DD')
-	if (isPlayedNow) {
-		return { status: MATCH_STATUS.ONGOING, text: t('Playing now') }
-	}
+	if (match.isOpen && !match.isPaused && !match.homeOdds && !match.awayOdds) return { status: MATCH_STATUS.ONGOING, text: t('Playing now') }
 	if (match?.isCanceled) return { status: MATCH_STATUS.CANCELED, text: t('Canceled {{ date }}', { date }) }
 	if (match?.isPaused) return { status: MATCH_STATUS.PAUSED, text: t('Paused {{ date }}', { date }) }
-	if (match.isResolved) return { status: MATCH_STATUS.SUCCESS, text: `${match.homeScore || '?'} : ${match.awayScore || '?'}` }
+	if (match.isResolved) return { status: MATCH_STATUS.SUCCESS, text: `Match end | ${match.homeScore || '?'} : ${match.awayScore || '?'}` }
 	return { status: MATCH_STATUS.OPEN, text: dayjs(toNumber(match?.maturityDate) * 1000).format('MMM DD | HH:mm') }
 }
 
@@ -461,6 +460,13 @@ export const isTicketClosed = (market: ParlayMarket | PositionBalance) => {
 	return resolvedMarkets?.length === positions.length
 }
 
+export const getMatchResult = (match: SportMarket) => {
+	if (match.finalResult === '0') return undefined
+	if (match.finalResult === '1') return MATCH_RESULT.HOME
+	if (match.finalResult === '2') return MATCH_RESULT.AWAY
+	if (match.finalResult === '3') return MATCH_RESULT.DRAW
+	return undefined
+}
 export const getTicketType = (market: ParlayMarket | PositionBalance): TICKET_TYPE | undefined => {
 	if (isTicketOpen(market)) return TICKET_TYPE.OPEN_TICKET
 	if (isTicketClosed(market)) return TICKET_TYPE.CLOSED_TICKET

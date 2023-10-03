@@ -13,6 +13,16 @@ export enum MATCHES {
 	FINISHED = 'finished',
 	PAUSED = 'paused'
 }
+export enum MATCH_RESULT {
+	HOME = 'HOME',
+	AWAY = 'AWAY',
+	DRAW = 'DRAW'
+}
+
+export enum TEAM_TYPE {
+	HOME_TEAM = 'HOME_TEAM',
+	AWAY_TEAM = 'AWAY_TEAM'
+}
 export enum SWITCH_BUTTON_OPTIONS {
 	OPTION_1 = 'OPTION_1',
 	OPTION_2 = 'OPTION_2'

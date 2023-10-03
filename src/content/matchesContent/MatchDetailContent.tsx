@@ -4,21 +4,21 @@ import React, { useEffect, useState } from 'react'
 import { useLazyQuery } from '@apollo/client'
 import { useRouter } from 'next-translate-routes'
 import { groupBy, toNumber, toPairs } from 'lodash'
-import Flag from 'react-world-flags'
 
 import BackButton from '@/atoms/backButton/BackButton'
-import { PAGES, SWITCH_BUTTON_OPTIONS } from '@/utils/enums'
+import { PAGES, SWITCH_BUTTON_OPTIONS, TEAM_TYPE } from '@/utils/enums'
 import * as SC from './MatchDetailContentStyles'
 import * as SCS from '@/styles/GlobalStyles'
 import SwitchButton from '@/components/switchButton/SwitchButton'
 import { GET_MATCH_DETAIL } from '@/utils/queries'
 import { getTeamImageSource } from '@/utils/images'
-import { MSG_TYPE, NO_TEAM_IMAGE_FALLBACK, NOTIFICATION_TYPE, STATIC } from '@/utils/constants'
+import { MSG_TYPE, NO_TEAM_IMAGE_FALLBACK, NOTIFICATION_TYPE, STABLE_DECIMALS } from '@/utils/constants'
 import { showNotifications } from '@/utils/tsxHelpers'
-import { getMatchStatus } from '@/utils/helpers'
+import { getMatchResult, getMatchStatus } from '@/utils/helpers'
 import { BetType, TAGS_LIST } from '@/utils/tags'
 import MatchListContent from '@/components/matchesList/MatchListContent'
 import { getMarketOddsFromContract } from '@/utils/markets'
+import { bigNumberFormmaterWithDecimals } from '@/utils/formatters/ethers'
 
 const MatchDetail = () => {
 	// TODO: Match detail
@@ -29,7 +29,6 @@ const MatchDetail = () => {
 	const onChangeSwitch = (option: SWITCH_BUTTON_OPTIONS) => {
 		setTab(option)
 	}
-	console.log('matchDetailData', matchDetailData)
 	const [fetchMatchDetail] = useLazyQuery(GET_MATCH_DETAIL)
 	const fetchData = () => {
 		setTimeout(() => {
@@ -61,7 +60,7 @@ const MatchDetail = () => {
 								}
 							}) // NOTE: remove broken results.
 							.filter((item) => item.winnerTypeMatch)
-						setMatchDetailData({ ...matchesWithChildMarkets[0], league })
+						setMatchDetailData({ ...matchesWithChildMarkets[0], league, status: getMatchStatus(matchesWithChildMarkets[0], t).status })
 					})
 				})
 				.catch((e) => {
@@ -89,7 +88,7 @@ const MatchDetail = () => {
 						<SC.MatchDetailHeader>
 							<Row justify={'center'}>
 								<SC.HeaderCol span={8} order={2} md={{ order: 1 }}>
-									<SC.MatchIcon>
+									<SC.MatchIcon result={getMatchResult(matchDetailData)} team={TEAM_TYPE.HOME_TEAM}>
 										<img
 											src={getTeamImageSource(matchDetailData?.homeTeam || '', toNumber(matchDetailData?.tags?.[0]))}
 											onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
@@ -102,10 +101,9 @@ const MatchDetail = () => {
 								<SC.HeaderCol span={8} order={3} md={{ order: 2 }}>
 									<SCS.LeagueIcon className={matchDetailData.league.logoClass} />
 									<SC.HeaderVersusText>VS</SC.HeaderVersusText>
-									{/* <SC.HeaderStatus>{getMatchStatus(matchDetailData, false, t).text}</SC.HeaderStatus> */}
 								</SC.HeaderCol>
 								<SC.HeaderCol span={8} order={3} md={{ order: 3 }}>
-									<SC.MatchIcon>
+									<SC.MatchIcon result={getMatchResult(matchDetailData)} team={TEAM_TYPE.AWAY_TEAM}>
 										<img
 											src={getTeamImageSource(matchDetailData?.awayTeam || '', toNumber(matchDetailData?.tags?.[0]))}
 											onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
@@ -116,7 +114,9 @@ const MatchDetail = () => {
 									<SC.HeaderTeam>{matchDetailData?.awayTeam}</SC.HeaderTeam>
 								</SC.HeaderCol>
 								<Col span={24} order={1} md={{ order: 4, span: 6 }}>
-									<SC.HeaderStatus>{getMatchStatus(matchDetailData, false, t).text}</SC.HeaderStatus>
+									<SC.HeaderStatus matchStatus={getMatchStatus(matchDetailData, t).status}>
+										<span>{getMatchStatus(matchDetailData, t).text}</span>
+									</SC.HeaderStatus>
 								</Col>
 							</Row>
 						</SC.MatchDetailHeader>

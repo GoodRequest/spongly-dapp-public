@@ -1,7 +1,9 @@
-import styled from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 import { Col, Skeleton } from 'antd'
 import { breakpoints } from '@/styles/theme'
 import { HeadingXSMedium, TextMDSemibold, TextXSMedium } from '@/styles/typography'
+import { MATCH_STATUS } from '@/utils/constants'
+import { MATCH_RESULT, TEAM_TYPE } from '@/utils/enums'
 
 export const MatchDetailWrapper = styled.div`
 	width: 100%;
@@ -21,7 +23,7 @@ export const HeaderTeam = styled.div`
 	@media (max-width: ${breakpoints.md}px) {
 		${TextMDSemibold};
 		margin-top: 8px;
-		height: auto;
+		height: 48px;
 	}
 `
 export const HeaderVersusText = styled.div`
@@ -33,24 +35,92 @@ export const HeaderVersusText = styled.div`
 		color: ${({ theme }) => theme['color-base-content-quaternary']};
 	}
 `
-export const HeaderStatus = styled.div`
+const flicker = keyframes`
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+`
+export const HeaderStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 	${TextXSMedium};
 	padding: 12px;
 	text-align: center;
+	position: relative;
 	background: ${({ theme }) => theme['color-base-surface-quaternary']};
 	border-radius: 6px;
+	${(p) =>
+		p.matchStatus === MATCH_STATUS.ONGOING &&
+		css`
+			position: relative;
+			background: ${({ theme }) => theme['color-base-state-warning-bg']};
+			color: ${({ theme }) => theme['color-base-state-warning-fg']};
+			& > span {
+				position: relative;
+				&::before {
+					content: '';
+					position: absolute;
+					left: -10px;
+					top: 50%;
+					transform: translate(-50%, -50%);
+					width: 8px;
+					height: 8px;
+					border-radius: 50%;
+					background: ${({ theme }) => theme['color-base-state-warning-fg']};
+					animation: ${flicker} 1s infinite;
+				}
+			}
+		`}
+	${(p) =>
+		p.matchStatus === MATCH_STATUS.CANCELED &&
+		css`
+			background: ${({ theme }) => theme['color-base-state-error-bg']};
+			color: ${({ theme }) => theme['color-base-state-error-fg']};
+		`}
+	${(p) =>
+		p.matchStatus === MATCH_STATUS.ONGOING &&
+		css`
+			color: ${({ theme }) => theme['color-base-state-warning-fg']};
+		`};
 	@media (max-width: ${breakpoints.md}px) {
 		margin-bottom: 16px;
 	}
 `
 
-export const MatchIcon = styled.div`
+export const MatchIcon = styled.div<{ result?: MATCH_RESULT; team: TEAM_TYPE }>`
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
+	background: ${({ theme }) => theme['color-base-surface-quaternary']};
+	border-radius: 999px;
+	border: 2px solid ${({ theme }) => theme['color-base-action-primary-default']};
+	padding: 16px;
+	${(p) =>
+		p.result === MATCH_RESULT.DRAW &&
+		css`
+			background: ${({ theme }) => theme['color-base-state-warning-bg']};
+			border: 2px solid ${({ theme }) => theme['color-base-state-warning-fg']};
+		`};
+	${(p) =>
+		p.result === MATCH_RESULT.HOME &&
+		p.team === TEAM_TYPE.HOME_TEAM &&
+		css`
+			background: ${({ theme }) => theme['color-base-state-success-bg']};
+			border: 2px solid ${({ theme }) => theme['color-base-state-success-fg']};
+		`};
+	${(p) =>
+		p.result === MATCH_RESULT.AWAY &&
+		p.team === TEAM_TYPE.AWAY_TEAM &&
+		css`
+			background: ${({ theme }) => theme['color-base-state-success-bg']};
+			border: 2px solid ${({ theme }) => theme['color-base-state-success-fg']};
+		`};
 	@media (max-width: ${breakpoints.md}px) {
 		background: ${({ theme }) => theme['color-base-surface-quaternary']};
 		border-radius: 999px;
+		height: 48px;
+		width: 48px;
 	}
 	&:last-of-type {
 		margin-left: -14px;
@@ -59,7 +129,7 @@ export const MatchIcon = styled.div`
 		margin-left: 0;
 	}
 	img {
-		padding: 4px;
+		padding: 12px;
 		width: 120px;
 		height: 120px;
 		@media (max-width: ${breakpoints.md}px) {

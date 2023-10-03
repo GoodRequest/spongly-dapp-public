@@ -207,36 +207,28 @@ export const GET_TICKETS = gql`
 export const GET_MATCH_DETAIL = gql`
 	query getMatch($gameId: String!) {
 		sportMarkets(where: { gameId: $gameId }) {
-			address
-			arePostQualifyingOddsFetched
-			awayOdds
-			awayScore
-			awayTeam
-			betType
-			doubleChanceMarketType
-			downAddress
-			drawAddress
-			drawOdds
-			finalResult
-			gameId
-			homeOdds
-			homeScore
-			homeTeam
 			id
-			isCanceled
+			timestamp
+			address
+			gameId
 			isOpen
+			isCanceled
 			isPaused
 			isResolved
-			leagueRaceName
-			maturityDate
-			numberOfParticipants
-			playerId
-			playerName
+			awayTeam
+			awayScore
+			betType
 			spread
-			tags
-			timestamp
 			total
-			parentMarket
+			finalResult
+			homeScore
+			homeTeam
+			maturityDate
+			tags
+			homeOdds
+			awayOdds
+			drawOdds
+			doubleChanceMarketType
 		}
 	}
 `
