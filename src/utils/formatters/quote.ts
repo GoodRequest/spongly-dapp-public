@@ -1,4 +1,4 @@
-import { floor } from 'lodash'
+import { floor, forEach } from 'lodash'
 import { IMatch } from '@/typescript/types'
 import { Position, PositionType } from '@/__generated__/resolvers-types'
 import { OddsType, OPTIMISM_DIVISOR } from '../constants'
@@ -57,8 +57,11 @@ export const formatPositionOdds = (match: Position) => {
 
 const formatMatchCombinedPositionsQuote = (position1: number, position2: number, SGPFee: number) => {
 	const odd = formatQuote(OddsType.DECIMAL, position1 * position2)
-	const oddWithFee = floor(Number(odd) * SGPFee, 2).toFixed(2)
-	return oddWithFee
+	if (SGPFee) {
+		return floor(Number(odd) * SGPFee, 2).toFixed(2)
+	}
+
+	return odd
 }
 
 export const formattedCombinedTypeMatch = (match: IMatch, customBetOption?: BET_OPTIONS) => {

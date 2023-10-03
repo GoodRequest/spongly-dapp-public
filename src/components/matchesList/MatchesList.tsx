@@ -54,8 +54,9 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 		// @ts-ignore
 		if (isPlayerProps((firstMarket?.betType as BetType) || BetType.WINNER) || isPlayerProps((secondMarket?.betType as BetType) || BetType.WINNER))
 			return false
-		if (firstMarket.gameId && secondMarket.gameId) return firstMarket.gameId === secondMarket.gameId
+		if (firstMarket.parentMarket && secondMarket.parentMarket) return firstMarket.gameId === secondMarket.gameId
 
+		console.log('returing atm')
 		return false
 	}
 
@@ -66,22 +67,27 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 					const [match] = markets
 
 					const combinedMarkets: string[] = []
+					const combinedTEst: any[] = []
 					if (match.gameId === '0x3761353862343463303330366661626330363165643833306665343961313431') {
-						console.log(markets.length)
 						console.log(markets)
 						for (let i = 0; i < markets.length - 1; i += 1) {
 							for (let j = i + 1; j < markets?.length; j += 1) {
-								if (isTwoSportMarketsFromSameParent(markets[i], markets[j])) {
-									if (!combinedMarkets.includes(markets[i].id)) {
-										combinedMarkets.push(markets[i].id)
-									}
-									if (!combinedMarkets.includes(markets[j].id)) {
-										combinedMarkets.push(markets[j].id)
-									}
+								console.log(j)
+								if (markets[i]?.parentMarket && markets[j]?.parentMarket && markets[i]?.parentMarket === markets[j]?.parentMarket) {
+									combinedTest.push({ test1: markets[i], test2: markets[j] })
 								}
+								// if (isTwoSportMarketsFromSameParent(markets[i], markets[j])) {
+								// 	combinedTags.push({ tag1: markets[i].tags, tag2: markets[j]?.tags })
+								// 	if (!combinedMarkets.includes(markets[i].id)) {
+								// 		combinedMarkets.push(markets[i].id)
+								// 	}
+								// 	if (!combinedMarkets.includes(markets[j].id)) {
+								// 		combinedMarkets.push(markets[j].id)
+								// 	}
+								// }
 							}
 						}
-						console.log(combinedMarkets)
+						console.log(combinedSomethong)
 					}
 
 					const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
