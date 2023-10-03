@@ -67,7 +67,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 					const [match] = markets
 
 					const combinedMarkets: string[] = []
-					const combinedTEst: any[] = []
+					const combinedTest: any[] = []
 					if (match.gameId === '0x3761353862343463303330366661626330363165643833306665343961313431') {
 						console.log(markets)
 						for (let i = 0; i < markets.length - 1; i += 1) {
@@ -87,7 +87,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 								// }
 							}
 						}
-						console.log(combinedSomethong)
+						console.log(combinedTest)
 					}
 
 					const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
