@@ -3,10 +3,8 @@ import { Row, Col } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import { map, filter as lodashFilter, includes, find, toString, sortBy } from 'lodash'
 import { useRouter } from 'next-translate-routes'
-import Flag from 'react-world-flags'
 import dayjs from 'dayjs'
 import { useSelector } from 'react-redux'
-import { FlagWorld } from '@/styles/GlobalStyles'
 
 // types
 import { SportMarket } from '@/__generated__/resolvers-types'
@@ -251,10 +249,8 @@ const MatchesContent = () => {
 		return { showCount: !!filterCount, filterCount }
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedSport])
-
 	const onShowResults = (preventScroll = false) => {
 		const results = filterMatches(filter)
-
 		setFiltered({
 			matches: results,
 			sport: selectedSport.filter((item) =>
@@ -271,7 +267,6 @@ const MatchesContent = () => {
 			contentRef.current?.scrollIntoView()
 		}
 	}
-
 	useEffect(() => {
 		setLoading(true)
 		mapMatchesByLeagueByStatus()
@@ -332,19 +327,13 @@ const MatchesContent = () => {
 					map(filtered.sport, (item) => {
 						const leagueMatches = find(filtered.matches, ['id', item.id])?.[filter.status] || []
 						return (
-							<>
-								<SCS.LeagueHeader>
-									{item?.country && item?.country !== STATIC.WORLD && (
-										<SC.FlagWrapper>
-											<Flag code={item.country} />
-										</SC.FlagWrapper>
-									)}
-
-									{item?.country && item?.country === STATIC.WORLD && <FlagWorld />}
-									{item?.label}
-								</SCS.LeagueHeader>
-								<MatchesList key={`leaguePannel-${item.id}-${filter.status}`} matches={leagueMatches || []} filter={filter} loading={false} />
-							</>
+							<MatchesList
+								item={item}
+								key={`leaguePannel-${item.id}-${filter.status}`}
+								matches={leagueMatches || []}
+								filter={filter}
+								loading={false}
+							/>
 						)
 					})
 				)}

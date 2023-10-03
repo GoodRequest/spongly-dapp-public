@@ -43,7 +43,7 @@ const MatchHeaderPC = ({
 	const isOnlyWinner = winnerTypeMatch && doubleChanceTypeMatches?.length === 0 && !spreadTypeMatch && !totalTypeMatch
 
 	const getSpanNumber = (betType: BetType) => {
-		if (isOnlyWinner) return 5
+		if (isOnlyWinner) return 15
 		if (getBaseBetTypes().length > 2) {
 			if (betType === BetType.WINNER && match.drawOdds && Number(match.drawOdds) !== 0) return 7
 			return 5
@@ -52,17 +52,11 @@ const MatchHeaderPC = ({
 		return 16
 	}
 
-	const getPushNumber = () => {
-		if (isTotalWinner) return 10
-		if (isOnlyWinner) return 10
-		return 0
-	}
-
 	return (
 		<SC.PCContentWrapper>
 			{type === MATCHES.OPEN && (
-				<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.OPEN}`}>
-					<SC.MatchItemCol $alignItems={'flex-start'} span={8 + getPushNumber()}>
+				<SC.MatchItemRow type={MATCHES.OPEN} key={`${match.maturityDate}-${MATCHES.OPEN}`}>
+					<SC.MatchItemCol $alignItems={'flex-start'} span={8}>
 						{getContestedTeams}
 					</SC.MatchItemCol>
 					{includes(getBaseBetTypes(), BetType.WINNER) && (
@@ -189,11 +183,11 @@ const MatchHeaderPC = ({
 				</SC.MatchItemRow>
 			)}
 			{type === MATCHES.ONGOING && (
-				<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.ONGOING}`}>
-					<SC.MatchItemCol $alignItems={'flex-start'} span={16}>
+				<SC.MatchItemRow gutter={16} type={MATCHES.ONGOING} key={`${match.maturityDate}-${MATCHES.ONGOING}`}>
+					<SC.MatchItemCol $alignItems={'flex-start'} span={18}>
 						{getContestedTeams}
 					</SC.MatchItemCol>
-					<SC.MatchItemCol span={8}>
+					<SC.MatchItemCol span={6}>
 						<SC.Header>{t('Status')}</SC.Header>
 						<SC.StatusWrapper>
 							<SCS.Icon icon={ClockIcon} />
@@ -203,20 +197,22 @@ const MatchHeaderPC = ({
 				</SC.MatchItemRow>
 			)}
 			{type === MATCHES.FINISHED && (
-				<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.FINISHED}`}>
-					<SC.MatchItemCol $alignItems={'flex-start'} span={16}>
+				<SC.MatchItemRow gutter={16} type={MATCHES.FINISHED} key={`${match.maturityDate}-${MATCHES.FINISHED}`}>
+					<SC.MatchItemCol $alignItems={'flex-start'} span={18}>
 						{getContestedTeams}
 					</SC.MatchItemCol>
-					<SC.MatchItemCol span={8}>
+					<SC.MatchItemCol span={6}>
 						<SC.Header>{t('Results')}</SC.Header>
 						<SC.StatusWrapper>{formatFinishedResults()}</SC.StatusWrapper>
 					</SC.MatchItemCol>
 				</SC.MatchItemRow>
 			)}
 			{type === MATCHES.PAUSED && (
-				<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.PAUSED}`}>
-					<SC.MatchItemCol span={16}>{getContestedTeams}</SC.MatchItemCol>
-					<SC.MatchItemCol span={8}>
+				<SC.MatchItemRow gutter={16} type={MATCHES.PAUSED} key={`${match.maturityDate}-${MATCHES.PAUSED}`}>
+					<SC.MatchItemCol $alignItems={'flex-start'} span={18}>
+						{getContestedTeams}
+					</SC.MatchItemCol>
+					<SC.MatchItemCol span={6}>
 						<SC.Header>{t('Status')}</SC.Header>
 						{match?.isPaused ? (
 							<SC.StatusWrapper>
