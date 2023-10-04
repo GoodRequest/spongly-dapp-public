@@ -96,6 +96,7 @@ export const MatchIcon = styled.div<{ result?: MATCH_RESULT; team: TEAM_TYPE }>`
 	border-radius: 999px;
 	border: 2px solid ${({ theme }) => theme['color-base-action-primary-default']};
 	padding: 16px;
+	position: relative;
 	${(p) =>
 		p.result === MATCH_RESULT.DRAW &&
 		css`
@@ -108,6 +109,20 @@ export const MatchIcon = styled.div<{ result?: MATCH_RESULT; team: TEAM_TYPE }>`
 		css`
 			background: ${({ theme }) => theme['color-base-state-success-bg']};
 			border: 2px solid ${({ theme }) => theme['color-base-state-success-fg']};
+			&::before {
+				content: '\\2713';
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 20px;
+				position: absolute;
+				top: 12px;
+				right: 0;
+				height: 32px;
+				width: 32px;
+				background: ${({ theme }) => theme['color-base-state-success-fg']};
+				border-radius: 50%;
+			}
 		`};
 	${(p) =>
 		p.result === MATCH_RESULT.AWAY &&
@@ -115,6 +130,20 @@ export const MatchIcon = styled.div<{ result?: MATCH_RESULT; team: TEAM_TYPE }>`
 		css`
 			background: ${({ theme }) => theme['color-base-state-success-bg']};
 			border: 2px solid ${({ theme }) => theme['color-base-state-success-fg']};
+			&::before {
+				content: '\\2713';
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 20px;
+				position: absolute;
+				top: 12px;
+				right: 0;
+				height: 32px;
+				width: 32px;
+				background: ${({ theme }) => theme['color-base-state-success-fg']};
+				border-radius: 50%;
+			}
 		`};
 	@media (max-width: ${breakpoints.md}px) {
 		background: ${({ theme }) => theme['color-base-surface-quaternary']};
