@@ -48,6 +48,7 @@ const Select = ({
 	`
 	return (
 		<>
+			{/* eslint-disable-next-line react/no-danger */}
 			{isDropdownOpen && <div dangerouslySetInnerHTML={{ __html: bodyStyle }} />}
 			<SC.SelectWrapper id={`select-container`}>
 				{title && <SC.Title>{title}</SC.Title>}

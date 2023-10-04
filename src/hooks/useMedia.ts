@@ -6,6 +6,8 @@ export const useMedia = () => {
 	let mediaQueryLists: any
 	// NOTE: Leaving these contants here to make it easier to customize.
 	const queries = [
+		`(max-width: ${breakpoints.xs}px)`,
+		`(max-width: ${breakpoints.smsx}px)`,
 		`(max-width: ${breakpoints.sm}px)`,
 		`(max-width: ${breakpoints.md}px)`,
 		`(max-width: ${breakpoints.lg}px)`,
@@ -13,7 +15,7 @@ export const useMedia = () => {
 		`(max-width: ${breakpoints.semixxl}px)`
 	]
 
-	const values = [RESOLUTIONS.SM, RESOLUTIONS.MD, RESOLUTIONS.LG, RESOLUTIONS.XL, RESOLUTIONS.SEMIXXL]
+	const values = [RESOLUTIONS.XS, RESOLUTIONS.SMSX, RESOLUTIONS.SM, RESOLUTIONS.MD, RESOLUTIONS.LG, RESOLUTIONS.XL, RESOLUTIONS.SEMIXXL]
 	const defaultValue = RESOLUTIONS.XXL
 
 	// Array containing a media query list for each query

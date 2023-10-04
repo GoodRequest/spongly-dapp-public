@@ -15,7 +15,7 @@ import { TicketPosition } from '@/redux/betTickets/betTicketTypes'
 interface IMatchListItem {
 	match: TicketPosition
 	type: MATCHES
-	setVisibleTotalWinnerModal: Dispatch<SetStateAction<boolean>>
+	setVisibleParlayValidationModal: Dispatch<SetStateAction<{ visible: boolean; message: string }>>
 	getContestedTeams: any
 	getBaseBetTypes: any
 	formatFinishedResults: any
@@ -24,7 +24,7 @@ interface IMatchListItem {
 const MatchHeaderMobile = ({
 	match,
 	type = MATCHES.OPEN,
-	setVisibleTotalWinnerModal,
+	setVisibleParlayValidationModal,
 	getContestedTeams,
 	getBaseBetTypes,
 	formatFinishedResults
@@ -35,7 +35,7 @@ const MatchHeaderMobile = ({
 	const router = useRouter()
 	return (
 		<SC.MobileContentWrapper>
-			<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.OPEN}`}>
+			<SC.MatchItemRow type={type} key={`${match.maturityDate}-${MATCHES.OPEN}`}>
 				<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCHES}/${match.gameId}`)} $alignItems={'flex-start'} span={24}>
 					{getContestedTeams}
 				</SC.MatchItemCol>
@@ -48,13 +48,25 @@ const MatchHeaderMobile = ({
 						<OddButton
 							isHeader
 							match={match}
-							setVisibleTotalWinnerModal={isTotalWinner ? setVisibleTotalWinnerModal : undefined}
+							setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 							betOption={BET_OPTIONS.WINNER_HOME}
 							oddName={isTotalWinner ? t('YES') : BET_OPTIONS.WINNER_HOME}
 							isMobilePanel
 						/>
-						<OddButton isHeader match={match} betOption={BET_OPTIONS.WINNER_DRAW} isMobilePanel />
-						<OddButton isHeader match={match} betOption={BET_OPTIONS.WINNER_AWAY} isMobilePanel />
+						<OddButton
+							setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+							isHeader
+							match={match}
+							betOption={BET_OPTIONS.WINNER_DRAW}
+							isMobilePanel
+						/>
+						<OddButton
+							setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+							isHeader
+							match={match}
+							betOption={BET_OPTIONS.WINNER_AWAY}
+							isMobilePanel
+						/>
 					</SC.RadioMobileGroup>
 					<SC.OddsWrapper>
 						<OddValue match={match} betOption={BET_OPTIONS.WINNER_HOME} />

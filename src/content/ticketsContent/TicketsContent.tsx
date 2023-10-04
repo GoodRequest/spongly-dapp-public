@@ -26,7 +26,7 @@ import * as SC from './TicketsContentStyles'
 import FilterIcon from '@/assets/icons/filter-icon.svg'
 
 // utils
-import { ORDER_DIRECTION, STATIC, TICKET_SORTING, TICKET_TYPE } from '@/utils/constants'
+import { ORDER_DIRECTION, STATIC, SportFilterEnum, TICKET_SORTING, TICKET_TYPE } from '@/utils/constants'
 import { RESOLUTIONS } from '@/utils/enums'
 import { SPORTS_TAGS_MAP, TAGS_LIST } from '@/utils/tags'
 import { decodeSorter, isBellowOrEqualResolution } from '@/utils/helpers'
@@ -127,7 +127,8 @@ const TicketsContent = () => {
 			setSelectedSport(TAGS_LIST)
 		}
 		if (!includes([STATIC.ALL, undefined], filter.sport) && includes([STATIC.ALL, undefined], filter.league)) {
-			setSelectedSport(lodashFilter(TAGS_LIST, (item) => includes(SPORTS_TAGS_MAP[filter.sport as string], item.id)))
+			const sportName = filter.sport === SportFilterEnum.MMA ? 'MMA' : (filter.sport as SportFilterEnum)
+			setSelectedSport(lodashFilter(TAGS_LIST, (item) => includes(SPORTS_TAGS_MAP[sportName], item.id)))
 		}
 		if (!includes([STATIC.ALL, undefined], filter.league)) {
 			setSelectedSport([find(TAGS_LIST, (item) => toString(item.id) === filter.league) as any])

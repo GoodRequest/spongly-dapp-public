@@ -4,6 +4,7 @@ import { CustomTheme } from '@/typescript/styled'
 
 export const breakpoints = {
 	xs: 320,
+	smsx: 450,
 	sm: 576,
 	md: 768,
 	lg: 992,
