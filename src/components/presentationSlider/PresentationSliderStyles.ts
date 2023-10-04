@@ -12,6 +12,7 @@ export const PresentationSliderWrapper = styled.div`
 		position: absolute;
 		width: fit-content;
 		top: 0px;
+		height: 50px;
 		right: 48px;
 		left: unset;
 	}
