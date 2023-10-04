@@ -2,8 +2,9 @@ import { includes } from 'lodash'
 import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'next-export-i18n'
 import { useNetwork } from 'wagmi'
+import { useRouter } from 'next/router'
 import * as SC from '../MatchesListStyles'
-import { BET_OPTIONS, MATCHES } from '@/utils/enums'
+import { BET_OPTIONS, MATCHES, PAGES } from '@/utils/enums'
 import OddButton from '@/components/oddButton/OddButton'
 import OddValue from '@/components/oddButton/OddValue'
 import { BetType } from '@/utils/tags'
@@ -41,7 +42,7 @@ const MatchHeaderPC = ({
 	const { winnerTypeMatch, doubleChanceTypeMatches, spreadTypeMatch, totalTypeMatch } = match
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(winnerTypeMatch?.tags[0] as any)
 	const isOnlyWinner = winnerTypeMatch && doubleChanceTypeMatches?.length === 0 && !spreadTypeMatch && !totalTypeMatch
-
+	const router = useRouter()
 	const getSpanNumber = (betType: BetType) => {
 		if (isOnlyWinner) return 5
 		if (getBaseBetTypes().length > 2) {
@@ -62,7 +63,7 @@ const MatchHeaderPC = ({
 		<SC.PCContentWrapper>
 			{type === MATCHES.OPEN && (
 				<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.OPEN}`}>
-					<SC.MatchItemCol $alignItems={'flex-start'} span={8 + getPushNumber()}>
+					<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCHES}/${match.gameId}`)} $alignItems={'flex-start'} span={8 + getPushNumber()}>
 						{getContestedTeams}
 					</SC.MatchItemCol>
 					{includes(getBaseBetTypes(), BetType.WINNER) && (

@@ -32,7 +32,6 @@ interface IMatchListItem {
 const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVisibleTotalWinnerModal }) => {
 	const { t } = useTranslation()
 	const size = useMedia()
-	const router = useRouter()
 	const { winnerTypeMatch } = match
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(winnerTypeMatch?.tags[0] as any)
 	const [imgSrcHome, setImgSrcHome] = useState<string>(getTeamImageSource(match?.homeTeam || '', toNumber(match?.tags?.[0])))
@@ -105,7 +104,7 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 							<Col span={12}>
 								<Row style={{ flexWrap: 'nowrap' }}>{images}</Row>
 							</Col>
-							<Col onClick={() => router.push(`/${PAGES.MATCHES}/${match.gameId}`)} span={12}>
+							<Col span={12}>
 								<SC.TeamNames>{teamNames}</SC.TeamNames>
 							</Col>
 						</SC.NoWrapCenterRow>

@@ -113,6 +113,7 @@ export const MatchItemCol = styled(Col)<{ $alignItems?: string }>`
 	margin-top: auto;
 	margin-bottom: auto;
 	flex-direction: column;
+	cursor: ${({ onClick }) => (onClick ? 'pointer' : 'default')};
 `
 
 export const ExtendedMatchContentWrapper = styled.div`
@@ -399,9 +400,7 @@ export const NoWrapCenterRow = styled(Row)`
 	align-items: center;
 `
 
-export const TeamNames = styled(Row)`
-	cursor: pointer;
-`
+export const TeamNames = styled(Row)``
 
 export const FlexCol = styled(Col)<{ isTotalWinner?: boolean }>`
 	display: flex;

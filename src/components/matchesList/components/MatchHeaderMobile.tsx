@@ -1,8 +1,9 @@
 import { includes } from 'lodash'
 import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'next-export-i18n'
+import { useRouter } from 'next/router'
 import * as SC from '../MatchesListStyles'
-import { BET_OPTIONS, MATCHES } from '@/utils/enums'
+import { BET_OPTIONS, MATCHES, PAGES } from '@/utils/enums'
 import OddButton from '@/components/oddButton/OddButton'
 import OddValue from '@/components/oddButton/OddValue'
 import { BetType } from '@/utils/tags'
@@ -31,11 +32,11 @@ const MatchHeaderMobile = ({
 	const { t } = useTranslation()
 	const { winnerTypeMatch } = match
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(winnerTypeMatch?.tags[0] as any)
-
+	const router = useRouter()
 	return (
 		<SC.MobileContentWrapper>
 			<SC.MatchItemRow key={`${match.maturityDate}-${MATCHES.OPEN}`}>
-				<SC.MatchItemCol $alignItems={'flex-start'} span={24}>
+				<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCHES}/${match.gameId}`)} $alignItems={'flex-start'} span={24}>
 					{getContestedTeams}
 				</SC.MatchItemCol>
 			</SC.MatchItemRow>

@@ -92,11 +92,13 @@ export const MatchIcon = styled.div<{ result?: MATCH_RESULT; team: TEAM_TYPE }>`
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
-	background: ${({ theme }) => theme['color-base-surface-quaternary']};
 	border-radius: 999px;
-	border: 2px solid ${({ theme }) => theme['color-base-action-primary-default']};
+	// TODO: Uncomment when designer add styles for thsoe states
+	// background: ${({ theme }) => theme['color-base-surface-quaternary']};
+	//border: 2px solid ${({ theme }) => theme['color-base-action-primary-default']};
 	padding: 16px;
 	position: relative;
+	/* TODO: Uncomment when designer add styles for thsoe states
 	${(p) =>
 		p.result === MATCH_RESULT.DRAW &&
 		css`
@@ -145,6 +147,7 @@ export const MatchIcon = styled.div<{ result?: MATCH_RESULT; team: TEAM_TYPE }>`
 				border-radius: 50%;
 			}
 		`};
+	*/
 	@media (max-width: ${breakpoints.md}px) {
 		background: ${({ theme }) => theme['color-base-surface-quaternary']};
 		border-radius: 999px;
