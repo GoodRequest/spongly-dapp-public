@@ -1,4 +1,4 @@
-import { Row, Skeleton } from 'antd'
+import { Divider, Row, Skeleton } from 'antd'
 import styled from 'styled-components'
 import { TextSMMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
@@ -22,8 +22,9 @@ export const LeaderboardContentWrapper = styled.div`
 	}
 `
 export const LeaderboardContenRow = styled(Row)`
-	padding-top: 20px;
-	padding-bottom: 20px;
+	//padding-top: 20px;
+	//padding-bottom: 20px;
+	padding: 24px;
 	border-radius: 12px;
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	margin-bottom: 16px;
@@ -50,6 +51,13 @@ export const Description = styled.span`
 	${TextSMMedium};
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
 `
+
+export const Value = styled.span`
+	@media (max-width: ${breakpoints.md}px) {
+		order: 2;
+	}
+`
+
 export const Title = styled.span`
 	${TextSMMedium};
 	display: flex;
@@ -73,6 +81,8 @@ export const RowSkeleton = styled(Skeleton)`
 `
 export const SelectSorters = styled.div`
 	display: none;
+	margin-top: 16px;
+	margin-bottom: 16px;
 	@media (max-width: ${breakpoints.md}px) {
 		width: 100%;
 		display: flex;
@@ -85,5 +95,18 @@ export const SelectTitle = styled.div`
 		margin-right: 8px;
 		width: 16px;
 		height: 16px;
+	}
+`
+export const LeaderboardDivider = styled(Divider)`
+	display: none;
+	margin-left: -24px;
+	width: calc(100% + 24px + 24px);
+	margin-top: 0px;
+	margin-bottom: 0px;
+	@media (max-width: ${breakpoints.md}px) {
+		display: block;
+		border-top: ${({ theme }) => `2px solid ${theme['color-base-action-secondary-default']}`};
+		opacity: 0.5;
+		z-index: 10;
 	}
 `

@@ -31,7 +31,7 @@ export const GET_ALL_SPORT_MARKETS = gql`
 
 export const GET_TIPSTERS = gql`
 	query getTipsters($skip: Int!, $orderBy: String!, $orderDirection: String!, $first: Int!) {
-		users(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection) {
+		users(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection, where: { trades_gt: 0 }) {
 			volume
 			trades
 			pnl
