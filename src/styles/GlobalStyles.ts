@@ -165,12 +165,9 @@ export const Sorter = styled.div<{ sorterName: any; disabled?: boolean }>`
 export const SorterRow = styled(Row)`
 	margin-top: 16px;
 	margin-bottom: 16px;
-`
-export const HorizontalSorters = styled(Row)`
+
 	display: flex;
 	width: 100%;
-	padding-left: 24px;
-	padding-right: 24px;
 	@media (max-width: ${breakpoints.md}px) {
 		display: none;
 	}

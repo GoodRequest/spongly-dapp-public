@@ -303,23 +303,21 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 							<>
 								{type !== TICKET_TYPE.HOT_TICKET && (
 									<SCS.SorterRow>
-										<SC.HorizontalSorters>
-											<Col span={5}>
-												<Sorter title={t('Wallet')} />
-											</Col>
-											<Col span={8}>
-												<Sorter title={t('Success rate')} name={TICKET_SORTING.SUCCESS_RATE} />
-											</Col>
-											<Col span={3}>
-												<Sorter title={t('Buy in')} name={TICKET_SORTING.BUY_IN} />
-											</Col>
-											<Col span={3}>
-												<Sorter title={t('Quote')} name={TICKET_SORTING.TOTAL_TICKET_QUOTE} />
-											</Col>
-											<Col span={3}>
-												<Sorter title={t('Matches')} name={TICKET_SORTING.MATCHES} />
-											</Col>
-										</SC.HorizontalSorters>
+										<Col span={5}>
+											<Sorter title={t('Wallet')} />
+										</Col>
+										<Col span={8}>
+											<Sorter title={t('Success rate')} name={TICKET_SORTING.SUCCESS_RATE} />
+										</Col>
+										<Col span={3}>
+											<Sorter title={t('Buy in')} name={TICKET_SORTING.BUY_IN} />
+										</Col>
+										<Col span={3}>
+											<Sorter title={t('Quote')} name={TICKET_SORTING.TOTAL_TICKET_QUOTE} />
+										</Col>
+										<Col span={3}>
+											<Sorter title={t('Matches')} name={TICKET_SORTING.MATCHES} />
+										</Col>
 										<SC.SelectSorters>
 											<Select
 												title={

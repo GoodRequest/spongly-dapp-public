@@ -670,6 +670,11 @@ export const getHandicapValue = (number: number, type: BET_OPTIONS.HANDICAP_AWAY
 	return prefix + roundToTwoDecimals(Math.abs(oppositeNumber))
 }
 
+export const markedValue = (value: string) => {
+	const prefix = Number(value) >= 0 ? `+${value}` : value
+	return prefix
+}
+
 export const checkTotalWinnerBetExist = (activeTicketValues: IUnsubmittedBetTicket, match: any) => {
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(match?.winnerTypeMatch?.tags[0] as any)
 	// NOTE: ak obsahuje tiket uz totalWinnera z danej sutaze a pridavame z tej istej sutaze dalsieho tak vyhodi warning

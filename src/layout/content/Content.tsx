@@ -15,12 +15,11 @@ interface ILayout {
 const Content: FC<ILayout> = ({ children }) => {
 	const router = useRouter()
 	const fullWidthPages = [`/${PAGES.PARLAY_LEADERBOARD}`, `/${PAGES.LEADERBOARD}`]
-
 	return (
 		<SC.MainContainer>
 			<Row gutter={30} style={{ display: 'flex', justifyContent: 'space-between' }}>
 				{includes(fullWidthPages, router.pathname) ? (
-					<Col lg={24} xl={24}>
+					<Col style={{ width: '100%' }} lg={24} xl={24}>
 						{children}
 					</Col>
 				) : (
