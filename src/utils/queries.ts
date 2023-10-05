@@ -29,6 +29,17 @@ export const GET_ALL_SPORT_MARKETS = gql`
 	}
 `
 
+export const GET_TIPSTERS = gql`
+	query getTipsters($skip: Int!, $orderBy: String!, $orderDirection: String!, $first: Int!) {
+		users(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection) {
+			volume
+			trades
+			pnl
+			id
+		}
+	}
+`
+
 export const GET_USERS_STATISTICS = gql`
 	query getUser($id: String!) {
 		user(id: $id) {

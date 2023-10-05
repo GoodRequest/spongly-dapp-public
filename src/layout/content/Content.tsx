@@ -14,7 +14,7 @@ interface ILayout {
 
 const Content: FC<ILayout> = ({ children }) => {
 	const router = useRouter()
-	const fullWidthPages = [`/${PAGES.PARLAY_LEADERBOARD}`]
+	const fullWidthPages = [`/${PAGES.PARLAY_LEADERBOARD}`, `/${PAGES.LEADERBOARD}`]
 
 	return (
 		<SC.MainContainer>

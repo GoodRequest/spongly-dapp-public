@@ -4,6 +4,7 @@ import { HeadingXSMedium, TextMDMedium, TextMDRegular, TextSMMedium, TextSorter 
 import worldFlag from '@/assets/icons/world-flag.png'
 import { decodeSorter } from '@/utils/helpers'
 import { TextLGMedium } from './typography'
+import { breakpoints } from '@/styles/theme'
 
 const { Paragraph } = Typography
 export const GlobalStyle = createGlobalStyle`
@@ -137,14 +138,14 @@ export const FlexRow = styled.div`
 	gap: 16px;
 `
 
-export const Sorter = styled.div<{ sorterName: any }>`
+export const Sorter = styled.div<{ sorterName: any; disabled?: boolean }>`
 	${TextSorter};
 	display: inline-flex;
 	align-items: center;
 	height: 32px;
 	border-radius: 4px;
 	padding: 4px 8px 4px 0;
-	cursor: ${({ sorterName }) => (sorterName ? 'pointer' : 'default')};
+	cursor: ${({ sorterName, disabled }) => (disabled ? 'not-allowed' : sorterName ? 'pointer' : 'default')};
 	${(p) =>
 		p.sorterName &&
 		p.sorterName === decodeSorter().property &&
@@ -155,6 +156,7 @@ export const Sorter = styled.div<{ sorterName: any }>`
 	img {
 		padding: 0;
 		margin-right: 8px;
+		margin-left: 0;
 		width: 20px;
 		height: 20px;
 	}
@@ -164,6 +166,16 @@ export const SorterRow = styled(Row)`
 	margin-top: 16px;
 	margin-bottom: 16px;
 `
+export const HorizontalSorters = styled(Row)`
+	display: flex;
+	width: 100%;
+	padding-left: 24px;
+	padding-right: 24px;
+	@media (max-width: ${breakpoints.md}px) {
+		display: none;
+	}
+`
+
 export const FlagWorld = styled.div`
 	height: 20px;
 	width: 20px;

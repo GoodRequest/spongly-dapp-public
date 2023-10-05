@@ -55,6 +55,7 @@ const MobileMenu = ({ selected }: Props) => {
 					<SC.Menu mode={'vertical'} onClick={(e) => handleSelect(e)} selectedKeys={[selected]}>
 						<SC.MenuItem key={PAGES.DASHBOARD}>{t('Dashboard')}</SC.MenuItem>
 						<SC.MenuItem key={PAGES.TICKETS}>{t('Tickets')}</SC.MenuItem>
+						<SC.MenuItem key={PAGES.LEADERBOARD}>{t('Leaderboard')}</SC.MenuItem>
 						<SC.MenuItem key={PAGES.MATCHES}>{t('Matches')}</SC.MenuItem>
 						{isMounted && chain?.id && <SC.MenuItem key={PAGES.MY_WALLET}>{t('My wallet')}</SC.MenuItem>}
 						<SC.MenuItem key={PAGES.PARLAY_LEADERBOARD}>{t('Parlay Leaderboard')}</SC.MenuItem>
