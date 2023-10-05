@@ -1,10 +1,10 @@
 import styled from 'styled-components'
-import { Spin } from 'antd'
+import { Col, Spin } from 'antd'
 
 import infoIconPurple from '@/assets/icons/info-circle.svg'
-import { TextMDMedium, TextXSMedium, TextSMMedium, HeadingSMMedium } from '@/styles/typography'
+import { TextMDMedium, TextXSMedium, TextSMMedium, HeadingSMMedium, HeadingXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
-import { AllPositionsHeader, MobileWrapper, RadioMobileHeader } from '../matchesList/MatchesListStyles'
+import { AllPositionsHeader } from '../matchesList/MatchesListStyles'
 import { SCROLL_DIRECTION } from '@/utils/enums'
 
 export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
@@ -245,4 +245,30 @@ export const FormWrapper = styled.form`
 	@media (max-width: ${breakpoints.md}px) {
 		max-height: calc(100vh - 100px);
 	}
+`
+
+export const ModalDescription = styled(Col)`
+	${TextMDMedium};
+	text-align: center;
+	margin-bottom: 32px;
+	color: ${({ theme }) => theme['color-base-content-tertiary']};
+`
+
+export const ModalTitle = styled(Col)`
+	${HeadingSMMedium};
+	width: 75%;
+	margin: 0 auto;
+	text-align: center;
+	margin-bottom: 12px;
+
+	@media (max-width: ${breakpoints.md}px) {
+		${HeadingXSMedium}
+	}
+`
+
+export const MatchContainerRow = styled(Col)`
+	max-height: 304px;
+	margin-bottom: 32px;
+	overflow: auto;
+	background: linear-gradient(360deg, #1d2046 0%, rgba(29, 32, 70, 0) 100%);
 `
