@@ -65,7 +65,8 @@ const SportFilter: FC<SportFilterProps> = ({ onReset, onShowResults, resultsCoun
 		if (selectedSport.name === STATIC.ALL) {
 			return map(TAGS_LIST, (item) => ({ name: item?.label, country: item?.country, id: item?.id } as IFilterCategoryItem))
 		}
-		return map(SPORTS_TAGS_MAP[selectedSport.name as SportFilterEnum], (sportId) => {
+		const sportName = selectedSport.name === SportFilterEnum.MMA ? 'MMA' : (selectedSport.name as SportFilterEnum)
+		return map(SPORTS_TAGS_MAP[sportName], (sportId) => {
 			const crntLeagueItem = find(TAGS_LIST, (item) => includes(item, sportId as any))
 			return {
 				name: crntLeagueItem?.label,
@@ -80,7 +81,8 @@ const SportFilter: FC<SportFilterProps> = ({ onReset, onShowResults, resultsCoun
 			return map(TAGS_LIST, (item) => ({ label: item?.label, country: item?.country, value: item?.id } as IMobileSelectItem))
 		}
 
-		return map(SPORTS_TAGS_MAP[selectedSport.name as SportFilterEnum], (sportId) => {
+		const sportName = selectedSport.name === SportFilterEnum.MMA ? 'MMA' : (selectedSport.name as SportFilterEnum)
+		return map(SPORTS_TAGS_MAP[sportName], (sportId) => {
 			const crntLeagueItem = find(TAGS_LIST, (item) => includes(item, sportId as any))
 			return {
 				label: crntLeagueItem?.label,

@@ -9,4 +9,7 @@ export const Logo = styled.img`
 	@media (max-width: ${breakpoints.sm}px) {
 		margin-right: 0px;
 	}
+	@media (max-width: ${breakpoints.smsx}px) {
+		width: 140px;
+	}
 `

@@ -20,10 +20,10 @@ import * as SC from './MatchesListStyles'
 
 interface IMatchListContent {
 	match: TicketPosition
-	setVisibleTotalWinnerModal?: Dispatch<SetStateAction<boolean>>
+	setVisibleParlayValidationModal?: Dispatch<SetStateAction<{ visible: boolean; message: string }>>
 }
 
-const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleTotalWinnerModal }) => {
+const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleParlayValidationModal }) => {
 	const { t } = useTranslation()
 	const { chain } = useNetwork()
 	const { winnerTypeMatch, doubleChanceTypeMatches, spreadTypeMatch, totalTypeMatch, combinedTypeMatch } = match
@@ -43,13 +43,23 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleTotalWinnerM
 						<SC.RadioMobileGroup>
 							<OddButton
 								match={match}
-								setVisibleTotalWinnerModal={isTotalWinner ? setVisibleTotalWinnerModal : undefined}
+								setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 								betOption={BET_OPTIONS.WINNER_HOME}
 								oddName={isTotalWinner ? t('YES') : BET_OPTIONS.WINNER_HOME}
 								isMobilePanel
 							/>
-							<OddButton match={match} betOption={BET_OPTIONS.WINNER_DRAW} isMobilePanel />
-							<OddButton match={match} betOption={BET_OPTIONS.WINNER_AWAY} isMobilePanel />
+							<OddButton
+								setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+								match={match}
+								betOption={BET_OPTIONS.WINNER_DRAW}
+								isMobilePanel
+							/>
+							<OddButton
+								setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+								match={match}
+								betOption={BET_OPTIONS.WINNER_AWAY}
+								isMobilePanel
+							/>
 						</SC.RadioMobileGroup>
 						<SC.OddsWrapper>
 							<OddValue match={match} betOption={BET_OPTIONS.WINNER_HOME} />
@@ -65,9 +75,24 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleTotalWinnerM
 							<SC.WarningText>{t('Coming soon')}</SC.WarningText>
 						)}
 						<SC.RadioMobileGroup>
-							<OddButton match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_HOME} isMobilePanel />
-							<OddButton match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_DRAW} isMobilePanel />
-							<OddButton match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_AWAY} isMobilePanel />
+							<OddButton
+								setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+								match={match}
+								betOption={BET_OPTIONS.DOUBLE_CHANCE_HOME}
+								isMobilePanel
+							/>
+							<OddButton
+								setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+								match={match}
+								betOption={BET_OPTIONS.DOUBLE_CHANCE_DRAW}
+								isMobilePanel
+							/>
+							<OddButton
+								setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+								match={match}
+								betOption={BET_OPTIONS.DOUBLE_CHANCE_AWAY}
+								isMobilePanel
+							/>
 						</SC.RadioMobileGroup>
 						<SC.OddsWrapper>
 							<OddValue match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_HOME} />
@@ -82,12 +107,14 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleTotalWinnerM
 						<SC.RadioMobileGroup>
 							<OddButton
 								match={match}
+								setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 								betOption={BET_OPTIONS.HANDICAP_HOME}
 								oddName={`${BET_OPTIONS.HANDICAP_HOME} (${getHandicapValue(spreadTypeMatch.spread, BET_OPTIONS.HANDICAP_HOME)})`}
 								isMobilePanel
 							/>
 							<OddButton
 								match={match}
+								setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 								betOption={BET_OPTIONS.HANDICAP_AWAY}
 								oddName={`${BET_OPTIONS.HANDICAP_AWAY} (${getHandicapValue(spreadTypeMatch.spread, BET_OPTIONS.HANDICAP_AWAY)})`}
 								isMobilePanel
@@ -105,12 +132,14 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleTotalWinnerM
 						<SC.RadioMobileGroup>
 							<OddButton
 								match={match}
+								setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 								betOption={BET_OPTIONS.TOTAL_OVER}
 								oddName={`${BET_OPTIONS.TOTAL_OVER} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
 								isMobilePanel
 							/>
 							<OddButton
 								match={match}
+								setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 								betOption={BET_OPTIONS.TOTAL_UNDER}
 								oddName={`${BET_OPTIONS.TOTAL_UNDER} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
 								isMobilePanel
@@ -128,6 +157,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleTotalWinnerM
 						<SC.RadioMobileGroup>
 							{/* // 1O */}
 							<OddButton
+								setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 								match={match}
 								isMobilePanel
 								betOption={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER}
@@ -135,6 +165,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleTotalWinnerM
 							/>
 							{/* 1U */}
 							<OddButton
+								setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 								match={match}
 								isMobilePanel
 								betOption={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER}
@@ -142,6 +173,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleTotalWinnerM
 							/>
 							{/* 2O */}
 							<OddButton
+								setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 								match={match}
 								isMobilePanel
 								betOption={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER}
@@ -149,6 +181,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleTotalWinnerM
 							/>
 							{/* 2U */}
 							<OddButton
+								setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 								match={match}
 								isMobilePanel
 								betOption={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER}
@@ -174,12 +207,20 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleTotalWinnerM
 							<SC.ExtendedMatchContentRadioButtonGroup>
 								<OddButton
 									match={match}
-									setVisibleTotalWinnerModal={isTotalWinner ? setVisibleTotalWinnerModal : undefined}
+									setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 									betOption={BET_OPTIONS.WINNER_HOME}
 									oddName={isTotalWinner ? t('YES') : BET_OPTIONS.WINNER_HOME}
 								/>
-								<OddButton match={match} betOption={BET_OPTIONS.WINNER_DRAW} />
-								<OddButton match={match} betOption={BET_OPTIONS.WINNER_AWAY} />
+								<OddButton
+									setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+									match={match}
+									betOption={BET_OPTIONS.WINNER_DRAW}
+								/>
+								<OddButton
+									setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+									match={match}
+									betOption={BET_OPTIONS.WINNER_AWAY}
+								/>
 							</SC.ExtendedMatchContentRadioButtonGroup>
 							<SC.ExtendedOddsWrapper>
 								<OddValue match={match} betOption={BET_OPTIONS.WINNER_HOME} />
@@ -198,9 +239,21 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleTotalWinnerM
 								<SC.WarningText>{t('Coming soon')}</SC.WarningText>
 							)}
 							<SC.ExtendedMatchContentRadioButtonGroup>
-								<OddButton match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_HOME} />
-								<OddButton match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_DRAW} />
-								<OddButton match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_AWAY} />
+								<OddButton
+									setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+									match={match}
+									betOption={BET_OPTIONS.DOUBLE_CHANCE_HOME}
+								/>
+								<OddButton
+									setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+									match={match}
+									betOption={BET_OPTIONS.DOUBLE_CHANCE_DRAW}
+								/>
+								<OddButton
+									setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+									match={match}
+									betOption={BET_OPTIONS.DOUBLE_CHANCE_AWAY}
+								/>
 							</SC.ExtendedMatchContentRadioButtonGroup>
 							<SC.ExtendedOddsWrapper>
 								<OddValue match={match} betOption={BET_OPTIONS.DOUBLE_CHANCE_HOME} />
@@ -217,11 +270,13 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleTotalWinnerM
 						<SC.ExtendedRowItemContent>
 							<SC.ExtendedMatchContentRadioButtonGroup>
 								<OddButton
+									setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 									match={match}
 									betOption={BET_OPTIONS.HANDICAP_HOME}
 									oddName={`${BET_OPTIONS.HANDICAP_HOME} (${getHandicapValue(spreadTypeMatch.spread, BET_OPTIONS.HANDICAP_HOME)})`}
 								/>
 								<OddButton
+									setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 									match={match}
 									betOption={BET_OPTIONS.HANDICAP_AWAY}
 									oddName={`${BET_OPTIONS.HANDICAP_AWAY} (${getHandicapValue(spreadTypeMatch.spread, BET_OPTIONS.HANDICAP_AWAY)})`}
@@ -241,11 +296,13 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleTotalWinnerM
 						<SC.ExtendedRowItemContent>
 							<SC.ExtendedMatchContentRadioButtonGroup>
 								<OddButton
+									setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 									match={match}
 									betOption={BET_OPTIONS.TOTAL_OVER}
 									oddName={`${BET_OPTIONS.TOTAL_OVER} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
 								/>
 								<OddButton
+									setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 									match={match}
 									betOption={BET_OPTIONS.TOTAL_UNDER}
 									oddName={`${BET_OPTIONS.TOTAL_UNDER} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
@@ -266,24 +323,28 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleTotalWinnerM
 							<SC.ExtendedMatchContentRadioButtonGroup>
 								{/* // 1O */}
 								<OddButton
+									setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 									match={match}
 									betOption={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER}
 									oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
 								/>
 								{/* 1U */}
 								<OddButton
+									setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 									match={match}
 									betOption={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER}
 									oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
 								/>
 								{/* 2O */}
 								<OddButton
+									setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 									match={match}
 									betOption={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER}
 									oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}
 								/>
 								{/* 2U */}
 								<OddButton
+									setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 									match={match}
 									betOption={BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER}
 									oddName={`${BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER} (${roundToTwoDecimals(totalTypeMatch.total || 0)})`}

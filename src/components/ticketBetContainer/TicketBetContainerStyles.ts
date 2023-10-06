@@ -128,16 +128,9 @@ export const MatchBetOptionsWrapper = styled.div`
 		margin-right: 0px !important;
 		margin-left: 0px !important;
 	}
-	${MobileWrapper} {
-		background: ${({ theme }) => theme['color-base-surface-secondary']};
-	}
+
 	${AllPositionsHeader} {
 		display: none;
-	}
-
-	${RadioMobileHeader} {
-		${TextXSMedium};
-		justify-content: flex-start;
 	}
 `
 

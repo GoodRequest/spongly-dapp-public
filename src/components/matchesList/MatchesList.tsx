@@ -1,9 +1,10 @@
-import { FC, useState, useEffect, useMemo } from 'react'
+import React, { FC, useState, useEffect, useMemo } from 'react'
 import { Col, Row } from 'antd'
 import { groupBy, includes, map, slice, toPairs } from 'lodash'
 import { useTranslation } from 'next-export-i18n'
 import { useNetwork } from 'wagmi'
 
+import Flag from 'react-world-flags'
 import MatchListItem from './MatchesListItem'
 import ArrowIcon from '@/assets/icons/arrow-down.svg'
 
@@ -15,23 +16,24 @@ import { BetType } from '@/utils/tags'
 import { useMedia } from '@/hooks/useMedia'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 import { SGPItem } from '@/typescript/types'
-import { MATCHES_OFFSET, MATCHES_OFFSET_MOBILE, PLAYER_PROPS_BET_TYPES } from '@/utils/constants'
+import { MATCHES_OFFSET, MATCHES_OFFSET_MOBILE, PLAYER_PROPS_BET_TYPES, STATIC } from '@/utils/constants'
 import Modal from '@/components/modal/Modal'
 import { RESOLUTIONS } from '@/utils/enums'
+import { FlagWorld } from '@/styles/GlobalStyles'
 
 interface IMatchesList {
 	matches: SportMarket[]
 	filter: any
 	loading: boolean
+	item: any
 }
 
-const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
+const MatchesList: FC<IMatchesList> = ({ matches, filter, item }) => {
 	const { chain } = useNetwork()
 	const { t } = useTranslation()
 	const size = useMedia()
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
-	const [visibleTotalWinnerModal, setVisibleTotalWinnerModal] = useState(false)
-
+	const [visibleParlayValidationModal, setVisibleParlayValidationModal] = useState({ visible: false, message: '' })
 	const [matchOffsetByResolution, setMatchOffsetByResolution] = useState(0)
 
 	useEffect(() => {
@@ -146,63 +148,55 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, loading }) => {
 	const modalParlayValidation = useMemo(
 		() => (
 			<Modal
-				open={visibleTotalWinnerModal}
+				open={visibleParlayValidationModal.visible}
 				onCancel={() => {
-					setVisibleTotalWinnerModal(false)
+					setVisibleParlayValidationModal({ visible: false, message: '' })
 				}}
 				title={t('Parlay Validation')}
 				centered
 			>
-				<SC.ModalDescriptionText>{t('Only one participant per event is supported.')}</SC.ModalDescriptionText>
+				<SC.ModalDescriptionText>{visibleParlayValidationModal.message}</SC.ModalDescriptionText>
 			</Modal>
 		),
-		[visibleTotalWinnerModal]
+		[visibleParlayValidationModal]
 	)
 
-	return (
+	// NOTE if sport exist in league show league header and match list if not show anything (do not use empty state because it is necessary)
+	return renderList.length > 0 ? (
 		<SC.MatchListWrapper>
 			<Row>
 				<Col span={24}>
 					{/* NOTE: if has no items, should be filtered out, so renderList list must be loading. */}
-					{loading || renderList?.length === 0 ? (
-						<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
-					) : (
-						<>
-							{renderList.length > 0 ? (
-								map(renderList, (match, key) => (
-									<MatchListItem
-										match={match}
-										keyValue={`match-${match.address}-${key}`}
-										filter={filter}
-										setVisibleTotalWinnerModal={setVisibleTotalWinnerModal}
-									/>
-								))
-							) : (
-								<SC.MatchItemEmptyState>
-									<Row>
-										<Col md={{ span: 5 }} xs={{ span: 0 }}>
-											<SC.EmptyImage />
-										</Col>
-										<Col md={{ span: 19 }} xs={{ span: 24 }}>
-											<h4>{t('There are currently no matches being played')}</h4>
-											<p>{t('You can try other leagues')}</p>
-										</Col>
-									</Row>
-								</SC.MatchItemEmptyState>
-							)}
-							{hasMore && (
-								<SC.LoadMore onClick={addMatchesToList}>
-									{t('Show more')}
-									<SCS.Icon icon={ArrowIcon} />
-								</SC.LoadMore>
-							)}
-						</>
+					<SC.LeagueHeader>
+						{item?.country && item?.country !== STATIC.WORLD && (
+							<SC.FlagWrapper>
+								<Flag code={item.country} />
+							</SC.FlagWrapper>
+						)}
+
+						{item?.country && item?.country === STATIC.WORLD && <FlagWorld />}
+						{item?.label}
+					</SC.LeagueHeader>
+					{map(renderList, (match, key) => (
+						<MatchListItem
+							match={match}
+							keyValue={`match-${match.address}-${key}`}
+							filter={filter}
+							setVisibleParlayValidationModal={setVisibleParlayValidationModal}
+						/>
+					))}
+
+					{hasMore && renderList.length !== 0 && (
+						<SC.LoadMore onClick={addMatchesToList}>
+							{t('Show more')}
+							<SCS.Icon icon={ArrowIcon} />
+						</SC.LoadMore>
 					)}
 				</Col>
 			</Row>
 			{modalParlayValidation}
 		</SC.MatchListWrapper>
-	)
+	) : null
 }
 
 export default MatchesList
