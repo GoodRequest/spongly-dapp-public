@@ -6,7 +6,7 @@ import { useNetwork } from 'wagmi'
 
 import { UserTicket } from '@/typescript/types'
 import UserTicketTableRow from './UserTicketTableRow'
-import { WALLET_TICKETS } from '@/utils/enums'
+import { PAGES, WALLET_TICKETS } from '@/utils/enums'
 
 import * as SC from './UserTicketsListStyles'
 import * as SCS from '@/styles/GlobalStyles'
@@ -21,9 +21,10 @@ type Props = {
 	tickets: UserTicket[] | undefined
 	isLoading: boolean
 	refetch: () => void
+	isMyWallet?: boolean
 }
 
-const UserTicketsList = ({ tickets, isLoading, refetch }: Props) => {
+const UserTicketsList = ({ tickets, isLoading, refetch, isMyWallet }: Props) => {
 	const { t } = useTranslation()
 	const router = useRouter()
 	const { query, isReady } = useRouter()
@@ -34,7 +35,6 @@ const UserTicketsList = ({ tickets, isLoading, refetch }: Props) => {
 	const [sortedTickets, setSortedTickets] = useState<UserTicket[] | undefined>([])
 
 	const [filter, setFilter] = useState<{ status: WALLET_TICKETS }>({ status: WALLET_TICKETS.ALL })
-
 	const claimableSuccessfulTicketCount = tickets?.filter((item) => item.isClaimable && item.ticketType === WALLET_TICKETS.SUCCESSFUL).length || 0
 	const claimableCanceledTicketCount = tickets?.filter((item) => item.isClaimable && item.ticketType === WALLET_TICKETS.PAUSED_CANCELED).length || 0
 
@@ -92,19 +92,33 @@ const UserTicketsList = ({ tickets, isLoading, refetch }: Props) => {
 	useEffect(() => {
 		setShownTickets(sortedTickets?.slice(0, pagination.page * 10))
 		// NOTE: Do not update query when wallet is not connected -> instead useEffect in WalletContent will redirect to dashboard
-		if (chain?.id) {
-			router.replace(
-				{
-					pathname: '/my-wallet',
-					query: {
-						page: pagination?.page,
-						status: filter.status
-					}
-				},
-				undefined,
-				{ scroll: false }
-			)
-		}
+		// TODO: zistit ako toto vyriesit pri updatovani query ak neni walletka pripojena a sucasne som na detaile a nie my-wallet
+		// if (router.query.id) {
+		// 	router.replace(
+		// 		{
+		// 			pathname: `/${PAGES.LEADERBOARD}/${router.query.id}`,
+		// 			query: {
+		// 				page: pagination?.page,
+		// 				status: filter.status
+		// 			}
+		// 		},
+		// 		undefined,
+		// 		{ scroll: false }
+		// 	)
+		// }
+		// if (chain?.id && !router.query.id) {
+		// 	router.replace(
+		// 		{
+		// 			pathname: `/${PAGES.MY_WALLET}`,
+		// 			query: {
+		// 				page: pagination?.page,
+		// 				status: filter.status
+		// 			}
+		// 		},
+		// 		undefined,
+		// 		{ scroll: false }
+		// 	)
+		// }
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [pagination, sortedTickets, chain?.id])
 
@@ -160,7 +174,7 @@ const UserTicketsList = ({ tickets, isLoading, refetch }: Props) => {
 				/>
 			)
 		}
-		return shownTickets?.map((data) => <UserTicketTableRow refetch={refetch} ticket={data} key={data?.id} />)
+		return shownTickets?.map((data) => <UserTicketTableRow isMyWallet={isMyWallet} refetch={refetch} ticket={data} key={data?.id} />)
 	}
 
 	const hasMoreData = () => {
@@ -175,7 +189,7 @@ const UserTicketsList = ({ tickets, isLoading, refetch }: Props) => {
 
 	return (
 		<SC.ContentWrapper>
-			{claimableSuccessfulTicketCount + claimableCanceledTicketCount > 0 && <YouNeedToClaimBanner />}
+			{claimableSuccessfulTicketCount + claimableCanceledTicketCount > 0 && isMyWallet && <YouNeedToClaimBanner />}
 			<Row>
 				<Col span={24}>
 					<SC.MobileWrapper>

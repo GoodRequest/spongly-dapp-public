@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { useLazyQuery } from '@apollo/client'
 import { useTranslation } from 'next-export-i18n'
@@ -32,11 +32,11 @@ const MyWalletContent = () => {
 	const { address } = useAccount()
 	const { chain } = useNetwork()
 	const router = useRouter()
+	const isMyWallet = !router.query.id
 	const provider = useProvider({ chainId: chain?.id || NETWORK_IDS.OPTIMISM })
 	const { signer } = networkConnector
 	const isMounted = useIsMounted()
 	const [fetchUserStatistic] = useLazyQuery(GET_USERS_STATISTICS)
-
 	const [userStatistic, setUserStatistic] = useState<undefined | UserStatistic>(undefined)
 	const [isLoading, setIsLoading] = useState(true)
 
@@ -80,7 +80,10 @@ const MyWalletContent = () => {
 	const fetchStatistics = () => {
 		setIsLoading(true)
 		setTimeout(() => {
-			fetchUserStatistic({ variables: { id: address?.toLocaleLowerCase() || '' }, context: { chainId: chain?.id } })
+			fetchUserStatistic({
+				variables: { id: isMyWallet ? address?.toLocaleLowerCase() : String(router.query.id).toLowerCase() },
+				context: { chainId: chain?.id }
+			})
 				.then(async (values) => {
 					const parlayData = values?.data?.parlayMarkets
 					const positions = values?.data?.positionBalances
@@ -200,7 +203,7 @@ const MyWalletContent = () => {
 			router.push(`/${PAGES.DASHBOARD}`)
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [address, chain?.id, signer])
+	}, [address, chain?.id, signer, router.query.id])
 
 	const refetch = () => {
 		if (address && chain?.id && signer) {
@@ -210,8 +213,8 @@ const MyWalletContent = () => {
 
 	return (
 		<>
-			{isMounted && <TicketsStatisticRow isLoading={isLoading} user={userStatistic?.user} />}
-			<UserTicketsList refetch={refetch} isLoading={isLoading} tickets={userStatistic?.tickets} />
+			{isMounted && <TicketsStatisticRow isMyWallet={isMyWallet} isLoading={isLoading} user={userStatistic?.user} />}
+			<UserTicketsList refetch={refetch} isMyWallet={isMyWallet} isLoading={isLoading} tickets={userStatistic?.tickets} />
 		</>
 	)
 }

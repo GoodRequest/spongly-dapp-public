@@ -221,3 +221,9 @@ export const ClaimValue = styled.span`
 	margin-top: -4px;
 	${TextXSMedium}
 `
+export const StylesRow = styled(Row)`
+	margin-top: 16px;
+	@media (max-width: ${breakpoints.md}px) {
+		margin-top: 16px;
+	}
+`

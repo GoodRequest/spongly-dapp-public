@@ -21,7 +21,7 @@ import {
 	isClaimableUntil,
 	orderPositionsAsSportMarkets
 } from '@/utils/helpers'
-import { USER_TICKET_TYPE, NOTIFICATION_TYPE, MSG_TYPE, GAS_ESTIMATION_BUFFER } from '@/utils/constants'
+import { GAS_ESTIMATION_BUFFER, MSG_TYPE, NOTIFICATION_TYPE, USER_TICKET_TYPE } from '@/utils/constants'
 import networkConnector from '@/utils/networkConnector'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
 import { roundPrice } from '@/utils/formatters/currency'
@@ -36,13 +36,17 @@ import * as SC from './UserTicketTableRowStyles'
 
 // assets
 import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
+import { IUnsubmittedBetTicket } from '@/redux/betTickets/betTicketTypes'
+import { RootState } from '@/redux/rootReducer'
+import { FORM } from '@/utils/enums'
 
 type Props = {
 	ticket: UserTicket
 	refetch: () => void
+	isMyWallet?: boolean
 }
 
-const UserTicketTableRow = ({ ticket, refetch }: Props) => {
+const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 	const { t } = useTranslation()
 	const { chain } = useNetwork()
 
@@ -107,7 +111,10 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 
 	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions, ticket, sgpFees)
-
+	const hasOpenPositions = positionsWithMergedCombinedPositions?.some(
+		// TODO: ongoing sa nesprava dobre elbo je isOpen a sucasne isResolved
+		(item) => item?.market?.isOpen && !item?.market?.isPaused && !item?.market?.isCanceled && !item?.market?.isResolved
+	)
 	const userTicketType = getUserTicketType(ticket)
 
 	const isClaimed = (userTicketType === USER_TICKET_TYPE.SUCCESS || userTicketType === USER_TICKET_TYPE.CANCELED) && ticket?.claimed
@@ -216,11 +223,11 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 				) : (
 					<>
 						<SC.ClaimValueText userTicketType={userTicketType}>{getClaimValue()}</SC.ClaimValueText>
-						{userTicketType !== USER_TICKET_TYPE.MISS && <SC.ColumnNameText>{t('Claim')}</SC.ColumnNameText>}
+						{userTicketType !== USER_TICKET_TYPE.MISS && isMyWallet && <SC.ColumnNameText>{t('Claim')}</SC.ColumnNameText>}
 					</>
 				)}
 			</SC.CenterRowContent>
-			<SC.ClaimColContent show={ticket.isClaimable} md={{ span: 4, order: 5 }} xs={{ span: 24, order: 5 }}>
+			<SC.ClaimColContent show={!!(ticket.isClaimable && isMyWallet)} md={{ span: 4, order: 5 }} xs={{ span: 24, order: 5 }}>
 				{!isClaiming ? (
 					<Button
 						btnStyle={'primary'}
@@ -265,6 +272,39 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 						</Col>
 					))}
 				</Row>
+				<SC.StylesRow gutter={[16, 16]}>
+					{/* <Col md={type === TICKET_TYPE.CLOSED_TICKET ? 24 : 12} span={24}>
+									<Button
+										btnStyle={'secondary'}
+										content={t('Show ticket detail')}
+										onClick={() => {
+											// TODO: redirect to detail
+										}}
+									/>
+								</Col> */}
+					{hasOpenPositions && (
+						<Col md={12} span={24}>
+							<Button
+								disabledPopoverText={t('Matches are no longer open to copy')}
+								// disabled={activeMatches?.length === 0} // If ticket with active matches is empty disable button
+								btnStyle={'primary'}
+								content={t('Copy ticket')}
+								// TODO: copy ticket
+								// onClick={async () => {
+								// 	// NOTE: if ticket has matches open modal which ask if you want to replace ticket or create new one
+								// 	if (!isEmpty(betTicket?.matches)) {
+								// 		setTempMatches(activeMatches)
+								// 		setCopyModal({ visible: true, onlyCopy: false })
+								// 	} else {
+								// 		// Otherwise create ticket
+								// 		setTempMatches(activeMatches)
+								// 		setCopyModal({ visible: true, onlyCopy: true })
+								// 	}
+								// }}
+							/>
+						</Col>
+					)}
+				</SC.StylesRow>
 			</SC.ColapsePanel>
 			<SC.CollapseButtonWrapper>
 				<Button

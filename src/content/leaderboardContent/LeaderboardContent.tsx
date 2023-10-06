@@ -26,6 +26,7 @@ import * as SCS from '@/styles/GlobalStyles'
 
 // types
 import { LeaderboardUser } from '@/typescript/types'
+import { PAGES } from '@/utils/enums'
 
 const limit = 20
 
@@ -239,11 +240,10 @@ const LeaderboardContent = () => {
 									<Button
 										type={'primary'}
 										size={'large'}
-										disabled={true}
 										btnStyle={'secondary'}
 										onClick={() => {
 											// TODO: in detail of tipster
-											// router.push(`/tipster/${item.id}`)
+											router.push(`/${PAGES.LEADERBOARD}/${item.id}`)
 										}}
 										content={<span>{t('Show more')}</span>}
 									/>
