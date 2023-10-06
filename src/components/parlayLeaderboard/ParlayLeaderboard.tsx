@@ -15,6 +15,7 @@ import * as SCS from '@/styles/GlobalStyles'
 import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
 import { formatQuote } from '@/utils/formatters/quote'
 import { showNotifications } from '@/utils/tsxHelpers'
+import { PAGES } from '@/utils/enums'
 
 const ParlayLeaderboard = () => {
 	const { t } = useTranslation()
@@ -104,7 +105,7 @@ const ParlayLeaderboard = () => {
 				</Row>
 			)}
 			<div style={{ minHeight: '200px' }}>{!isLoading ? parlayLeaderBoard : <SC.Skeleton paragraph={{ rows: 4 }} />}</div>
-			<SC.LeaderboardButton type={'primary'} onClick={() => router.push('/parlay-leaderboard')}>
+			<SC.LeaderboardButton type={'primary'} onClick={() => router.push(`/${PAGES.PARLAY_SUPERSTARS}`)}>
 				{t('Show more')}
 			</SC.LeaderboardButton>
 		</SC.ParlayLeaderboardWrapper>

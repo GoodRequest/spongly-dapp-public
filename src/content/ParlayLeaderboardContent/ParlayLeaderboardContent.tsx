@@ -25,6 +25,7 @@ import * as SC from './ParlayLeaderboardContentStyles'
 import * as SCS from '@/styles/GlobalStyles'
 import { formatQuote } from '@/utils/formatters/quote'
 import { showNotifications } from '@/utils/tsxHelpers'
+import { PAGES } from '@/utils/enums'
 
 type ParlayLeaderboardFilter = {
 	page: number
@@ -68,7 +69,7 @@ const ParlayLeaderboardContent = () => {
 	useEffect(() => {
 		router.replace(
 			{
-				pathname: '/parlay-leaderboard',
+				pathname: `/${PAGES.PARLAY_SUPERSTARS}`,
 				query: {
 					page: filters?.page,
 					period: filters?.period,

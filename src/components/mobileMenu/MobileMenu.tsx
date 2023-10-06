@@ -58,7 +58,7 @@ const MobileMenu = ({ selected }: Props) => {
 						<SC.MenuItem key={PAGES.LEADERBOARD}>{t('Leaderboard')}</SC.MenuItem>
 						<SC.MenuItem key={PAGES.MATCHES}>{t('Matches')}</SC.MenuItem>
 						{isMounted && chain?.id && <SC.MenuItem key={PAGES.MY_WALLET}>{t('My wallet')}</SC.MenuItem>}
-						<SC.MenuItem key={PAGES.PARLAY_LEADERBOARD}>{t('Parlay Leaderboard')}</SC.MenuItem>
+						<SC.MenuItem key={PAGES.PARLAY_SUPERSTARS}>{t('Parlay Superstars')}</SC.MenuItem>
 					</SC.Menu>
 					<div>
 						<Row gutter={[16, 16]}>
