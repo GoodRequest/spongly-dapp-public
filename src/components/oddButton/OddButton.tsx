@@ -33,10 +33,6 @@ const OddButton = (props: Props) => {
 	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
 	const isMatchInActiveTicket = activeTicketValues?.matches?.find((m) => m.gameId === match.gameId)
 
-	// if (match.id === '0x975c36db306192af347508e4acfab6abe5ab1885') {
-	// 	console.log(oddName)
-	// }
-
 	// TODO: refactore TicketPosition type and use Imatch type and remove as any
 	return getOddByBetType(match as any, !!activeTicketValues.copied, betOption).formattedOdd > MIN_ODD_TRESHOLD ? (
 		<SC.MatchContentOddButton

@@ -25,7 +25,6 @@ export const GET_ALL_SPORT_MARKETS = gql`
 			awayOdds
 			drawOdds
 			doubleChanceMarketType
-			upAddress
 		}
 	}
 `
