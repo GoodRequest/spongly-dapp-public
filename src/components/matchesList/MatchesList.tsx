@@ -16,7 +16,7 @@ import { BetType } from '@/utils/tags'
 import { useMedia } from '@/hooks/useMedia'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 import { SGPItem } from '@/typescript/types'
-import { MATCHES_OFFSET, MATCHES_OFFSET_MOBILE, PLAYER_PROPS_BET_TYPES, STATIC } from '@/utils/constants'
+import { MATCHES_OFFSET, MATCHES_OFFSET_MOBILE, STATIC } from '@/utils/constants'
 import Modal from '@/components/modal/Modal'
 import { RESOLUTIONS } from '@/utils/enums'
 import { FlagWorld } from '@/styles/GlobalStyles'
@@ -42,25 +42,12 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, item }) => {
 		} else {
 			setMatchOffsetByResolution(MATCHES_OFFSET)
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	const sgpFeesRaw = useSGPFeesQuery(chain?.id as any, {
-		enabled: !!chain?.id
+		enabled: true
 	})
-
-	const isPlayerProps = (betType: BetType) => {
-		return PLAYER_PROPS_BET_TYPES.includes(betType)
-	}
-
-	const isTwoSportMarketsFromSameParent = (firstMarket: SportMarket, secondMarket: SportMarket) => {
-		// @ts-ignore
-		if (isPlayerProps((firstMarket?.betType as BetType) || BetType.WINNER) || isPlayerProps((secondMarket?.betType as BetType) || BetType.WINNER))
-			return false
-		if (firstMarket.parentMarket && secondMarket.parentMarket) return firstMarket.gameId === secondMarket.gameId
-
-		console.log('returing atm')
-		return false
-	}
 
 	const matchesWithChildMarkets = useMemo(
 		() =>
@@ -68,36 +55,11 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, item }) => {
 				.map(([, markets]) => {
 					const [match] = markets
 
-					const combinedMarkets: string[] = []
-					const combinedTest: any[] = []
-					if (match.gameId === '0x3761353862343463303330366661626330363165643833306665343961313431') {
-						console.log(markets)
-						for (let i = 0; i < markets.length - 1; i += 1) {
-							for (let j = i + 1; j < markets?.length; j += 1) {
-								console.log(j)
-								if (markets[i]?.parentMarket && markets[j]?.parentMarket && markets[i]?.parentMarket === markets[j]?.parentMarket) {
-									combinedTest.push({ test1: markets[i], test2: markets[j] })
-								}
-								// if (isTwoSportMarketsFromSameParent(markets[i], markets[j])) {
-								// 	combinedTags.push({ tag1: markets[i].tags, tag2: markets[j]?.tags })
-								// 	if (!combinedMarkets.includes(markets[i].id)) {
-								// 		combinedMarkets.push(markets[i].id)
-								// 	}
-								// 	if (!combinedMarkets.includes(markets[j].id)) {
-								// 		combinedMarkets.push(markets[j].id)
-								// 	}
-								// }
-							}
-						}
-						console.log(combinedTest)
-					}
-
 					const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
 					const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
 					const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD)
 					const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL)
-					const combinedTypeMatch =
-						sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0]))) || markets.find((market) => combinedMarkets.includes(market.id))
+					const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
 					return {
 						...(winnerTypeMatch ?? matches.find((item) => item.gameId === match?.gameId)),
 						winnerTypeMatch,
@@ -158,6 +120,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, item }) => {
 				<SC.ModalDescriptionText>{visibleParlayValidationModal.message}</SC.ModalDescriptionText>
 			</Modal>
 		),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[visibleParlayValidationModal]
 	)
 

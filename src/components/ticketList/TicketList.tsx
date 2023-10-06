@@ -62,7 +62,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
 
 	const sgpFeesRaw = useSGPFeesQuery(chain?.id as any, {
-		enabled: !!chain?.id
+		enabled: true
 	})
 
 	useEffect(() => {

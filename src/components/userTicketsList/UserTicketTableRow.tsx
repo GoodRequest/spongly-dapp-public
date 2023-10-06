@@ -53,7 +53,7 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
 
 	const sgpFeesRaw = useSGPFeesQuery(chain?.id as any, {
-		enabled: !!chain?.id
+		enabled: true
 	})
 
 	useEffect(() => {

@@ -20,12 +20,12 @@ export const GET_ALL_SPORT_MARKETS = gql`
 			homeScore
 			homeTeam
 			maturityDate
-			parentMarket
 			tags
 			homeOdds
 			awayOdds
 			drawOdds
 			doubleChanceMarketType
+			upAddress
 		}
 	}
 `
