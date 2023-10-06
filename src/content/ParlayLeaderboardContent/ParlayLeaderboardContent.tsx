@@ -5,7 +5,6 @@ import { useAccount, useNetwork } from 'wagmi'
 import { orderBy, round } from 'lodash'
 import { useRouter } from 'next-translate-routes'
 
-import BackButton from '@/atoms/backButton/BackButton'
 import Select from '@/atoms/select/Select'
 import Search from '@/atoms/search/Search'
 import ParlayLeaderboardTableRow from '@/components/parlayLeaderboardTableRow/ParlayLeaderboardTableRow'
@@ -258,168 +257,161 @@ const ParlayLeaderboardContent = () => {
 	}
 
 	return (
-		<>
-			<SC.PCRow>
+		<SC.ContentWrapper>
+			<Row>
+				<SC.ParlayLeaderboardTextCol span={24}>
+					<SC.ParlayLeaderboardTitle>{t('Parlay incentives superstars')}</SC.ParlayLeaderboardTitle>
+					<SC.ParlayLeaderboardContext>
+						{t(
+							'A total of 1,000 OP will be distributed to the best parlays with minimum 3 games on a bi-weekly basis. The tickets will be ranked based on a total quote, followed by the number of positions on the parlays.'
+						)}
+					</SC.ParlayLeaderboardContext>
+					<SC.ParlayLeaderboardContext>{t('Rewards will be distributed to the TOP 10 parlays every 2 weeks!')}</SC.ParlayLeaderboardContext>
+					<SC.ParlayLeaderboardContext style={{ marginBottom: '16px' }}>
+						{t(
+							'If multiple parlays have the same total quote and the number of positions the following will be used as tie-breakers in respective order'
+						)}
+						:
+					</SC.ParlayLeaderboardContext>
+					<SC.ParlayLeaderboardList>
+						<li>{t('The amount paid')}</li>
+						<li>{t('Actual total quote (gotten by multiplying positions individually)')}</li>
+					</SC.ParlayLeaderboardList>
+					<SC.ParlayleaderboardText>{t('* 1 winning parlay eligible per wallet')}</SC.ParlayleaderboardText>
+				</SC.ParlayLeaderboardTextCol>
+			</Row>
+			<Row style={{ marginTop: '-16px' }}>
 				<Col span={24}>
-					<BackButton backUrl={'/dashboard'} />
+					<SC.ParlayLeaderboardFilterRow justify={'space-between'} gutter={32}>
+						<Col md={12} xs={24}>
+							<SC.FilterWrapper>
+								<Select options={biweeklyPeriodOptions()} onChange={onPeriodChange} value={filters.period} />
+								<SC.PeriodDiv>
+									<SC.WarningIcon src={WarningIcon} />
+									{isMounted && <SC.PeriodSubtext>{getPeriodEndsText(Number(filters?.period), t)}</SC.PeriodSubtext>}
+								</SC.PeriodDiv>
+							</SC.FilterWrapper>
+						</Col>
+						<Col md={12} xs={24}>
+							<SC.FilterWrapper className={'search'}>
+								<Search value={filters?.search} onChange={onSearchChange} placeholder={`${t('Search wallet address')}`} />
+							</SC.FilterWrapper>
+						</Col>
+					</SC.ParlayLeaderboardFilterRow>
 				</Col>
-			</SC.PCRow>
-			<SC.ContentWrapper>
-				<Row>
-					<SC.ParlayLeaderboardTextCol span={24}>
-						<SC.ParlayLeaderboardTitle>{t('Parlay incentives superstars')}</SC.ParlayLeaderboardTitle>
-						<SC.ParlayLeaderboardContext>
-							{t(
-								'A total of 1,000 OP will be distributed to the best parlays with minimum 3 games on a bi-weekly basis. The tickets will be ranked based on a total quote, followed by the number of positions on the parlays.'
-							)}
-						</SC.ParlayLeaderboardContext>
-						<SC.ParlayLeaderboardContext>{t('Rewards will be distributed to the TOP 10 parlays every 2 weeks!')}</SC.ParlayLeaderboardContext>
-						<SC.ParlayLeaderboardContext style={{ marginBottom: '16px' }}>
-							{t(
-								'If multiple parlays have the same total quote and the number of positions the following will be used as tie-breakers in respective order'
-							)}
-							:
-						</SC.ParlayLeaderboardContext>
-						<SC.ParlayLeaderboardList>
-							<li>{t('The amount paid')}</li>
-							<li>{t('Actual total quote (gotten by multiplying positions individually)')}</li>
-						</SC.ParlayLeaderboardList>
-						<SC.ParlayleaderboardText>{t('* 1 winning parlay eligible per wallet')}</SC.ParlayleaderboardText>
-					</SC.ParlayLeaderboardTextCol>
-				</Row>
-				<Row style={{ marginTop: '-16px' }}>
+			</Row>
+			{userRank && (
+				<Row style={{ marginTop: '32px' }}>
 					<Col span={24}>
-						<SC.ParlayLeaderboardFilterRow justify={'space-between'} gutter={32}>
-							<Col md={12} xs={24}>
-								<SC.FilterWrapper>
-									<Select options={biweeklyPeriodOptions()} onChange={onPeriodChange} value={filters.period} />
-									<SC.PeriodDiv>
-										<SC.WarningIcon src={WarningIcon} />
-										{isMounted && <SC.PeriodSubtext>{getPeriodEndsText(Number(filters?.period), t)}</SC.PeriodSubtext>}
-									</SC.PeriodDiv>
-								</SC.FilterWrapper>
-							</Col>
-							<Col md={12} xs={24}>
-								<SC.FilterWrapper className={'search'}>
-									<Search value={filters?.search} onChange={onSearchChange} placeholder={`${t('Search wallet address')}`} />
-								</SC.FilterWrapper>
-							</Col>
-						</SC.ParlayLeaderboardFilterRow>
+						<SC.YourPositionText>{t('Your current position')}</SC.YourPositionText>
+						<ParlayLeaderboardUserRow
+							rank={userRank?.rank}
+							address={userRank?.address}
+							position={userRank?.position}
+							paid={userRank?.paid}
+							quote={userRank?.quote}
+							won={userRank?.won}
+							reward={getReward(userRank.rank - 1, chain?.id)}
+						/>
 					</Col>
 				</Row>
-				{userRank && (
-					<Row style={{ marginTop: '32px' }}>
-						<Col span={24}>
-							<SC.YourPositionText>{t('Your current position')}</SC.YourPositionText>
-							<ParlayLeaderboardUserRow
-								rank={userRank?.rank}
-								address={userRank?.address}
-								position={userRank?.position}
-								paid={userRank?.paid}
-								quote={userRank?.quote}
-								won={userRank?.won}
-								reward={getReward(userRank.rank - 1, chain?.id)}
-							/>
+			)}
+			<SC.ParlayLeaderboardTableText>{t('Leader board')}</SC.ParlayLeaderboardTableText>
+			<SC.FilterRow style={{ marginTop: '32px' }}>
+				<Col span={24}>
+					<Row align={'middle'}>
+						<Col span={6}>
+							<SC.OrderButton
+								className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.RANK ? 'active' : ''}`}
+								onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.RANK)}
+							>
+								<SC.ButtonContent>
+									{t('Rank')}
+									{getIcon(PARLAY_LEADERBOARD_SORTING.RANK)}
+								</SC.ButtonContent>
+							</SC.OrderButton>
 						</Col>
+
+						<SC.CenterRowContent span={3}>
+							<SC.OrderButton
+								className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.POSITION ? 'active' : ''}`}
+								onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.POSITION)}
+							>
+								<SC.ButtonContent>
+									{t('Positions')}
+									{getIcon(PARLAY_LEADERBOARD_SORTING.POSITION)}
+								</SC.ButtonContent>
+							</SC.OrderButton>
+						</SC.CenterRowContent>
+
+						<SC.CenterRowContent span={4}>
+							<SC.OrderButton
+								className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.PAID ? 'active' : ''}`}
+								onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.PAID)}
+							>
+								<SC.ButtonContent>
+									<span>{t('Buy-in')}</span>
+									{getIcon(PARLAY_LEADERBOARD_SORTING.PAID)}
+								</SC.ButtonContent>
+							</SC.OrderButton>
+						</SC.CenterRowContent>
+
+						<SC.CenterRowContent span={3}>
+							<SC.OrderButton
+								className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.QUOTE ? 'active' : ''}`}
+								onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.QUOTE)}
+							>
+								<SC.ButtonContent>
+									<span>{t('Quote')}</span>
+									{getIcon(PARLAY_LEADERBOARD_SORTING.QUOTE)}
+								</SC.ButtonContent>
+							</SC.OrderButton>
+						</SC.CenterRowContent>
+
+						<SC.CenterRowContent span={4}>
+							<SC.OrderButton
+								className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.WON ? 'active' : ''}`}
+								onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.WON)}
+							>
+								<SC.ButtonContent>
+									<span>{t('Won')}</span>
+									{getIcon(PARLAY_LEADERBOARD_SORTING.WON)}
+								</SC.ButtonContent>
+							</SC.OrderButton>
+						</SC.CenterRowContent>
+
+						<SC.CenterRowContent span={4}>
+							<SC.OrderButton className={'no-sorting'} disabled>
+								<SC.ButtonContent>
+									<span>{t('Reward')}</span>
+								</SC.ButtonContent>
+							</SC.OrderButton>
+						</SC.CenterRowContent>
 					</Row>
-				)}
-				<SC.ParlayLeaderboardTableText>{t('Leader board')}</SC.ParlayLeaderboardTableText>
-				<SC.FilterRow style={{ marginTop: '32px' }}>
-					<Col span={24}>
-						<Row align={'middle'}>
-							<Col span={6}>
-								<SC.OrderButton
-									className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.RANK ? 'active' : ''}`}
-									onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.RANK)}
-								>
-									<SC.ButtonContent>
-										{t('Rank')}
-										{getIcon(PARLAY_LEADERBOARD_SORTING.RANK)}
-									</SC.ButtonContent>
-								</SC.OrderButton>
-							</Col>
-
-							<SC.CenterRowContent span={3}>
-								<SC.OrderButton
-									className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.POSITION ? 'active' : ''}`}
-									onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.POSITION)}
-								>
-									<SC.ButtonContent>
-										{t('Positions')}
-										{getIcon(PARLAY_LEADERBOARD_SORTING.POSITION)}
-									</SC.ButtonContent>
-								</SC.OrderButton>
-							</SC.CenterRowContent>
-
-							<SC.CenterRowContent span={4}>
-								<SC.OrderButton
-									className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.PAID ? 'active' : ''}`}
-									onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.PAID)}
-								>
-									<SC.ButtonContent>
-										<span>{t('Buy-in')}</span>
-										{getIcon(PARLAY_LEADERBOARD_SORTING.PAID)}
-									</SC.ButtonContent>
-								</SC.OrderButton>
-							</SC.CenterRowContent>
-
-							<SC.CenterRowContent span={3}>
-								<SC.OrderButton
-									className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.QUOTE ? 'active' : ''}`}
-									onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.QUOTE)}
-								>
-									<SC.ButtonContent>
-										<span>{t('Quote')}</span>
-										{getIcon(PARLAY_LEADERBOARD_SORTING.QUOTE)}
-									</SC.ButtonContent>
-								</SC.OrderButton>
-							</SC.CenterRowContent>
-
-							<SC.CenterRowContent span={4}>
-								<SC.OrderButton
-									className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.WON ? 'active' : ''}`}
-									onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.WON)}
-								>
-									<SC.ButtonContent>
-										<span>{t('Won')}</span>
-										{getIcon(PARLAY_LEADERBOARD_SORTING.WON)}
-									</SC.ButtonContent>
-								</SC.OrderButton>
-							</SC.CenterRowContent>
-
-							<SC.CenterRowContent span={4}>
-								<SC.OrderButton className={'no-sorting'} disabled>
-									<SC.ButtonContent>
-										<span>{t('Reward')}</span>
-									</SC.ButtonContent>
-								</SC.OrderButton>
-							</SC.CenterRowContent>
-						</Row>
-					</Col>
-				</SC.FilterRow>
+				</Col>
+			</SC.FilterRow>
+			<Row>
+				<Col span={24}>{parlayLeaderBoard()}</Col>
+			</Row>
+			{hasMoreData() && (
 				<Row>
-					<Col span={24}>{parlayLeaderBoard()}</Col>
+					<Col span={24}>
+						<Button
+							type={'primary'}
+							btnStyle={'secondary'}
+							onClick={showMore}
+							style={{ marginTop: '32px', height: '60px' }}
+							content={
+								<SC.ButtonContent>
+									<span>{t('Show more')}</span>
+									<SC.ButtonIcon src={ArrowDownIcon} />
+								</SC.ButtonContent>
+							}
+						/>
+					</Col>
 				</Row>
-				{hasMoreData() && (
-					<Row>
-						<Col span={24}>
-							<Button
-								type={'primary'}
-								btnStyle={'secondary'}
-								onClick={showMore}
-								style={{ marginTop: '32px', height: '60px' }}
-								content={
-									<SC.ButtonContent>
-										<span>{t('Show more')}</span>
-										<SC.ButtonIcon src={ArrowDownIcon} />
-									</SC.ButtonContent>
-								}
-							/>
-						</Col>
-					</Row>
-				)}
-			</SC.ContentWrapper>
-		</>
+			)}
+		</SC.ContentWrapper>
 	)
 }
 

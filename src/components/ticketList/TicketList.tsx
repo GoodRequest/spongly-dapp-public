@@ -302,37 +302,39 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 						) : (
 							<>
 								{type !== TICKET_TYPE.HOT_TICKET && (
-									<SCS.SorterRow>
-										<Col span={5}>
-											<Sorter title={t('Wallet')} />
-										</Col>
-										<Col span={8}>
-											<Sorter title={t('Success rate')} name={TICKET_SORTING.SUCCESS_RATE} />
-										</Col>
-										<Col span={3}>
-											<Sorter title={t('Buy in')} name={TICKET_SORTING.BUY_IN} />
-										</Col>
-										<Col span={3}>
-											<Sorter title={t('Quote')} name={TICKET_SORTING.TOTAL_TICKET_QUOTE} />
-										</Col>
-										<Col span={3}>
-											<Sorter title={t('Matches')} name={TICKET_SORTING.MATCHES} />
-										</Col>
-										<SC.SelectSorters>
+									<>
+										<SCS.SorterRow>
+											<Col span={5}>
+												<Sorter title={t('Wallet')} />
+											</Col>
+											<Col span={8}>
+												<Sorter title={t('Success rate')} name={TICKET_SORTING.SUCCESS_RATE} />
+											</Col>
+											<Col span={3}>
+												<Sorter title={t('Buy in')} name={TICKET_SORTING.BUY_IN} />
+											</Col>
+											<Col span={3}>
+												<Sorter title={t('Quote')} name={TICKET_SORTING.TOTAL_TICKET_QUOTE} />
+											</Col>
+											<Col span={3}>
+												<Sorter title={t('Matches')} name={TICKET_SORTING.MATCHES} />
+											</Col>
+										</SCS.SorterRow>
+										<SCS.SelectSorters>
 											<Select
 												title={
-													<SC.SelectTitle>
+													<SCS.SelectTitle>
 														<img src={SortIcon} alt={'Sorter'} />
 														{t('Sort by')}
-													</SC.SelectTitle>
+													</SCS.SelectTitle>
 												}
 												allowClear
 												options={sortOptions}
 												placeholder={t('Sort by')}
 												onChange={handleSubmitSort}
 											/>
-										</SC.SelectSorters>
-									</SCS.SorterRow>
+										</SCS.SelectSorters>
+									</>
 								)}
 								{renderList.length > 0 ? (
 									ticketList

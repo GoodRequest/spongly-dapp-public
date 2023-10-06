@@ -3,28 +3,36 @@ import { useTranslation } from 'next-export-i18n'
 import { useLazyQuery } from '@apollo/client'
 import { Col, Spin } from 'antd'
 import { useRouter } from 'next-translate-routes'
-
 import { LoadingOutlined } from '@ant-design/icons'
+
+// components, assets, atoms
 import * as SC from './LeaderboardContentStyles'
-import { GET_TIPSTERS } from '@/utils/queries'
-import * as SCS from '@/styles/GlobalStyles'
 import Sorter from '@/components/Sorter'
+import Button from '@/atoms/button/Button'
+import Select from '@/atoms/select/Select'
+import SortIcon from '@/assets/icons/sort-icon.svg'
+import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
+
+// utils
+import { GET_TIPSTERS } from '@/utils/queries'
 import { ENDPOINTS, LEADERBOARD_SORTING, ORDER_DIRECTION } from '@/utils/constants'
 import { decodeSorter, markedValue, setSort } from '@/utils/helpers'
 import { roundPrice } from '@/utils/formatters/currency'
-import Button from '@/atoms/button/Button'
 import { formatAccount } from '@/utils/formatters/string'
 import { getWalletImage } from '@/utils/images'
-import Select from '@/atoms/select/Select'
-import SortIcon from '@/assets/icons/sort-icon.svg'
-import { User } from '@/__generated__/resolvers-types'
+
+// styles
+import * as SCS from '@/styles/GlobalStyles'
+
+// types
+import { LeaderboardUser } from '@/typescript/types'
 
 const limit = 20
 
 const LeaderboardContent = () => {
 	const { t } = useTranslation()
-	const [fetchTipsters, { loading }] = useLazyQuery(GET_TIPSTERS)
-	const [tipstersData, setTipstersData] = useState<User[]>([])
+	const [fetchTipsters, { loading }] = useLazyQuery<{ users: LeaderboardUser[] }>(GET_TIPSTERS)
+	const [tipstersData, setTipstersData] = useState<LeaderboardUser[]>([])
 	const router = useRouter()
 	const { direction, property } = decodeSorter()
 
@@ -56,6 +64,7 @@ const LeaderboardContent = () => {
 			setSort(property, direction as ORDER_DIRECTION)
 		}
 	}
+	// TODO: remove this if successRate will be added to graphQL
 	const fetchSuccessRateData = async () => {
 		try {
 			const response = await fetch(ENDPOINTS.GET_SUCCESS_RATE())
@@ -94,7 +103,8 @@ const LeaderboardContent = () => {
 					orderDirection: direction || ORDER_DIRECTION.DESCENDENT
 				}
 			})
-			const formattedData = data.users.map((user: any) => {
+
+			const formattedData = (data?.users || []).map((user) => {
 				// TODO: Need to add computing success rate to graphQL (asked Thales for this request)
 				// const successRate = successRateMap2.get(user.id)
 				const successRate = 'N/A'
@@ -124,27 +134,33 @@ const LeaderboardContent = () => {
 			undefined,
 			{ shallow: true }
 		)
-		const { data } = await fetchTipsters({
-			variables: {
-				first: limit,
-				skip: newSkip,
-				orderBy: property || LEADERBOARD_SORTING.PROFITS,
-				orderDirection: direction || ORDER_DIRECTION.DESCENDENT
-			}
-		})
-		const formattedNewData = data.users.map((user: any) => {
-			// const successRate = successRateMap.get(user.id)
-			return {
-				...user,
-				successRate: 'N/A'
-			}
-		})
-		setTipstersData((prevData: any) => [...prevData, ...formattedNewData])
+		try {
+			const { data } = await fetchTipsters({
+				variables: {
+					first: limit,
+					skip: newSkip,
+					orderBy: property || LEADERBOARD_SORTING.PROFITS,
+					orderDirection: direction || ORDER_DIRECTION.DESCENDENT
+				}
+			})
+			const formattedNewData = (data?.users || []).map((user: LeaderboardUser) => {
+				// const successRate = successRateMap.get(user.id)
+				return {
+					...user,
+					successRate: 'N/A'
+				}
+			})
+			setTipstersData((prevData) => [...prevData, ...formattedNewData])
+		} catch (e) {
+			setTipstersData([])
+			// eslint-disable-next-line no-console
+			console.error(e)
+		}
 	}
-
-	useEffect(() => {
-		fetchSuccessRateData()
-	}, [])
+	// TODO: remove this if successRate will be added to graphQL
+	// useEffect(() => {
+	// 	fetchSuccessRateData()
+	// }, [])
 
 	useEffect(() => {
 		fetchData()
@@ -153,7 +169,7 @@ const LeaderboardContent = () => {
 	return (
 		<SC.LeaderboardContentWrapper>
 			<h1>Leaderboard</h1>
-			<SCS.SorterRow gutter={[24, 0]} align={'middle'}>
+			<SCS.SorterRow align={'middle'}>
 				<Col push={6} span={6}>
 					<Sorter disabled={true} title={t('Success rate')} name={LEADERBOARD_SORTING.SUCCESS_RATE} />
 				</Col>
@@ -164,20 +180,20 @@ const LeaderboardContent = () => {
 					<Sorter title={t('Tickets')} name={LEADERBOARD_SORTING.TICKETS} />
 				</Col>
 			</SCS.SorterRow>
-			<SC.SelectSorters>
+			<SCS.SelectSorters>
 				<Select
 					title={
-						<SC.SelectTitle>
+						<SCS.SelectTitle>
 							<img src={SortIcon} alt={'Sorter'} />
 							{t('Sort by')}
-						</SC.SelectTitle>
+						</SCS.SelectTitle>
 					}
 					allowClear
 					options={sortOptions}
 					placeholder={t('Sort by')}
 					onChange={handleSubmitSort}
 				/>
-			</SC.SelectSorters>
+			</SCS.SelectSorters>
 			{loading && tipstersData.length === 0 ? (
 				<>
 					<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
@@ -186,9 +202,9 @@ const LeaderboardContent = () => {
 				</>
 			) : (
 				<Spin indicator={<LoadingOutlined spin />} spinning={loading}>
-					{tipstersData.map((item: any) => {
+					{tipstersData.map((item) => {
 						return (
-							<SC.LeaderboardContenRow align={'middle'} gutter={[0, 16]}>
+							<SC.LeaderboardContentRow align={'middle'} gutter={[0, 16]}>
 								<Col span={12} md={6}>
 									<SC.Wallet>
 										<SC.WalletIcon imageSrc={getWalletImage(item.id)} />
@@ -209,7 +225,7 @@ const LeaderboardContent = () => {
 								</Col>
 								<Col span={12} md={5}>
 									<SC.Title>
-										<SC.Value>{`${markedValue(roundPrice(item.volume - item.pnl) as string)} $`}</SC.Value>
+										<SC.Value>{`${markedValue(roundPrice(Number(item.pnl)) as string)} $`}</SC.Value>
 										<SC.Description>{t('Profits')}</SC.Description>
 									</SC.Title>
 								</Col>
@@ -223,6 +239,7 @@ const LeaderboardContent = () => {
 									<Button
 										type={'primary'}
 										size={'large'}
+										disabled={true}
 										btnStyle={'secondary'}
 										onClick={() => {
 											// TODO: in detail of tipster
@@ -231,7 +248,7 @@ const LeaderboardContent = () => {
 										content={<span>{t('Show more')}</span>}
 									/>
 								</Col>
-							</SC.LeaderboardContenRow>
+							</SC.LeaderboardContentRow>
 						)
 					})}
 				</Spin>
@@ -244,7 +261,12 @@ const LeaderboardContent = () => {
 				onClick={() => {
 					loadMore()
 				}}
-				content={<span>{t('Show more')}</span>}
+				content={
+					<SC.ButtonContent>
+						<span>{t('Show more')}</span>
+						<SC.ButtonIcon src={ArrowDownIcon} />
+					</SC.ButtonContent>
+				}
 			/>
 		</SC.LeaderboardContentWrapper>
 	)

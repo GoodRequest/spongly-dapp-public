@@ -1,4 +1,4 @@
-import { SportMarket, ParlayMarket, PositionBalance, Position } from '@/__generated__/resolvers-types'
+import { SportMarket, ParlayMarket, PositionBalance, Position, User as ResolverUser } from '@/__generated__/resolvers-types'
 
 import { CLOSED_TICKET_TYPE, MSG_TYPE, ORDER_DIRECTION, PositionNumber, TICKET_TYPE } from '@/utils/constants'
 import { BetType, DoubleChanceMarketType } from '@/utils/tags'
@@ -202,6 +202,10 @@ export type UserTicket = {
 			isCanceled: boolean
 		}
 	]
+}
+
+export type LeaderboardUser = ResolverUser & {
+	successRate: string
 }
 
 export type User = {

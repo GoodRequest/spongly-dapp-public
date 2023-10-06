@@ -21,16 +21,11 @@ export const LeaderboardContentWrapper = styled.div`
 		padding-right: 16px;
 	}
 `
-export const LeaderboardContenRow = styled(Row)`
-	//padding-top: 20px;
-	//padding-bottom: 20px;
+export const LeaderboardContentRow = styled(Row)`
 	padding: 24px;
 	border-radius: 12px;
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	margin-bottom: 16px;
-	// @media (max-width: ${breakpoints.md}px) {
-	// 	display: none;
-	// }
 `
 
 export const WalletIcon = styled.div<{ imageSrc: number }>`
@@ -79,34 +74,28 @@ export const RowSkeleton = styled(Skeleton)`
 		}
 	}
 `
-export const SelectSorters = styled.div`
-	display: none;
-	margin-top: 16px;
-	margin-bottom: 16px;
-	@media (max-width: ${breakpoints.md}px) {
-		width: 100%;
-		display: flex;
-	}
-`
-export const SelectTitle = styled.div`
-	display: flex;
-	align-items: center;
-	img {
-		margin-right: 8px;
-		width: 16px;
-		height: 16px;
-	}
-`
+
 export const LeaderboardDivider = styled(Divider)`
 	display: none;
 	margin-left: -24px;
 	width: calc(100% + 24px + 24px);
-	margin-top: 0px;
-	margin-bottom: 0px;
+	margin-top: 0;
+	margin-bottom: 0;
 	@media (max-width: ${breakpoints.md}px) {
 		display: block;
-		border-top: ${({ theme }) => `2px solid ${theme['color-base-action-secondary-default']}`};
-		opacity: 0.5;
+		border-top: ${({ theme }) => `1px solid ${theme['color-base-action-secondary-default']}`};
 		z-index: 10;
 	}
+`
+export const ButtonContent = styled.div`
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+`
+
+export const ButtonIcon = styled.img`
+	margin-left: 8px;
+	width: 16px;
+	height: 16px;
 `

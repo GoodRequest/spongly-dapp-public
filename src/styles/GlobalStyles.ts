@@ -173,6 +173,25 @@ export const SorterRow = styled(Row)`
 	}
 `
 
+export const SelectSorters = styled.div`
+	display: none;
+	margin-top: 16px;
+	margin-bottom: 16px;
+	@media (max-width: ${breakpoints.md}px) {
+		width: 100%;
+		display: flex;
+	}
+`
+export const SelectTitle = styled.div`
+	display: flex;
+	align-items: center;
+	img {
+		margin-right: 8px;
+		width: 16px;
+		height: 16px;
+	}
+`
+
 export const FlagWorld = styled.div`
 	height: 20px;
 	width: 20px;
