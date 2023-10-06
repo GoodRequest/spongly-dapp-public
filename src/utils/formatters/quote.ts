@@ -1,4 +1,4 @@
-import { floor, forEach } from 'lodash'
+import { floor } from 'lodash'
 import { IMatch } from '@/typescript/types'
 import { Position, PositionType } from '@/__generated__/resolvers-types'
 import { OddsType, OPTIMISM_DIVISOR } from '../constants'
