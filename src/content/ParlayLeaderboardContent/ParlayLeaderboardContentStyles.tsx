@@ -119,7 +119,6 @@ export const ButtonContent = styled.div`
 `
 
 export const ButtonIcon = styled.img`
-	margin-left: 8px;
 	width: 20px;
 	height: 20px;
 `
