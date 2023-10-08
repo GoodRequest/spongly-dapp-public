@@ -1,5 +1,5 @@
 import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react'
-import { find, groupBy, map, slice, toPairs } from 'lodash'
+import { groupBy, map, slice, toPairs } from 'lodash'
 import { useTranslation } from 'next-export-i18n'
 import { useDispatch, useSelector } from 'react-redux'
 import { change, getFormValues } from 'redux-form'
@@ -356,10 +356,10 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 									</SC.TicketItemEmptyState>
 								)}
 								{hasMore && (
-									<SC.LoadMore onClick={addTicketsToList}>
+									<SCS.LoadMore onClick={addTicketsToList}>
 										{type === TICKET_TYPE.HOT_TICKET ? t('Show all tickets') : t('Show more')}
 										<SCS.Icon degree={type === TICKET_TYPE.HOT_TICKET ? 270 : 0} icon={ArrowIcon} />
-									</SC.LoadMore>
+									</SCS.LoadMore>
 								)}
 							</>
 						)}

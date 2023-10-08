@@ -169,8 +169,6 @@ export const SorterRow = styled(Row)`
 export const HorizontalSorters = styled(Row)`
 	display: flex;
 	width: 100%;
-	padding-left: 24px;
-	padding-right: 24px;
 	@media (max-width: ${breakpoints.md}px) {
 		display: none;
 	}
@@ -202,6 +200,25 @@ export const FlagWorld = styled.div`
 	background-repeat: no-repeat;
 	background-position: center;
 `
+
+export const LoadMore = styled.div`
+	height: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	${TextMDMedium};
+	cursor: pointer;
+	border-radius: 12px;
+	background: ${({ theme }) => theme['color-base-action-secondary-default']};
+	transition: background 300ms;
+	&:hover {
+		background: ${({ theme }) => theme['color-base-action-primary-default']};
+	}
+	@media (max-width: ${breakpoints.md}px) {
+		height: 48px;
+	}
+`
+
 export const Icon = styled.span<{ icon: string; degree?: number }>`
 	padding: 20px;
 	background-image: url('${({ icon }) => icon}');

@@ -8,7 +8,7 @@ export const ParlayLeaderboardTableRow = styled(Row)`
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	padding: 8px;
 	height: 80px;
-	margin-top: 16px;
+	margin-bottom: 16px;
 	@media (max-width: ${breakpoints.md}px) {
 		height: 160px;
 	}
@@ -76,7 +76,7 @@ export const ParlayDivider = styled(Divider)`
 		border-top: ${({ theme }) => `1px solid ${theme['color-base-action-primary-default']}`};
 		opacity: 0.5;
 		position: absolute;
-		margin-top: -72px;
+		margin-top: -90px;
 		z-index: 10;
 	}
 `
