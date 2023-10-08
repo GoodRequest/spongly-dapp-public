@@ -13,7 +13,7 @@ import * as SCS from '@/styles/GlobalStyles'
 import SwitchButton from '@/components/switchButton/SwitchButton'
 import { GET_MATCH_DETAIL } from '@/utils/queries'
 import { getTeamImageSource } from '@/utils/images'
-import { MSG_TYPE, NO_TEAM_IMAGE_FALLBACK, NOTIFICATION_TYPE } from '@/utils/constants'
+import { MSG_TYPE, Network, NO_TEAM_IMAGE_FALLBACK, NOTIFICATION_TYPE } from '@/utils/constants'
 import { showNotifications } from '@/utils/tsxHelpers'
 import { getMatchResult, getMatchStatus } from '@/utils/helpers'
 import { BetType, TAGS_LIST } from '@/utils/tags'
@@ -32,7 +32,7 @@ const MatchDetail = () => {
 	}
 
 	const [fetchMatchDetail] = useLazyQuery(GET_MATCH_DETAIL)
-	const sgpFeesRaw = useSGPFeesQuery(chain?.id as any, {
+	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
 		enabled: !!chain?.id
 	})
 

@@ -24,7 +24,7 @@ import MatchRow from '@/components/ticketBetContainer/components/matchRow/MatchR
 import { ACTIVE_BET_TICKET, IUnsubmittedBetTicket, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 
 // utils
-import { MAX_TICKETS, ORDER_DIRECTION, TICKET_SORTING, TICKET_TYPE } from '@/utils/constants'
+import { MAX_TICKETS, Network, ORDER_DIRECTION, TICKET_SORTING, TICKET_TYPE } from '@/utils/constants'
 import { copyTicketToUnsubmittedTickets, getTicketsTypeName, setSort } from '@/utils/helpers'
 import { BetType } from '@/utils/tags'
 import { FORM, PAGES } from '@/utils/enums'
@@ -61,7 +61,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 	const [copyModal, setCopyModal] = useState<{ visible: boolean; onlyCopy: boolean }>({ visible: false, onlyCopy: false })
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
 
-	const sgpFeesRaw = useSGPFeesQuery(chain?.id as any, {
+	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
 		enabled: true
 	})
 

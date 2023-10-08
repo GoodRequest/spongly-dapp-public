@@ -16,7 +16,6 @@ export const MatchDetailHeader = styled.div`
 	margin-bottom: 30px;
 `
 export const HeaderTeam = styled.div`
-	margin-top: 16px;
 	${HeadingXSMedium};
 	text-align: center;
 	height: 84px;

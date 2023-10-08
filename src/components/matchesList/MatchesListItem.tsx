@@ -60,17 +60,15 @@ const MatchListItem: FC<IMatchListItem> = ({ match, keyValue, filter, loading = 
 				)}
 				<Button
 					style={{ marginTop: '24px' }}
-					type={'primary'}
 					btnStyle={'secondary'}
 					size={'middle'}
 					onClick={() => router.push(`/${PAGES.MATCHES}/${match.gameId}`)}
-					content={<span>{t('Show match details')}</span>}
+					content={t('Show match details')}
 				/>
 			</SC.CollapsePanel>
 			{filter.status === MATCHES.OPEN && (
 				<SC.CollapseButtonWrapper>
 					<Button
-						type={'primary'}
 						btnStyle={'secondary'}
 						onClick={() => setIsExpanded(!isExpanded)}
 						style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '32px' }}

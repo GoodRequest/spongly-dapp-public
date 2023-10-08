@@ -415,8 +415,6 @@ export const NoWrapCenterRow = styled(Row)`
 	align-items: center;
 `
 
-export const TeamNames = styled(Row)``
-
 export const FlexCol = styled(Col)<{ isTotalWinner?: boolean }>`
 	display: flex;
 	width: ${({ isTotalWinner }) => (isTotalWinner ? '80px' : '120px')};
