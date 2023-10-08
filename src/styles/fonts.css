@@ -2,3 +2,7 @@
     font-family: 'OvertimeIcons';
     src: local('OvertimeIcons'), url(../assets/fonts/OvertimeIcons.ttf) format('truetype');
 }
+@font-face {
+	font-family: 'LeagueIcons';
+	src: local('LeagueIcons'), url(../assets/fonts/LeagueIcons/LeagueIcons.ttf) format('truetype');
+}

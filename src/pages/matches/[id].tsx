@@ -2,7 +2,7 @@ import { GetStaticProps, GetStaticPaths } from 'next'
 import Layout from '@/layout/layout/Layout'
 import SEOHelmet from '@/atoms/SEOHelmet'
 import { IPage } from '@/typescript/types'
-import MatcheDetailContent from '@/content/matchesContent/MatchDetailContent'
+import MatchDetailContent from '@/content/matchesContent/MatchDetailContent'
 
 export const getStaticProps: GetStaticProps<{ page: IPage<{}> }> = async () => {
 	const page = {
@@ -30,7 +30,7 @@ export const getStaticPaths: GetStaticPaths = () => {
 	}
 }
 
-const MatchesPage = (props: any) => <MatcheDetailContent {...props} />
+const MatchesPage = (props: any) => <MatchDetailContent {...props} />
 
 MatchesPage.getLayout = function getLayout(page: any) {
 	return (

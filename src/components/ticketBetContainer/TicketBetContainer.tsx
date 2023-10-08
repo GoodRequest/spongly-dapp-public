@@ -4,9 +4,10 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAccount, useNetwork } from 'wagmi'
 import { useTranslation } from 'next-export-i18n'
-import { round, toNumber } from 'lodash'
-import { Spin } from 'antd'
+import { find, round, toNumber } from 'lodash'
+import { Col, Row, Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
+import Modal from '@/components/modal/Modal'
 
 // hooks
 import useParlayAmmDataQuery from '@/hooks/useParlayAmmDataQuery'
@@ -54,6 +55,9 @@ import { showNotifications } from '@/utils/tsxHelpers'
 import { formatCurrency } from '@/utils/formatters/currency'
 import { formatQuote } from '@/utils/formatters/quote'
 
+// atoms
+import Button from '@/atoms/button/Button'
+
 // components
 import HorizontalScroller from './components/horizontalScroller/HorizontalScroller'
 import TicketBetContainerForm from './TicketBetContainerForm'
@@ -73,6 +77,7 @@ import { updateActiveTicketMatches } from '@/redux/betTickets/betTicketsActions'
 // styles
 import * as SC from './TicketBetContainerStyles'
 import { breakpoints } from '@/styles/theme'
+import MatchRow from './components/matchRow/MatchRow'
 
 const TicketBetContainer = () => {
 	const dispatch = useDispatch()
@@ -84,6 +89,7 @@ const TicketBetContainer = () => {
 	const isMounted = useIsMounted()
 	const [isSwitchedTicket, setIsSwitchedTicket] = useState(false)
 	const size = useMedia()
+	const [deleteModal, setDeleteModal] = useState({ visible: false, id: 0 })
 	const isProcessing = useSelector((state: RootState) => state.betTickets.isProcessing)
 
 	const [availablePerPosition, setAvailablePerPosition] = useState<any>({
@@ -345,6 +351,7 @@ const TicketBetContainer = () => {
 			throw new Error('Failed to fetch parley ticket data', { cause: err })
 		}
 	}
+
 	const fetchSinglesTicketData = async () => {
 		try {
 			const { signer, sportsAMMContract } = networkConnector
@@ -419,6 +426,7 @@ const TicketBetContainer = () => {
 			throw new Error('Failed to fetch single ticket data', { cause: err })
 		}
 	}
+
 	const handleConfirmTicket = async (values: IUnsubmittedBetTicket) => {
 		try {
 			// TODO: if the currency changes from USD to another, buyFromParlayWithDifferentCollateral is called
@@ -561,6 +569,48 @@ const TicketBetContainer = () => {
 		}
 	}, [isSwitchedTicket])
 
+	const modal = (
+		<Modal
+			open={deleteModal.visible}
+			onCancel={() => {
+				setDeleteModal({ visible: false, id: 0 })
+			}}
+			centered
+		>
+			<SC.ModalTitle>{t('Deleting ticket')}</SC.ModalTitle>
+			<SC.ModalDescription style={{ marginBottom: '8px' }}>{t('Are you sure you want to delete a ticket with matches?')}</SC.ModalDescription>
+			<Row>
+				<SC.MatchContainerRow span={24}>
+					{find(unsubmittedTickets, ['id', deleteModal.id])?.matches?.map((match: any, key: any) => (
+						<MatchRow readOnly key={`matchRow-${key}`} match={match} />
+					))}
+				</SC.MatchContainerRow>
+			</Row>
+			<Row gutter={[16, 16]}>
+				<Col span={24}>
+					<Button
+						btnStyle={'secondary'}
+						content={t('Keep the ticket')}
+						onClick={() => {
+							setDeleteModal({ visible: false, id: 0 })
+						}}
+					/>
+				</Col>
+				<Col span={24}>
+					<Button
+						btnStyle={'primary'}
+						className={'error'}
+						content={t('Delete')}
+						onClick={() => {
+							handleRemoveTicket(deleteModal.id)
+							setDeleteModal({ visible: false, id: 0 })
+						}}
+					/>
+				</Col>
+			</Row>
+		</Modal>
+	)
+
 	const bodyStyle = `
 		<style>
 			body {
@@ -588,6 +638,7 @@ const TicketBetContainer = () => {
 							setActiveTicket={handleSetActiveTicket}
 							activeTicket={activeTicketValues}
 							removeTicket={handleRemoveTicket}
+							setDeleteModal={setDeleteModal}
 						/>
 						<MobileHeader
 							rolledUp={rolledUp}
@@ -614,6 +665,7 @@ const TicketBetContainer = () => {
 					/>
 				</SC.SubmittingSpinner>
 			</SC.TicketBetWrapper>
+			{modal}
 		</>
 	)
 }

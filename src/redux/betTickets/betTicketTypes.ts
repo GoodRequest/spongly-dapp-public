@@ -2,6 +2,7 @@ import { SportMarket } from '@/__generated__/resolvers-types'
 import { IResetStore } from '@/redux/generalType'
 import { SGPItem, SportMarketInfo } from '@/typescript/types'
 import { BET_OPTIONS } from '@/utils/enums'
+import { MATCH_STATUS } from '@/utils/constants'
 
 export enum UNSUBMITTED_BET_TICKETS {
 	UNSUBMITTED_BET_TICKETS_INIT = 'UNSUBMITTED_BET_TICKETS_INIT',
@@ -68,6 +69,7 @@ export type TicketPosition = SportMarket & {
 	homeBonus?: number
 	awayBonus?: number
 	drawBonus?: number
+	status?: MATCH_STATUS
 }
 
 export interface IUnsubmittedBetTicketsPayload {

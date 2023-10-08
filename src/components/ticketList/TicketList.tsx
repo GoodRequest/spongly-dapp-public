@@ -1,5 +1,5 @@
 import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react'
-import { groupBy, map, slice, toPairs } from 'lodash'
+import { find, groupBy, map, slice, toPairs } from 'lodash'
 import { useTranslation } from 'next-export-i18n'
 import { useDispatch, useSelector } from 'react-redux'
 import { change, getFormValues } from 'redux-form'
@@ -24,7 +24,7 @@ import MatchRow from '@/components/ticketBetContainer/components/matchRow/MatchR
 import { ACTIVE_BET_TICKET, IUnsubmittedBetTicket, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 
 // utils
-import { MAX_TICKETS, ORDER_DIRECTION, TICKET_SORTING, TICKET_TYPE } from '@/utils/constants'
+import { MAX_TICKETS, Network, ORDER_DIRECTION, TICKET_SORTING, TICKET_TYPE } from '@/utils/constants'
 import { copyTicketToUnsubmittedTickets, getTicketsTypeName, setSort } from '@/utils/helpers'
 import { BetType } from '@/utils/tags'
 import { FORM, PAGES } from '@/utils/enums'
@@ -61,8 +61,8 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 	const [copyModal, setCopyModal] = useState<{ visible: boolean; onlyCopy: boolean }>({ visible: false, onlyCopy: false })
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
 
-	const sgpFeesRaw = useSGPFeesQuery(chain?.id as any, {
-		enabled: !!chain?.id
+	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
+		enabled: true
 	})
 
 	useEffect(() => {
@@ -239,7 +239,9 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 						<Col span={24}>
 							<Button
 								btnStyle={'secondary'}
-								content={t('Replace existing ticket')}
+								content={`${t('Replace existing ticket')} (Ticket ${
+									Number(unsubmittedTickets?.map((e) => e.id).indexOf(activeTicketValues.id)) + 1
+								})`}
 								onClick={() => {
 									setCopyModal({ visible: false, onlyCopy: false })
 									handleCopyTicket()
@@ -249,7 +251,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 						<Col span={24}>
 							<Button
 								btnStyle={'primary'}
-								content={t('Create new ticket')}
+								content={`${t('Create new ticket')} (Ticket ${Number(unsubmittedTickets?.length) + 1})`}
 								disabled={unsubmittedTickets?.length === MAX_TICKETS}
 								onClick={() => {
 									setCopyModal({ visible: false, onlyCopy: false })
