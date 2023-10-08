@@ -31,7 +31,6 @@ interface IMatchListItem {
 const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVisibleParlayValidationModal }) => {
 	const { t } = useTranslation()
 	const size = useMedia()
-
 	const { winnerTypeMatch } = match
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(winnerTypeMatch?.tags[0] as any)
 	const [imgSrcHome, setImgSrcHome] = useState<string>(getTeamImageSource(match?.homeTeam || '', toNumber(match?.tags?.[0])))

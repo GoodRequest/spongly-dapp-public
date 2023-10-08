@@ -204,3 +204,31 @@ export const GET_TICKETS = gql`
 		}
 	}
 `
+export const GET_MATCH_DETAIL = gql`
+	query getMatch($gameId: String!) {
+		sportMarkets(where: { gameId: $gameId }) {
+			id
+			timestamp
+			address
+			gameId
+			isOpen
+			isCanceled
+			isPaused
+			isResolved
+			awayTeam
+			awayScore
+			betType
+			spread
+			total
+			finalResult
+			homeScore
+			homeTeam
+			maturityDate
+			tags
+			homeOdds
+			awayOdds
+			drawOdds
+			doubleChanceMarketType
+		}
+	}
+`

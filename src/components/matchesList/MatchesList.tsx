@@ -16,7 +16,7 @@ import { BetType } from '@/utils/tags'
 import { useMedia } from '@/hooks/useMedia'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 import { SGPItem } from '@/typescript/types'
-import { MATCHES_OFFSET, MATCHES_OFFSET_MOBILE, STATIC } from '@/utils/constants'
+import { MATCHES_OFFSET, MATCHES_OFFSET_MOBILE, Network, STATIC } from '@/utils/constants'
 import Modal from '@/components/modal/Modal'
 import { RESOLUTIONS } from '@/utils/enums'
 import { FlagWorld } from '@/styles/GlobalStyles'
@@ -45,7 +45,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, item }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	const sgpFeesRaw = useSGPFeesQuery(chain?.id as any, {
+	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
 		enabled: true
 	})
 
