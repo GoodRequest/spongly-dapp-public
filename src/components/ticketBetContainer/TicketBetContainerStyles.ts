@@ -4,7 +4,7 @@ import { Spin } from 'antd'
 import infoIconPurple from '@/assets/icons/info-circle.svg'
 import { TextMDMedium, TextXSMedium, TextSMMedium, HeadingSMMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
-import { AllPositionsHeader, MobileWrapper, RadioMobileHeader } from '../matchesList/MatchesListStyles'
+import { AllPositionsHeader } from '../matchesList/MatchesListStyles'
 import { SCROLL_DIRECTION } from '@/utils/enums'
 
 export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`

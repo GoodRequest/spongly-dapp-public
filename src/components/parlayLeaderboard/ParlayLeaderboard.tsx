@@ -78,6 +78,7 @@ const ParlayLeaderboard = () => {
 		return parlayLeaderboardData?.map((data, index) => (
 			<ParlayLeaderboardRow key={index} rank={data.rank} address={data.address} position={data.position} quote={data.quote} reward={data?.reward} />
 		))
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [parlayLeaderboardData])
 
 	return (

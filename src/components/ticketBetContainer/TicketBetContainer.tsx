@@ -1,6 +1,6 @@
 import { change, getFormValues, initialize } from 'redux-form'
 import { ethers } from 'ethers'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAccount, useNetwork } from 'wagmi'
 import { useTranslation } from 'next-export-i18n'

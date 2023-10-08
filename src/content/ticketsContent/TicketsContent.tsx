@@ -257,6 +257,7 @@ const TicketsContent = () => {
 			</SC.ListHeader>
 			{isFilterOpened && (
 				<>
+					{/* eslint-disable-next-line react/no-danger */}
 					<div dangerouslySetInnerHTML={{ __html: bodyStyle }} />
 					<SportFilter
 						resultsCount={resultsCount}

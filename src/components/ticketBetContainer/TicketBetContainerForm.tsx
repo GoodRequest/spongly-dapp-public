@@ -241,9 +241,11 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 
 		if (listRef.current !== null) {
 			listRef.current.addEventListener('scroll', onScroll)
+			// eslint-disable-next-line react-hooks/exhaustive-deps
 			return () => listRef.current?.removeEventListener('scroll', onScroll)
 		}
 		return () => {}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [listRef.current])
 
 	useEffect(() => {
