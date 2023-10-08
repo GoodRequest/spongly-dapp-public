@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-export-i18n'
 import { Row, Col } from 'antd'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next-translate-routes'
 import { useNetwork } from 'wagmi'
 
@@ -16,6 +16,7 @@ import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
 import RadioButtons from '@/atoms/radioButtons/RadioButtons'
 import Select from '@/atoms/select/Select'
 import YouNeedToClaimBanner from './YouNeedToClaimBanner'
+import ArrowIcon from '@/assets/icons/arrow-down.svg'
 
 type Props = {
 	tickets: UserTicket[] | undefined
@@ -214,16 +215,10 @@ const UserTicketsList = ({ tickets, isLoading, refetch, isMyWallet }: Props) => 
 				<Col span={24}>{userTickets()}</Col>
 			</Row>
 			{hasMoreData() && (
-				<Row>
-					<Col span={24}>
-						<SC.ShowMoreButton type={'primary'} onClick={showMore}>
-							<SC.ButtonContent>
-								{t('Show more')}
-								<SC.ButtonIcon src={ArrowDownIcon} />
-							</SC.ButtonContent>
-						</SC.ShowMoreButton>
-					</Col>
-				</Row>
+				<SCS.LoadMore onClick={showMore}>
+					{t('Show more')}
+					<SCS.Icon icon={ArrowIcon} />
+				</SCS.LoadMore>
 			)}
 		</SC.ContentWrapper>
 	)

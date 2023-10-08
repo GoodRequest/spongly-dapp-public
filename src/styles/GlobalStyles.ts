@@ -162,10 +162,16 @@ export const Sorter = styled.div<{ sorterName: any; disabled?: boolean }>`
 	}
 `
 
-export const SorterRow = styled(Row)`
+export const SorterRow = styled.div`
 	margin-top: 16px;
 	margin-bottom: 16px;
+	display: flex;
+	width: 100%;
+`
 
+export const HorizontalSorters = styled(Row)`
+	padding-left: 24px;
+	padding-right: 24px;
 	display: flex;
 	width: 100%;
 	@media (max-width: ${breakpoints.md}px) {
@@ -175,14 +181,12 @@ export const SorterRow = styled(Row)`
 
 export const SelectSorters = styled.div`
 	display: none;
-	margin-top: 16px;
-	margin-bottom: 16px;
 	@media (max-width: ${breakpoints.md}px) {
 		width: 100%;
 		display: flex;
 	}
 `
-export const SelectTitle = styled.div`
+export const SelectSorterTitle = styled.div`
 	display: flex;
 	align-items: center;
 	img {
@@ -201,6 +205,25 @@ export const FlagWorld = styled.div`
 	background-repeat: no-repeat;
 	background-position: center;
 `
+
+export const LoadMore = styled.div`
+	height: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	${TextMDMedium};
+	cursor: pointer;
+	border-radius: 12px;
+	background: ${({ theme }) => theme['color-base-action-secondary-default']};
+	transition: background 300ms;
+	&:hover {
+		background: ${({ theme }) => theme['color-base-action-primary-default']};
+	}
+	@media (max-width: ${breakpoints.md}px) {
+		height: 48px;
+	}
+`
+
 export const Icon = styled.span<{ icon: string; degree?: number }>`
 	padding: 20px;
 	background-image: url('${({ icon }) => icon}');

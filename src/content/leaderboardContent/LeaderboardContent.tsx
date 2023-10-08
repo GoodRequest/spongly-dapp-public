@@ -27,6 +27,7 @@ import * as SCS from '@/styles/GlobalStyles'
 // types
 import { LeaderboardUser } from '@/typescript/types'
 import { PAGES } from '@/utils/enums'
+import ArrowIcon from '@/assets/icons/arrow-down.svg'
 
 const limit = 20
 
@@ -169,32 +170,37 @@ const LeaderboardContent = () => {
 
 	return (
 		<SC.LeaderboardContentWrapper>
-			<h1>Leaderboard</h1>
-			<SCS.SorterRow align={'middle'}>
-				<Col push={6} span={6}>
-					<Sorter disabled={true} title={t('Success rate')} name={LEADERBOARD_SORTING.SUCCESS_RATE} />
-				</Col>
-				<Col push={5} span={5}>
-					<Sorter title={t('Profits')} name={LEADERBOARD_SORTING.PROFITS} />
-				</Col>
-				<Col push={5} span={3}>
-					<Sorter title={t('Tickets')} name={LEADERBOARD_SORTING.TICKETS} />
-				</Col>
+			<h1>{t('Leaderboard')}</h1>
+			<SCS.SorterRow>
+				<SCS.HorizontalSorters>
+					<Col span={6}>
+						<Sorter title={t('Wallet')} />
+					</Col>
+					<Col span={5}>
+						<Sorter disabled={true} title={t('Success rate')} name={LEADERBOARD_SORTING.SUCCESS_RATE} />
+					</Col>
+					<Col span={5}>
+						<Sorter title={t('Profits')} name={LEADERBOARD_SORTING.PROFITS} />
+					</Col>
+					<Col span={3}>
+						<Sorter title={t('Tickets')} name={LEADERBOARD_SORTING.TICKETS} />
+					</Col>
+				</SCS.HorizontalSorters>
+				<SCS.SelectSorters>
+					<Select
+						title={
+							<SCS.SelectSorterTitle>
+								<img src={SortIcon} alt={'Sorter'} />
+								{t('Sort by')}
+							</SCS.SelectSorterTitle>
+						}
+						allowClear
+						options={sortOptions}
+						placeholder={t('Sort by')}
+						onChange={handleSubmitSort}
+					/>
+				</SCS.SelectSorters>
 			</SCS.SorterRow>
-			<SCS.SelectSorters>
-				<Select
-					title={
-						<SCS.SelectTitle>
-							<img src={SortIcon} alt={'Sorter'} />
-							{t('Sort by')}
-						</SCS.SelectTitle>
-					}
-					allowClear
-					options={sortOptions}
-					placeholder={t('Sort by')}
-					onChange={handleSubmitSort}
-				/>
-			</SCS.SelectSorters>
 			{loading && tipstersData.length === 0 ? (
 				<>
 					<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
@@ -237,37 +243,17 @@ const LeaderboardContent = () => {
 									</SC.Title>
 								</Col>
 								<Col span={24} md={5}>
-									<Button
-										type={'primary'}
-										size={'large'}
-										btnStyle={'secondary'}
-										onClick={() => {
-											// TODO: in detail of tipster
-											router.push(`/${PAGES.LEADERBOARD}/${item.id}`)
-										}}
-										content={<span>{t('Show more')}</span>}
-									/>
+									<SCS.LoadMore onClick={() => router.push(`/${PAGES.LEADERBOARD}/${item.id}`)}>{t('Show more')}</SCS.LoadMore>
 								</Col>
 							</SC.LeaderboardContentRow>
 						)
 					})}
 				</Spin>
 			)}
-			<Button
-				type={'primary'}
-				size={'large'}
-				disabled={loading}
-				btnStyle={'secondary'}
-				onClick={() => {
-					loadMore()
-				}}
-				content={
-					<SC.ButtonContent>
-						<span>{t('Show more')}</span>
-						<SC.ButtonIcon src={ArrowDownIcon} />
-					</SC.ButtonContent>
-				}
-			/>
+			<SCS.LoadMore onClick={loadMore}>
+				{t('Show more')}
+				<SCS.Icon icon={ArrowIcon} />
+			</SCS.LoadMore>
 		</SC.LeaderboardContentWrapper>
 	)
 }

@@ -8,6 +8,7 @@ import dayjs from 'dayjs'
 import { useRouter } from 'next-translate-routes'
 
 // components
+import { Col, Row } from 'antd'
 import TicketsStatisticRow from '@/components/ticketsStatisticRow/TicketsStatisticRow'
 import UserTicketsList from '@/components/userTicketsList/UserTicketsList'
 
@@ -26,6 +27,7 @@ import { useIsMounted } from '@/hooks/useIsMounted'
 // types
 import { UserStatistic, UserTicket } from '@/typescript/types'
 import { ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
+import BackButton from '@/atoms/backButton/BackButton'
 
 const MyWalletContent = () => {
 	const { t } = useTranslation()
@@ -212,10 +214,15 @@ const MyWalletContent = () => {
 	}
 
 	return (
-		<>
-			{isMounted && <TicketsStatisticRow isMyWallet={isMyWallet} isLoading={isLoading} user={userStatistic?.user} />}
-			<UserTicketsList refetch={refetch} isMyWallet={isMyWallet} isLoading={isLoading} tickets={userStatistic?.tickets} />
-		</>
+		<Row gutter={[0, 16]}>
+			<Col span={24}>
+				<BackButton backUrl={`/${PAGES.LEADERBOARD}`} />
+			</Col>
+			<Col span={24}>{isMounted && <TicketsStatisticRow isMyWallet={isMyWallet} isLoading={isLoading} user={userStatistic?.user} />}</Col>
+			<Col span={24}>
+				<UserTicketsList refetch={refetch} isMyWallet={isMyWallet} isLoading={isLoading} tickets={userStatistic?.tickets} />
+			</Col>
+		</Row>
 	)
 }
 

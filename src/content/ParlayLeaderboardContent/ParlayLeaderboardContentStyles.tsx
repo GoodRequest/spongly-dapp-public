@@ -1,4 +1,4 @@
-import { Button, Col, Row, Skeleton } from 'antd'
+import { Col, Row, Skeleton } from 'antd'
 import styled from 'styled-components'
 
 import { TextMDMedium, TextLGRegular, TextLGMedium, HeadingXXSMedium, HeadingXLMedium, HeadingMDMedium } from '@/styles/typography'
@@ -49,77 +49,13 @@ export const PeriodDiv = styled.div`
 	margin-bottom: 16px;
 `
 
-export const CenterRowContent = styled(Col)`
-	display: flex;
-	justify-content: center;
-`
-
 export const WarningIcon = styled.img`
 	width: 24px;
 	height: 24px;
 	margin-right: 12px;
 `
 
-export const OrderButton = styled(Button)`
-	background: transparent;
-	border: none;
-	box-shadow: none;
-	${TextMDMedium};
-	color: ${({ theme }) => theme['color-base-content-quaternary']};
-
-	:hover:not(.no-sorting) {
-		// must be important, or antd will ingore
-		background: ${({ theme }) => theme['color-base-surface-quaternary']}!important;
-		color: ${({ theme }) => theme['color-base-content-top']} !important;
-	}
-
-	&.active {
-		background: ${({ theme }) => theme['color-base-surface-quaternary']} !important;
-		color: ${({ theme }) => theme['color-base-content-top']} !important;
-	}
-
-	:disabled {
-		color: ${({ theme }) => theme['color-base-content-quaternary']} !important;
-	}
-`
-
-export const FilterRow = styled(Row)`
-	@media (max-width: ${breakpoints.md}px) {
-		display: none;
-	}
-`
-
-export const ShowMoreButton = styled(Button)`
-	margin-top: 16px;
-	height: 60px;
-	background: ${({ theme }) => theme['color-inverse-action-primary-default']};
-	border-radius: 12px;
-	width: 100%;
-	box-shadow: none;
-	margin-bottom: 36px;
-	${TextMDMedium}
-
-	:hover:not(:disabled) {
-		// must be important, or antd will ingore
-		background: ${({ theme }) => theme['color-inverse-action-primary-hover']} !important;
-	}
-
-	:disabled {
-		border: none;
-		background: ${({ theme }) => theme['color-base-action-primary-disable']};
-		color: ${({ theme }) => theme['color-base-content-primary']};
-	}
-`
-
-export const ButtonContent = styled.div`
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-`
-
 export const ButtonIcon = styled.img`
-	margin-left: 8px;
 	width: 20px;
 	height: 20px;
 `
@@ -169,14 +105,6 @@ export const ParlayLeaderboardTableText = styled.p`
 	${HeadingXXSMedium};
 	@media (max-width: ${breakpoints.md}px) {
 		display: block;
-	}
-`
-
-export const PCRow = styled(Row)`
-	display: flex;
-
-	@media (max-width: ${breakpoints.xl}px) {
-		display: none;
 	}
 `
 
