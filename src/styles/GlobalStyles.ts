@@ -4,6 +4,7 @@ import { HeadingXSMedium, TextMDMedium, TextMDRegular, TextSMMedium, TextSorter 
 import worldFlag from '@/assets/icons/world-flag.png'
 import { decodeSorter } from '@/utils/helpers'
 import { TextLGMedium } from './typography'
+import { breakpoints } from '@/styles/theme'
 
 const { Paragraph } = Typography
 export const GlobalStyle = createGlobalStyle`
@@ -204,5 +205,13 @@ export const Empty = styled(AntdEmpty)`
 				${TextMDRegular}
 			}
 		}
+	}
+`
+export const LeagueIcon = styled.i`
+	color: white;
+	font-size: 70px;
+	font-style: normal;
+	@media (max-width: ${breakpoints.md}px) {
+		font-size: 40px;
 	}
 `

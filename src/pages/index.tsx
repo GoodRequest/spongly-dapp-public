@@ -30,6 +30,7 @@ const HomePage = () => {
 
 	useEffect(() => {
 		router.push('/dashboard')
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	return <h1>{PAGES.HOMEPAGE}</h1>
