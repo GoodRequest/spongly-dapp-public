@@ -36,6 +36,12 @@ export const PrimaryButton = styled(AntdButton)`
 			background: ${({ theme }) => theme['color-base-action-primary-default']} !important;
 		}
 	}
+	&.error {
+		background: ${({ theme }) => theme['color-base-action-destructive-default']} !important;
+		:hover {
+			background: ${({ theme }) => theme['color-base-action-destructive-hover']} !important;
+		}
+	}
 `
 
 export const SecondaryButton = styled(AntdButton)`
