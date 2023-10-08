@@ -16,6 +16,7 @@ type Props = {
 const OddValue = (props: Props) => {
 	const { match, betOption } = props
 	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
+
 	// TODO: refactore TicketPosition type and use Imatch type and remove as any
 	return getOddByBetType(match as any, !!activeTicketValues.copied, betOption).formattedOdd > MIN_ODD_TRESHOLD ? (
 		<SC.Odd>

@@ -381,13 +381,6 @@ export const getPositions = (data: ParlayMarket | PositionBalance): Array<Positi
 	return positions
 }
 
-const isWinningTicket = (market: ParlayMarket | PositionBalance) => {
-	if (MARKET_PROPERTY.WON in market) {
-		return market.won
-	}
-	return market.position.claimable
-}
-
 export const addDaysToEnteredTimestamp = (numberOfDays: number, timestamp: string) => {
 	return new Date().setTime(new Date(timestamp).getTime() + numberOfDays * 24 * 60 * 60 * 1000)
 }

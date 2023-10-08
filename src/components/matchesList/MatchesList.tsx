@@ -42,10 +42,11 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, item }) => {
 		} else {
 			setMatchOffsetByResolution(MATCHES_OFFSET)
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	const sgpFeesRaw = useSGPFeesQuery(chain?.id as any, {
-		enabled: !!chain?.id
+		enabled: true
 	})
 
 	const matchesWithChildMarkets = useMemo(
@@ -119,6 +120,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, item }) => {
 				<SC.ModalDescriptionText>{visibleParlayValidationModal.message}</SC.ModalDescriptionText>
 			</Modal>
 		),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[visibleParlayValidationModal]
 	)
 
