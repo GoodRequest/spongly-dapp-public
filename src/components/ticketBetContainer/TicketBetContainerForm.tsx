@@ -241,9 +241,11 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 
 		if (listRef.current !== null) {
 			listRef.current.addEventListener('scroll', onScroll)
+			// eslint-disable-next-line react-hooks/exhaustive-deps
 			return () => listRef.current?.removeEventListener('scroll', onScroll)
 		}
 		return () => {}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [listRef.current])
 
 	useEffect(() => {
@@ -331,16 +333,9 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 							</SC.InfoBox>
 						)}
 						{!isWalletConnected ? (
-							<Button
-								type={'primary'}
-								size={'large'}
-								className={'make-bet-button'}
-								onClick={openConnectModal}
-								content={<span>{t('Connect wallet')}</span>}
-							/>
+							<Button size={'large'} className={'make-bet-button'} onClick={openConnectModal} content={<span>{t('Connect wallet')}</span>} />
 						) : (
 							<Button
-								type={'primary'}
 								size={'large'}
 								className={`make-bet-button ${isProcessing && 'isProcessing'}`}
 								disabled={allowance >= buyIn ? !!error : false}

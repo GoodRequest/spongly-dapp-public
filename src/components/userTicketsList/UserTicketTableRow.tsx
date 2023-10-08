@@ -21,7 +21,7 @@ import {
 	isClaimableUntil,
 	orderPositionsAsSportMarkets
 } from '@/utils/helpers'
-import { GAS_ESTIMATION_BUFFER, MSG_TYPE, NOTIFICATION_TYPE, USER_TICKET_TYPE } from '@/utils/constants'
+import { USER_TICKET_TYPE, NOTIFICATION_TYPE, MSG_TYPE, GAS_ESTIMATION_BUFFER, Network } from '@/utils/constants'
 import networkConnector from '@/utils/networkConnector'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
 import { roundPrice } from '@/utils/formatters/currency'
@@ -56,8 +56,8 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
 
-	const sgpFeesRaw = useSGPFeesQuery(chain?.id as any, {
-		enabled: !!chain?.id
+	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
+		enabled: true
 	})
 
 	useEffect(() => {
@@ -308,7 +308,6 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 			</SC.ColapsePanel>
 			<SC.CollapseButtonWrapper>
 				<Button
-					type={'primary'}
 					btnStyle={'secondary'}
 					onClick={() => setIsExpanded(!isExpanded)}
 					style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '32px' }}

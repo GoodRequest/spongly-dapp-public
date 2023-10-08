@@ -1,9 +1,8 @@
-import { FC, useRef, useState } from 'react'
-import map from 'lodash/map'
+import { FC, useRef, useState, Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'next-export-i18n'
+import { find, map } from 'lodash'
 
 import * as SC from '../../TicketBetContainerStyles'
-
 import arrowRightIcon from '@/assets/icons/arrow-right.svg'
 import addIcon from '@/assets/icons/add.svg'
 import { IUnsubmittedBetTicket } from '@/redux/betTickets/betTicketTypes'
@@ -13,13 +12,14 @@ import { SCROLL_DIRECTION } from '@/utils/enums'
 
 interface IHorizontalScroller {
 	tickets: IUnsubmittedBetTicket[]
-	removeTicket: (id: number) => void
 	addTicket: () => void
 	setActiveTicket: (ticket: IUnsubmittedBetTicket) => void
+	setDeleteModal: Dispatch<SetStateAction<{ visible: boolean; id: number }>>
 	activeTicket?: IUnsubmittedBetTicket
+	removeTicket: (id: number) => void
 }
 
-const HorizontalScroller: FC<IHorizontalScroller> = ({ tickets, addTicket, activeTicket, setActiveTicket, removeTicket }) => {
+const HorizontalScroller: FC<IHorizontalScroller> = ({ tickets, addTicket, activeTicket, setActiveTicket, setDeleteModal, removeTicket }) => {
 	const { t } = useTranslation()
 	const ref: any = useRef()
 	const [visibleArrows, setVisibleArrows] = useState<SCROLL_DIRECTION>()
@@ -55,7 +55,11 @@ const HorizontalScroller: FC<IHorizontalScroller> = ({ tickets, addTicket, activ
 						<SC.CloseIcon
 							onClick={(e) => {
 								e.stopPropagation()
-								removeTicket(item.id as number)
+								if (Number(find(tickets, ['id', item.id])?.matches?.length) > 0) {
+									setDeleteModal({ visible: true, id: item.id as number })
+								} else {
+									removeTicket(item.id as number)
+								}
 							}}
 							src={CloseMenuIcon}
 						/>

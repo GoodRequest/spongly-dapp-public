@@ -398,7 +398,6 @@ const ParlayLeaderboardContent = () => {
 				<Row>
 					<Col span={24}>
 						<Button
-							type={'primary'}
 							btnStyle={'secondary'}
 							onClick={showMore}
 							style={{ marginTop: '32px', height: '60px' }}
