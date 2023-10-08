@@ -305,7 +305,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 							<>
 								{type !== TICKET_TYPE.HOT_TICKET && (
 									<SCS.SorterRow>
-										<SC.HorizontalSorters>
+										<SCS.HorizontalSorters>
 											<Col span={5}>
 												<Sorter title={t('Wallet')} />
 											</Col>
@@ -321,21 +321,21 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 											<Col span={3}>
 												<Sorter title={t('Matches')} name={TICKET_SORTING.MATCHES} />
 											</Col>
-										</SC.HorizontalSorters>
-										<SC.SelectSorters>
+										</SCS.HorizontalSorters>
+										<SCS.SelectSorters>
 											<Select
 												title={
-													<SC.SelectTitle>
+													<SCS.SelectSorterTitle>
 														<img src={SortIcon} alt={'Sorter'} />
 														{t('Sort by')}
-													</SC.SelectTitle>
+													</SCS.SelectSorterTitle>
 												}
 												allowClear
 												options={sortOptions}
 												placeholder={t('Sort by')}
 												onChange={handleSubmitSort}
 											/>
-										</SC.SelectSorters>
+										</SCS.SelectSorters>
 									</SCS.SorterRow>
 								)}
 								{renderList.length > 0 ? (

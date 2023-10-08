@@ -1,6 +1,6 @@
 import { Col, Row } from 'antd'
 import { useTranslation } from 'next-export-i18n'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAccount, useNetwork } from 'wagmi'
 import { orderBy, round } from 'lodash'
 import { useRouter } from 'next-translate-routes'
@@ -13,7 +13,7 @@ import ParlayLeaderboardUserRow from '@/components/parlayLeaderboardTableRow/Par
 import Button from '@/atoms/button/Button'
 import { ENDPOINTS, MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE, OddsType, ORDER_DIRECTION, PARLAY_LEADERBOARD_SORTING } from '@/utils/constants'
 import { getReq } from '@/utils/requests'
-import { getCurrentBiweeklyPeriod, getPeriodEndsText, getReward } from '@/utils/helpers'
+import { decodeSorter, getCurrentBiweeklyPeriod, getPeriodEndsText, getReward, setSort } from '@/utils/helpers'
 import { useIsMounted } from '@/hooks/useIsMounted'
 import { Option, ParlayLeaderboardTableItem } from '@/typescript/types'
 
@@ -26,13 +26,15 @@ import * as SC from './ParlayLeaderboardContentStyles'
 import * as SCS from '@/styles/GlobalStyles'
 import { formatQuote } from '@/utils/formatters/quote'
 import { showNotifications } from '@/utils/tsxHelpers'
+import Sorter from '@/components/Sorter'
 
 type ParlayLeaderboardFilter = {
 	page: number
 	period: string
 	search: string
-	orderDirection: ORDER_DIRECTION
-	orderBy: PARLAY_LEADERBOARD_SORTING
+	sorter: string
+	// orderDirection: ORDER_DIRECTION
+	// orderBy: PARLAY_LEADERBOARD_SORTING
 }
 
 const ParlayLeaderboardContent = () => {
@@ -44,13 +46,67 @@ const ParlayLeaderboardContent = () => {
 
 	const { query, isReady } = useRouter()
 
+	const sortOptions = [
+		{
+			label: t('The highest rank'),
+			value: `${PARLAY_LEADERBOARD_SORTING.RANK}:${ORDER_DIRECTION.DESCENDENT}`
+		},
+		{
+			label: t('The lowest rank'),
+			value: `${PARLAY_LEADERBOARD_SORTING.RANK}:${ORDER_DIRECTION.ASCENDENT}`
+		},
+		{
+			label: t('The most matches'),
+			value: `${PARLAY_LEADERBOARD_SORTING.POSITION}:${ORDER_DIRECTION.DESCENDENT}`
+		},
+		{
+			label: t('The least matches'),
+			value: `${PARLAY_LEADERBOARD_SORTING.POSITION}:${ORDER_DIRECTION.ASCENDENT}`
+		},
+		{
+			label: t('The highest buy-in'),
+			value: `${PARLAY_LEADERBOARD_SORTING.PAID}:${ORDER_DIRECTION.DESCENDENT}`
+		},
+		{
+			label: t('The lowest buy-in'),
+			value: `${PARLAY_LEADERBOARD_SORTING.PAID}:${ORDER_DIRECTION.ASCENDENT}`
+		},
+		{
+			label: t('The highest quote'),
+			value: `${PARLAY_LEADERBOARD_SORTING.QUOTE}:${ORDER_DIRECTION.DESCENDENT}`
+		},
+		{
+			label: t('The lowest quote'),
+			value: `${PARLAY_LEADERBOARD_SORTING.QUOTE}:${ORDER_DIRECTION.ASCENDENT}`
+		},
+		{
+			label: t('The highest win'),
+			value: `${PARLAY_LEADERBOARD_SORTING.WON}:${ORDER_DIRECTION.DESCENDENT}`
+		},
+		{
+			label: t('The lowest win'),
+			value: `${PARLAY_LEADERBOARD_SORTING.WON}:${ORDER_DIRECTION.ASCENDENT}`
+		}
+	]
+
+	const handleSubmitSort = (value: string) => {
+		if (!value) {
+			// clear sort
+			setSort(undefined)
+		} else {
+			const [property, direction] = value.split(':')
+			setSort(property, direction as ORDER_DIRECTION)
+		}
+	}
+
 	// duplicite init, o avoid handling undefined state
 	const [filters, setFilters] = useState<ParlayLeaderboardFilter>({
 		page: 1,
 		period: `${getCurrentBiweeklyPeriod()}`,
 		search: '',
-		orderDirection: ORDER_DIRECTION.ASCENDENT,
-		orderBy: PARLAY_LEADERBOARD_SORTING.RANK
+		sorter: ''
+		// orderDirection: ORDER_DIRECTION.ASCENDENT,
+		// orderBy: PARLAY_LEADERBOARD_SORTING.RANK
 	})
 
 	useEffect(() => {
@@ -59,8 +115,9 @@ const ParlayLeaderboardContent = () => {
 				page: Number(query?.page) ? Number(query?.page) : 1,
 				period: query?.period ? (query?.period as string) : `${getCurrentBiweeklyPeriod()}`,
 				search: query?.search ? (query?.search as string) : '',
-				orderDirection: query?.orderDirection ? (query?.orderDirection as ORDER_DIRECTION) : ORDER_DIRECTION.ASCENDENT,
-				orderBy: query?.orderBy ? (query?.orderBy as PARLAY_LEADERBOARD_SORTING) : PARLAY_LEADERBOARD_SORTING.RANK
+				sorter: query?.sorter ? (query?.sorter as string) : ''
+				// orderDirection: query?.orderDirection ? (query?.orderDirection as ORDER_DIRECTION) : ORDER_DIRECTION.ASCENDENT,
+				// orderBy: query?.orderBy ? (query?.orderBy as PARLAY_LEADERBOARD_SORTING) : PARLAY_LEADERBOARD_SORTING.RANK
 			})
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,8 +131,9 @@ const ParlayLeaderboardContent = () => {
 					page: filters?.page,
 					period: filters?.period,
 					search: filters?.search,
-					orderDirection: filters?.orderDirection,
-					orderBy: filters?.orderBy
+					sorter: filters?.sorter
+					// orderDirection: filters?.orderDirection,
+					// orderBy: filters?.orderBy
 				}
 			},
 			undefined,
@@ -87,7 +145,7 @@ const ParlayLeaderboardContent = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const [parlayLeaderboardData, setParlayLeaderboardData] = useState<ParlayLeaderboardTableItem[] | undefined>(undefined)
 	const [userRank, setUserRank] = useState<ParlayLeaderboardTableItem | undefined>(undefined)
-
+	console.log('parlayLeaderboardData', parlayLeaderboardData)
 	const sortData = (data: ParlayLeaderboardTableItem[] | undefined, sortedBy: PARLAY_LEADERBOARD_SORTING, orderDirection: ORDER_DIRECTION) => {
 		return orderBy(data, [sortedBy], [orderDirection])
 	}
@@ -114,7 +172,8 @@ const ParlayLeaderboardContent = () => {
 					setUserRank(userRank)
 				}
 			}
-			setParlayLeaderboardData(sortData(newParlayData, filters.orderBy as PARLAY_LEADERBOARD_SORTING, filters?.orderDirection as ORDER_DIRECTION))
+			const { direction, property } = decodeSorter()
+			setParlayLeaderboardData(sortData(newParlayData, property as PARLAY_LEADERBOARD_SORTING, direction as ORDER_DIRECTION))
 		} catch (e) {
 			showNotifications([{ type: MSG_TYPE.ERROR, message: t('Could not load table data') }], NOTIFICATION_TYPE.NOTIFICATION)
 		} finally {
@@ -152,9 +211,10 @@ const ParlayLeaderboardContent = () => {
 	}
 
 	useEffect(() => {
-		setParlayLeaderboardData(sortData(parlayLeaderboardData, filters?.orderBy as PARLAY_LEADERBOARD_SORTING, filters?.orderDirection as ORDER_DIRECTION))
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [filters?.orderBy, filters?.orderDirection])
+		const { direction, property } = decodeSorter()
+		console.log('called', direction, property)
+		setParlayLeaderboardData(sortData(parlayLeaderboardData, property as PARLAY_LEADERBOARD_SORTING, direction as ORDER_DIRECTION))
+	}, [query.sorter])
 
 	useEffect(() => {
 		loadLeaderboard()
@@ -168,15 +228,15 @@ const ParlayLeaderboardContent = () => {
 		})
 	}
 
-	const getIcon = (orderedBy: PARLAY_LEADERBOARD_SORTING) => {
-		if (filters?.orderBy === orderedBy) {
-			if (filters?.orderDirection === ORDER_DIRECTION.ASCENDENT) {
-				return <SC.ButtonIcon src={ArrowDownIcon} style={{ transform: 'rotate(180deg)' }} />
-			}
-			return <SC.ButtonIcon src={ArrowDownIcon} />
-		}
-		return <SC.ButtonIcon src={SortIcon} />
-	}
+	// const getIcon = (orderedBy: PARLAY_LEADERBOARD_SORTING) => {
+	// 	if (filters?.orderBy === orderedBy) {
+	// 		if (filters?.orderDirection === ORDER_DIRECTION.ASCENDENT) {
+	// 			return <SC.ButtonIcon src={ArrowDownIcon} style={{ transform: 'rotate(180deg)' }} />
+	// 		}
+	// 		return <SC.ButtonIcon src={ArrowDownIcon} />
+	// 	}
+	// 	return <SC.ButtonIcon src={SortIcon} />
+	// }
 	const parlayLeaderBoard = () => {
 		if (isLoading) {
 			return (
@@ -235,27 +295,27 @@ const ParlayLeaderboardContent = () => {
 		return false
 	}
 
-	const handleOrderButtonClick = (orderBy: PARLAY_LEADERBOARD_SORTING) => {
-		if (orderBy === filters?.orderBy) {
-			if (filters?.orderDirection === ORDER_DIRECTION.DESCENDENT) {
-				setFilters({
-					...filters,
-					orderDirection: ORDER_DIRECTION.ASCENDENT
-				})
-			} else {
-				setFilters({
-					...filters,
-					orderDirection: ORDER_DIRECTION.DESCENDENT
-				})
-			}
-		} else {
-			setFilters({
-				...filters,
-				orderDirection: ORDER_DIRECTION.ASCENDENT,
-				orderBy
-			})
-		}
-	}
+	// const handleOrderButtonClick = (orderBy: PARLAY_LEADERBOARD_SORTING) => {
+	// 	if (orderBy === filters?.orderBy) {
+	// 		if (filters?.orderDirection === ORDER_DIRECTION.DESCENDENT) {
+	// 			setFilters({
+	// 				...filters,
+	// 				orderDirection: ORDER_DIRECTION.ASCENDENT
+	// 			})
+	// 		} else {
+	// 			setFilters({
+	// 				...filters,
+	// 				orderDirection: ORDER_DIRECTION.DESCENDENT
+	// 			})
+	// 		}
+	// 	} else {
+	// 		setFilters({
+	// 			...filters,
+	// 			orderDirection: ORDER_DIRECTION.ASCENDENT,
+	// 			orderBy
+	// 		})
+	// 	}
+	// }
 
 	return (
 		<>
@@ -324,79 +384,113 @@ const ParlayLeaderboardContent = () => {
 					</Row>
 				)}
 				<SC.ParlayLeaderboardTableText>{t('Leader board')}</SC.ParlayLeaderboardTableText>
-				<SC.FilterRow style={{ marginTop: '32px' }}>
-					<Col span={24}>
-						<Row align={'middle'}>
-							<Col span={6}>
-								<SC.OrderButton
-									className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.RANK ? 'active' : ''}`}
-									onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.RANK)}
-								>
-									<SC.ButtonContent>
-										{t('Rank')}
-										{getIcon(PARLAY_LEADERBOARD_SORTING.RANK)}
-									</SC.ButtonContent>
-								</SC.OrderButton>
-							</Col>
+				{/* // Sorter s */}
+				<SCS.SorterRow>
+					<SCS.HorizontalSorters>
+						<Col span={8}>
+							<Sorter title={t('Rank')} name={PARLAY_LEADERBOARD_SORTING.RANK} />
+						</Col>
+						<Col span={3}>
+							<Sorter title={t('Positions')} name={PARLAY_LEADERBOARD_SORTING.POSITION} />
+						</Col>
+						<Col span={3}>
+							<Sorter title={t('Buy-in')} name={PARLAY_LEADERBOARD_SORTING.PAID} />
+						</Col>
+						<Col span={3}>
+							<Sorter title={t('Quote')} name={PARLAY_LEADERBOARD_SORTING.QUOTE} />
+						</Col>
+						<Col span={3}>
+							<Sorter title={t('Won')} name={PARLAY_LEADERBOARD_SORTING.WON} />
+						</Col>
+					</SCS.HorizontalSorters>
+					<SCS.SelectSorters>
+						<Select
+							title={
+								<SCS.SelectSorterTitle>
+									<img src={SortIcon} alt={'Sorter'} />
+									{t('Sort by')}
+								</SCS.SelectSorterTitle>
+							}
+							allowClear
+							options={sortOptions}
+							placeholder={t('Sort by')}
+							onChange={handleSubmitSort}
+						/>
+					</SCS.SelectSorters>
+				</SCS.SorterRow>
+				{/* <SC.FilterRow style={{ marginBottom: '16px' }}> */}
+				{/*	<Col span={24}> */}
+				{/*		<Row align={'middle'}> */}
+				{/*			<Col span={6}> */}
+				{/*				<SC.OrderButton */}
+				{/*					className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.RANK ? 'active' : ''}`} */}
+				{/*					onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.RANK)} */}
+				{/*				> */}
+				{/*					<SC.ButtonContent> */}
+				{/*						{t('Rank')} */}
+				{/*						{getIcon(PARLAY_LEADERBOARD_SORTING.RANK)} */}
+				{/*					</SC.ButtonContent> */}
+				{/*				</SC.OrderButton> */}
+				{/*			</Col> */}
 
-							<SC.CenterRowContent span={3}>
-								<SC.OrderButton
-									className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.POSITION ? 'active' : ''}`}
-									onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.POSITION)}
-								>
-									<SC.ButtonContent>
-										{t('Positions')}
-										{getIcon(PARLAY_LEADERBOARD_SORTING.POSITION)}
-									</SC.ButtonContent>
-								</SC.OrderButton>
-							</SC.CenterRowContent>
+				{/*			<SC.CenterRowContent span={3}> */}
+				{/*				<SC.OrderButton */}
+				{/*					className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.POSITION ? 'active' : ''}`} */}
+				{/*					onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.POSITION)} */}
+				{/*				> */}
+				{/*					<SC.ButtonContent> */}
+				{/*						{t('Positions')} */}
+				{/*						{getIcon(PARLAY_LEADERBOARD_SORTING.POSITION)} */}
+				{/*					</SC.ButtonContent> */}
+				{/*				</SC.OrderButton> */}
+				{/*			</SC.CenterRowContent> */}
 
-							<SC.CenterRowContent span={4}>
-								<SC.OrderButton
-									className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.PAID ? 'active' : ''}`}
-									onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.PAID)}
-								>
-									<SC.ButtonContent>
-										<span>{t('Buy-in')}</span>
-										{getIcon(PARLAY_LEADERBOARD_SORTING.PAID)}
-									</SC.ButtonContent>
-								</SC.OrderButton>
-							</SC.CenterRowContent>
+				{/*			<SC.CenterRowContent span={4}> */}
+				{/*				<SC.OrderButton */}
+				{/*					className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.PAID ? 'active' : ''}`} */}
+				{/*					onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.PAID)} */}
+				{/*				> */}
+				{/*					<SC.ButtonContent> */}
+				{/*						<span>{t('Buy-in')}</span> */}
+				{/*						{getIcon(PARLAY_LEADERBOARD_SORTING.PAID)} */}
+				{/*					</SC.ButtonContent> */}
+				{/*				</SC.OrderButton> */}
+				{/*			</SC.CenterRowContent> */}
 
-							<SC.CenterRowContent span={3}>
-								<SC.OrderButton
-									className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.QUOTE ? 'active' : ''}`}
-									onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.QUOTE)}
-								>
-									<SC.ButtonContent>
-										<span>{t('Quote')}</span>
-										{getIcon(PARLAY_LEADERBOARD_SORTING.QUOTE)}
-									</SC.ButtonContent>
-								</SC.OrderButton>
-							</SC.CenterRowContent>
+				{/*			<SC.CenterRowContent span={3}> */}
+				{/*				<SC.OrderButton */}
+				{/*					className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.QUOTE ? 'active' : ''}`} */}
+				{/*					onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.QUOTE)} */}
+				{/*				> */}
+				{/*					<SC.ButtonContent> */}
+				{/*						<span>{t('Quote')}</span> */}
+				{/*						{getIcon(PARLAY_LEADERBOARD_SORTING.QUOTE)} */}
+				{/*					</SC.ButtonContent> */}
+				{/*				</SC.OrderButton> */}
+				{/*			</SC.CenterRowContent> */}
 
-							<SC.CenterRowContent span={4}>
-								<SC.OrderButton
-									className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.WON ? 'active' : ''}`}
-									onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.WON)}
-								>
-									<SC.ButtonContent>
-										<span>{t('Won')}</span>
-										{getIcon(PARLAY_LEADERBOARD_SORTING.WON)}
-									</SC.ButtonContent>
-								</SC.OrderButton>
-							</SC.CenterRowContent>
+				{/*			<SC.CenterRowContent span={4}> */}
+				{/*				<SC.OrderButton */}
+				{/*					className={`${filters?.orderBy === PARLAY_LEADERBOARD_SORTING.WON ? 'active' : ''}`} */}
+				{/*					onClick={() => handleOrderButtonClick(PARLAY_LEADERBOARD_SORTING.WON)} */}
+				{/*				> */}
+				{/*					<SC.ButtonContent> */}
+				{/*						<span>{t('Won')}</span> */}
+				{/*						{getIcon(PARLAY_LEADERBOARD_SORTING.WON)} */}
+				{/*					</SC.ButtonContent> */}
+				{/*				</SC.OrderButton> */}
+				{/*			</SC.CenterRowContent> */}
 
-							<SC.CenterRowContent span={4}>
-								<SC.OrderButton className={'no-sorting'} disabled>
-									<SC.ButtonContent>
-										<span>{t('Reward')}</span>
-									</SC.ButtonContent>
-								</SC.OrderButton>
-							</SC.CenterRowContent>
-						</Row>
-					</Col>
-				</SC.FilterRow>
+				{/*			<SC.CenterRowContent span={4}> */}
+				{/*				<SC.OrderButton className={'no-sorting'} disabled> */}
+				{/*					<SC.ButtonContent> */}
+				{/*						<span>{t('Reward')}</span> */}
+				{/*					</SC.ButtonContent> */}
+				{/*				</SC.OrderButton> */}
+				{/*			</SC.CenterRowContent> */}
+				{/*		</Row> */}
+				{/*	</Col> */}
+				{/* </SC.FilterRow> */}
 				<Row>
 					<Col span={24}>{parlayLeaderBoard()}</Col>
 				</Row>
@@ -406,6 +500,7 @@ const ParlayLeaderboardContent = () => {
 							<Button
 								btnStyle={'secondary'}
 								onClick={showMore}
+								disabled={isLoading}
 								style={{ marginTop: '32px', height: '60px' }}
 								content={
 									<SC.ButtonContent>
