@@ -3,14 +3,14 @@ import { useNetwork } from 'wagmi'
 import { ethers } from 'ethers'
 import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
-import { isEmpty, map } from 'lodash'
+import { map } from 'lodash'
 import { Col, Row, Spin } from 'antd'
 
 // components
-import { getFormValues } from 'redux-form'
-import { useSelector } from 'react-redux'
 import Button from '@/atoms/button/Button'
 import TicketItem from '../ticketList/TicketItem'
+import CopyTicketModal from '@/components/copyTicketModal/CopyTicketModal'
+import CopyTicketButton from '@/components/copyTicketButton/CopyTicketButton'
 
 // utils
 import { showNotifications } from '@/utils/tsxHelpers'
@@ -39,10 +39,6 @@ import * as SC from './UserTicketTableRowStyles'
 // assets
 import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
 import DocumentIcon from '@/assets/icons/document-icon.svg'
-import { FORM } from '@/utils/enums'
-import { IUnsubmittedBetTicket } from '@/redux/betTickets/betTicketTypes'
-import { RootState } from '@/redux/rootReducer'
-import CopyTicketModal from '@/components/copyTicketModal/CopyTicketModal'
 
 type Props = {
 	ticket: UserTicket
@@ -58,7 +54,6 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 	const [isClaiming, setIsClaiming] = useState(false)
 	const [copyModal, setCopyModal] = useState<{ visible: boolean; onlyCopy: boolean }>({ visible: false, onlyCopy: false })
 	const [tempMatches, setTempMatches] = useState<any>()
-	const betTicket: Partial<IUnsubmittedBetTicket> = useSelector((state: RootState) => getFormValues(FORM.BET_TICKET)(state))
 	const [activeMatches, setActiveMatches] = useState<any[]>([])
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 
@@ -297,24 +292,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 						)}
 						{hasOpenPositions && !isMyWallet && (
 							<Col md={12} span={24}>
-								<Button
-									disabledPopoverText={t('Matches are no longer open to copy')}
-									// disabled={activeMatches?.length === 0} // If ticket with active matches is empty disable button
-									btnStyle={'primary'}
-									content={t('Copy ticket')}
-									// TODO: copy ticket
-									onClick={async () => {
-										// NOTE: if ticket has matches open modal which ask if you want to replace ticket or create new one
-										if (!isEmpty(betTicket?.matches)) {
-											setTempMatches(activeMatches)
-											setCopyModal({ visible: true, onlyCopy: false })
-										} else {
-											// Otherwise create ticket
-											setTempMatches(activeMatches)
-											setCopyModal({ visible: true, onlyCopy: true })
-										}
-									}}
-								/>
+								<CopyTicketButton setTempMatches={setTempMatches} activeMatches={activeMatches} setCopyModal={setCopyModal} />
 							</Col>
 						)}
 					</SC.StylesRow>

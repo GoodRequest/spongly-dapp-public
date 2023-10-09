@@ -33,7 +33,6 @@ const CopyTicketModal = ({ setCopyModal, copyModal, tempMatches, ticket, setActi
 	const { t } = useTranslation()
 	const dispatch = useDispatch()
 	const { chain } = useNetwork()
-	const betTicket: Partial<IUnsubmittedBetTicket> = useSelector((state: RootState) => getFormValues(FORM.BET_TICKET)(state))
 	const unsubmittedTickets = useSelector((state: RootState) => state.betTickets.unsubmittedBetTickets.data)
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
 	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
@@ -82,6 +81,7 @@ const CopyTicketModal = ({ setCopyModal, copyModal, tempMatches, ticket, setActi
 		}
 	}, [sgpFeesRaw.data, sgpFeesRaw.isSuccess])
 
+	// TODO: daniel zrefactoruje tak nahradit generickym hookom ktory spravi
 	const getMatchesWithChildMarkets = useMemo(() => {
 		const matchesWithChildMarkets = toPairs(groupBy(tempMatches, 'gameId')).map(([, markets]) => {
 			const [match] = markets
