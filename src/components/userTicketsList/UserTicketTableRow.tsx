@@ -115,8 +115,6 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 	)
 	const userTicketType = getUserTicketType(ticket)
 
-	const isClaimed = (userTicketType === USER_TICKET_TYPE.SUCCESS || userTicketType === USER_TICKET_TYPE.CANCELED) && ticket?.claimed
-
 	const isParlay = ticket?.positions?.length > 1
 
 	const getClaimValue = () => {
@@ -209,17 +207,8 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 			</SC.CenterRowContent>
 
 			<SC.CenterRowContent md={{ span: 5, order: 4 }} xs={{ span: 12, order: 4 }}>
-				{isClaimed ? (
-					<>
-						<SC.ClaimValueText userTicketType={userTicketType}>{getClaimValue()}</SC.ClaimValueText>
-						<SC.ClaimValueText userTicketType={userTicketType}>{t('Claimed')}</SC.ClaimValueText>
-					</>
-				) : (
-					<>
-						<SC.ClaimValueText userTicketType={userTicketType}>{getClaimValue()}</SC.ClaimValueText>
-						{userTicketType !== USER_TICKET_TYPE.MISS && isMyWallet && <SC.ColumnNameText>{t('Claim')}</SC.ColumnNameText>}
-					</>
-				)}
+				<SC.ClaimValueText userTicketType={userTicketType}>{getClaimValue()}</SC.ClaimValueText>
+				<SC.ColumnNameText>{t('Claim')}</SC.ColumnNameText>
 			</SC.CenterRowContent>
 			<SC.ClaimColContent show={!!(ticket.isClaimable && isMyWallet)} md={{ span: 4, order: 5 }} xs={{ span: 24, order: 5 }}>
 				{!isClaiming ? (
@@ -250,7 +239,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 			activeKey={isExpanded ? [ticket.id] : []}
 			isExpanded={isExpanded}
 		>
-			<SC.ColapsePanel header={ticketHeader} key={ticket.id}>
+			<SC.CollapsePanel header={ticketHeader} key={ticket.id}>
 				<Row gutter={[16, 16]}>
 					{map(positionsWithMergedCombinedPositions, (item, index) => (
 						<Col key={item?.id} span={24} lg={12}>
@@ -267,16 +256,34 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 					))}
 				</Row>
 				<SC.StylesRow gutter={[16, 16]}>
-					{/* <Col md={type === TICKET_TYPE.CLOSED_TICKET ? 24 : 12} span={24}>
-									<Button
-										btnStyle={'secondary'}
-										content={t('Show ticket detail')}
-										onClick={() => {
-											// TODO: redirect to detail
-										}}
-									/>
-								</Col> */}
-					{hasOpenPositions && (
+					<Col span={12}>
+						<Button
+							btnStyle={'secondary'}
+							content={t('Show ticket detail')}
+							onClick={() => {
+								// TODO: redirect to detail
+							}}
+						/>
+					</Col>
+					{!!(ticket.isClaimable && isMyWallet) && (
+						<Col span={12}>
+							{!isClaiming ? (
+								<Button
+									btnStyle={'primary'}
+									onClick={() => handleClaim()}
+									content={
+										<SC.ClaimButtonWrapper>
+											<SC.ClaimText>{t('Claim')}</SC.ClaimText>
+											<SC.ClaimValue>{claimableUntil}</SC.ClaimValue>
+										</SC.ClaimButtonWrapper>
+									}
+								/>
+							) : (
+								<Spin />
+							)}
+						</Col>
+					)}
+					{hasOpenPositions && !isMyWallet && (
 						<Col md={12} span={24}>
 							<Button
 								disabledPopoverText={t('Matches are no longer open to copy')}
@@ -299,7 +306,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 						</Col>
 					)}
 				</SC.StylesRow>
-			</SC.ColapsePanel>
+			</SC.CollapsePanel>
 			<SC.CollapseButtonWrapper>
 				<Button
 					btnStyle={'secondary'}

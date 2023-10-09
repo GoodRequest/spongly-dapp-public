@@ -1,6 +1,6 @@
 import { Col, Divider, Row, Collapse } from 'antd'
 import styled from 'styled-components'
-import { TextLGMedium, TextMDMedium, TextSMMedium, TextXSMedium } from '@/styles/typography'
+import { TextLGMedium, TextSMMedium, TextXSMedium } from '@/styles/typography'
 import { USER_TICKET_TYPE } from '@/utils/constants'
 import { breakpoints } from '@/styles/theme'
 
@@ -54,7 +54,7 @@ export const UserCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 	border: ${({ theme, isExpanded }) => (isExpanded ? `2px solid ${theme['color-base-surface-quintarny']}` : '2px solid transparent')};
 `
 
-export const ColapsePanel = styled(Panel)`
+export const CollapsePanel = styled(Panel)`
 	.ant-collapse-content {
 		background: ${({ theme }) => theme['color-base-surface-secondary']};
 		border-top: none;
@@ -126,11 +126,11 @@ export const ColumnNameText = styled.span`
 `
 
 export const ColumnValueText = styled.span`
-	${TextMDMedium}
+	${TextLGMedium};
 `
 
 export const ClaimValueText = styled.span<{ userTicketType: USER_TICKET_TYPE }>`
-	${TextMDMedium};
+	${TextLGMedium};
 	color: ${({ userTicketType, theme }) => {
 		if (userTicketType === USER_TICKET_TYPE.SUCCESS || userTicketType === USER_TICKET_TYPE.CANCELED) {
 			return theme['color-base-state-success-fg']
@@ -170,19 +170,6 @@ export const AddressText = styled.p`
 	overflow: hidden;
 	text-overflow: ellipsis;
 	max-width: 100%;
-`
-
-export const TxButtonText = styled.p`
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	max-width: 100%;
-`
-
-export const CenterDiv = styled.div`
-	display: flex;
-	align-items: center;
-	flex-direction: column;
 `
 
 export const TicketTypeTag = styled.div<{ ticketType: USER_TICKET_TYPE }>`
