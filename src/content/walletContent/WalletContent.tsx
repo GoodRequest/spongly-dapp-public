@@ -211,14 +211,14 @@ const MyWalletContent = () => {
 	useEffect(() => {
 		// TODO: preco tu bol signer
 		console.log('add', [address, chain?.id, signer])
-		if (address && chain?.id) {
+		if (address && chain?.id && signer) {
 			fetchStatistics()
 		} else {
 			console.log('else')
 			router.push(`/${PAGES.DASHBOARD}`)
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [address, chain?.id, signer, router.query.id])
+	}, [address, chain?.id, signer])
 
 	const refetch = () => {
 		if (address && chain?.id && signer) {

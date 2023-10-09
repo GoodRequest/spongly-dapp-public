@@ -6,7 +6,7 @@ import { useNetwork } from 'wagmi'
 
 import { UserTicket } from '@/typescript/types'
 import UserTicketTableRow from './UserTicketTableRow'
-import { WALLET_TICKETS } from '@/utils/enums'
+import { PAGES, WALLET_TICKETS } from '@/utils/enums'
 
 import * as SC from './UserTicketsListStyles'
 import * as SCS from '@/styles/GlobalStyles'
@@ -93,32 +93,32 @@ const UserTicketsList = ({ tickets, isLoading, refetch, isMyWallet }: Props) => 
 		setShownTickets(sortedTickets?.slice(0, pagination.page * 10))
 		// NOTE: Do not update query when wallet is not connected -> instead useEffect in WalletContent will redirect to dashboard
 		// TODO: zistit ako toto vyriesit pri updatovani query ak neni walletka pripojena a sucasne som na detaile a nie my-wallet
-		// if (router.query.id) {
-		// 	router.replace(
-		// 		{
-		// 			pathname: `/${PAGES.LEADERBOARD}/${router.query.id}`,
-		// 			query: {
-		// 				page: pagination?.page,
-		// 				status: filter.status
-		// 			}
-		// 		},
-		// 		undefined,
-		// 		{ scroll: false }
-		// 	)
-		// }
-		// if (chain?.id && !router.query.id) {
-		// 	router.replace(
-		// 		{
-		// 			pathname: `/${PAGES.MY_WALLET}`,
-		// 			query: {
-		// 				page: pagination?.page,
-		// 				status: filter.status
-		// 			}
-		// 		},
-		// 		undefined,
-		// 		{ scroll: false }
-		// 	)
-		// }
+		if (router.query.id) {
+			router.replace(
+				{
+					pathname: `/${PAGES.LEADERBOARD}/${router.query.id}`,
+					query: {
+						page: pagination?.page,
+						status: filter.status
+					}
+				},
+				undefined,
+				{ scroll: false }
+			)
+		}
+		if (chain?.id && !router.query.id) {
+			router.replace(
+				{
+					pathname: `/${PAGES.MY_WALLET}`,
+					query: {
+						page: pagination?.page,
+						status: filter.status
+					}
+				},
+				undefined,
+				{ scroll: false }
+			)
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [pagination, sortedTickets, chain?.id])
 
