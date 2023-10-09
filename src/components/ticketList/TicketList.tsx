@@ -165,10 +165,6 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 		// helper variable which says that ticket has matches which were copied
 	}
 
-	useEffect(() => {
-		console.log(getMatchesWithChildMarkets)
-	}, [getMatchesWithChildMarkets])
-
 	const handleAddTicket = async () => {
 		const largestId = unsubmittedTickets?.reduce((maxId, ticket) => {
 			return Math.max(maxId, ticket.id as number)

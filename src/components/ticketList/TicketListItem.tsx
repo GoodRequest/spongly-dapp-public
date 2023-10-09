@@ -19,7 +19,7 @@ import { IUnsubmittedBetTicket } from '@/redux/betTickets/betTicketTypes'
 
 // utils
 import { FORM } from '@/utils/enums'
-import { convertPositionNameToPosition, getSymbolText } from '@/utils/markets'
+import { convertPositionNameToPosition, getMarketOddsFromContract, getSymbolText } from '@/utils/markets'
 import networkConnector from '@/utils/networkConnector'
 import { TICKET_TYPE } from '@/utils/constants'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
@@ -94,23 +94,31 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 		setIsExpanded((c) => !c)
 	}
 
-	const handleSetTempMatches = async () => {
+	const handleSetTempMatches = async (onlyCopy: boolean) => {
 		const gameIDQuery = activeMatches?.map((item) => item?.gameId)
 
 		testMatches({ variables: { gameId_in: gameIDQuery }, context: { chainId: chain?.id } })
-			.then((values) => {
-				// setTempMatches(activeMatches)
-				setTempMatches(
-					values?.data?.sportMarkets?.map((item: any) => {
-						return { ...item, betOption: '2' }
-					})
-				)
+			.then(async (values) => {
+				try {
+					const marketOddsFromContract = await getMarketOddsFromContract([...values.data.sportMarkets])
 
-				// console.log(values?.data?.sportMarkets)
-				// console.log(activeMatches)
+					setTempMatches(
+						marketOddsFromContract.map((marketOdds) => {
+							return {
+								...marketOdds,
+								betOption: activeMatches?.find((activeMatch) => activeMatch.gameId === marketOdds.gameId)?.betOption
+							}
+						})
+					)
+				} catch (err) {
+					setTempMatches(activeMatches)
+				} finally {
+					setCopyModal({ visible: true, onlyCopy })
+				}
 			})
 			.catch(() => {
 				setTempMatches(activeMatches)
+				setCopyModal({ visible: true, onlyCopy })
 			})
 	}
 
@@ -160,14 +168,10 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 										onClick={async () => {
 											// NOTE: if ticket has matches open modal which ask if you want to replace ticket or create new one
 											if (!isEmpty(betTicket?.matches)) {
-												handleSetTempMatches()
-												// setTempMatches(activeMatches)
-												setCopyModal({ visible: true, onlyCopy: false })
+												handleSetTempMatches(false)
 											} else {
-												handleSetTempMatches()
-												// Otherwise create ticket
-												// setTempMatches(activeMatches)
-												setCopyModal({ visible: true, onlyCopy: true })
+												// NOTE: Otherwise create ticket
+												handleSetTempMatches(true)
 											}
 										}}
 									/>
