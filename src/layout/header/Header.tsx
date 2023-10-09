@@ -34,9 +34,10 @@ const Header = () => {
 			<>
 				<SC.MenuItem key={PAGES.DASHBOARD}>{t('Dashboard')}</SC.MenuItem>
 				<SC.MenuItem key={PAGES.TICKETS}>{t('Tickets')}</SC.MenuItem>
+				<SC.MenuItem key={PAGES.LEADERBOARD}>{t('Leaderboard')}</SC.MenuItem>
 				<SC.MenuItem key={PAGES.MATCHES}>{t('Matches')}</SC.MenuItem>
 				{isMounted && chain?.id && <SC.MenuItem key={PAGES.MY_WALLET}>{t('My wallet')}</SC.MenuItem>}
-				<SC.MenuItem key={PAGES.PARLAY_LEADERBOARD}>{t('Parlay Leaderboard')}</SC.MenuItem>
+				<SC.MenuItem key={PAGES.PARLAY_SUPERSTARS}>{t('Parlay Superstars')}</SC.MenuItem>
 			</>
 		),
 		[t, isMounted, chain?.id]
@@ -53,11 +54,14 @@ const Header = () => {
 			case `/${PAGES.MATCHES}`:
 				setSelected(PAGES.MATCHES)
 				break
-			case `/${PAGES.PARLAY_LEADERBOARD}`:
-				setSelected(PAGES.PARLAY_LEADERBOARD)
+			case `/${PAGES.PARLAY_SUPERSTARS}`:
+				setSelected(PAGES.PARLAY_SUPERSTARS)
 				break
 			case `/${PAGES.MY_WALLET}`:
 				setSelected(PAGES.MY_WALLET)
+				break
+			case `/${PAGES.LEADERBOARD}`:
+				setSelected(PAGES.LEADERBOARD)
 				break
 			default:
 				setSelected(PAGES.DASHBOARD)

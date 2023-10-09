@@ -71,8 +71,8 @@ export const Divider = styled(AntdDivider)`
 
 export const MenuXLRow = styled(Row)`
 	margin-left: -16px;
-	height: 68px;
 	padding-top: 0px;
+	margin-bottom: 16px;
 `
 
 export const WalletDiv = styled.div`
