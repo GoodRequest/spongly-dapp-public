@@ -4,8 +4,10 @@ import { Col } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import { useSelector } from 'react-redux'
 import { getFormValues } from 'redux-form'
+import { useLazyQuery } from '@apollo/client'
 
 // components
+import { useNetwork } from 'wagmi'
 import TicketListItemHeader from '@/components/ticketList/TicketListItemHeader'
 import { ITicketContent } from '@/content/ticketsContent/TicketsContent'
 import Button from '@/atoms/button/Button'
@@ -21,6 +23,7 @@ import { convertPositionNameToPosition, getSymbolText } from '@/utils/markets'
 import networkConnector from '@/utils/networkConnector'
 import { TICKET_TYPE } from '@/utils/constants'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
+import { GET_SPORT_MARKETS_FOR_GAME } from '@/utils/queries'
 import { orderPositionsAsSportMarkets, getPositionsWithMergedCombinedPositions } from '@/utils/helpers'
 
 // types
@@ -43,9 +46,12 @@ interface ITicketListItem extends ITicketContent {
 const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, activeKeysList, setActiveKeysList, setCopyModal, setTempMatches, sgpFees }) => {
 	const { t } = useTranslation()
 	const { sportsAMMContract } = networkConnector
+	const { chain } = useNetwork()
+
 	const betTicket: Partial<IUnsubmittedBetTicket> = useSelector((state: RootState) => getFormValues(FORM.BET_TICKET)(state))
 	const [activeMatches, setActiveMatches] = useState<any[]>([])
 	const [isExpanded, setIsExpanded] = useState(false)
+	const [testMatches] = useLazyQuery(GET_SPORT_MARKETS_FOR_GAME)
 
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 
@@ -86,6 +92,26 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 	const handleCollapseChange = (e: any) => {
 		setActiveKeysList([...e])
 		setIsExpanded((c) => !c)
+	}
+
+	const handleSetTempMatches = async () => {
+		const gameIDQuery = activeMatches?.map((item) => item?.gameId)
+
+		testMatches({ variables: { gameId_in: gameIDQuery }, context: { chainId: chain?.id } })
+			.then((values) => {
+				// setTempMatches(activeMatches)
+				setTempMatches(
+					values?.data?.sportMarkets?.map((item: any) => {
+						return { ...item, betOption: '2' }
+					})
+				)
+
+				// console.log(values?.data?.sportMarkets)
+				// console.log(activeMatches)
+			})
+			.catch(() => {
+				setTempMatches(activeMatches)
+			})
 	}
 
 	return (
@@ -134,11 +160,13 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 										onClick={async () => {
 											// NOTE: if ticket has matches open modal which ask if you want to replace ticket or create new one
 											if (!isEmpty(betTicket?.matches)) {
-												setTempMatches(activeMatches)
+												handleSetTempMatches()
+												// setTempMatches(activeMatches)
 												setCopyModal({ visible: true, onlyCopy: false })
 											} else {
+												handleSetTempMatches()
 												// Otherwise create ticket
-												setTempMatches(activeMatches)
+												// setTempMatches(activeMatches)
 												setCopyModal({ visible: true, onlyCopy: true })
 											}
 										}}

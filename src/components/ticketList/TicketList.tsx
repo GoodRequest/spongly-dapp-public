@@ -131,10 +131,10 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 	const getMatchesWithChildMarkets = useMemo(() => {
 		const matchesWithChildMarkets = toPairs(groupBy(tempMatches, 'gameId')).map(([, markets]) => {
 			const [match] = markets
-			const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
-			const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
-			const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD)
-			const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL)
+			const winnerTypeMatch = markets?.find((market) => Number(market.betType) === BetType.WINNER)
+			const doubleChanceTypeMatches = markets?.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
+			const spreadTypeMatch = markets?.find((market) => Number(market.betType) === BetType.SPREAD)
+			const totalTypeMatch = markets?.find((market) => Number(market.betType) === BetType.TOTAL)
 			const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
 			return {
 				...(winnerTypeMatch ?? tempMatches.find((item: any) => item.gameId === match?.gameId)),
@@ -164,6 +164,10 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 		dispatch(change(FORM.BET_TICKET, 'copied', true))
 		// helper variable which says that ticket has matches which were copied
 	}
+
+	useEffect(() => {
+		console.log(getMatchesWithChildMarkets)
+	}, [getMatchesWithChildMarkets])
 
 	const handleAddTicket = async () => {
 		const largestId = unsubmittedTickets?.reduce((maxId, ticket) => {
