@@ -36,9 +36,7 @@ import * as SC from './UserTicketTableRowStyles'
 
 // assets
 import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
-import { IUnsubmittedBetTicket } from '@/redux/betTickets/betTicketTypes'
-import { RootState } from '@/redux/rootReducer'
-import { FORM } from '@/utils/enums'
+import DocumentIcon from '@/assets/icons/document-icon.svg'
 
 type Props = {
 	ticket: UserTicket
@@ -193,15 +191,11 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 	const ticketHeader = (
 		<SC.UserTicketTableRow show={ticket.isClaimable} align={'middle'} gutter={[16, 16]}>
 			<SC.TxCol md={{ span: 6, order: 1 }} xs={{ span: 24, order: 2 }}>
-				<Button
-					btnStyle={'secondary'}
-					disabled={!(chain?.id && ticket.txHash)}
-					onClick={() => handleTxHashRedirect(ticket.txHash)}
-					content={<SC.TxButtonText>{ticket?.txHash}</SC.TxButtonText>}
-				/>
-				<SC.CenterDiv>
-					<SC.ColumnNameText>{t('Tx hash')}</SC.ColumnNameText>
-				</SC.CenterDiv>
+				<SC.TxHeader onClick={() => handleTxHashRedirect(ticket.txHash)}>
+					<SC.TxIcon src={DocumentIcon} alt='hash' />
+					<SC.AddressText>{ticket?.txHash}</SC.AddressText>
+				</SC.TxHeader>
+				<SC.ColumnNameText>{t('Tx hash')}</SC.ColumnNameText>
 			</SC.TxCol>
 			<SC.TagColContent md={{ span: 4, order: 2 }} xs={{ span: 24, order: 1 }}>
 				<SC.TicketTypeTag ticketType={userTicketType}>{getUserTicketTypeName(userTicketType, t)}</SC.TicketTypeTag>

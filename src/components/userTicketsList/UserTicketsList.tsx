@@ -6,13 +6,12 @@ import { useNetwork } from 'wagmi'
 
 import { UserTicket } from '@/typescript/types'
 import UserTicketTableRow from './UserTicketTableRow'
-import { PAGES, WALLET_TICKETS } from '@/utils/enums'
+import { WALLET_TICKETS } from '@/utils/enums'
 
 import * as SC from './UserTicketsListStyles'
 import * as SCS from '@/styles/GlobalStyles'
 
 import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
-import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
 import RadioButtons from '@/atoms/radioButtons/RadioButtons'
 import Select from '@/atoms/select/Select'
 import YouNeedToClaimBanner from './YouNeedToClaimBanner'

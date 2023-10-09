@@ -199,9 +199,12 @@ const MyWalletContent = () => {
 	}
 
 	useEffect(() => {
-		if (address && chain?.id && signer) {
+		// TODO: preco tu bol signer
+		console.log('add', [address, chain?.id, signer])
+		if (address && chain?.id) {
 			fetchStatistics()
 		} else {
+			console.log('else')
 			router.push(`/${PAGES.DASHBOARD}`)
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps

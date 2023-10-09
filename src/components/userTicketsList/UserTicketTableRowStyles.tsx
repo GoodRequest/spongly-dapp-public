@@ -1,6 +1,6 @@
 import { Col, Divider, Row, Collapse } from 'antd'
 import styled from 'styled-components'
-import { TextMDMedium, TextSMMedium, TextXSMedium } from '@/styles/typography'
+import { TextLGMedium, TextMDMedium, TextSMMedium, TextXSMedium } from '@/styles/typography'
 import { USER_TICKET_TYPE } from '@/utils/constants'
 import { breakpoints } from '@/styles/theme'
 
@@ -121,7 +121,7 @@ export const TagColContent = styled(Col)`
 `
 
 export const ColumnNameText = styled.span`
-	${TextXSMedium};
+	${TextSMMedium};
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
 `
 
@@ -153,6 +153,25 @@ export const TxCol = styled(Col)`
 	}
 `
 
+export const TxIcon = styled.img`
+	width: 24px;
+	height: 24px;
+	margin-right: 10px;
+`
+export const TxHeader = styled.div`
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+`
+
+export const AddressText = styled.p`
+	${TextLGMedium};
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 100%;
+`
+
 export const TxButtonText = styled.p`
 	white-space: nowrap;
 	overflow: hidden;
@@ -172,7 +191,7 @@ export const TicketTypeTag = styled.div<{ ticketType: USER_TICKET_TYPE }>`
 	align-items: center;
 	justify-content: center;
 	width: 100%;
-	height: 100%;
+	height: 48px;
 	${TextSMMedium};
 	background: ${({ ticketType, theme }) => {
 		if (ticketType === USER_TICKET_TYPE.MISS) {
