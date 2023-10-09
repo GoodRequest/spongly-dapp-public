@@ -181,11 +181,14 @@ export const TicketTypeTag = styled.div<{ ticketType: USER_TICKET_TYPE }>`
 	height: 48px;
 	${TextSMMedium};
 	background: ${({ ticketType, theme }) => {
-		if (ticketType === USER_TICKET_TYPE.MISS) {
+		if (ticketType === USER_TICKET_TYPE.MISS || ticketType === USER_TICKET_TYPE.CANCELED) {
 			return theme['color-base-state-error-bg']
 		}
 		if (ticketType === USER_TICKET_TYPE.SUCCESS) {
 			return theme['color-base-state-success-bg']
+		}
+		if (ticketType === USER_TICKET_TYPE.ONGOING) {
+			return theme['color-base-state-warning-bg']
 		}
 		return theme['color-base-surface-quaternary']
 	}};
@@ -195,6 +198,9 @@ export const TicketTypeTag = styled.div<{ ticketType: USER_TICKET_TYPE }>`
 		}
 		if (ticketType === USER_TICKET_TYPE.SUCCESS) {
 			return theme['color-base-state-success-fg']
+		}
+		if (ticketType === USER_TICKET_TYPE.ONGOING) {
+			return theme['color-base-state-warning-fg']
 		}
 		return theme['color-base-content-top']
 	}};
