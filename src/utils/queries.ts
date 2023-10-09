@@ -40,6 +40,17 @@ export const GET_TIPSTERS = gql`
 	}
 `
 
+export const GET_USERS_TRANSACTIONS = gql`
+	query geetUsersTransactions($account: String!) {
+		marketTransactions(first: 1000, skip: 0, where: { account: $account }) {
+			timestamp
+			positionBalance {
+				id
+			}
+		}
+	}
+`
+
 export const GET_USERS_STATISTICS = gql`
 	query getUser($id: String!) {
 		user(id: $id) {

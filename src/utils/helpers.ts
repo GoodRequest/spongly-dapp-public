@@ -998,6 +998,17 @@ export const isAboveOrEqualResolution = (currentResolution: RESOLUTIONS, resolut
 			)
 				return true
 			return false
+		case RESOLUTIONS.SMSX:
+			if (
+				currentResolution === RESOLUTIONS.XXL ||
+				currentResolution === RESOLUTIONS.SEMIXXL ||
+				currentResolution === RESOLUTIONS.XL ||
+				currentResolution === RESOLUTIONS.LG ||
+				currentResolution === RESOLUTIONS.MD ||
+				currentResolution === RESOLUTIONS.SMSX
+			)
+				return true
+			return false
 		case RESOLUTIONS.SM:
 		default:
 			return true
@@ -1009,15 +1020,25 @@ export const isBellowOrEqualResolution = (currentResolution: RESOLUTIONS, resolu
 		case RESOLUTIONS.SM:
 			if (currentResolution === RESOLUTIONS.SM) return true
 			return false
+		case RESOLUTIONS.SMSX:
+			if (currentResolution === RESOLUTIONS.SM || currentResolution === RESOLUTIONS.SMSX) return true
+			return false
 		case RESOLUTIONS.MD:
-			if (currentResolution === RESOLUTIONS.SM || currentResolution === RESOLUTIONS.MD) return true
+			if (currentResolution === RESOLUTIONS.SM || currentResolution === RESOLUTIONS.MD || currentResolution === RESOLUTIONS.SMSX) return true
 			return false
 		case RESOLUTIONS.LG:
-			if (currentResolution === RESOLUTIONS.SM || currentResolution === RESOLUTIONS.MD || currentResolution === RESOLUTIONS.LG) return true
+			if (
+				currentResolution === RESOLUTIONS.SMSX ||
+				currentResolution === RESOLUTIONS.SM ||
+				currentResolution === RESOLUTIONS.MD ||
+				currentResolution === RESOLUTIONS.LG
+			)
+				return true
 			return false
 		case RESOLUTIONS.XL:
 			if (
 				currentResolution === RESOLUTIONS.SM ||
+				currentResolution === RESOLUTIONS.SMSX ||
 				currentResolution === RESOLUTIONS.MD ||
 				currentResolution === RESOLUTIONS.LG ||
 				currentResolution === RESOLUTIONS.XL
@@ -1027,6 +1048,7 @@ export const isBellowOrEqualResolution = (currentResolution: RESOLUTIONS, resolu
 		case RESOLUTIONS.SEMIXXL:
 			if (
 				currentResolution === RESOLUTIONS.SM ||
+				currentResolution === RESOLUTIONS.SMSX ||
 				currentResolution === RESOLUTIONS.MD ||
 				currentResolution === RESOLUTIONS.LG ||
 				currentResolution === RESOLUTIONS.XL ||

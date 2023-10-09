@@ -13,7 +13,7 @@ import TicketsStatisticRow from '@/components/ticketsStatisticRow/TicketsStatist
 import UserTicketsList from '@/components/userTicketsList/UserTicketsList'
 
 // utils
-import { GET_USERS_STATISTICS } from '@/utils/queries'
+import { GET_USERS_STATISTICS, GET_USERS_TRANSACTIONS } from '@/utils/queries'
 import networkConnector from '@/utils/networkConnector'
 import { getUserTicketType, removeDuplicateSubstring, ticketTypeToWalletType } from '@/utils/helpers'
 import { MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE, USER_TICKET_TYPE } from '@/utils/constants'
@@ -36,25 +36,29 @@ const MyWalletContent = () => {
 	const router = useRouter()
 	const isMyWallet = !router.query.id
 	const provider = useProvider({ chainId: chain?.id || NETWORK_IDS.OPTIMISM })
+	const [fetchUserStatistic] = useLazyQuery(GET_USERS_STATISTICS)
 	const { signer } = networkConnector
 	const isMounted = useIsMounted()
-	const [fetchUserStatistic] = useLazyQuery(GET_USERS_STATISTICS)
+	const [fetchUserMarketTransactions] = useLazyQuery(GET_USERS_TRANSACTIONS)
+
 	const [userStatistic, setUserStatistic] = useState<undefined | UserStatistic>(undefined)
 	const [isLoading, setIsLoading] = useState(true)
 
-	const assignOtherAttrs = async (ticket: UserTicket[]) => {
+	const assignOtherAttrs = async (ticket: UserTicket[], marketTransactions: { timestamp: string; id: string }[]) => {
 		const promises = ticket.map(async (item) => {
 			const userTicketType = getUserTicketType(item as any)
 
 			let timestamp = item?.timestamp
 			if (!timestamp) {
-				const transaction = await provider.getTransaction(item.txHash)
-				const block = await provider.getBlock(transaction.blockNumber as any)
-				timestamp = String(block.timestamp)
+				timestamp = marketTransactions?.find((transaction) => transaction?.id === item?.id)?.timestamp || ''
 			}
-
 			if (!(userTicketType === USER_TICKET_TYPE.SUCCESS || userTicketType === USER_TICKET_TYPE.CANCELED) || item.claimed) {
-				return { ...item, isClaimable: false, ticketType: ticketTypeToWalletType(userTicketType), timestamp }
+				return {
+					...item,
+					isClaimable: false,
+					ticketType: ticketTypeToWalletType(userTicketType),
+					timestamp
+				}
 			}
 
 			const maturityDates = item.positions?.map((position) => {
@@ -78,17 +82,23 @@ const MyWalletContent = () => {
 
 		return Promise.all(promises)
 	}
-
 	const fetchStatistics = () => {
 		setIsLoading(true)
+		const id = isMyWallet ? address?.toLocaleLowerCase() : String(router.query.id).toLowerCase()
 		setTimeout(() => {
-			fetchUserStatistic({
-				variables: { id: isMyWallet ? address?.toLocaleLowerCase() : String(router.query.id).toLowerCase() },
-				context: { chainId: chain?.id }
-			})
+			Promise.all([
+				fetchUserStatistic({ variables: { id }, context: { chainId: chain?.id } }),
+				fetchUserMarketTransactions({ variables: { account: address?.toLocaleLowerCase() || '' }, context: { chainId: chain?.id } })
+			])
 				.then(async (values) => {
-					const parlayData = values?.data?.parlayMarkets
-					const positions = values?.data?.positionBalances
+					const marketData: { timestamp: string; id: string }[] = values?.[1]?.data?.marketTransactions?.map((item: any) => {
+						return {
+							timestamp: item?.timestamp,
+							id: item?.positionBalance?.id
+						}
+					})
+					const parlayData = values?.[0]?.data?.parlayMarkets
+					const positions = values?.[0]?.data?.positionBalances
 
 					const parlayTickets: UserTicket[] = parlayData?.map((parlay: ParlayMarket) => {
 						const newParlay = {
@@ -180,9 +190,9 @@ const MyWalletContent = () => {
 						successRate = Number(((wonTickets.length / numberOfAttempts) * 100).toFixed(2))
 					}
 
-					assignOtherAttrs([...parlayTickets, ...positionTickets]).then((ticketsWithOtherAttrs) => {
+					assignOtherAttrs([...parlayTickets, ...positionTickets], marketData).then((ticketsWithOtherAttrs) => {
 						setUserStatistic({
-							user: { ...values?.data?.user, successRate },
+							user: { ...values?.[0]?.data?.user, successRate },
 							tickets: ticketsWithOtherAttrs.sort((a, b) => (Number(a.timestamp) < Number(b.timestamp) ? 1 : -1))
 						})
 					})
