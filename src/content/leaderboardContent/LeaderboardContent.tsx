@@ -183,10 +183,10 @@ const LeaderboardContent = () => {
 			<SCS.SelectSorters>
 				<Select
 					title={
-						<SCS.SelectTitle>
+						<SCS.SelectSorterTitle>
 							<img src={SortIcon} alt={'Sorter'} />
 							{t('Sort by')}
-						</SCS.SelectTitle>
+						</SCS.SelectSorterTitle>
 					}
 					allowClear
 					options={sortOptions}

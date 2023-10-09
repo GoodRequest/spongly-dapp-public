@@ -1,5 +1,5 @@
 import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react'
-import { find, groupBy, map, slice, toPairs } from 'lodash'
+import { groupBy, map, slice, toPairs } from 'lodash'
 import { useTranslation } from 'next-export-i18n'
 import { useDispatch, useSelector } from 'react-redux'
 import { change, getFormValues } from 'redux-form'
@@ -304,8 +304,8 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 						) : (
 							<>
 								{type !== TICKET_TYPE.HOT_TICKET && (
-									<>
-										<SCS.SorterRow>
+									<SCS.SorterRow>
+										<SCS.HorizontalSorters>
 											<Col span={5}>
 												<Sorter title={t('Wallet')} />
 											</Col>
@@ -321,14 +321,14 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 											<Col span={3}>
 												<Sorter title={t('Matches')} name={TICKET_SORTING.MATCHES} />
 											</Col>
-										</SCS.SorterRow>
+										</SCS.HorizontalSorters>
 										<SCS.SelectSorters>
 											<Select
 												title={
-													<SCS.SelectTitle>
+													<SCS.SelectSorterTitle>
 														<img src={SortIcon} alt={'Sorter'} />
 														{t('Sort by')}
-													</SCS.SelectTitle>
+													</SCS.SelectSorterTitle>
 												}
 												allowClear
 												options={sortOptions}
@@ -336,7 +336,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 												onChange={handleSubmitSort}
 											/>
 										</SCS.SelectSorters>
-									</>
+									</SCS.SorterRow>
 								)}
 								{renderList.length > 0 ? (
 									ticketList
@@ -356,10 +356,10 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 									</SC.TicketItemEmptyState>
 								)}
 								{hasMore && (
-									<SC.LoadMore onClick={addTicketsToList}>
+									<SCS.LoadMore onClick={addTicketsToList}>
 										{type === TICKET_TYPE.HOT_TICKET ? t('Show all tickets') : t('Show more')}
 										<SCS.Icon degree={type === TICKET_TYPE.HOT_TICKET ? 270 : 0} icon={ArrowIcon} />
-									</SC.LoadMore>
+									</SCS.LoadMore>
 								)}
 							</>
 						)}
