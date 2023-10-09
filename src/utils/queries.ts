@@ -29,6 +29,35 @@ export const GET_ALL_SPORT_MARKETS = gql`
 	}
 `
 
+export const GET_SPORT_MARKETS_FOR_GAME = gql`
+	query getSportsMarketForGameIds($gameId_in: [String!]) {
+		sportMarkets(first: 1000, where: { gameId_in: $gameId_in }) {
+			id
+			timestamp
+			address
+			gameId
+			isOpen
+			isCanceled
+			isPaused
+			isResolved
+			awayTeam
+			awayScore
+			betType
+			spread
+			total
+			finalResult
+			homeScore
+			homeTeam
+			maturityDate
+			tags
+			homeOdds
+			awayOdds
+			drawOdds
+			doubleChanceMarketType
+		}
+	}
+`
+
 export const GET_TIPSTERS = gql`
 	query getTipsters($skip: Int!, $orderBy: String!, $orderDirection: String!, $first: Int!) {
 		users(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection, where: { trades_gt: 0 }) {
