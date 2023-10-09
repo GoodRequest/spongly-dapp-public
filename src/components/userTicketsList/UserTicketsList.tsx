@@ -205,8 +205,8 @@ const UserTicketsList = ({ tickets, isLoading, refetch, isMyWallet }: Props) => 
 							value={filter.status}
 							minimizeFirstOption={true}
 							counts={[
-								{ value: WALLET_TICKETS.PAUSED_CANCELED, count: claimableCanceledTicketCount },
-								{ value: WALLET_TICKETS.SUCCESSFUL, count: claimableSuccessfulTicketCount }
+								{ value: WALLET_TICKETS.PAUSED_CANCELED, count: isMyWallet ? claimableCanceledTicketCount : undefined },
+								{ value: WALLET_TICKETS.SUCCESSFUL, count: isMyWallet ? claimableSuccessfulTicketCount : undefined }
 							]}
 						/>
 					</SC.PCWrapper>
