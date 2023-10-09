@@ -2,20 +2,19 @@ import { useTranslation } from 'next-export-i18n'
 import { useNetwork } from 'wagmi'
 import { ethers } from 'ethers'
 import dayjs from 'dayjs'
-import React, { useEffect, useMemo, useState } from 'react'
-import { groupBy, isEmpty, map, toPairs } from 'lodash'
+import React, { useEffect, useState } from 'react'
+import { isEmpty, map } from 'lodash'
 import { Col, Row, Spin } from 'antd'
 
 // components
-import { change, getFormValues } from 'redux-form'
-import { useDispatch, useSelector } from 'react-redux'
+import { getFormValues } from 'redux-form'
+import { useSelector } from 'react-redux'
 import Button from '@/atoms/button/Button'
 import TicketItem from '../ticketList/TicketItem'
 
 // utils
 import { showNotifications } from '@/utils/tsxHelpers'
 import {
-	copyTicketToUnsubmittedTickets,
 	getCanceledClaimAmount,
 	getEtherScanTxHash,
 	getPositionsWithMergedCombinedPositions,
@@ -24,7 +23,7 @@ import {
 	isClaimableUntil,
 	orderPositionsAsSportMarkets
 } from '@/utils/helpers'
-import { USER_TICKET_TYPE, NOTIFICATION_TYPE, MSG_TYPE, GAS_ESTIMATION_BUFFER, Network, MAX_TICKETS } from '@/utils/constants'
+import { GAS_ESTIMATION_BUFFER, MSG_TYPE, Network, NOTIFICATION_TYPE, USER_TICKET_TYPE } from '@/utils/constants'
 import networkConnector from '@/utils/networkConnector'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
 import { roundPrice } from '@/utils/formatters/currency'
@@ -40,14 +39,10 @@ import * as SC from './UserTicketTableRowStyles'
 // assets
 import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
 import DocumentIcon from '@/assets/icons/document-icon.svg'
-import MatchRow from '@/components/ticketBetContainer/components/matchRow/MatchRow'
-import { BetType } from '@/utils/tags'
 import { FORM } from '@/utils/enums'
-import { ACTIVE_BET_TICKET, IUnsubmittedBetTicket, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
+import { IUnsubmittedBetTicket } from '@/redux/betTickets/betTicketTypes'
 import { RootState } from '@/redux/rootReducer'
-import { bigNumberFormatter } from '@/utils/formatters/ethers'
-import { convertPositionNameToPosition, getSymbolText } from '@/utils/markets'
-import Modal from '@/components/modal/Modal'
+import CopyTicketModal from '@/components/copyTicketModal/CopyTicketModal'
 
 type Props = {
 	ticket: UserTicket
@@ -58,18 +53,14 @@ type Props = {
 const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 	const { t } = useTranslation()
 	const { chain } = useNetwork()
-	const dispatch = useDispatch()
 	const [expiryDate, setExpiryDate] = useState(0)
 	const [isExpanded, setIsExpanded] = useState(false)
 	const [isClaiming, setIsClaiming] = useState(false)
 	const [copyModal, setCopyModal] = useState<{ visible: boolean; onlyCopy: boolean }>({ visible: false, onlyCopy: false })
 	const [tempMatches, setTempMatches] = useState<any>()
 	const betTicket: Partial<IUnsubmittedBetTicket> = useSelector((state: RootState) => getFormValues(FORM.BET_TICKET)(state))
-	const unsubmittedTickets = useSelector((state: RootState) => state.betTickets.unsubmittedBetTickets.data)
 	const [activeMatches, setActiveMatches] = useState<any[]>([])
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
-	const { sportsAMMContract } = networkConnector
-	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
 
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
 
@@ -105,36 +96,6 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
-	const formatMatchesToTicket = async () => {
-		return Promise.all(
-			orderedPositions
-				?.filter((item) => item.market.isOpen)
-				.map(async (item) => {
-					const data = await sportsAMMContract?.getMarketDefaultOdds(item.market.address, false)
-					return {
-						...item.market,
-						gameId: item.market.gameId,
-						homeOdds: bigNumberFormatter(data?.[0] || 0),
-						awayOdds: bigNumberFormatter(data?.[1] || 0),
-						drawOdds: bigNumberFormatter(data?.[2] || 0),
-						betOption: item?.isCombined
-							? item?.combinedPositionsText?.replace('&', '')
-							: getSymbolText(convertPositionNameToPosition(item.side), item.market)
-					}
-				})
-		)
-	}
-	useEffect(() => {
-		const filterOngoingMatches = async () => {
-			const matches = await formatMatchesToTicket()
-
-			const filterOngoingMatches = matches.filter((match) => !(match.awayOdds === 0 && match.homeOdds === 0 && match.awayOdds === 0))
-			setActiveMatches(filterOngoingMatches)
-		}
-
-		filterOngoingMatches()
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [ticket])
 
 	const now = dayjs()
 	const dateDiff = dayjs(expiryDate * 1000).diff(now, 'm')
@@ -276,129 +237,8 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 		</SC.UserTicketTableRow>
 	)
 
-	const getMatchesWithChildMarkets = useMemo(() => {
-		const matchesWithChildMarkets = toPairs(groupBy(tempMatches, 'gameId')).map(([, markets]) => {
-			const [match] = markets
-			const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
-			const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
-			const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD)
-			const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL)
-			const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
-			return {
-				...(winnerTypeMatch ?? tempMatches.find((item: any) => item.gameId === match?.gameId)),
-				winnerTypeMatch,
-				doubleChanceTypeMatches,
-				spreadTypeMatch,
-				totalTypeMatch,
-				combinedTypeMatch
-			}
-		})
-
-		return matchesWithChildMarkets?.map((item) => {
-			if (item?.winnerTypeMatch && item?.totalTypeMatch && item?.combinedTypeMatch) {
-				return {
-					...item,
-					betOption: `${item.winnerTypeMatch.betOption}&${item.totalTypeMatch.betOption}`
-				}
-			}
-
-			return item
-		})
-	}, [sgpFees, tempMatches])
-	const handleAddTicket = async () => {
-		const largestId = unsubmittedTickets?.reduce((maxId, ticket) => {
-			return Math.max(maxId, ticket.id as number)
-		}, 0)
-		const matches = getMatchesWithChildMarkets || []
-
-		const data = unsubmittedTickets
-			? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			  [...unsubmittedTickets, { id: (largestId || 1) + 1, matches, copied: true }]
-			: [{ id: 1, matches, copied: true }]
-
-		await dispatch({
-			type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_UPDATE,
-			payload: {
-				data
-			}
-		})
-		// NOTE: set active state for new ticket item in HorizontalScroller id === data.length (actual state of tickets and set active ticket to last item)
-		await dispatch({ type: ACTIVE_BET_TICKET.ACTIVE_BET_TICKET_SET, payload: { data: { id: (largestId || 1) + 1 } } })
-	}
-	const handleCopyTicket = async () => {
-		copyTicketToUnsubmittedTickets(getMatchesWithChildMarkets as any, unsubmittedTickets, dispatch, activeTicketValues.id)
-		dispatch(change(FORM.BET_TICKET, 'matches', getMatchesWithChildMarkets))
-		dispatch(change(FORM.BET_TICKET, 'copied', true))
-		// helper variable which says that ticket has matches which were copied
-	}
-
 	const modals = (
-		<Modal
-			open={copyModal.visible}
-			onCancel={() => {
-				setCopyModal({ visible: false, onlyCopy: false })
-			}}
-			centered
-		>
-			{copyModal.onlyCopy ? (
-				<SC.ModalTitle>{t('Do you wish to add these matches?')}</SC.ModalTitle>
-			) : (
-				<>
-					<SC.ModalTitle>{t('Your ticket already includes matches')}</SC.ModalTitle>
-					<SC.ModalDescription style={{ marginBottom: '8px' }}>
-						{t('Do you wish to replace these matches or create a new ticket?')}
-					</SC.ModalDescription>
-				</>
-			)}
-			<SC.ModalDescriptionWarning>{t('Odds might slightly differ')}</SC.ModalDescriptionWarning>
-			<Row>
-				<SC.MatchContainerRow span={24}>
-					{getMatchesWithChildMarkets?.map((match: any, key: any) => (
-						<MatchRow readOnly copied key={`matchRow-${key}`} match={match} />
-					))}
-				</SC.MatchContainerRow>
-			</Row>
-			<Row gutter={[16, 16]}>
-				{copyModal.onlyCopy ? (
-					<Col span={24}>
-						<Button
-							btnStyle={'secondary'}
-							content={t('Add these to ticket')}
-							onClick={() => {
-								setCopyModal({ visible: false, onlyCopy: false })
-								handleCopyTicket()
-							}}
-						/>
-					</Col>
-				) : (
-					<>
-						<Col span={24}>
-							<Button
-								btnStyle={'secondary'}
-								content={`${t('Replace existing ticket')} (Ticket ${
-									Number(unsubmittedTickets?.map((e) => e.id).indexOf(activeTicketValues.id)) + 1
-								})`}
-								onClick={() => {
-									setCopyModal({ visible: false, onlyCopy: false })
-									handleCopyTicket()
-								}}
-							/>
-						</Col>
-						<Col span={24}>
-							<Button
-								btnStyle={'primary'}
-								content={`${t('Create new ticket')} (Ticket ${Number(unsubmittedTickets?.length) + 1})`}
-								disabled={unsubmittedTickets?.length === MAX_TICKETS}
-								onClick={() => {
-									setCopyModal({ visible: false, onlyCopy: false })
-									handleAddTicket()
-								}}
-							/>
-						</Col>
-					</>
-				)}
-			</Row>
-		</Modal>
+		<CopyTicketModal copyModal={copyModal} setCopyModal={setCopyModal} tempMatches={tempMatches} ticket={ticket} setActiveMatches={setActiveMatches} />
 	)
 	return (
 		<>
