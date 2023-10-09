@@ -5,9 +5,9 @@ import { useTranslation } from 'next-export-i18n'
 import { useSelector } from 'react-redux'
 import { getFormValues } from 'redux-form'
 import { useLazyQuery } from '@apollo/client'
+import { useNetwork } from 'wagmi'
 
 // components
-import { useNetwork } from 'wagmi'
 import TicketListItemHeader from '@/components/ticketList/TicketListItemHeader'
 import { ITicketContent } from '@/content/ticketsContent/TicketsContent'
 import Button from '@/atoms/button/Button'
