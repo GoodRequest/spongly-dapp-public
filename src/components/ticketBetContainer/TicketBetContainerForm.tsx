@@ -70,8 +70,6 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	const buyIn = Number(round(Number(formValues?.buyIn), 2).toFixed(2))
 	const availableBalance = Number(round(Number(available), 2).toFixed(2))
 
-	// console.log(matches)
-
 	const payWithOptions = [
 		{
 			label: (

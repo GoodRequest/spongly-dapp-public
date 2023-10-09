@@ -51,7 +51,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 	const betTicket: Partial<IUnsubmittedBetTicket> = useSelector((state: RootState) => getFormValues(FORM.BET_TICKET)(state))
 	const [activeMatches, setActiveMatches] = useState<any[]>([])
 	const [isExpanded, setIsExpanded] = useState(false)
-	const [testMatches] = useLazyQuery(GET_SPORT_MARKETS_FOR_GAME)
+	const [fetchMarketsForGame] = useLazyQuery(GET_SPORT_MARKETS_FOR_GAME)
 
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 
@@ -96,8 +96,8 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 
 	const handleSetTempMatches = async (onlyCopy: boolean) => {
 		const gameIDQuery = activeMatches?.map((item) => item?.gameId)
-
-		testMatches({ variables: { gameId_in: gameIDQuery }, context: { chainId: chain?.id } })
+		// NOTE: fetch rest of the available betOptions
+		fetchMarketsForGame({ variables: { gameId_in: gameIDQuery }, context: { chainId: chain?.id } })
 			.then(async (values) => {
 				try {
 					const marketOddsFromContract = await getMarketOddsFromContract([...values.data.sportMarkets])
@@ -106,6 +106,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 						marketOddsFromContract.map((marketOdds) => {
 							return {
 								...marketOdds,
+								// NOTE: every bet is different game.
 								betOption: activeMatches?.find((activeMatch) => activeMatch.gameId === marketOdds.gameId)?.betOption
 							}
 						})
