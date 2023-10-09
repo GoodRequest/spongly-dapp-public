@@ -4,6 +4,8 @@ import { Col } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import { useSelector } from 'react-redux'
 import { getFormValues } from 'redux-form'
+import { useLazyQuery } from '@apollo/client'
+import { useNetwork } from 'wagmi'
 
 // components
 import TicketListItemHeader from '@/components/ticketList/TicketListItemHeader'
@@ -17,10 +19,11 @@ import { IUnsubmittedBetTicket } from '@/redux/betTickets/betTicketTypes'
 
 // utils
 import { FORM } from '@/utils/enums'
-import { convertPositionNameToPosition, getSymbolText } from '@/utils/markets'
+import { convertPositionNameToPosition, getMarketOddsFromContract, getSymbolText } from '@/utils/markets'
 import networkConnector from '@/utils/networkConnector'
 import { TICKET_TYPE } from '@/utils/constants'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
+import { GET_SPORT_MARKETS_FOR_GAME } from '@/utils/queries'
 import { orderPositionsAsSportMarkets, getPositionsWithMergedCombinedPositions } from '@/utils/helpers'
 
 // types
@@ -43,9 +46,14 @@ interface ITicketListItem extends ITicketContent {
 const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, activeKeysList, setActiveKeysList, setCopyModal, setTempMatches, sgpFees }) => {
 	const { t } = useTranslation()
 	const { sportsAMMContract } = networkConnector
+	const { chain } = useNetwork()
+
 	const betTicket: Partial<IUnsubmittedBetTicket> = useSelector((state: RootState) => getFormValues(FORM.BET_TICKET)(state))
+	const [fetchMarketsForGame] = useLazyQuery(GET_SPORT_MARKETS_FOR_GAME)
+
 	const [activeMatches, setActiveMatches] = useState<any[]>([])
 	const [isExpanded, setIsExpanded] = useState(false)
+	const [isLoading, setIsLoading] = useState(false)
 
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 
@@ -86,6 +94,39 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 	const handleCollapseChange = (e: any) => {
 		setActiveKeysList([...e])
 		setIsExpanded((c) => !c)
+	}
+
+	const handleSetTempMatches = async (onlyCopy: boolean) => {
+		setIsLoading(true)
+		const gameIDQuery = activeMatches?.map((item) => item?.gameId)
+
+		// NOTE: fetch rest of the available betOptions
+		fetchMarketsForGame({ variables: { gameId_in: gameIDQuery }, context: { chainId: chain?.id } })
+			.then(async (values) => {
+				try {
+					const marketOddsFromContract = await getMarketOddsFromContract([...values.data.sportMarkets])
+
+					setTempMatches(
+						marketOddsFromContract.map((marketOdds) => {
+							return {
+								...marketOdds,
+								// NOTE: every bet is different game.
+								betOption: activeMatches?.find((activeMatch) => activeMatch.gameId === marketOdds.gameId)?.betOption
+							}
+						})
+					)
+				} catch (err) {
+					setTempMatches(activeMatches)
+				} finally {
+					setCopyModal({ visible: true, onlyCopy })
+					setIsLoading(false)
+				}
+			})
+			.catch(() => {
+				setTempMatches(activeMatches)
+				setCopyModal({ visible: true, onlyCopy })
+				setIsLoading(false)
+			})
 	}
 
 	return (
@@ -130,16 +171,15 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 										disabledPopoverText={t('Matches are no longer open to copy')}
 										disabled={activeMatches?.length === 0} // If ticket with active matches is empty disable button
 										btnStyle={'primary'}
+										isLoading={isLoading}
 										content={type === TICKET_TYPE.ONGOING_TICKET ? t('Copy open positions') : t('Copy ticket')}
 										onClick={async () => {
 											// NOTE: if ticket has matches open modal which ask if you want to replace ticket or create new one
 											if (!isEmpty(betTicket?.matches)) {
-												setTempMatches(activeMatches)
-												setCopyModal({ visible: true, onlyCopy: false })
+												handleSetTempMatches(false)
 											} else {
-												// Otherwise create ticket
-												setTempMatches(activeMatches)
-												setCopyModal({ visible: true, onlyCopy: true })
+												// NOTE: Otherwise create ticket
+												handleSetTempMatches(true)
 											}
 										}}
 									/>
