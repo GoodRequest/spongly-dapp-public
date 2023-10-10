@@ -90,7 +90,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 
 	const now = dayjs()
 	const dateDiff = dayjs(expiryDate * 1000).diff(now, 'm')
-	const claimableUntil = isClaimableUntil(dateDiff)
+	const claimableUntil = !!(ticket.isClaimable && isMyWallet) && isClaimableUntil(dateDiff)
 
 	const handleTxHashRedirect = (txHash: string) => {
 		const link = document.createElement('a')
@@ -208,16 +208,22 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 				<SC.ClaimValueText userTicketType={userTicketType}>{getClaimValue()}</SC.ClaimValueText>
 				<SC.ColumnNameText>{t('Claim')}</SC.ColumnNameText>
 			</SC.CenterRowContent>
-			<SC.ClaimColContent show={!!(ticket.isClaimable && isMyWallet)} md={{ span: 4, order: 5 }} xs={{ span: 24, order: 5 }}>
+			<SC.ClaimColContent show={!!(isMyWallet && userTicketType === USER_TICKET_TYPE.SUCCESS)} md={{ span: 4, order: 5 }} xs={{ span: 24, order: 5 }}>
 				{!isClaiming ? (
 					<Button
 						btnStyle={'primary'}
 						onClick={() => handleClaim()}
+						disabled={!ticket.isClaimable}
+						size={'large'}
 						content={
-							<SC.ClaimButtonWrapper>
-								<SC.ClaimText>{t('Claim')}</SC.ClaimText>
-								<SC.ClaimValue>{claimableUntil}</SC.ClaimValue>
-							</SC.ClaimButtonWrapper>
+							!ticket.isClaimable ? (
+								t('Claimed')
+							) : (
+								<SC.ClaimButtonWrapper>
+									<SC.ClaimText>{t('Claim')}</SC.ClaimText>
+									<SC.ClaimValue>{claimableUntil}</SC.ClaimValue>
+								</SC.ClaimButtonWrapper>
+							)
 						}
 					/>
 				) : (

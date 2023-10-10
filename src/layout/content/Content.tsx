@@ -14,11 +14,12 @@ interface ILayout {
 
 const Content: FC<ILayout> = ({ children }) => {
 	const router = useRouter()
+	const { id } = router.query
 	const fullWidthPages = [`/${PAGES.PARLAY_SUPERSTARS}`, `/${PAGES.LEADERBOARD}`]
 	return (
 		<SC.MainContainer>
 			<Row gutter={30} style={{ display: 'flex', justifyContent: 'space-between' }}>
-				{includes(fullWidthPages, router.pathname) ? (
+				{includes(fullWidthPages, router.pathname) && !id ? (
 					<Col style={{ width: '100%' }} lg={24} xl={24}>
 						{children}
 					</Col>

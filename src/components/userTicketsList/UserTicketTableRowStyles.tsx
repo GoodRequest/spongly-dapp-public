@@ -213,7 +213,6 @@ export const TicketDivider = styled(Divider)<{ showClaimed: boolean }>`
 		display: block;
 		border-top: ${({ theme }) => `1px solid ${theme['color-base-surface-quintarny']}`};
 		position: absolute;
-		margin-top: ${({ showClaimed }) => (showClaimed ? '40px' : '100px')};
 		left: 0px;
 		z-index: 10;
 	}
