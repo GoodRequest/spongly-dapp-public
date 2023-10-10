@@ -9,6 +9,7 @@ import { Col, Row, Spin } from 'antd'
 // components
 import Button from '@/atoms/button/Button'
 import TicketItem from '../ticketList/TicketItem'
+import CopyTicketButton from '@/components/copyTicketButton/CopyTicketButton'
 
 // utils
 import { showNotifications } from '@/utils/tsxHelpers'
@@ -37,7 +38,6 @@ import * as SC from './UserTicketTableRowStyles'
 // assets
 import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
 import DocumentIcon from '@/assets/icons/document-icon.svg'
-import CopyTicketButton from '@/components/copyTicketButton/CopyTicketButton'
 
 type Props = {
 	ticket: UserTicket
@@ -51,9 +51,6 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 	const [expiryDate, setExpiryDate] = useState(0)
 	const [isExpanded, setIsExpanded] = useState(false)
 	const [isClaiming, setIsClaiming] = useState(false)
-	const [copyModal, setCopyModal] = useState<{ visible: boolean; onlyCopy: boolean }>({ visible: false, onlyCopy: false })
-	const [tempMatches, setTempMatches] = useState<any>()
-	const [activeMatches, setActiveMatches] = useState<any[]>([])
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
@@ -111,7 +108,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 
 	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions, ticket, sgpFees)
 	const hasOpenPositions = positionsWithMergedCombinedPositions?.some(
-		// TODO: ongoing sa nesprava dobre elbo je isOpen a sucasne isResolved
+		// TODO: ongoing is not good because it is isOpen and isResolved at the same time
 		(item) => item?.market?.isOpen && !item?.market?.isPaused && !item?.market?.isCanceled && !item?.market?.isResolved
 	)
 	const userTicketType = getUserTicketType(ticket)
@@ -231,81 +228,75 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 		</SC.UserTicketTableRow>
 	)
 
-	// const modals = (
-	// 	<CopyTicketModal copyModal={copyModal} setCopyModal={setCopyModal} tempMatches={tempMatches} ticket={ticket} setActiveMatches={setActiveMatches} />
-	// )
 	return (
-		<>
-			{/* {modals} */}
-			<SC.UserCollapse
-				collapsible={'icon'}
-				expandIconPosition={'end'}
-				key={ticket.id}
-				onChange={() => setIsExpanded(!isExpanded)}
-				activeKey={isExpanded ? [ticket.id] : []}
-				isExpanded={isExpanded}
-			>
-				<SC.CollapsePanel header={ticketHeader} key={ticket.id}>
-					<Row gutter={[16, 16]}>
-						{map(positionsWithMergedCombinedPositions, (item, index) => (
-							<Col key={item?.id} span={24} lg={12}>
-								<TicketItem
-									match={item as any}
-									oddsInfo={{
-										quote: item?.isCombined ? item?.odds : Number(ticket?.marketQuotes?.[index]),
-										isParlay: ticket.positions.length > 1,
-										isCombined: item?.isCombined,
-										combinedPositionsText: item?.combinedPositionsText
-									}}
-								/>
-							</Col>
-						))}
-					</Row>
-					<SC.StylesRow gutter={[16, 16]}>
-						<Col span={12}>
-							<Button
-								btnStyle={'secondary'}
-								content={t('Show ticket detail')}
-								onClick={() => {
-									// TODO: redirect to detail
+		<SC.UserCollapse
+			collapsible={'icon'}
+			expandIconPosition={'end'}
+			key={ticket.id}
+			onChange={() => setIsExpanded(!isExpanded)}
+			activeKey={isExpanded ? [ticket.id] : []}
+			isExpanded={isExpanded}
+		>
+			<SC.CollapsePanel header={ticketHeader} key={ticket.id}>
+				<Row gutter={[16, 16]}>
+					{map(positionsWithMergedCombinedPositions, (item, index) => (
+						<Col key={item?.id} span={24} lg={12}>
+							<TicketItem
+								match={item as any}
+								oddsInfo={{
+									quote: item?.isCombined ? item?.odds : Number(ticket?.marketQuotes?.[index]),
+									isParlay: ticket.positions.length > 1,
+									isCombined: item?.isCombined,
+									combinedPositionsText: item?.combinedPositionsText
 								}}
 							/>
 						</Col>
-						{!!(ticket.isClaimable && isMyWallet) && (
-							<Col span={12}>
-								{!isClaiming ? (
-									<Button
-										btnStyle={'primary'}
-										onClick={() => handleClaim()}
-										content={
-											<SC.ClaimButtonWrapper>
-												<SC.ClaimText>{t('Claim')}</SC.ClaimText>
-												<SC.ClaimValue>{claimableUntil}</SC.ClaimValue>
-											</SC.ClaimButtonWrapper>
-										}
-									/>
-								) : (
-									<Spin />
-								)}
-							</Col>
-						)}
-						{hasOpenPositions && !isMyWallet && (
-							<Col md={12} span={24}>
-								<CopyTicketButton ticket={ticket} />
-							</Col>
-						)}
-					</SC.StylesRow>
-				</SC.CollapsePanel>
-				<SC.CollapseButtonWrapper>
-					<Button
-						btnStyle={'secondary'}
-						onClick={() => setIsExpanded(!isExpanded)}
-						style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '32px' }}
-						content={<SC.ButtonIcon src={ArrowDownIcon} style={isExpanded ? { transform: 'rotate(180deg)' } : {}} />}
-					/>
-				</SC.CollapseButtonWrapper>
-			</SC.UserCollapse>
-		</>
+					))}
+				</Row>
+				<SC.StylesRow gutter={[16, 16]}>
+					<Col span={12}>
+						<Button
+							btnStyle={'secondary'}
+							content={t('Show ticket detail')}
+							onClick={() => {
+								// TODO: redirect to detail
+							}}
+						/>
+					</Col>
+					{!!(ticket.isClaimable && isMyWallet) && (
+						<Col span={12}>
+							{!isClaiming ? (
+								<Button
+									btnStyle={'primary'}
+									onClick={() => handleClaim()}
+									content={
+										<SC.ClaimButtonWrapper>
+											<SC.ClaimText>{t('Claim')}</SC.ClaimText>
+											<SC.ClaimValue>{claimableUntil}</SC.ClaimValue>
+										</SC.ClaimButtonWrapper>
+									}
+								/>
+							) : (
+								<Spin />
+							)}
+						</Col>
+					)}
+					{hasOpenPositions && !isMyWallet && (
+						<Col md={12} span={24}>
+							<CopyTicketButton ticket={ticket} />
+						</Col>
+					)}
+				</SC.StylesRow>
+			</SC.CollapsePanel>
+			<SC.CollapseButtonWrapper>
+				<Button
+					btnStyle={'secondary'}
+					onClick={() => setIsExpanded(!isExpanded)}
+					style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '32px' }}
+					content={<SC.ButtonIcon src={ArrowDownIcon} style={isExpanded ? { transform: 'rotate(180deg)' } : {}} />}
+				/>
+			</SC.CollapseButtonWrapper>
+		</SC.UserCollapse>
 	)
 }
 

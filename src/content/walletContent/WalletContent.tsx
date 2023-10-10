@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from 'react'
-import { useAccount, useNetwork, useProvider } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 import { useLazyQuery } from '@apollo/client'
 import { useTranslation } from 'next-export-i18n'
 import { max } from 'lodash'
 import { ethers } from 'ethers'
 import dayjs from 'dayjs'
 import { useRouter } from 'next-translate-routes'
+import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit'
+import { Col, Row } from 'antd'
 
 // components
-import { Col, Row } from 'antd'
 import TicketsStatisticRow from '@/components/ticketsStatisticRow/TicketsStatisticRow'
+import Button from '@/atoms/button/Button'
 import UserTicketsList from '@/components/userTicketsList/UserTicketsList'
+import BackButton from '@/atoms/backButton/BackButton'
+import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
 
 // utils
 import { GET_USERS_STATISTICS, GET_USERS_TRANSACTIONS } from '@/utils/queries'
 import networkConnector from '@/utils/networkConnector'
 import { getUserTicketType, removeDuplicateSubstring, ticketTypeToWalletType } from '@/utils/helpers'
-import { MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE, USER_TICKET_TYPE } from '@/utils/constants'
+import { MSG_TYPE, NOTIFICATION_TYPE, USER_TICKET_TYPE } from '@/utils/constants'
 import { showNotifications } from '@/utils/tsxHelpers'
 import { PAGES, WALLET_TICKETS } from '@/utils/enums'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
@@ -27,7 +31,9 @@ import { useIsMounted } from '@/hooks/useIsMounted'
 // types
 import { UserStatistic, UserTicket } from '@/typescript/types'
 import { ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
-import BackButton from '@/atoms/backButton/BackButton'
+
+// styles
+import * as SCS from '@/styles/GlobalStyles'
 
 const MyWalletContent = () => {
 	const { t } = useTranslation()
@@ -35,7 +41,6 @@ const MyWalletContent = () => {
 	const { chain } = useNetwork()
 	const router = useRouter()
 	const isMyWallet = !router.query.id
-	const provider = useProvider({ chainId: chain?.id || NETWORK_IDS.OPTIMISM })
 	const [fetchUserStatistic] = useLazyQuery(GET_USERS_STATISTICS)
 	const { signer } = networkConnector
 	const isMounted = useIsMounted()
@@ -66,15 +71,22 @@ const MyWalletContent = () => {
 			})
 
 			const lastMaturityDate = maturityDates.sort((a, b) => (a.maturityDate < b.maturityDate ? 1 : -1))[0]
+			if (chain?.id) {
+				const contract = new ethers.Contract(lastMaturityDate.id, sportsMarketContract.abi, signer)
 
-			const contract = new ethers.Contract(lastMaturityDate.id, sportsMarketContract.abi, signer)
-
-			const contractData = await contract.times()
-			const expiryDate = contractData?.expiry?.toString()
-			const now = dayjs()
+				const contractData = await contract.times()
+				const expiryDate = contractData?.expiry?.toString()
+				const now = dayjs()
+				return {
+					...item,
+					isClaimable: !now.isAfter(expiryDate * 1000),
+					ticketType: ticketTypeToWalletType(userTicketType),
+					timestamp
+				}
+			}
 			return {
 				...item,
-				isClaimable: !now.isAfter(expiryDate * 1000),
+				isClaimable: false,
 				ticketType: ticketTypeToWalletType(userTicketType),
 				timestamp
 			}
@@ -88,7 +100,7 @@ const MyWalletContent = () => {
 		setTimeout(() => {
 			Promise.all([
 				fetchUserStatistic({ variables: { id }, context: { chainId: chain?.id } }),
-				fetchUserMarketTransactions({ variables: { account: address?.toLocaleLowerCase() || '' }, context: { chainId: chain?.id } })
+				fetchUserMarketTransactions({ variables: { account: id }, context: { chainId: chain?.id } })
 			])
 				.then(async (values) => {
 					const marketData: { timestamp: string; id: string }[] = values?.[1]?.data?.marketTransactions?.map((item: any) => {
@@ -189,7 +201,6 @@ const MyWalletContent = () => {
 					if (wonTickets.length !== 0) {
 						successRate = Number(((wonTickets.length / numberOfAttempts) * 100).toFixed(2))
 					}
-
 					assignOtherAttrs([...parlayTickets, ...positionTickets], marketData).then((ticketsWithOtherAttrs) => {
 						setUserStatistic({
 							user: { ...values?.[0]?.data?.user, successRate },
@@ -209,19 +220,14 @@ const MyWalletContent = () => {
 	}
 
 	useEffect(() => {
-		// TODO: preco tu bol signer
-		console.log('add', [address, chain?.id, signer])
-		if (address && chain?.id && signer) {
+		if (chain?.id ? signer && address : router.query.id) {
 			fetchStatistics()
-		} else {
-			console.log('else')
-			router.push(`/${PAGES.DASHBOARD}`)
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [address, chain?.id, signer])
+	}, [address, chain?.id, signer, router.query.id])
 
 	const refetch = () => {
-		if (address && chain?.id && signer) {
+		if (chain?.id ? signer && address : router.query.id) {
 			fetchStatistics()
 		}
 	}
@@ -231,9 +237,37 @@ const MyWalletContent = () => {
 			<Col span={24}>
 				<BackButton backUrl={`/${PAGES.LEADERBOARD}`} />
 			</Col>
-			<Col span={24}>{isMounted && <TicketsStatisticRow isMyWallet={isMyWallet} isLoading={isLoading} user={userStatistic?.user} />}</Col>
+
 			<Col span={24}>
-				<UserTicketsList refetch={refetch} isMyWallet={isMyWallet} isLoading={isLoading} tickets={userStatistic?.tickets} />
+				<RainbowConnectButton.Custom>
+					{({ account, chain, openConnectModal, mounted }) => {
+						const connected = mounted && account && chain
+
+						if (!connected && isMyWallet && !isLoading) {
+							return (
+								<SCS.Empty
+									image={EmptyStateImage}
+									description={
+										<div>
+											<p>{t('You do not have connected wallet. Please connect your wallet.')}</p>
+											<Button btnStyle={'primary'} onClick={() => openConnectModal()} content={t('Connect Wallet')} />
+										</div>
+									}
+								/>
+							)
+						}
+						return (
+							<Row gutter={[0, 16]}>
+								<Col span={24}>
+									{isMounted && <TicketsStatisticRow isMyWallet={isMyWallet} isLoading={isLoading} user={userStatistic?.user} />}
+								</Col>
+								<Col span={24}>
+									<UserTicketsList refetch={refetch} isMyWallet={isMyWallet} isLoading={isLoading} tickets={userStatistic?.tickets} />
+								</Col>
+							</Row>
+						)
+					}}
+				</RainbowConnectButton.Custom>
 			</Col>
 		</Row>
 	)

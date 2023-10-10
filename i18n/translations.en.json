@@ -184,6 +184,7 @@
     "You can only bet on {{ matches }} matches per ticket": "You can only bet on {{ matches }} matches per ticket",
     "You can try other type": "You can try other type",
     "You do not have any tickets": "You do not have any tickets",
+    "You do not have connected wallet. Please connect your wallet.": "You do not have connected wallet. Please connect your wallet.",
     "You dont have any matches in your ticket": "You dont have any matches in your ticket",
     "You dont have enough allowance for": "You dont have enough allowance for",
     "You need to": "You need to",

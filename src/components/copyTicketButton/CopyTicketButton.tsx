@@ -45,7 +45,6 @@ const CopyTicketButton = ({ ticket }: Props) => {
 	const [copyModal, setCopyModal] = useState<{ visible: boolean; onlyCopy: boolean }>({ visible: false, onlyCopy: false })
 	const [tempMatches, setTempMatches] = useState<any>()
 	const [activeMatches, setActiveMatches] = useState<any[]>([])
-	console.log('ticket', ticket)
 	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
 		enabled: true
 	})
@@ -96,9 +95,7 @@ const CopyTicketButton = ({ ticket }: Props) => {
 			const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
 			const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD)
 			const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL)
-			console.log('sgpFeesRaw', sgpFeesRaw)
-			const combinedTypeMatch = sgpFeesRaw.data?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
-			// const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
+			const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
 			return {
 				...(winnerTypeMatch ?? tempMatches.find((item: any) => item.gameId === match?.gameId)),
 				winnerTypeMatch,
@@ -108,7 +105,6 @@ const CopyTicketButton = ({ ticket }: Props) => {
 				combinedTypeMatch
 			}
 		})
-		console.log('matchesWithChildMarkets', matchesWithChildMarkets)
 		return matchesWithChildMarkets?.map((item) => {
 			if (item?.winnerTypeMatch && item?.totalTypeMatch && item?.combinedTypeMatch) {
 				return {
