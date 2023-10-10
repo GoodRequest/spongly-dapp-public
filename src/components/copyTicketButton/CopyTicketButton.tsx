@@ -1,30 +1,152 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { isEmpty } from 'lodash'
-import { getFormValues } from 'redux-form'
+import React, { useEffect, useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { groupBy, isEmpty, toPairs } from 'lodash'
+import { change, getFormValues } from 'redux-form'
 import { useTranslation } from 'next-export-i18n'
 import { useNetwork } from 'wagmi'
 import { useLazyQuery } from '@apollo/client'
-import { IUnsubmittedBetTicket } from '@/redux/betTickets/betTicketTypes'
+import { Col, Row } from 'antd'
+
+import { ACTIVE_BET_TICKET, IUnsubmittedBetTicket, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 import { RootState } from '@/redux/rootReducer'
 import { FORM } from '@/utils/enums'
 import Button from '@/atoms/button/Button'
-import { getMarketOddsFromContract } from '@/utils/markets'
+import { convertPositionNameToPosition, getMarketOddsFromContract, getSymbolText } from '@/utils/markets'
 import { GET_SPORT_MARKETS_FOR_GAME } from '@/utils/queries'
+import Modal from '@/components/modal/Modal'
+import * as SC from './CopyTicketButtonStyles'
+import MatchRow from '@/components/ticketBetContainer/components/matchRow/MatchRow'
+import { MAX_TICKETS, Network } from '@/utils/constants'
+import { bigNumberFormatter } from '@/utils/formatters/ethers'
+import { BetType } from '@/utils/tags'
+import { copyTicketToUnsubmittedTickets, orderPositionsAsSportMarkets } from '@/utils/helpers'
+import { SGPItem } from '@/typescript/types'
+import networkConnector from '@/utils/networkConnector'
+import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 
 type Props = {
-	setCopyModal: React.Dispatch<React.SetStateAction<{ visible: boolean; onlyCopy: boolean }>>
-	setTempMatches: React.Dispatch<React.SetStateAction<any[]>>
-	activeMatches: any[]
+	ticket: any
 }
 
-const CopyTicketButton = ({ setCopyModal, setTempMatches, activeMatches }: Props) => {
+const CopyTicketButton = ({ ticket }: Props) => {
 	const { t } = useTranslation()
-	const betTicket: Partial<IUnsubmittedBetTicket> = useSelector((state: RootState) => getFormValues(FORM.BET_TICKET)(state))
-	const [isLoading, setIsLoading] = useState(false)
 	const { chain } = useNetwork()
+	const dispatch = useDispatch()
 	const [fetchMarketsForGame] = useLazyQuery(GET_SPORT_MARKETS_FOR_GAME)
-	// console.log('activeMatches', activeMatches)
+	const { sportsAMMContract } = networkConnector
+	const orderedPositions = orderPositionsAsSportMarkets(ticket)
+
+	const betTicket: Partial<IUnsubmittedBetTicket> = useSelector((state: RootState) => getFormValues(FORM.BET_TICKET)(state))
+	const unsubmittedTickets = useSelector((state: RootState) => state.betTickets.unsubmittedBetTickets.data)
+	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
+
+	const [isLoading, setIsLoading] = useState(false)
+	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
+	const [copyModal, setCopyModal] = useState<{ visible: boolean; onlyCopy: boolean }>({ visible: false, onlyCopy: false })
+	const [tempMatches, setTempMatches] = useState<any>()
+	const [activeMatches, setActiveMatches] = useState<any[]>([])
+	console.log('ticket', ticket)
+	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
+		enabled: true
+	})
+
+	const formatMatchesToTicket = async () => {
+		return Promise.all(
+			orderedPositions
+				?.filter((item) => item.market.isOpen)
+				.map(async (item) => {
+					const data = await sportsAMMContract?.getMarketDefaultOdds(item.market.address, false)
+					return {
+						...item.market,
+						gameId: item.market.gameId,
+						homeOdds: bigNumberFormatter(data?.[0] || 0),
+						awayOdds: bigNumberFormatter(data?.[1] || 0),
+						drawOdds: bigNumberFormatter(data?.[2] || 0),
+						betOption: item?.isCombined
+							? item?.combinedPositionsText?.replace('&', '')
+							: getSymbolText(convertPositionNameToPosition(item.side), item.market)
+					}
+				})
+		)
+	}
+
+	useEffect(() => {
+		const filterOngoingMatches = async () => {
+			const matches = await formatMatchesToTicket()
+
+			const filterOngoingMatches = matches.filter((match) => !(match.awayOdds === 0 && match.homeOdds === 0 && match.awayOdds === 0))
+			setActiveMatches(filterOngoingMatches)
+		}
+
+		filterOngoingMatches()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [ticket])
+
+	useEffect(() => {
+		if (sgpFeesRaw.isSuccess && sgpFeesRaw.data) {
+			setSgpFees(sgpFeesRaw.data)
+		}
+	}, [sgpFeesRaw.data, sgpFeesRaw.isSuccess])
+
+	// TODO: daniel zrefactoruje tak nahradit generickym hookom ktory spravi
+	const getMatchesWithChildMarkets = useMemo(() => {
+		const matchesWithChildMarkets = toPairs(groupBy(tempMatches, 'gameId')).map(([, markets]) => {
+			const [match] = markets
+			const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
+			const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
+			const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD)
+			const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL)
+			console.log('sgpFeesRaw', sgpFeesRaw)
+			const combinedTypeMatch = sgpFeesRaw.data?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
+			// const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
+			return {
+				...(winnerTypeMatch ?? tempMatches.find((item: any) => item.gameId === match?.gameId)),
+				winnerTypeMatch,
+				doubleChanceTypeMatches,
+				spreadTypeMatch,
+				totalTypeMatch,
+				combinedTypeMatch
+			}
+		})
+		console.log('matchesWithChildMarkets', matchesWithChildMarkets)
+		return matchesWithChildMarkets?.map((item) => {
+			if (item?.winnerTypeMatch && item?.totalTypeMatch && item?.combinedTypeMatch) {
+				return {
+					...item,
+					betOption: `${item.winnerTypeMatch.betOption}&${item.totalTypeMatch.betOption}`
+				}
+			}
+
+			return item
+		})
+	}, [sgpFees, tempMatches])
+	const handleAddTicket = async () => {
+		const largestId = unsubmittedTickets?.reduce((maxId, ticket) => {
+			return Math.max(maxId, ticket.id as number)
+		}, 0)
+		const matches = getMatchesWithChildMarkets || []
+
+		const data = unsubmittedTickets
+			? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			  [...unsubmittedTickets, { id: (largestId || 1) + 1, matches, copied: true }]
+			: [{ id: 1, matches, copied: true }]
+
+		await dispatch({
+			type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_UPDATE,
+			payload: {
+				data
+			}
+		})
+		// NOTE: set active state for new ticket item in HorizontalScroller id === data.length (actual state of tickets and set active ticket to last item)
+		await dispatch({ type: ACTIVE_BET_TICKET.ACTIVE_BET_TICKET_SET, payload: { data: { id: (largestId || 1) + 1 } } })
+	}
+	const handleCopyTicket = async () => {
+		copyTicketToUnsubmittedTickets(getMatchesWithChildMarkets as any, unsubmittedTickets, dispatch, activeTicketValues.id)
+		dispatch(change(FORM.BET_TICKET, 'matches', getMatchesWithChildMarkets))
+		dispatch(change(FORM.BET_TICKET, 'copied', true))
+		// helper variable which says that ticket has matches which were copied
+	}
+
 	const handleSetTempMatches = async (onlyCopy: boolean) => {
 		setIsLoading(true)
 		const gameIDQuery = activeMatches?.map((item) => item?.gameId)
@@ -58,24 +180,95 @@ const CopyTicketButton = ({ setCopyModal, setTempMatches, activeMatches }: Props
 			})
 	}
 
-	return (
-		<Button
-			disabledPopoverText={t('Matches are no longer open to copy')}
-			disabled={activeMatches?.length === 0} // If ticket with active matches is empty disable button
-			btnStyle={'primary'}
-			// TODO: opravit text podla toho aky druh je vybraty
-			content={t('Copy ticket')}
-			isLoading={isLoading}
-			onClick={async () => {
-				// NOTE: if ticket has matches open modal which ask if you want to replace ticket or create new one
-				if (!isEmpty(betTicket?.matches)) {
-					handleSetTempMatches(false)
-				} else {
-					// NOTE: Otherwise create ticket
-					handleSetTempMatches(true)
-				}
+	const modals = (
+		<Modal
+			open={copyModal.visible}
+			onCancel={() => {
+				setCopyModal({ visible: false, onlyCopy: false })
 			}}
-		/>
+			centered
+		>
+			{copyModal.onlyCopy ? (
+				<SC.ModalTitle>{t('Do you wish to add these matches?')}</SC.ModalTitle>
+			) : (
+				<>
+					<SC.ModalTitle>{t('Your ticket already includes matches')}</SC.ModalTitle>
+					<SC.ModalDescription style={{ marginBottom: '8px' }}>
+						{t('Do you wish to replace these matches or create a new ticket?')}
+					</SC.ModalDescription>
+				</>
+			)}
+			<SC.ModalDescriptionWarning>{t('Odds might slightly differ')}</SC.ModalDescriptionWarning>
+			<Row>
+				<SC.MatchContainerRow span={24}>
+					{getMatchesWithChildMarkets?.map((match: any, key: any) => (
+						<MatchRow readOnly copied key={`matchRow-${key}`} match={match} />
+					))}
+				</SC.MatchContainerRow>
+			</Row>
+			<Row gutter={[16, 16]}>
+				{copyModal.onlyCopy ? (
+					<Col span={24}>
+						<Button
+							btnStyle={'secondary'}
+							content={t('Add these to ticket')}
+							onClick={() => {
+								setCopyModal({ visible: false, onlyCopy: false })
+								handleCopyTicket()
+							}}
+						/>
+					</Col>
+				) : (
+					<>
+						<Col span={24}>
+							<Button
+								btnStyle={'secondary'}
+								content={`${t('Replace existing ticket')} (Ticket ${
+									Number(unsubmittedTickets?.map((e) => e.id).indexOf(activeTicketValues.id)) + 1
+								})`}
+								onClick={() => {
+									setCopyModal({ visible: false, onlyCopy: false })
+									handleCopyTicket()
+								}}
+							/>
+						</Col>
+						<Col span={24}>
+							<Button
+								btnStyle={'primary'}
+								content={`${t('Create new ticket')} (Ticket ${Number(unsubmittedTickets?.length) + 1})`}
+								disabled={unsubmittedTickets?.length === MAX_TICKETS}
+								onClick={() => {
+									setCopyModal({ visible: false, onlyCopy: false })
+									handleAddTicket()
+								}}
+							/>
+						</Col>
+					</>
+				)}
+			</Row>
+		</Modal>
+	)
+	return (
+		<>
+			{modals}
+			<Button
+				disabledPopoverText={t('Matches are no longer open to copy')}
+				disabled={activeMatches?.length === 0} // If ticket with active matches is empty disable button
+				btnStyle={'primary'}
+				// TODO: opravit text podla toho aky druh je vybraty
+				content={t('Copy ticket')}
+				isLoading={isLoading}
+				onClick={async () => {
+					// NOTE: if ticket has matches open modal which ask if you want to replace ticket or create new one
+					if (!isEmpty(betTicket?.matches)) {
+						handleSetTempMatches(false)
+					} else {
+						// NOTE: Otherwise create ticket
+						handleSetTempMatches(true)
+					}
+				}}
+			/>
+		</>
 	)
 }
 

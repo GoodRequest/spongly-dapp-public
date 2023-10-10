@@ -9,8 +9,6 @@ import { Col, Row, Spin } from 'antd'
 // components
 import Button from '@/atoms/button/Button'
 import TicketItem from '../ticketList/TicketItem'
-import CopyTicketModal from '@/components/copyTicketModal/CopyTicketModal'
-import CopyTicketButton from '@/components/copyTicketButton/CopyTicketButton'
 
 // utils
 import { showNotifications } from '@/utils/tsxHelpers'
@@ -39,6 +37,7 @@ import * as SC from './UserTicketTableRowStyles'
 // assets
 import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
 import DocumentIcon from '@/assets/icons/document-icon.svg'
+import CopyTicketButton from '@/components/copyTicketButton/CopyTicketButton'
 
 type Props = {
 	ticket: UserTicket
@@ -232,12 +231,12 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 		</SC.UserTicketTableRow>
 	)
 
-	const modals = (
-		<CopyTicketModal copyModal={copyModal} setCopyModal={setCopyModal} tempMatches={tempMatches} ticket={ticket} setActiveMatches={setActiveMatches} />
-	)
+	// const modals = (
+	// 	<CopyTicketModal copyModal={copyModal} setCopyModal={setCopyModal} tempMatches={tempMatches} ticket={ticket} setActiveMatches={setActiveMatches} />
+	// )
 	return (
 		<>
-			{modals}
+			{/* {modals} */}
 			<SC.UserCollapse
 				collapsible={'icon'}
 				expandIconPosition={'end'}
@@ -292,7 +291,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 						)}
 						{hasOpenPositions && !isMyWallet && (
 							<Col md={12} span={24}>
-								<CopyTicketButton setTempMatches={setTempMatches} activeMatches={activeMatches} setCopyModal={setCopyModal} />
+								<CopyTicketButton ticket={ticket} />
 							</Col>
 						)}
 					</SC.StylesRow>
