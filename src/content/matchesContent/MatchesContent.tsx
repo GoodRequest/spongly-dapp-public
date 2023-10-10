@@ -34,6 +34,7 @@ import { RootState } from '@/redux/rootReducer'
 import { isBellowOrEqualResolution } from '@/utils/helpers'
 import { breakpoints } from '@/styles/theme'
 import SportFilter from '@/components/sportFilter/SportFilter'
+import MatchDetailContent from '@/content/matchesContent/MatchDetailContent'
 
 interface ILeague {
 	id: number
@@ -362,7 +363,9 @@ const MatchesContent = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filtered.matches, filtered.sport, filter, isLoading, isFailure, loading])
 
-	return (
+	return router.query.id ? (
+		<MatchDetailContent />
+	) : (
 		<>
 			{isMounted && (
 				<SCS.ListHeader>

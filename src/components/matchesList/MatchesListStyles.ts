@@ -11,7 +11,6 @@ const { Panel } = Collapse
 export const MatchListWrapper = styled.div`
 	border-radius: 12px;
 	padding-top: 24px;
-	margin-bottom: 40px;
 	${TextSMMedium}
 `
 
@@ -120,6 +119,7 @@ export const LeagueHeader = styled.div`
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	margin-bottom: 24px;
 	${HeadingXSMedium}
 
 	${FlagWorld} {
