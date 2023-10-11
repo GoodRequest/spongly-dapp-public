@@ -19,7 +19,7 @@ import MatchRow from '@/components/ticketBetContainer/components/matchRow/MatchR
 import { MAX_TICKETS, Network } from '@/utils/constants'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import { BetType } from '@/utils/tags'
-import { copyTicketToUnsubmittedTickets, orderPositionsAsSportMarkets } from '@/utils/helpers'
+import { copyTicketToUnsubmittedTickets, getPositionsWithMergedCombinedPositions, orderPositionsAsSportMarkets } from '@/utils/helpers'
 import { SGPItem } from '@/typescript/types'
 import networkConnector from '@/utils/networkConnector'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
@@ -34,7 +34,6 @@ const CopyTicketButton = ({ ticket }: Props) => {
 	const dispatch = useDispatch()
 	const [fetchMarketsForGame] = useLazyQuery(GET_SPORT_MARKETS_FOR_GAME)
 	const { sportsAMMContract } = networkConnector
-	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 
 	const betTicket: Partial<IUnsubmittedBetTicket> = useSelector((state: RootState) => getFormValues(FORM.BET_TICKET)(state))
 	const unsubmittedTickets = useSelector((state: RootState) => state.betTickets.unsubmittedBetTickets.data)
@@ -49,9 +48,13 @@ const CopyTicketButton = ({ ticket }: Props) => {
 		enabled: true
 	})
 
+	const orderedPositions = orderPositionsAsSportMarkets(ticket)
+
+	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions, ticket, sgpFees)
+
 	const formatMatchesToTicket = async () => {
 		return Promise.all(
-			orderedPositions
+			positionsWithMergedCombinedPositions
 				?.filter((item) => item.market.isOpen)
 				.map(async (item) => {
 					const data = await sportsAMMContract?.getMarketDefaultOdds(item.market.address, false)
@@ -61,9 +64,7 @@ const CopyTicketButton = ({ ticket }: Props) => {
 						homeOdds: bigNumberFormatter(data?.[0] || 0),
 						awayOdds: bigNumberFormatter(data?.[1] || 0),
 						drawOdds: bigNumberFormatter(data?.[2] || 0),
-						betOption: item?.isCombined
-							? item?.combinedPositionsText?.replace('&', '')
-							: getSymbolText(convertPositionNameToPosition(item.side), item.market)
+						betOption: item?.isCombined ? item?.combinedPositionsText : getSymbolText(convertPositionNameToPosition(item.side), item.market)
 					}
 				})
 		)
@@ -105,17 +106,9 @@ const CopyTicketButton = ({ ticket }: Props) => {
 				combinedTypeMatch
 			}
 		})
-		return matchesWithChildMarkets?.map((item) => {
-			if (item?.winnerTypeMatch && item?.totalTypeMatch && item?.combinedTypeMatch) {
-				return {
-					...item,
-					betOption: `${item.winnerTypeMatch.betOption}&${item.totalTypeMatch.betOption}`
-				}
-			}
-
-			return item
-		})
+		return matchesWithChildMarkets
 	}, [sgpFees, tempMatches])
+
 	const handleAddTicket = async () => {
 		const largestId = unsubmittedTickets?.reduce((maxId, ticket) => {
 			return Math.max(maxId, ticket.id as number)

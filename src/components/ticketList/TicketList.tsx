@@ -145,17 +145,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 				combinedTypeMatch
 			}
 		})
-
-		return matchesWithChildMarkets?.map((item) => {
-			if (item?.winnerTypeMatch && item?.totalTypeMatch && item?.combinedTypeMatch) {
-				return {
-					...item,
-					betOption: `${item.winnerTypeMatch.betOption}&${item.totalTypeMatch.betOption}`
-				}
-			}
-
-			return item
-		})
+		return matchesWithChildMarkets
 	}, [sgpFees, tempMatches])
 
 	const handleCopyTicket = async () => {

@@ -90,19 +90,7 @@ const MatchRow: FC<IMatchRow> = ({ match, deleteHandler, copied, readOnly }) => 
 					</SC.BetOptionButton>
 				</Col>
 				<SC.OddCol xs={5} sm={3} md={readOnly ? 3 : 5} xl={readOnly ? 3 : 5}>
-					<SC.MatchOdd>
-						{
-							getOddByBetType(
-								match as any,
-								copied ? true : !!formValues.copied,
-								// @ts-ignore
-								match.combinedTypeMatch && match.winnerTypeMatch?.betOption && match.totalTypeMatch?.betOption
-									? // @ts-ignore
-									  `${match.winnerTypeMatch.betOption}&${match.totalTypeMatch.betOption}`
-									: undefined
-							).formattedOdd
-						}
-					</SC.MatchOdd>
+					<SC.MatchOdd>{getOddByBetType(match as any, copied ? true : !!formValues.copied).formattedOdd}</SC.MatchOdd>
 					{!readOnly && (
 						<SC.BonusText hide={getOddByBetType(match as any, copied ? true : !!formValues.copied).rawBonus <= 0}>
 							{getOddByBetType(match as any, copied ? true : !!formValues.copied).formattedBonus}

@@ -5,7 +5,7 @@ import { useTranslation } from 'next-export-i18n'
 import { useSelector } from 'react-redux'
 import { getFormValues } from 'redux-form'
 import { useLazyQuery } from '@apollo/client'
-import { useNetwork } from 'wagmi'
+import { useAccount, useBalance, useNetwork } from 'wagmi'
 
 // components
 import TicketListItemHeader from '@/components/ticketList/TicketListItemHeader'
@@ -61,7 +61,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 
 	const formatMatchesToTicket = async () => {
 		return Promise.all(
-			orderedPositions
+			positionsWithMergedCombinedPositions
 				?.filter((item) => item.market.isOpen)
 				.map(async (item) => {
 					const data = await sportsAMMContract?.getMarketDefaultOdds(item.market.address, false)
@@ -71,9 +71,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 						homeOdds: bigNumberFormatter(data?.[0] || 0),
 						awayOdds: bigNumberFormatter(data?.[1] || 0),
 						drawOdds: bigNumberFormatter(data?.[2] || 0),
-						betOption: item?.isCombined
-							? item?.combinedPositionsText?.replace('&', '')
-							: getSymbolText(convertPositionNameToPosition(item.side), item.market)
+						betOption: item?.isCombined ? item?.combinedPositionsText : getSymbolText(convertPositionNameToPosition(item.side), item.market)
 					}
 				})
 		)
