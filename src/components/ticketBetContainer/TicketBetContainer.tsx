@@ -320,7 +320,6 @@ const TicketBetContainer = () => {
 				const skew = bigNumberFormatter(parlayAmmQuote?.skewImpact || 0)
 				// TODO: Do we need this logic? Remove this logic if testing bonuses will be correct
 				// const totalBonus = '0'
-				// console.log('parlayAmmMinimumUSDAmountQuote', parlayAmmMinimumUSDAmountQuote)
 				// Calculates total bonus percentage
 				// if (!parlayAmmMinimumUSDAmountQuote.error) {
 				// 	const baseQuote = bigNumberFormatter(parlayAmmMinimumUSDAmountQuote?.totalQuote ?? 0)
