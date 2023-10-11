@@ -248,7 +248,7 @@ const CopyTicketButton = ({ ticket }: Props) => {
 		<>
 			{modals}
 			<Button
-				disabledPopoverText={t('Matches are no longer open to copy')}
+				disabledPopoverText={activeMatches?.length === 1 ? t('Match is no longer open to copy') : t('Matches are no longer open to copy')}
 				disabled={activeMatches?.length === 0} // If ticket with active matches is empty disable button
 				btnStyle={'primary'}
 				// TODO: opravit text podla toho aky druh je vybraty
