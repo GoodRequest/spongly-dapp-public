@@ -8,10 +8,8 @@ import { LoadingOutlined } from '@ant-design/icons'
 // components, assets, atoms
 import * as SC from './LeaderboardContentStyles'
 import Sorter from '@/components/Sorter'
-import Button from '@/atoms/button/Button'
 import Select from '@/atoms/select/Select'
 import SortIcon from '@/assets/icons/sort-icon.svg'
-import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
 
 // utils
 import { GET_TIPSTERS } from '@/utils/queries'
@@ -26,6 +24,9 @@ import * as SCS from '@/styles/GlobalStyles'
 
 // types
 import { LeaderboardUser } from '@/typescript/types'
+import { PAGES } from '@/utils/enums'
+import ArrowIcon from '@/assets/icons/arrow-down.svg'
+import MyWalletContent from '@/content/walletContent/WalletContent'
 
 const limit = 20
 
@@ -35,7 +36,6 @@ const LeaderboardContent = () => {
 	const [tipstersData, setTipstersData] = useState<LeaderboardUser[]>([])
 	const router = useRouter()
 	const { direction, property } = decodeSorter()
-
 	const sortOptions = [
 		{
 			label: t('The highest profit'),
@@ -65,20 +65,20 @@ const LeaderboardContent = () => {
 		}
 	}
 	// TODO: remove this if successRate will be added to graphQL
-	const fetchSuccessRateData = async () => {
-		try {
-			const response = await fetch(ENDPOINTS.GET_SUCCESS_RATE())
-			// TODO: Need to add computing success rate to graphQL (asked Thales for this request)
-			// const successRate: ISuccessRateData = await response.json()
-			// const successRateMap = new Map(successRate.stats.map((obj) => [obj.ac, obj.sr]))
-			// setSuccessRateMap(successRateMap)
-			return await response.json()
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.error(error)
-			throw error
-		}
-	}
+	// const fetchSuccessRateData = async () => {
+	// 	try {
+	// 		const response = await fetch(ENDPOINTS.GET_SUCCESS_RATE())
+	// 		// TODO: Need to add computing success rate to graphQL (asked Thales for this request)
+	// 		// const successRate: ISuccessRateData = await response.json()
+	// 		// const successRateMap = new Map(successRate.stats.map((obj) => [obj.ac, obj.sr]))
+	// 		// setSuccessRateMap(successRateMap)
+	// 		return await response.json()
+	// 	} catch (error) {
+	// 		// eslint-disable-next-line no-console
+	// 		console.error(error)
+	// 		throw error
+	// 	}
+	// }
 	const fetchData = async () => {
 		router?.push(
 			{
@@ -163,37 +163,47 @@ const LeaderboardContent = () => {
 	// }, [])
 
 	useEffect(() => {
+		if (router.query.id) {
+			return
+		}
 		fetchData()
-	}, [direction, property])
+	}, [direction, property, router.query.id])
 
-	return (
+	return router.query.id ? (
+		<MyWalletContent />
+	) : (
 		<SC.LeaderboardContentWrapper>
-			<h1>Leaderboard</h1>
-			<SCS.SorterRow align={'middle'}>
-				<Col push={6} span={6}>
-					<Sorter disabled={true} title={t('Success rate')} name={LEADERBOARD_SORTING.SUCCESS_RATE} />
-				</Col>
-				<Col push={5} span={5}>
-					<Sorter title={t('Profits')} name={LEADERBOARD_SORTING.PROFITS} />
-				</Col>
-				<Col push={5} span={3}>
-					<Sorter title={t('Tickets')} name={LEADERBOARD_SORTING.TICKETS} />
-				</Col>
+			<h1>{t('Leaderboard')}</h1>
+			<SCS.SorterRow>
+				<SCS.HorizontalSorters>
+					<Col span={6}>
+						<Sorter title={t('Wallet')} />
+					</Col>
+					<Col span={5}>
+						<Sorter disabled={true} title={t('Success rate')} name={LEADERBOARD_SORTING.SUCCESS_RATE} />
+					</Col>
+					<Col span={5}>
+						<Sorter title={t('Profits')} name={LEADERBOARD_SORTING.PROFITS} />
+					</Col>
+					<Col span={3}>
+						<Sorter title={t('Tickets')} name={LEADERBOARD_SORTING.TICKETS} />
+					</Col>
+				</SCS.HorizontalSorters>
+				<SCS.SelectSorters>
+					<Select
+						title={
+							<SCS.SelectSorterTitle>
+								<img src={SortIcon} alt={'Sorter'} />
+								{t('Sort by')}
+							</SCS.SelectSorterTitle>
+						}
+						allowClear
+						options={sortOptions}
+						placeholder={t('Sort by')}
+						onChange={handleSubmitSort}
+					/>
+				</SCS.SelectSorters>
 			</SCS.SorterRow>
-			<SCS.SelectSorters>
-				<Select
-					title={
-						<SCS.SelectSorterTitle>
-							<img src={SortIcon} alt={'Sorter'} />
-							{t('Sort by')}
-						</SCS.SelectSorterTitle>
-					}
-					allowClear
-					options={sortOptions}
-					placeholder={t('Sort by')}
-					onChange={handleSubmitSort}
-				/>
-			</SCS.SelectSorters>
 			{loading && tipstersData.length === 0 ? (
 				<>
 					<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
@@ -236,38 +246,17 @@ const LeaderboardContent = () => {
 									</SC.Title>
 								</Col>
 								<Col span={24} md={5}>
-									<Button
-										type={'primary'}
-										size={'large'}
-										disabled={true}
-										btnStyle={'secondary'}
-										onClick={() => {
-											// TODO: in detail of tipster
-											// router.push(`/tipster/${item.id}`)
-										}}
-										content={<span>{t('Show more')}</span>}
-									/>
+									<SCS.LoadMore onClick={() => router.push(`/${PAGES.LEADERBOARD}/?id=${item.id}`)}>{t('Show more')}</SCS.LoadMore>
 								</Col>
 							</SC.LeaderboardContentRow>
 						)
 					})}
 				</Spin>
 			)}
-			<Button
-				type={'primary'}
-				size={'large'}
-				disabled={loading}
-				btnStyle={'secondary'}
-				onClick={() => {
-					loadMore()
-				}}
-				content={
-					<SC.ButtonContent>
-						<span>{t('Show more')}</span>
-						<SC.ButtonIcon src={ArrowDownIcon} />
-					</SC.ButtonContent>
-				}
-			/>
+			<SCS.LoadMore onClick={loadMore}>
+				{t('Show more')}
+				<SCS.Icon icon={ArrowIcon} />
+			</SCS.LoadMore>
 		</SC.LeaderboardContentWrapper>
 	)
 }

@@ -1,5 +1,7 @@
 import { gql } from '@apollo/client'
 
+export const THALES_TIPSTER_BOTS = ['0x82b3634c0518507d5d817be6dab6233ebe4d68d9']
+
 export const GET_ALL_SPORT_MARKETS = gql`
 	query getSportsMarket($skip: Int!) {
 		sportMarkets(first: 1000, skip: $skip, orderBy: maturityDate, orderDirection: desc) {
@@ -60,7 +62,23 @@ export const GET_SPORT_MARKETS_FOR_GAME = gql`
 
 export const GET_TIPSTERS = gql`
 	query getTipsters($skip: Int!, $orderBy: String!, $orderDirection: String!, $first: Int!) {
-		users(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection, where: { trades_gt: 0 }) {
+		users(
+			first: $first
+			skip: $skip
+			orderBy: $orderBy
+			orderDirection: $orderDirection
+			# NOTE: bots from thales that need to be filtered and not showed in list of tipsters
+			where: {
+				trades_gt: 0
+				id_not_in: [
+					"0x82b3634c0518507d5d817be6dab6233ebe4d68d9"
+					"0x81e1f62d4f5722daa0c2f87137228d0b59516aba"
+					"0xff936b80783b32ad3f2b4e610d04c9778c4669a0"
+					"0x8314125c8b68af2afd0d151eb4a551e88128a2ae"
+					"0x9841484a4a6c0b61c4eea71376d76453fd05ec9c"
+				]
+			}
+		) {
 			volume
 			trades
 			pnl

@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useTranslation } from 'next-export-i18n'
 import { Row, Col } from 'antd'
 import { useRouter } from 'next-translate-routes'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAccount } from 'wagmi'
 
 import Button from '@/atoms/button/Button'
 import { PAGES } from '@/utils/enums'
@@ -26,7 +26,6 @@ const MobileMenu = ({ selected }: Props) => {
 
 	const [isOpen, setIsOpen] = useState(false)
 	const { address } = useAccount()
-	const { chain } = useNetwork()
 
 	const isMounted = useIsMounted()
 
@@ -57,7 +56,7 @@ const MobileMenu = ({ selected }: Props) => {
 						<SC.MenuItem key={PAGES.TICKETS}>{t('Tickets')}</SC.MenuItem>
 						<SC.MenuItem key={PAGES.LEADERBOARD}>{t('Leaderboard')}</SC.MenuItem>
 						<SC.MenuItem key={PAGES.MATCHES}>{t('Matches')}</SC.MenuItem>
-						{isMounted && chain?.id && <SC.MenuItem key={PAGES.MY_WALLET}>{t('My wallet')}</SC.MenuItem>}
+						<SC.MenuItem key={PAGES.MY_WALLET}>{t('My wallet')}</SC.MenuItem>
 						<SC.MenuItem key={PAGES.PARLAY_SUPERSTARS}>{t('Parlay Superstars')}</SC.MenuItem>
 					</SC.Menu>
 					<div>

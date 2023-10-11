@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'next-export-i18n'
 import { Col } from 'antd'
 import { useRouter } from 'next-translate-routes'
-import { useNetwork } from 'wagmi'
 
 // components
 import HeaderLogo from '@/components/headerLogo/HeaderLogo'
@@ -12,9 +11,6 @@ import MobileMenu from '@/components/mobileMenu/MobileMenu'
 // utils
 import { PAGES } from '@/utils/enums'
 
-// hooks
-import { useIsMounted } from '@/hooks/useIsMounted'
-
 // styled
 import * as SC from './HeaderStyles'
 
@@ -22,8 +18,6 @@ const Header = () => {
 	const [selected, setSelected] = useState(PAGES.DASHBOARD)
 	const { t } = useTranslation()
 	const router = useRouter()
-	const { chain } = useNetwork()
-	const isMounted = useIsMounted()
 
 	const handleSelect = (e: any) => {
 		router.push(`/${e.key}`)
@@ -36,11 +30,11 @@ const Header = () => {
 				<SC.MenuItem key={PAGES.TICKETS}>{t('Tickets')}</SC.MenuItem>
 				<SC.MenuItem key={PAGES.LEADERBOARD}>{t('Leaderboard')}</SC.MenuItem>
 				<SC.MenuItem key={PAGES.MATCHES}>{t('Matches')}</SC.MenuItem>
-				{isMounted && chain?.id && <SC.MenuItem key={PAGES.MY_WALLET}>{t('My wallet')}</SC.MenuItem>}
+				<SC.MenuItem key={PAGES.MY_WALLET}>{t('My wallet')}</SC.MenuItem>
 				<SC.MenuItem key={PAGES.PARLAY_SUPERSTARS}>{t('Parlay Superstars')}</SC.MenuItem>
 			</>
 		),
-		[t, isMounted, chain?.id]
+		[]
 	)
 
 	const chooseSelected = () => {
