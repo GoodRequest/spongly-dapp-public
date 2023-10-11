@@ -25,14 +25,14 @@ export const MatchCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 		color: white;
 		font-size: 24px;
 		position: absolute;
-		height: 52px !important;
-		width: 52px;
+		height: 48px !important;
+		width: 48px;
 		border-radius: 12px;
 		padding: 16px;
 		right: 24px;
 		top: 36px;
 		padding-inline-end: 0 !important;
-		padding-inline-start: 16px !important;
+		padding-inline-start: 14px !important;
 		background: ${({ theme }) => theme['color-base-surface-quaternary']};
 		svg {
 			transform: rotate(90deg) !important;

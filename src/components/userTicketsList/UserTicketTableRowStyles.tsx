@@ -16,14 +16,14 @@ export const UserCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 		color: white;
 		font-size: 24px;
 		position: absolute;
-		height: 52px !important;
-		width: 52px;
-		border-radius: 12px;
+		height: 48px !important;
+		width: 48px;
+		border-radius: 10px;
 		padding: 16px;
 		right: 24px;
 		top: 28px;
 		padding-inline-end: 0 !important;
-		padding-inline-start: 16px !important;
+		padding-inline-start: 14px !important;
 		background: ${({ theme }) => theme['color-base-surface-quaternary']};
 		svg {
 			transform: rotate(90deg) !important;
