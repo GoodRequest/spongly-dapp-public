@@ -16,7 +16,7 @@ const SBox = ({ title, value, icon }: Props) => {
 				<SC.SBoxTitle>{title}</SC.SBoxTitle>
 				<SC.SBoxValue>{value}</SC.SBoxValue>
 			</SC.SCColWrapper>
-			<img src={icon} alt={'stat'} />
+			{icon && <SC.SBoxIcon src={icon} alt={'stat'} />}
 		</SC.SBoxWrapper>
 	)
 }

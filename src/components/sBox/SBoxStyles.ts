@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { TextLGBold, TextSMMedium, TextXLBold } from '@/styles/typography'
+import { TextLGBold, TextSMMedium } from '@/styles/typography'
 
 export const SBoxWrapper = styled.div`
 	display: flex;
@@ -21,4 +21,7 @@ export const SBoxTitle = styled.div`
 
 export const SBoxValue = styled.div`
 	${TextLGBold};
+`
+export const SBoxIcon = styled.img`
+	height: 90px;
 `
