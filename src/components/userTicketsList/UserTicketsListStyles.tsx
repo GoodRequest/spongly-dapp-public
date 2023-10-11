@@ -3,9 +3,7 @@ import styled from 'styled-components'
 import { TextMDMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
-export const ContentWrapper = styled.div`
-	margin-top: 32px;
-`
+export const ContentWrapper = styled.div``
 
 export const ShowMoreButton = styled(Button)`
 	margin-top: 16px;

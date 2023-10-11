@@ -76,10 +76,12 @@ const MatchDetail = () => {
 					showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while loading detail of match') }], NOTIFICATION_TYPE.NOTIFICATION)
 				})
 		}, 500)
-	}, [fetchMatchDetail, router.query.id, t])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [router.query.id, sgpFeesRaw.data, t])
 
 	useEffect(() => {
 		fetchData()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	return (

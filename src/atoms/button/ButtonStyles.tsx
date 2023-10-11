@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { Button as AntdButton, Popover as AntdPopover } from 'antd'
 import { TextMDMedium } from '@/styles/typography'
 import { FIELD_HEIGHT } from '@/utils/constants'
+import { breakpoints } from '@/styles/theme'
 
 export const PrimaryButton = styled(AntdButton)`
 	height: ${FIELD_HEIGHT.middle};
@@ -22,8 +23,11 @@ export const PrimaryButton = styled(AntdButton)`
 		// must be important, or antd will ingore
 		background: ${({ theme }) => theme['color-base-action-primary-hover']} !important;
 	}
+	@media (max-width: ${breakpoints.md}px) {
+		height: ${FIELD_HEIGHT.small} !important;
+	}
 	:disabled {
-		background: ${({ theme }) => theme['color-base-surface-secondary']} !important;
+		background: ${({ theme }) => theme['color-base-surface-quaternary']} !important;
 		color: ${({ theme }) => theme['color-base-content-quaternary']} !important;
 		border: none !important;
 	}

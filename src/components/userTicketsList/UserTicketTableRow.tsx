@@ -2,13 +2,14 @@ import { useTranslation } from 'next-export-i18n'
 import { useNetwork } from 'wagmi'
 import { ethers } from 'ethers'
 import dayjs from 'dayjs'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { map } from 'lodash'
 import { Col, Row, Spin } from 'antd'
 
 // components
 import Button from '@/atoms/button/Button'
 import TicketItem from '../ticketList/TicketItem'
+import CopyTicketButton from '@/components/copyTicketButton/CopyTicketButton'
 
 // utils
 import { showNotifications } from '@/utils/tsxHelpers'
@@ -21,7 +22,7 @@ import {
 	isClaimableUntil,
 	orderPositionsAsSportMarkets
 } from '@/utils/helpers'
-import { USER_TICKET_TYPE, NOTIFICATION_TYPE, MSG_TYPE, GAS_ESTIMATION_BUFFER, Network } from '@/utils/constants'
+import { GAS_ESTIMATION_BUFFER, MSG_TYPE, Network, NOTIFICATION_TYPE, USER_TICKET_TYPE } from '@/utils/constants'
 import networkConnector from '@/utils/networkConnector'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
 import { roundPrice } from '@/utils/formatters/currency'
@@ -36,19 +37,21 @@ import * as SC from './UserTicketTableRowStyles'
 
 // assets
 import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
+import DocumentIcon from '@/assets/icons/document-icon.svg'
 
 type Props = {
 	ticket: UserTicket
 	refetch: () => void
+	isMyWallet?: boolean
 }
 
-const UserTicketTableRow = ({ ticket, refetch }: Props) => {
+const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 	const { t } = useTranslation()
 	const { chain } = useNetwork()
-
 	const [expiryDate, setExpiryDate] = useState(0)
 	const [isExpanded, setIsExpanded] = useState(false)
 	const [isClaiming, setIsClaiming] = useState(false)
+	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
 
@@ -87,7 +90,7 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 
 	const now = dayjs()
 	const dateDiff = dayjs(expiryDate * 1000).diff(now, 'm')
-	const claimableUntil = isClaimableUntil(dateDiff)
+	const claimableUntil = !!(ticket.isClaimable && isMyWallet) && isClaimableUntil(dateDiff)
 
 	const handleTxHashRedirect = (txHash: string) => {
 		const link = document.createElement('a')
@@ -103,14 +106,12 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 		}
 	}
 
-	// positions must be ordered like sportsMarkets or marketQuotes wont fit
-	const orderedPositions = orderPositionsAsSportMarkets(ticket)
-
 	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions, ticket, sgpFees)
-
+	const hasOpenPositions = positionsWithMergedCombinedPositions?.some(
+		// TODO: ongoing is not good because it is isOpen and isResolved at the same time
+		(item) => item?.market?.isOpen && !item?.market?.isPaused && !item?.market?.isCanceled && !item?.market?.isResolved
+	)
 	const userTicketType = getUserTicketType(ticket)
-
-	const isClaimed = (userTicketType === USER_TICKET_TYPE.SUCCESS || userTicketType === USER_TICKET_TYPE.CANCELED) && ticket?.claimed
 
 	const isParlay = ticket?.positions?.length > 1
 
@@ -186,15 +187,11 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 	const ticketHeader = (
 		<SC.UserTicketTableRow show={ticket.isClaimable} align={'middle'} gutter={[16, 16]}>
 			<SC.TxCol md={{ span: 6, order: 1 }} xs={{ span: 24, order: 2 }}>
-				<Button
-					btnStyle={'secondary'}
-					disabled={!(chain?.id && ticket.txHash)}
-					onClick={() => handleTxHashRedirect(ticket.txHash)}
-					content={<SC.TxButtonText>{ticket?.txHash}</SC.TxButtonText>}
-				/>
-				<SC.CenterDiv>
-					<SC.ColumnNameText>{t('Tx hash')}</SC.ColumnNameText>
-				</SC.CenterDiv>
+				<SC.TxHeader onClick={() => handleTxHashRedirect(ticket.txHash)}>
+					<SC.TxIcon src={DocumentIcon} alt='hash' />
+					<SC.AddressText>{ticket?.txHash}</SC.AddressText>
+				</SC.TxHeader>
+				<SC.ColumnNameText>{t('Tx hash')}</SC.ColumnNameText>
 			</SC.TxCol>
 			<SC.TagColContent md={{ span: 4, order: 2 }} xs={{ span: 24, order: 1 }}>
 				<SC.TicketTypeTag ticketType={userTicketType}>{getUserTicketTypeName(userTicketType, t)}</SC.TicketTypeTag>
@@ -208,28 +205,25 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 			</SC.CenterRowContent>
 
 			<SC.CenterRowContent md={{ span: 5, order: 4 }} xs={{ span: 12, order: 4 }}>
-				{isClaimed ? (
-					<>
-						<SC.ClaimValueText userTicketType={userTicketType}>{getClaimValue()}</SC.ClaimValueText>
-						<SC.ClaimValueText userTicketType={userTicketType}>{t('Claimed')}</SC.ClaimValueText>
-					</>
-				) : (
-					<>
-						<SC.ClaimValueText userTicketType={userTicketType}>{getClaimValue()}</SC.ClaimValueText>
-						{userTicketType !== USER_TICKET_TYPE.MISS && <SC.ColumnNameText>{t('Claim')}</SC.ColumnNameText>}
-					</>
-				)}
+				<SC.ClaimValueText userTicketType={userTicketType}>{getClaimValue()}</SC.ClaimValueText>
+				<SC.ColumnNameText>{t('Claim')}</SC.ColumnNameText>
 			</SC.CenterRowContent>
-			<SC.ClaimColContent show={ticket.isClaimable} md={{ span: 4, order: 5 }} xs={{ span: 24, order: 5 }}>
+			<SC.ClaimColContent show={!!(isMyWallet && userTicketType === USER_TICKET_TYPE.SUCCESS)} md={{ span: 4, order: 5 }} xs={{ span: 24, order: 5 }}>
 				{!isClaiming ? (
 					<Button
 						btnStyle={'primary'}
 						onClick={() => handleClaim()}
+						disabled={!ticket.isClaimable}
+						size={'large'}
 						content={
-							<SC.ClaimButtonWrapper>
-								<SC.ClaimText>{t('Claim')}</SC.ClaimText>
-								<SC.ClaimValue>{claimableUntil}</SC.ClaimValue>
-							</SC.ClaimButtonWrapper>
+							!ticket.isClaimable ? (
+								t('Claimed')
+							) : (
+								<SC.ClaimButtonWrapper>
+									<SC.ClaimText>{t('Claim')}</SC.ClaimText>
+									<SC.ClaimValue>{claimableUntil}</SC.ClaimValue>
+								</SC.ClaimButtonWrapper>
+							)
 						}
 					/>
 				) : (
@@ -249,7 +243,7 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 			activeKey={isExpanded ? [ticket.id] : []}
 			isExpanded={isExpanded}
 		>
-			<SC.ColapsePanel header={ticketHeader} key={ticket.id}>
+			<SC.CollapsePanel header={ticketHeader} key={ticket.id}>
 				<Row gutter={[16, 16]}>
 					{map(positionsWithMergedCombinedPositions, (item, index) => (
 						<Col key={item?.id} span={24} lg={12}>
@@ -265,7 +259,41 @@ const UserTicketTableRow = ({ ticket, refetch }: Props) => {
 						</Col>
 					))}
 				</Row>
-			</SC.ColapsePanel>
+				<SC.StylesRow gutter={[16, 16]}>
+					<Col span={12}>
+						<Button
+							btnStyle={'secondary'}
+							content={t('Show ticket detail')}
+							onClick={() => {
+								// TODO: redirect to detail
+							}}
+						/>
+					</Col>
+					{!!(ticket.isClaimable && isMyWallet) && (
+						<Col span={12}>
+							{!isClaiming ? (
+								<Button
+									btnStyle={'primary'}
+									onClick={() => handleClaim()}
+									content={
+										<SC.ClaimButtonWrapper>
+											<SC.ClaimText>{t('Claim')}</SC.ClaimText>
+											<SC.ClaimValue>{claimableUntil}</SC.ClaimValue>
+										</SC.ClaimButtonWrapper>
+									}
+								/>
+							) : (
+								<Spin />
+							)}
+						</Col>
+					)}
+					{hasOpenPositions && !isMyWallet && (
+						<Col md={12} span={24}>
+							<CopyTicketButton ticket={ticket} />
+						</Col>
+					)}
+				</SC.StylesRow>
+			</SC.CollapsePanel>
 			<SC.CollapseButtonWrapper>
 				<Button
 					btnStyle={'secondary'}

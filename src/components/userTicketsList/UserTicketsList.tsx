@@ -1,29 +1,30 @@
 import { useTranslation } from 'next-export-i18n'
 import { Row, Col } from 'antd'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next-translate-routes'
 import { useNetwork } from 'wagmi'
 
 import { UserTicket } from '@/typescript/types'
 import UserTicketTableRow from './UserTicketTableRow'
-import { WALLET_TICKETS } from '@/utils/enums'
+import { PAGES, WALLET_TICKETS } from '@/utils/enums'
 
 import * as SC from './UserTicketsListStyles'
 import * as SCS from '@/styles/GlobalStyles'
 
 import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
-import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
 import RadioButtons from '@/atoms/radioButtons/RadioButtons'
 import Select from '@/atoms/select/Select'
 import YouNeedToClaimBanner from './YouNeedToClaimBanner'
+import ArrowIcon from '@/assets/icons/arrow-down.svg'
 
 type Props = {
 	tickets: UserTicket[] | undefined
 	isLoading: boolean
 	refetch: () => void
+	isMyWallet?: boolean
 }
 
-const UserTicketsList = ({ tickets, isLoading, refetch }: Props) => {
+const UserTicketsList = ({ tickets, isLoading, refetch, isMyWallet }: Props) => {
 	const { t } = useTranslation()
 	const router = useRouter()
 	const { query, isReady } = useRouter()
@@ -34,7 +35,6 @@ const UserTicketsList = ({ tickets, isLoading, refetch }: Props) => {
 	const [sortedTickets, setSortedTickets] = useState<UserTicket[] | undefined>([])
 
 	const [filter, setFilter] = useState<{ status: WALLET_TICKETS }>({ status: WALLET_TICKETS.ALL })
-
 	const claimableSuccessfulTicketCount = tickets?.filter((item) => item.isClaimable && item.ticketType === WALLET_TICKETS.SUCCESSFUL).length || 0
 	const claimableCanceledTicketCount = tickets?.filter((item) => item.isClaimable && item.ticketType === WALLET_TICKETS.PAUSED_CANCELED).length || 0
 
@@ -92,10 +92,25 @@ const UserTicketsList = ({ tickets, isLoading, refetch }: Props) => {
 	useEffect(() => {
 		setShownTickets(sortedTickets?.slice(0, pagination.page * 10))
 		// NOTE: Do not update query when wallet is not connected -> instead useEffect in WalletContent will redirect to dashboard
-		if (chain?.id) {
+		// TODO: zistit ako toto vyriesit pri updatovani query ak neni walletka pripojena a sucasne som na detaile a nie my-wallet
+		if (router.query.id) {
 			router.replace(
 				{
-					pathname: '/my-wallet',
+					pathname: `/${PAGES.LEADERBOARD}`,
+					query: {
+						id: router.query.id,
+						page: pagination?.page,
+						status: filter.status
+					}
+				},
+				undefined,
+				{ scroll: false }
+			)
+		}
+		if (chain?.id && !router.query.id) {
+			router.replace(
+				{
+					pathname: `/${PAGES.MY_WALLET}`,
 					query: {
 						page: pagination?.page,
 						status: filter.status
@@ -160,7 +175,7 @@ const UserTicketsList = ({ tickets, isLoading, refetch }: Props) => {
 				/>
 			)
 		}
-		return shownTickets?.map((data) => <UserTicketTableRow refetch={refetch} ticket={data} key={data?.id} />)
+		return shownTickets?.map((data) => <UserTicketTableRow isMyWallet={isMyWallet} refetch={refetch} ticket={data} key={data?.id} />)
 	}
 
 	const hasMoreData = () => {
@@ -175,7 +190,7 @@ const UserTicketsList = ({ tickets, isLoading, refetch }: Props) => {
 
 	return (
 		<SC.ContentWrapper>
-			{claimableSuccessfulTicketCount + claimableCanceledTicketCount > 0 && <YouNeedToClaimBanner />}
+			{claimableSuccessfulTicketCount + claimableCanceledTicketCount > 0 && isMyWallet && <YouNeedToClaimBanner />}
 			<Row>
 				<Col span={24}>
 					<SC.MobileWrapper>
@@ -191,8 +206,8 @@ const UserTicketsList = ({ tickets, isLoading, refetch }: Props) => {
 							value={filter.status}
 							minimizeFirstOption={true}
 							counts={[
-								{ value: WALLET_TICKETS.PAUSED_CANCELED, count: claimableCanceledTicketCount },
-								{ value: WALLET_TICKETS.SUCCESSFUL, count: claimableSuccessfulTicketCount }
+								{ value: WALLET_TICKETS.PAUSED_CANCELED, count: isMyWallet ? claimableCanceledTicketCount : undefined },
+								{ value: WALLET_TICKETS.SUCCESSFUL, count: isMyWallet ? claimableSuccessfulTicketCount : undefined }
 							]}
 						/>
 					</SC.PCWrapper>
@@ -200,16 +215,10 @@ const UserTicketsList = ({ tickets, isLoading, refetch }: Props) => {
 				<Col span={24}>{userTickets()}</Col>
 			</Row>
 			{hasMoreData() && (
-				<Row>
-					<Col span={24}>
-						<SC.ShowMoreButton type={'primary'} onClick={showMore}>
-							<SC.ButtonContent>
-								{t('Show more')}
-								<SC.ButtonIcon src={ArrowDownIcon} />
-							</SC.ButtonContent>
-						</SC.ShowMoreButton>
-					</Col>
-				</Row>
+				<SCS.LoadMore onClick={showMore}>
+					{t('Show more')}
+					<SCS.Icon icon={ArrowIcon} />
+				</SCS.LoadMore>
 			)}
 		</SC.ContentWrapper>
 	)

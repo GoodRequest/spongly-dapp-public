@@ -1,6 +1,6 @@
 import { Col, Divider, Row, Collapse } from 'antd'
-import styled from 'styled-components'
-import { TextMDMedium, TextSMMedium, TextXSMedium } from '@/styles/typography'
+import styled, { keyframes } from 'styled-components'
+import { HeadingSMMedium, HeadingXSMedium, TextLGMedium, TextMDMedium, TextSMMedium, TextXSMedium } from '@/styles/typography'
 import { USER_TICKET_TYPE } from '@/utils/constants'
 import { breakpoints } from '@/styles/theme'
 
@@ -16,14 +16,14 @@ export const UserCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 		color: white;
 		font-size: 24px;
 		position: absolute;
-		height: 52px !important;
-		width: 52px;
-		border-radius: 12px;
+		height: 48px !important;
+		width: 48px;
+		border-radius: 10px;
 		padding: 16px;
 		right: 24px;
 		top: 28px;
 		padding-inline-end: 0 !important;
-		padding-inline-start: 16px !important;
+		padding-inline-start: 14px !important;
 		background: ${({ theme }) => theme['color-base-surface-quaternary']};
 		svg {
 			transform: rotate(90deg) !important;
@@ -54,7 +54,7 @@ export const UserCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 	border: ${({ theme, isExpanded }) => (isExpanded ? `2px solid ${theme['color-base-surface-quintarny']}` : '2px solid transparent')};
 `
 
-export const ColapsePanel = styled(Panel)`
+export const CollapsePanel = styled(Panel)`
 	.ant-collapse-content {
 		background: ${({ theme }) => theme['color-base-surface-secondary']};
 		border-top: none;
@@ -121,16 +121,16 @@ export const TagColContent = styled(Col)`
 `
 
 export const ColumnNameText = styled.span`
-	${TextXSMedium};
+	${TextSMMedium};
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
 `
 
 export const ColumnValueText = styled.span`
-	${TextMDMedium}
+	${TextLGMedium};
 `
 
 export const ClaimValueText = styled.span<{ userTicketType: USER_TICKET_TYPE }>`
-	${TextMDMedium};
+	${TextLGMedium};
 	color: ${({ userTicketType, theme }) => {
 		if (userTicketType === USER_TICKET_TYPE.SUCCESS || userTicketType === USER_TICKET_TYPE.CANCELED) {
 			return theme['color-base-state-success-fg']
@@ -153,17 +153,23 @@ export const TxCol = styled(Col)`
 	}
 `
 
-export const TxButtonText = styled.p`
+export const TxIcon = styled.img`
+	width: 24px;
+	height: 24px;
+	margin-right: 10px;
+`
+export const TxHeader = styled.div`
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+`
+
+export const AddressText = styled.p`
+	${TextLGMedium};
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	max-width: 100%;
-`
-
-export const CenterDiv = styled.div`
-	display: flex;
-	align-items: center;
-	flex-direction: column;
 `
 
 export const TicketTypeTag = styled.div<{ ticketType: USER_TICKET_TYPE }>`
@@ -172,14 +178,17 @@ export const TicketTypeTag = styled.div<{ ticketType: USER_TICKET_TYPE }>`
 	align-items: center;
 	justify-content: center;
 	width: 100%;
-	height: 100%;
+	height: 48px;
 	${TextSMMedium};
 	background: ${({ ticketType, theme }) => {
-		if (ticketType === USER_TICKET_TYPE.MISS) {
+		if (ticketType === USER_TICKET_TYPE.MISS || ticketType === USER_TICKET_TYPE.CANCELED) {
 			return theme['color-base-state-error-bg']
 		}
 		if (ticketType === USER_TICKET_TYPE.SUCCESS) {
 			return theme['color-base-state-success-bg']
+		}
+		if (ticketType === USER_TICKET_TYPE.ONGOING) {
+			return theme['color-base-state-warning-bg']
 		}
 		return theme['color-base-surface-quaternary']
 	}};
@@ -189,6 +198,9 @@ export const TicketTypeTag = styled.div<{ ticketType: USER_TICKET_TYPE }>`
 		}
 		if (ticketType === USER_TICKET_TYPE.SUCCESS) {
 			return theme['color-base-state-success-fg']
+		}
+		if (ticketType === USER_TICKET_TYPE.ONGOING) {
+			return theme['color-base-state-warning-fg']
 		}
 		return theme['color-base-content-top']
 	}};
@@ -201,7 +213,6 @@ export const TicketDivider = styled(Divider)<{ showClaimed: boolean }>`
 		display: block;
 		border-top: ${({ theme }) => `1px solid ${theme['color-base-surface-quintarny']}`};
 		position: absolute;
-		margin-top: ${({ showClaimed }) => (showClaimed ? '40px' : '100px')};
 		left: 0px;
 		z-index: 10;
 	}
@@ -220,4 +231,51 @@ export const ClaimText = styled.span`
 export const ClaimValue = styled.span`
 	margin-top: -4px;
 	${TextXSMedium}
+`
+export const StylesRow = styled(Row)`
+	margin-top: 16px;
+	@media (max-width: ${breakpoints.md}px) {
+		margin-top: 16px;
+	}
+`
+
+export const MatchContainerRow = styled(Col)`
+	max-height: 304px;
+	margin-bottom: 32px;
+	overflow: auto;
+	background: linear-gradient(360deg, #1d2046 0%, rgba(29, 32, 70, 0) 100%);
+`
+
+export const ModalDescription = styled(Col)`
+	${TextMDMedium};
+	text-align: center;
+	margin-bottom: 32px;
+	color: ${({ theme }) => theme['color-base-content-tertiary']};
+`
+const flicker = keyframes`
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+`
+
+export const ModalDescriptionWarning = styled(Col)`
+	${TextMDMedium};
+	text-align: center;
+	margin-bottom: 32px;
+	animation: ${flicker} 1s infinite;
+	color: ${({ theme }) => theme['color-base-state-warning-fg']};
+`
+export const ModalTitle = styled(Col)`
+	${HeadingSMMedium};
+	width: 75%;
+	margin: 0 auto;
+	text-align: center;
+	margin-bottom: 12px;
+
+	@media (max-width: ${breakpoints.md}px) {
+		${HeadingXSMedium}
+	}
 `
