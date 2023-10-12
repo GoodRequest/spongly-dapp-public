@@ -81,14 +81,15 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 		const filterOngoingMatches = async () => {
 			const matches = await formatMatchesToTicket()
 			const filterOngoingMatches = matches.filter(
-				(match) => (match.awayOdds === 0 && match.homeOdds === 0 && match.awayOdds === 0) || notPlayedNowIds.includes(match.gameId)
+				(match) => !(!notPlayedNowIds.includes(match.gameId) || (match.awayOdds === 0 && match.homeOdds === 0 && match.awayOdds === 0))
 			)
+
 			setActiveMatches(filterOngoingMatches)
 		}
 
 		filterOngoingMatches()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [notPlayedNowIds])
+	}, [notPlayedNowIds, ticket])
 
 	const handleCollapseChange = (e: any) => {
 		setActiveKeysList([...e])
