@@ -34,6 +34,7 @@ const Header = () => {
 				<SC.MenuItem key={PAGES.PARLAY_SUPERSTARS}>{t('Parlay Superstars')}</SC.MenuItem>
 			</>
 		),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[]
 	)
 

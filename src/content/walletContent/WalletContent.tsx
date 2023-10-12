@@ -2,9 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useAccount, useNetwork } from 'wagmi'
 import { useLazyQuery } from '@apollo/client'
 import { useTranslation } from 'next-export-i18n'
-import { max } from 'lodash'
-import { ethers } from 'ethers'
-import dayjs from 'dayjs'
 import { useRouter } from 'next-translate-routes'
 import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit'
 import { Col, Row } from 'antd'
@@ -19,11 +16,10 @@ import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
 // utils
 import { GET_USERS_STATISTICS, GET_USERS_TRANSACTIONS } from '@/utils/queries'
 import networkConnector from '@/utils/networkConnector'
-import { getUserTicketType, removeDuplicateSubstring, ticketTypeToWalletType } from '@/utils/helpers'
+import { assignOtherAttrsToUserTicket, getUserTicketType, parseParlayToUserTicket, parsePositionBalanceToUserTicket } from '@/utils/helpers'
 import { MSG_TYPE, NOTIFICATION_TYPE, USER_TICKET_TYPE } from '@/utils/constants'
 import { showNotifications } from '@/utils/tsxHelpers'
-import { PAGES, WALLET_TICKETS } from '@/utils/enums'
-import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
+import { PAGES } from '@/utils/enums'
 
 // hooks
 import { useIsMounted } from '@/hooks/useIsMounted'
@@ -49,51 +45,6 @@ const MyWalletContent = () => {
 	const [userStatistic, setUserStatistic] = useState<undefined | UserStatistic>(undefined)
 	const [isLoading, setIsLoading] = useState(true)
 
-	const assignOtherAttrs = async (ticket: UserTicket[], marketTransactions: { timestamp: string; id: string }[]) => {
-		const promises = ticket.map(async (item) => {
-			const userTicketType = getUserTicketType(item as any)
-
-			let timestamp = item?.timestamp
-			if (!timestamp) {
-				timestamp = marketTransactions?.find((transaction) => transaction?.id === item?.id)?.timestamp || ''
-			}
-			if (!(userTicketType === USER_TICKET_TYPE.SUCCESS || userTicketType === USER_TICKET_TYPE.CANCELED) || item.claimed) {
-				return {
-					...item,
-					isClaimable: false,
-					ticketType: ticketTypeToWalletType(userTicketType),
-					timestamp
-				}
-			}
-
-			const maturityDates = item.positions?.map((position) => {
-				return { maturityDate: position?.maturityDate, id: position.marketAddress }
-			})
-
-			const lastMaturityDate = maturityDates.sort((a, b) => (a.maturityDate < b.maturityDate ? 1 : -1))[0]
-			if (chain?.id) {
-				const contract = new ethers.Contract(lastMaturityDate.id, sportsMarketContract.abi, signer)
-
-				const contractData = await contract.times()
-				const expiryDate = contractData?.expiry?.toString()
-				const now = dayjs()
-				return {
-					...item,
-					isClaimable: !now.isAfter(expiryDate * 1000),
-					ticketType: ticketTypeToWalletType(userTicketType),
-					timestamp
-				}
-			}
-			return {
-				...item,
-				isClaimable: false,
-				ticketType: ticketTypeToWalletType(userTicketType),
-				timestamp
-			}
-		})
-
-		return Promise.all(promises)
-	}
 	const fetchStatistics = () => {
 		setIsLoading(true)
 		const id = isMyWallet ? address?.toLocaleLowerCase() : String(router.query.id).toLowerCase()
@@ -110,87 +61,13 @@ const MyWalletContent = () => {
 						}
 					})
 					const parlayData = values?.[0]?.data?.parlayMarkets
-					const positions = values?.[0]?.data?.positionBalances
+					const positionBalancesData = values?.[0]?.data?.positionBalances
 
 					const parlayTickets: UserTicket[] = parlayData?.map((parlay: ParlayMarket) => {
-						const newParlay = {
-							id: parlay?.id,
-							won: parlay?.won,
-							claimed: parlay?.claimed,
-							sUSDPaid: parlay?.sUSDPaid,
-							txHash: parlay?.txHash,
-							quote: parlay?.totalQuote,
-							amount: parlay?.totalAmount,
-							marketQuotes: parlay?.marketQuotes,
-							maturityDate: 0,
-							ticketType: WALLET_TICKETS.ALL,
-							timestamp: parlay.timestamp,
-							sportMarketsFromContract: parlay.sportMarketsFromContract,
-							isClaimable: false,
-							positions: parlay?.positions?.map((positionItem) => {
-								return {
-									// some are moved up so its easier to work with them
-									id: positionItem.id,
-									side: positionItem.side,
-									claimable: positionItem?.claimable,
-									isCanceled: positionItem?.market?.isCanceled,
-									isOpen: positionItem?.market?.isOpen,
-									isPaused: positionItem?.market?.isPaused,
-									isResolved: positionItem?.market?.isResolved,
-									maturityDate: Number(positionItem?.market?.maturityDate),
-									marketAddress: positionItem?.market?.address,
-									market: {
-										...positionItem.market,
-										homeTeam: removeDuplicateSubstring(positionItem?.market?.homeTeam),
-										awayTeam: removeDuplicateSubstring(positionItem?.market?.awayTeam)
-									}
-								}
-							}),
-							sportMarkets: parlay?.sportMarkets?.map((item) => ({
-								gameId: item.gameId,
-								address: item.address,
-								isCanceled: item.isCanceled
-							}))
-						}
-
-						const lastMaturityDate: number = max(newParlay?.positions?.map((item) => Number(item?.maturityDate))) || 0
-						newParlay.maturityDate = lastMaturityDate
-
-						return newParlay
+						return parseParlayToUserTicket(parlay)
 					})
-
-					const positionTickets: UserTicket[] = positions?.map((positionItem: PositionBalance) => {
-						return {
-							id: positionItem?.id,
-							won: undefined,
-							claimed: positionItem.claimed,
-							sUSDPaid: positionItem?.sUSDPaid,
-							txHash: positionItem?.firstTxHash,
-							amount: positionItem?.amount,
-							ticketType: WALLET_TICKETS.ALL,
-							maturityDate: Number(positionItem?.position?.market?.maturityDate),
-							isClaimable: false,
-							timestamp: 0,
-							positions: [
-								{
-									// some are moved up so its easier to work with them
-									id: positionItem.id,
-									side: positionItem.position.side,
-									claimable: positionItem?.position?.claimable,
-									isCanceled: positionItem?.position?.market?.isCanceled,
-									isOpen: positionItem?.position?.market?.isOpen,
-									isPaused: positionItem?.position?.market?.isPaused,
-									isResolved: positionItem?.position?.market?.isResolved,
-									marketAddress: positionItem?.position?.market?.address,
-									maturityDate: Number(positionItem?.position?.market?.maturityDate),
-									market: {
-										...positionItem.position?.market,
-										homeTeam: removeDuplicateSubstring(positionItem?.position?.market?.homeTeam),
-										awayTeam: removeDuplicateSubstring(positionItem?.position?.market?.awayTeam)
-									}
-								}
-							]
-						}
+					const positionTickets: UserTicket[] = positionBalancesData?.map((positionBalance: PositionBalance) => {
+						return parsePositionBalanceToUserTicket(positionBalance)
 					})
 
 					const wonTickets = [...parlayTickets, ...positionTickets]?.filter((item) => getUserTicketType(item) === USER_TICKET_TYPE.SUCCESS)
@@ -201,7 +78,8 @@ const MyWalletContent = () => {
 					if (wonTickets.length !== 0) {
 						successRate = Number(((wonTickets.length / numberOfAttempts) * 100).toFixed(2))
 					}
-					assignOtherAttrs([...parlayTickets, ...positionTickets], marketData).then((ticketsWithOtherAttrs) => {
+
+					assignOtherAttrsToUserTicket([...parlayTickets, ...positionTickets], marketData, chain?.id, signer).then((ticketsWithOtherAttrs) => {
 						setUserStatistic({
 							user: { ...values?.[0]?.data?.user, successRate },
 							tickets: ticketsWithOtherAttrs.sort((a, b) => (Number(a.timestamp) < Number(b.timestamp) ? 1 : -1))

@@ -301,3 +301,96 @@ export const GET_MATCH_DETAIL = gql`
 		}
 	}
 `
+
+export const GET_PARLAY_DETAIL = gql`
+	query getParlayDetail($id: String!) {
+		parlayMarket(id: $id) {
+			id
+			claimed
+			sUSDPaid
+			timestamp
+			totalQuote
+			won
+			account
+			totalAmount
+			lastGameStarts
+			marketQuotes
+			positions(first: 10, skip: 0) {
+				claimable
+				id
+				side
+				market {
+					id
+					address
+					doubleChanceMarketType
+					homeTeam
+					homeScore
+					homeOdds
+					awayOdds
+					awayScore
+					awayTeam
+					betType
+					total
+					spread
+					finalResult
+					isCanceled
+					isOpen
+					isPaused
+					isResolved
+					maturityDate
+					tags
+					gameId
+				}
+			}
+			sportMarkets {
+				gameId
+				address
+				isCanceled
+			}
+		}
+	}
+`
+
+export const GET_POSITION_BALANCE_DETAIL = gql`
+	query getPositionBalanceDetail($id: String!) {
+		positionBalance(id: $id) {
+			account
+			amount
+			id
+			sUSDPaid
+			position {
+				side
+				id
+				claimable
+				market {
+					address
+					awayOdds
+					awayScore
+					awayTeam
+					betType
+					downAddress
+					drawAddress
+					drawOdds
+					doubleChanceMarketType
+					finalResult
+					homeOdds
+					homeScore
+					homeTeam
+					id
+					isCanceled
+					isOpen
+					isPaused
+					isResolved
+					total
+					timestamp
+					resultDetails
+					tags
+					spread
+					total
+					maturityDate
+					gameId
+				}
+			}
+		}
+	}
+`

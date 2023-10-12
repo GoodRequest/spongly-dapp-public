@@ -1,7 +1,8 @@
 import dayjs from 'dayjs'
 import Router from 'next/router'
-import { floor, groupBy, toNumber, toPairs } from 'lodash'
+import { floor, groupBy, max, toNumber, toPairs } from 'lodash'
 import { AnyAction, Dispatch } from 'redux'
+import { ethers } from 'ethers'
 import { IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 
 import {
@@ -65,6 +66,7 @@ import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
 
 import { formatParlayQuote, formatQuote, formattedCombinedTypeMatch } from './formatters/quote'
 import { roundToTwoDecimals } from './formatters/number'
+import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
 
 export const getCurrentBiweeklyPeriod = () => {
 	const startOfPeriod = dayjs(START_OF_BIWEEKLY_PERIOD)
@@ -1203,4 +1205,138 @@ export const removeDuplicatesByGameId = (positions: Position[]): number => {
 	}, new Set<string>())
 
 	return uniqueGameIds.size
+}
+
+export const parsePositionBalanceToUserTicket = (ticket: PositionBalance): UserTicket => {
+	const newTicket = {
+		id: ticket?.id,
+		won: undefined,
+		claimed: ticket?.claimed,
+		sUSDPaid: Number(ticket?.sUSDPaid),
+		txHash: ticket?.firstTxHash,
+		amount: Number(ticket?.amount),
+		ticketType: WALLET_TICKETS.ALL,
+		maturityDate: Number(ticket?.position?.market?.maturityDate),
+		isClaimable: false,
+		timestamp: 0,
+		positions: [
+			{
+				// some are moved up so its easier to work with them
+				id: ticket?.id,
+				side: ticket?.position?.side,
+				claimable: ticket?.position?.claimable,
+				isCanceled: ticket?.position?.market?.isCanceled,
+				isOpen: ticket?.position?.market?.isOpen,
+				isPaused: ticket?.position?.market?.isPaused,
+				isResolved: ticket?.position?.market?.isResolved,
+				marketAddress: ticket?.position?.market?.address,
+				maturityDate: Number(ticket?.position?.market?.maturityDate),
+				market: {
+					...ticket.position.market,
+					homeTeam: removeDuplicateSubstring(ticket?.position?.market?.homeTeam),
+					awayTeam: removeDuplicateSubstring(ticket?.position?.market?.awayTeam)
+				}
+			}
+		]
+	}
+
+	return newTicket as UserTicket
+}
+
+export const parseParlayToUserTicket = (ticket: ParlayMarket): UserTicket => {
+	const newTicket = {
+		id: ticket?.id,
+		won: ticket?.won,
+		claimed: ticket?.claimed,
+		sUSDPaid: Number(ticket?.sUSDPaid),
+		txHash: ticket?.txHash,
+		quote: ticket?.totalQuote,
+		amount: Number(ticket?.totalAmount),
+		marketQuotes: ticket?.marketQuotes,
+		maturityDate: 0,
+		ticketType: WALLET_TICKETS.ALL,
+		timestamp: ticket.timestamp,
+		sportMarketsFromContract: ticket.sportMarketsFromContract,
+		isClaimable: false,
+		positions: ticket?.positions?.map((positionItem) => {
+			return {
+				// some are moved up so its easier to work with them
+				id: positionItem.id,
+				side: positionItem.side,
+				claimable: positionItem?.claimable,
+				isCanceled: positionItem?.market?.isCanceled,
+				isOpen: positionItem?.market?.isOpen,
+				isPaused: positionItem?.market?.isPaused,
+				isResolved: positionItem?.market?.isResolved,
+				maturityDate: Number(positionItem?.market?.maturityDate),
+				marketAddress: positionItem?.market?.address,
+				market: {
+					...positionItem.market,
+					homeTeam: removeDuplicateSubstring(positionItem?.market?.homeTeam),
+					awayTeam: removeDuplicateSubstring(positionItem?.market?.awayTeam)
+				}
+			}
+		}),
+		sportMarkets: ticket?.sportMarkets?.map((item) => ({
+			gameId: item.gameId,
+			address: item.address,
+			isCanceled: item.isCanceled
+		}))
+	}
+
+	const lastMaturityDate: number = max(newTicket?.positions?.map((item) => Number(item?.maturityDate))) || 0
+	newTicket.maturityDate = lastMaturityDate
+
+	return newTicket as UserTicket
+}
+
+export const assignOtherAttrsToUserTicket = async (
+	ticket: UserTicket[],
+	marketTransactions: { timestamp: string; id: string }[] | undefined,
+	chainId: number | undefined,
+	signer: ethers.Signer | undefined
+) => {
+	const promises = ticket.map(async (item) => {
+		const userTicketType = getUserTicketType(item as any)
+
+		let timestamp = item?.timestamp
+		if (!timestamp) {
+			timestamp = marketTransactions?.find((transaction) => transaction?.id === item?.id)?.timestamp || ''
+		}
+		if (!(userTicketType === USER_TICKET_TYPE.SUCCESS || userTicketType === USER_TICKET_TYPE.CANCELED) || item.claimed) {
+			return {
+				...item,
+				isClaimable: false,
+				ticketType: ticketTypeToWalletType(userTicketType),
+				timestamp
+			}
+		}
+
+		const maturityDates = item.positions?.map((position) => {
+			return { maturityDate: position?.maturityDate, id: position.marketAddress }
+		})
+
+		const lastMaturityDate = maturityDates.sort((a, b) => (a.maturityDate < b.maturityDate ? 1 : -1))[0]
+		if (chainId) {
+			const contract = new ethers.Contract(lastMaturityDate.id, sportsMarketContract.abi, signer)
+
+			const contractData = await contract.times()
+			const expiryDate = contractData?.expiry?.toString()
+			const now = dayjs()
+			return {
+				...item,
+				isClaimable: !now.isAfter(expiryDate * 1000),
+				ticketType: ticketTypeToWalletType(userTicketType),
+				timestamp
+			}
+		}
+		return {
+			...item,
+			isClaimable: false,
+			ticketType: ticketTypeToWalletType(userTicketType),
+			timestamp
+		}
+	})
+
+	return Promise.all(promises)
 }
