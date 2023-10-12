@@ -28,9 +28,10 @@ type Props = {
 		isCombined?: boolean
 		combinedPositionsText?: string
 	}
+	addPlayedNowId: (ids: string) => void
 }
 
-const TicketItem = ({ match, oddsInfo }: Props) => {
+const TicketItem = ({ match, oddsInfo, addPlayedNowId }: Props) => {
 	const { sportsAMMContract } = networkConnector
 	const { t } = useTranslation()
 	const [oddsDataFromContract, setOddsDataFromContract] = useState()
@@ -58,7 +59,10 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 
 	const isPlayedNow = () => {
 		if (oddsDataFromContract) {
-			if (match.market.isOpen && getMatchOddsContract(match.side, oddsDataFromContract) === '0' && !match.market.isPaused) return true
+			if (match.market.isOpen && getMatchOddsContract(match.side, oddsDataFromContract) === '0' && !match.market.isPaused) {
+				addPlayedNowId(match?.market?.gameId)
+				return true
+			}
 		}
 
 		return false

@@ -5,7 +5,7 @@ import { useTranslation } from 'next-export-i18n'
 import { useSelector } from 'react-redux'
 import { getFormValues } from 'redux-form'
 import { useLazyQuery } from '@apollo/client'
-import { useAccount, useBalance, useNetwork } from 'wagmi'
+import { useNetwork } from 'wagmi'
 
 // components
 import TicketListItemHeader from '@/components/ticketList/TicketListItemHeader'
@@ -54,10 +54,10 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 	const [activeMatches, setActiveMatches] = useState<any[]>([])
 	const [isExpanded, setIsExpanded] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
-
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
-
 	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions, ticket, sgpFees)
+
+	const [notPlayedNowIds, setNotPlayedNowIds] = useState<string[]>(positionsWithMergedCombinedPositions?.map((item) => item.market?.gameId))
 
 	const formatMatchesToTicket = async () => {
 		return Promise.all(
@@ -80,18 +80,25 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 	useEffect(() => {
 		const filterOngoingMatches = async () => {
 			const matches = await formatMatchesToTicket()
-
-			const filterOngoingMatches = matches.filter((match) => !(match.awayOdds === 0 && match.homeOdds === 0 && match.awayOdds === 0))
+			const filterOngoingMatches = matches.filter(
+				(match) => (match.awayOdds === 0 && match.homeOdds === 0 && match.awayOdds === 0) || notPlayedNowIds.includes(match.gameId)
+			)
 			setActiveMatches(filterOngoingMatches)
 		}
 
 		filterOngoingMatches()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [ticket])
+	}, [notPlayedNowIds])
 
 	const handleCollapseChange = (e: any) => {
 		setActiveKeysList([...e])
 		setIsExpanded((c) => !c)
+	}
+
+	const addPlayedNowId = (id: string) => {
+		if (notPlayedNowIds.includes(id)) {
+			setNotPlayedNowIds(notPlayedNowIds?.filter((item) => item !== id))
+		}
 	}
 
 	const handleSetTempMatches = async (onlyCopy: boolean) => {
@@ -149,6 +156,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 											isCombined: item?.isCombined,
 											combinedPositionsText: item?.combinedPositionsText
 										}}
+										addPlayedNowId={addPlayedNowId}
 									/>
 								</Col>
 							))}
