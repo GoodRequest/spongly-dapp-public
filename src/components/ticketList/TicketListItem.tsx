@@ -57,8 +57,6 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions, ticket, sgpFees)
 
-	const [notPlayedNowIds, setNotPlayedNowIds] = useState<string[]>(positionsWithMergedCombinedPositions?.map((item) => item.market?.gameId))
-
 	const formatMatchesToTicket = async () => {
 		return Promise.all(
 			positionsWithMergedCombinedPositions
@@ -80,26 +78,17 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 	useEffect(() => {
 		const filterOngoingMatches = async () => {
 			const matches = await formatMatchesToTicket()
-			const filterOngoingMatches = matches.filter(
-				(match) => !(!notPlayedNowIds.includes(match.gameId) || (match.awayOdds === 0 && match.homeOdds === 0 && match.awayOdds === 0))
-			)
-
+			const filterOngoingMatches = matches.filter((match) => !(match.awayOdds === 0 && match.homeOdds === 0))
 			setActiveMatches(filterOngoingMatches)
 		}
 
 		filterOngoingMatches()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [notPlayedNowIds, ticket])
+	}, [ticket])
 
 	const handleCollapseChange = (e: any) => {
 		setActiveKeysList([...e])
 		setIsExpanded((c) => !c)
-	}
-
-	const addPlayedNowId = (id: string) => {
-		if (notPlayedNowIds.includes(id)) {
-			setNotPlayedNowIds(notPlayedNowIds?.filter((item) => item !== id))
-		}
 	}
 
 	const handleSetTempMatches = async (onlyCopy: boolean) => {
@@ -157,7 +146,6 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 											isCombined: item?.isCombined,
 											combinedPositionsText: item?.combinedPositionsText
 										}}
-										addPlayedNowId={addPlayedNowId}
 									/>
 								</Col>
 							))}
@@ -176,7 +164,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 								<Col md={12} span={24}>
 									<Button
 										disabledPopoverText={t('Matches are no longer open to copy')}
-										disabled={activeMatches?.length === 0} // If ticket with active matches is empty disable button
+										// disabled={activeMatches?.length === 0} // If ticket with active matches is empty disable button
 										btnStyle={'primary'}
 										isLoading={isLoading}
 										content={type === TICKET_TYPE.ONGOING_TICKET ? t('Copy open positions') : t('Copy ticket')}
