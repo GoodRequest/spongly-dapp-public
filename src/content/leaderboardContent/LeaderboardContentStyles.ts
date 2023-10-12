@@ -41,6 +41,7 @@ export const WalletIcon = styled.div<{ imageSrc: number }>`
 `
 export const Wallet = styled.div`
 	display: flex;
+	cursor: pointer;
 `
 export const Description = styled.span`
 	${TextSMMedium};

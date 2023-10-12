@@ -6,12 +6,13 @@ import { toNumber } from 'lodash'
 import { getFormValues } from 'redux-form'
 
 // components
+import { useRouter } from 'next-translate-routes'
 import Modal from '../../../modal/Modal'
 import MatchListContent from '../../../matchesList/MatchListContent'
 
 // utils
 import { getTeamImageSource } from '@/utils/images'
-import { FORM } from '@/utils/enums'
+import { FORM, PAGES } from '@/utils/enums'
 import { getOddByBetType } from '@/utils/helpers'
 import { NO_TEAM_IMAGE_FALLBACK, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { getPossibleBetOptions } from '@/utils/markets'
@@ -38,6 +39,7 @@ const MatchRow: FC<IMatchRow> = ({ match, deleteHandler, copied, readOnly }) => 
 	const [modalOpen, setModalOpen] = useState(false)
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(match?.winnerTypeMatch?.tags[0] as any)
 	const formValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
+	const router = useRouter()
 
 	const [teamImages] = useState({
 		awayTeam: getTeamImageSource(match?.awayTeam || '', toNumber(match?.tags?.[0])),
@@ -76,7 +78,7 @@ const MatchRow: FC<IMatchRow> = ({ match, deleteHandler, copied, readOnly }) => 
 		<>
 			<SC.MatchRow gutter={[0, 0]} readOnly={readOnly}>
 				<Col xs={readOnly ? 16 : 14} sm={readOnly ? 18 : 16} md={readOnly ? 18 : 14} xl={readOnly ? 18 : 14}>
-					<SC.StartCenteredRow>
+					<SC.StartCenteredRow onClick={() => router.push(`/${PAGES.MATCHES}/?id=${match.gameId}`)}>
 						<SC.TeamImages>{images}</SC.TeamImages>
 						<SC.TeamNames>
 							<SC.TeamName>{match.homeTeam}</SC.TeamName>
