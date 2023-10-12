@@ -1,11 +1,12 @@
 import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react'
-import { groupBy, map, slice, toPairs } from 'lodash'
+import { map, slice } from 'lodash'
 import { useTranslation } from 'next-export-i18n'
 import { useDispatch, useSelector } from 'react-redux'
 import { change, getFormValues } from 'redux-form'
 import { Col, Row } from 'antd'
 import { useNetwork } from 'wagmi'
 import { useRouter } from 'next/router'
+import { RootState } from '@/redux/rootReducer'
 
 // components
 import { ITicketContent } from '@/content/ticketsContent/TicketsContent'
@@ -22,19 +23,20 @@ import MatchRow from '@/components/ticketBetContainer/components/matchRow/MatchR
 
 // types
 import { ACTIVE_BET_TICKET, IUnsubmittedBetTicket, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
+import { SGPItem } from '@/typescript/types'
 
 // utils
 import { MAX_TICKETS, Network, ORDER_DIRECTION, TICKET_SORTING, TICKET_TYPE } from '@/utils/constants'
 import { copyTicketToUnsubmittedTickets, getTicketsTypeName, setSort } from '@/utils/helpers'
-import { BetType } from '@/utils/tags'
 import { FORM, PAGES } from '@/utils/enums'
+
+// hooks
+import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
+import { useMatchesWithChildMarkets } from '@/hooks/useMatchesWithChildMarkets'
 
 // styles
 import * as SC from './TicketListStyles'
 import * as SCS from '@/styles/GlobalStyles'
-import { RootState } from '@/redux/rootReducer'
-import { SGPItem } from '@/typescript/types'
-import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 
 interface ITicketList {
 	type: TICKET_TYPE
@@ -60,6 +62,8 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 	const [tempMatches, setTempMatches] = useState<any>()
 	const [copyModal, setCopyModal] = useState<{ visible: boolean; onlyCopy: boolean }>({ visible: false, onlyCopy: false })
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
+
+	const matchesWithChildMarkets = useMatchesWithChildMarkets(tempMatches, sgpFees, false)
 
 	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
 		enabled: true
@@ -128,29 +132,9 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 		}
 	]
 
-	const getMatchesWithChildMarkets = useMemo(() => {
-		const matchesWithChildMarkets = toPairs(groupBy(tempMatches, 'gameId')).map(([, markets]) => {
-			const [match] = markets
-			const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
-			const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
-			const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD)
-			const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL)
-			const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
-			return {
-				...(winnerTypeMatch ?? tempMatches.find((item: any) => item.gameId === match?.gameId)),
-				winnerTypeMatch,
-				doubleChanceTypeMatches,
-				spreadTypeMatch,
-				totalTypeMatch,
-				combinedTypeMatch
-			}
-		})
-		return matchesWithChildMarkets
-	}, [sgpFees, tempMatches])
-
 	const handleCopyTicket = async () => {
-		copyTicketToUnsubmittedTickets(getMatchesWithChildMarkets as any, unsubmittedTickets, dispatch, activeTicketValues.id)
-		dispatch(change(FORM.BET_TICKET, 'matches', getMatchesWithChildMarkets))
+		copyTicketToUnsubmittedTickets(matchesWithChildMarkets as any, unsubmittedTickets, dispatch, activeTicketValues.id)
+		dispatch(change(FORM.BET_TICKET, 'matches', matchesWithChildMarkets))
 		dispatch(change(FORM.BET_TICKET, 'copied', true))
 		// helper variable which says that ticket has matches which were copied
 	}
@@ -159,7 +143,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 		const largestId = unsubmittedTickets?.reduce((maxId, ticket) => {
 			return Math.max(maxId, ticket.id as number)
 		}, 0)
-		const matches = getMatchesWithChildMarkets || []
+		const matches = matchesWithChildMarkets || []
 
 		const data = unsubmittedTickets
 			? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -207,7 +191,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 			<SC.ModalDescriptionWarning>{t('Odds might slightly differ')}</SC.ModalDescriptionWarning>
 			<Row>
 				<SC.MatchContainerRow span={24}>
-					{getMatchesWithChildMarkets?.map((match: any, key: any) => (
+					{matchesWithChildMarkets?.map((match: any, key: any) => (
 						<MatchRow readOnly copied key={`matchRow-${key}`} match={match} />
 					))}
 				</SC.MatchContainerRow>

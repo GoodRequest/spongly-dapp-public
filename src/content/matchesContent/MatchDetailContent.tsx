@@ -20,6 +20,7 @@ import { BetType, TAGS_LIST } from '@/utils/tags'
 import MatchListContent from '@/components/matchesList/MatchListContent'
 import { getMarketOddsFromContract } from '@/utils/markets'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
+import { useMatchesWithChildMarkets } from '@/hooks/useMatchesWithChildMarkets'
 
 const MatchDetail = () => {
 	const { t } = useTranslation()

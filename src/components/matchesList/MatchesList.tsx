@@ -20,6 +20,7 @@ import { MATCHES_OFFSET, MATCHES_OFFSET_MOBILE, Network, STATIC } from '@/utils/
 import Modal from '@/components/modal/Modal'
 import { RESOLUTIONS } from '@/utils/enums'
 import { FlagWorld } from '@/styles/GlobalStyles'
+import { useMatchesWithChildMarkets } from '@/hooks/useMatchesWithChildMarkets'
 
 interface IMatchesList {
 	matches: SportMarket[]
@@ -35,6 +36,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, item }) => {
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
 	const [visibleParlayValidationModal, setVisibleParlayValidationModal] = useState({ visible: false, message: '' })
 	const [matchOffsetByResolution, setMatchOffsetByResolution] = useState(0)
+	const matchesWithChildMarkets = useMatchesWithChildMarkets(matches, sgpFees, true)
 
 	useEffect(() => {
 		if (includes([RESOLUTIONS.SM, RESOLUTIONS.MD], size)) {
@@ -49,29 +51,29 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, item }) => {
 		enabled: true
 	})
 
-	const matchesWithChildMarkets = useMemo(
-		() =>
-			toPairs(groupBy(matches, 'gameId'))
-				.map(([, markets]) => {
-					const [match] = markets
+	// const matchesWithChildMarkets = useMemo(
+	// 	() =>
+	// 		toPairs(groupBy(matches, 'gameId'))
+	// 			.map(([, markets]) => {
+	// 				const [match] = markets
 
-					const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
-					const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
-					const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD)
-					const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL)
-					const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
-					return {
-						...(winnerTypeMatch ?? matches.find((item) => item.gameId === match?.gameId)),
-						winnerTypeMatch,
-						doubleChanceTypeMatches,
-						spreadTypeMatch,
-						totalTypeMatch,
-						combinedTypeMatch
-					}
-				}) // NOTE: remove broken results.
-				.filter((item) => item.winnerTypeMatch),
-		[matches, sgpFees]
-	)
+	// 				const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
+	// 				const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
+	// 				const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD)
+	// 				const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL)
+	// 				const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
+	// 				return {
+	// 					...(winnerTypeMatch ?? matches.find((item) => item.gameId === match?.gameId)),
+	// 					winnerTypeMatch,
+	// 					doubleChanceTypeMatches,
+	// 					spreadTypeMatch,
+	// 					totalTypeMatch,
+	// 					combinedTypeMatch
+	// 				}
+	// 			}) // NOTE: remove broken results.
+	// 			.filter((item) => item.winnerTypeMatch),
+	// 	[matches, sgpFees]
+	// )
 
 	const [renderList, setRenderList] = useState<any>([])
 	const [hasMore, setHasMore] = useState(matchesWithChildMarkets?.length > matchOffsetByResolution)
@@ -88,7 +90,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, item }) => {
 	}, [sgpFees, matchOffsetByResolution])
 
 	useEffect(() => {
-		if (renderList?.length < matchesWithChildMarkets.length) {
+		if (renderList?.length < matchesWithChildMarkets?.length) {
 			setHasMore(true)
 		} else {
 			setHasMore(false)
