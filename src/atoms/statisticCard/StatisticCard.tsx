@@ -8,14 +8,14 @@ type Props = {
 	title: string
 	isLoading?: boolean
 	filled?: boolean
-	img: string
+	img?: string
 	showMobileInColumn?: boolean
 	isAddress?: boolean
 }
 const StatisticCard = ({ value, title, isLoading = false, filled = false, img, showMobileInColumn = false, isAddress = false }: Props) => (
 	<SC.ColorWrapper filled={filled}>
 		<SC.StatisticCard filled={filled} showMobileInColumn={showMobileInColumn}>
-			<SC.Image filled={filled} src={img} />
+			{img && <SC.Image filled={filled} src={img} />}
 			<SC.StatisticWrapper isAddress={isAddress}>
 				<SC.Title>{title}</SC.Title>
 				{isAddress ? (

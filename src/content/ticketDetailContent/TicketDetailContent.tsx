@@ -3,13 +3,15 @@ import { useTranslation } from 'next-export-i18n'
 import { useRouter } from 'next-translate-routes'
 import { useLazyQuery } from '@apollo/client'
 import { useNetwork } from 'wagmi'
-import { Col, Row } from 'antd'
+import { Col, Row, Spin } from 'antd'
 import { GET_PARLAY_DETAIL, GET_POSITION_BALANCE_DETAIL, GET_POSITION_BALANCE_TRANSACTION } from '@/utils/queries'
 import { assignOtherAttrsToUserTicket, parseParlayToUserTicket, parsePositionBalanceToUserTicket } from '@/utils/helpers'
 import { UserTicket } from '@/typescript/types'
 import networkConnector from '@/utils/networkConnector'
 import BackButton from '@/atoms/backButton/BackButton'
 import { PAGES } from '@/utils/enums'
+import TicketStatisticRow from '@/components/statisticRow/TicketStatisticRow'
+import { roundPrice } from '@/utils/formatters/currency'
 
 const TicketDetailContent = () => {
 	const { t } = useTranslation()
@@ -19,7 +21,7 @@ const TicketDetailContent = () => {
 	const [fetchParlayDetail] = useLazyQuery(GET_PARLAY_DETAIL)
 	const [fetchPositionDetail] = useLazyQuery(GET_POSITION_BALANCE_DETAIL)
 	const [fetchPositionBalanceMarketTransactions] = useLazyQuery(GET_POSITION_BALANCE_TRANSACTION)
-	const [ticketData, setTicketData] = useState<UserTicket>([])
+	const [ticketData, setTicketData] = useState<UserTicket>()
 
 	const [isLoading, setIsLoading] = useState(false)
 
@@ -75,12 +77,37 @@ const TicketDetailContent = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [router.query.id])
 
+	console.log(ticketData)
+	// tipsterAddress: string
+	// buyIn: number
+	// quote: string
+	// matches: number
+
+	console.log(ticketData?.account)
+
 	return (
 		<Row gutter={[0, 16]}>
 			<Col span={24}>
 				{/* TODO: redirect to Tickets / My-Wallet / Tipster-detail */}
-				<BackButton backUrl={`/${PAGES.TICKETS}`} />
+				<BackButton backUrl={router?.query?.previousPath ? (router.query.previousPath as string) : `/${PAGES.TICKETS}`} />
 			</Col>
+			{isLoading ? (
+				<Spin />
+			) : (
+				<Col span={24}>
+					<Row gutter={[0, 16]}>
+						<Col span={24}>
+							{
+								<TicketStatisticRow
+									isLoading={isLoading}
+									tipsterAddress={ticketData?.account || ''}
+									buyIn={roundPrice(ticketData?.amount || 0, true)}
+								/>
+							}
+						</Col>
+					</Row>
+				</Col>
+			)}
 		</Row>
 	)
 }

@@ -7,7 +7,7 @@ import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit'
 import { Col, Row } from 'antd'
 
 // components
-import TicketsStatisticRow from '@/components/ticketsStatisticRow/TicketsStatisticRow'
+import UserStatisticRow from '@/components/statisticRow/UserStatisticRow'
 import Button from '@/atoms/button/Button'
 import UserTicketsList from '@/components/userTicketsList/UserTicketsList'
 import BackButton from '@/atoms/backButton/BackButton'
@@ -137,7 +137,7 @@ const MyWalletContent = () => {
 						return (
 							<Row gutter={[0, 16]}>
 								<Col span={24}>
-									{isMounted && <TicketsStatisticRow isMyWallet={isMyWallet} isLoading={isLoading} user={userStatistic?.user} />}
+									{isMounted && <UserStatisticRow isMyWallet={isMyWallet} isLoading={isLoading} user={userStatistic?.user} />}
 								</Col>
 								<Col span={24}>
 									<UserTicketsList refetch={refetch} isMyWallet={isMyWallet} isLoading={isLoading} tickets={userStatistic?.tickets} />

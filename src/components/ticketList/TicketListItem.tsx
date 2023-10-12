@@ -182,7 +182,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 								<Button
 									btnStyle={'secondary'}
 									content={t('Show ticket detail')}
-									onClick={() => router.push(`/${PAGES.TICKET_DETAIL}/?id=${ticket.id}`)}
+									onClick={() => router.push(`/${PAGES.TICKET_DETAIL}/?id=${ticket.id}&previousPath=${router.asPath}`)}
 								/>
 							</Col>
 						</SC.StylesRow>
