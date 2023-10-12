@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import { getFormValues } from 'redux-form'
 import { useLazyQuery } from '@apollo/client'
 import { useNetwork } from 'wagmi'
+import { useRouter } from 'next-translate-routes'
 
 // components
 import TicketListItemHeader from '@/components/ticketList/TicketListItemHeader'
@@ -18,7 +19,7 @@ import { RootState } from '@/redux/rootReducer'
 import { IUnsubmittedBetTicket } from '@/redux/betTickets/betTicketTypes'
 
 // utils
-import { FORM } from '@/utils/enums'
+import { FORM, PAGES } from '@/utils/enums'
 import { convertPositionNameToPosition, getMarketOddsFromContract, getSymbolText } from '@/utils/markets'
 import networkConnector from '@/utils/networkConnector'
 import { TICKET_TYPE } from '@/utils/constants'
@@ -47,6 +48,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 	const { t } = useTranslation()
 	const { sportsAMMContract } = networkConnector
 	const { chain } = useNetwork()
+	const router = useRouter()
 
 	const betTicket: Partial<IUnsubmittedBetTicket> = useSelector((state: RootState) => getFormValues(FORM.BET_TICKET)(state))
 	const [fetchMarketsForGame] = useLazyQuery(GET_SPORT_MARKETS_FOR_GAME)
@@ -156,15 +158,6 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 							))}
 						</SC.StylesRow>
 						<SC.StylesRow gutter={[16, 0]}>
-							{/* <Col md={type === TICKET_TYPE.CLOSED_TICKET ? 24 : 12} span={24}>
-									<Button
-										btnStyle={'secondary'}
-										content={t('Show ticket detail')}
-										onClick={() => {
-											// TODO: redirect to detail
-										}}
-									/>
-								</Col> */}
 							{(type === TICKET_TYPE.ONGOING_TICKET || type === TICKET_TYPE.OPEN_TICKET || type === TICKET_TYPE.HOT_TICKET) && (
 								<Col md={12} span={24}>
 									<Button
@@ -186,11 +179,11 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 								</Col>
 							)}
 							<Col md={type === TICKET_TYPE.CLOSED_TICKET ? 24 : 12} span={24}>
-								{/* <Button
-										btnStyle={'secondary'}
-										content={t('Show ticket detail')}
-										onClick={ handleCreateTicket }
-									/> */}
+								<Button
+									btnStyle={'secondary'}
+									content={t('Show ticket detail')}
+									onClick={() => router.push(`/${PAGES.TICKET_DETAIL}/?id=${ticket.id}`)}
+								/>
 							</Col>
 						</SC.StylesRow>
 					</SC.PanelContent>

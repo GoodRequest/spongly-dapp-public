@@ -5,6 +5,7 @@ import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
 import { map } from 'lodash'
 import { Col, Row, Spin } from 'antd'
+import { useRouter } from 'next-translate-routes'
 
 // components
 import Button from '@/atoms/button/Button'
@@ -38,6 +39,7 @@ import * as SC from './UserTicketTableRowStyles'
 // assets
 import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
 import DocumentIcon from '@/assets/icons/document-icon.svg'
+import { PAGES } from '@/utils/enums'
 
 type Props = {
 	ticket: UserTicket
@@ -48,6 +50,7 @@ type Props = {
 const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 	const { t } = useTranslation()
 	const { chain } = useNetwork()
+	const router = useRouter()
 	const [expiryDate, setExpiryDate] = useState(0)
 	const [isExpanded, setIsExpanded] = useState(false)
 	const [isClaiming, setIsClaiming] = useState(false)
@@ -264,9 +267,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 						<Button
 							btnStyle={'secondary'}
 							content={t('Show ticket detail')}
-							onClick={() => {
-								// TODO: redirect to detail
-							}}
+							onClick={() => router.push(`/${PAGES.TICKET_DETAIL}/?id=${ticket.id}`)}
 						/>
 					</Col>
 					{!!(ticket.isClaimable && isMyWallet) && (
