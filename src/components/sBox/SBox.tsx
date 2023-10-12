@@ -5,18 +5,18 @@ import * as SC from './SBoxStyles'
 type Props = {
 	title: string
 	value: string | number
-	icon?: any
+	extraContent?: any
 }
 
-const SBox = ({ title, value, icon }: Props) => {
+const SBox = ({ title, value, extraContent }: Props) => {
 	const { t } = useTranslation()
 	return (
 		<SC.SBoxWrapper>
-			<SC.SCColWrapper>
+			<SC.SBoxColWrapper>
 				<SC.SBoxTitle>{title}</SC.SBoxTitle>
 				<SC.SBoxValue>{value}</SC.SBoxValue>
-			</SC.SCColWrapper>
-			{icon && <SC.SBoxIcon src={icon} alt={'stat'} />}
+			</SC.SBoxColWrapper>
+			<SC.SBoxExtraContent>{extraContent}</SC.SBoxExtraContent>
 		</SC.SBoxWrapper>
 	)
 }

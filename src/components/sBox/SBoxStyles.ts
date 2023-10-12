@@ -6,12 +6,13 @@ export const SBoxWrapper = styled.div`
 	padding-left: 20px;
 	padding-right: 20px;
 	align-items: center;
+	justify-content: space-between;
 	height: 90px;
 	width: 100%;
 	border-radius: 12px;
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 `
-export const SCColWrapper = styled.div`
+export const SBoxColWrapper = styled.div`
 	flex-direction: column;
 `
 export const SBoxTitle = styled.div`
@@ -24,4 +25,11 @@ export const SBoxValue = styled.div`
 `
 export const SBoxIcon = styled.img`
 	height: 90px;
+`
+
+export const SBoxExtraContent = styled.div`
+	pointer-events: none;
+	button {
+		pointer-events: all;
+	}
 `

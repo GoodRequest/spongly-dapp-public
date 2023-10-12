@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Col } from 'antd'
+import { Col, Skeleton } from 'antd'
 import { breakpoints } from '@/styles/theme'
 
 export const MainContainer = styled.main`
@@ -22,7 +22,15 @@ export const MainContainer = styled.main`
 		margin-left: 16px;
 	}
 `
-
+export const StatsOverlayWrapper = styled.div`
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	@media (max-width: ${breakpoints.lg}px) {
+		cursor: grab;
+		min-width: 1200px;
+	}
+`
 export const SmallMainContainer = styled.div`
 	display: block;
 	max-width: 977px;
@@ -66,5 +74,21 @@ export const MainContentContainer = styled(Col)`
 
 	@media (max-width: ${breakpoints.semixxl}px) {
 		width: 100%;
+	}
+`
+
+export const RowSkeleton = styled(Skeleton)`
+	margin-bottom: 16px;
+	.ant-skeleton-content {
+		padding: 40px 60px;
+		background: ${({ theme }) => theme['color-base-surface-secondary']};
+		margin: 16px 0 16px 0;
+		border-radius: 12px;
+		h3,
+		ul li {
+			&::after {
+				background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(0, 0, 0, 0.2) 37%, rgba(255, 255, 255, 0.05) 63%) !important;
+			}
+		}
 	}
 `
