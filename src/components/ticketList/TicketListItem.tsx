@@ -164,7 +164,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 								<Col md={12} span={24}>
 									<Button
 										disabledPopoverText={t('Matches are no longer open to copy')}
-										// disabled={activeMatches?.length === 0} // If ticket with active matches is empty disable button
+										disabled={activeMatches?.length === 0} // If ticket with active matches is empty disable button
 										btnStyle={'primary'}
 										isLoading={isLoading}
 										content={type === TICKET_TYPE.ONGOING_TICKET ? t('Copy open positions') : t('Copy ticket')}
