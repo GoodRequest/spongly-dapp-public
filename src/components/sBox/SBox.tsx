@@ -4,7 +4,7 @@ import * as SC from './SBoxStyles'
 
 type Props = {
 	title: string
-	value: string
+	value: string | number
 	icon?: any
 }
 
