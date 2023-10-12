@@ -13,7 +13,7 @@ import SortIcon from '@/assets/icons/sort-icon.svg'
 
 // utils
 import { GET_TIPSTERS } from '@/utils/queries'
-import { ENDPOINTS, LEADERBOARD_SORTING, ORDER_DIRECTION } from '@/utils/constants'
+import { LEADERBOARD_SORTING, ORDER_DIRECTION } from '@/utils/constants'
 import { decodeSorter, markedValue, setSort } from '@/utils/helpers'
 import { roundPrice } from '@/utils/formatters/currency'
 import { formatAccount } from '@/utils/formatters/string'
