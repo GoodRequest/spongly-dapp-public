@@ -1219,6 +1219,7 @@ export const parsePositionBalanceToUserTicket = (ticket: PositionBalance): UserT
 		maturityDate: Number(ticket?.position?.market?.maturityDate),
 		isClaimable: false,
 		timestamp: 0,
+		account: ticket?.account,
 		positions: [
 			{
 				// some are moved up so its easier to work with them
@@ -1258,6 +1259,7 @@ export const parseParlayToUserTicket = (ticket: ParlayMarket): UserTicket => {
 		timestamp: ticket.timestamp,
 		sportMarketsFromContract: ticket.sportMarketsFromContract,
 		isClaimable: false,
+		account: ticket?.account,
 		positions: ticket?.positions?.map((positionItem) => {
 			return {
 				// some are moved up so its easier to work with them

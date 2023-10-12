@@ -176,6 +176,7 @@ export type UserTicket = {
 	ticketType: WALLET_TICKETS
 	isClaimable: boolean
 	timestamp: string | number
+	account?: string
 	positions: [
 		{
 			id: number | string

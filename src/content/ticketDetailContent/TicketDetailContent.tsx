@@ -2,34 +2,55 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'next-export-i18n'
 import { useRouter } from 'next-translate-routes'
 import { useLazyQuery } from '@apollo/client'
-import { GET_PARLAY_DETAIL, GET_POSITION_BALANCE_DETAIL } from '@/utils/queries'
-import { parseParlayToUserTicket, parsePositionBalanceToUserTicket } from '@/utils/helpers'
+import { useNetwork } from 'wagmi'
+import { Col, Row } from 'antd'
+import { GET_PARLAY_DETAIL, GET_POSITION_BALANCE_DETAIL, GET_POSITION_BALANCE_TRANSACTION } from '@/utils/queries'
+import { assignOtherAttrsToUserTicket, parseParlayToUserTicket, parsePositionBalanceToUserTicket } from '@/utils/helpers'
+import { UserTicket } from '@/typescript/types'
+import networkConnector from '@/utils/networkConnector'
+import BackButton from '@/atoms/backButton/BackButton'
+import { PAGES } from '@/utils/enums'
 
 const TicketDetailContent = () => {
 	const { t } = useTranslation()
+	const { chain } = useNetwork()
 	const router = useRouter()
+	const { signer } = networkConnector
 	const [fetchParlayDetail] = useLazyQuery(GET_PARLAY_DETAIL)
 	const [fetchPositionDetail] = useLazyQuery(GET_POSITION_BALANCE_DETAIL)
-	const [ticketData, setTicketData] = useState<any[]>([])
+	const [fetchPositionBalanceMarketTransactions] = useLazyQuery(GET_POSITION_BALANCE_TRANSACTION)
+	const [ticketData, setTicketData] = useState<UserTicket>([])
 
 	const [isLoading, setIsLoading] = useState(false)
 
 	const fetchData = async (isParlay: boolean) => {
 		try {
-			let result
+			let userTicket
+			let marketData
 			if (isParlay) {
 				const { data } = await fetchParlayDetail({
-					variables: { id: router.query.id }
+					variables: { id: router.query.id },
+					context: { chainId: chain?.id }
 				})
-				result = parseParlayToUserTicket(data?.parlayMarket)
+				userTicket = parseParlayToUserTicket(data?.parlayMarket)
 			} else {
-				const { data } = await fetchPositionDetail({
-					variables: { id: router.query.id }
+				const { data: positionDetailData } = await fetchPositionDetail({
+					variables: { id: router.query.id },
+					context: { chainId: chain?.id }
 				})
-				result = parsePositionBalanceToUserTicket(data?.positionBalance)
+				userTicket = parsePositionBalanceToUserTicket(positionDetailData?.positionBalance)
+
+				const { data: marketTransactionsData } = await fetchPositionBalanceMarketTransactions({
+					variables: { id: userTicket.id },
+					context: { chainId: chain?.id }
+				})
+				marketData = marketTransactionsData.marketTransactions
 			}
 
-			console.log(result)
+			assignOtherAttrsToUserTicket([userTicket], marketData, chain?.id, signer).then((ticketsWithOtherAttrs) => {
+				// NOTE: always just one ticket
+				setTicketData(ticketsWithOtherAttrs?.[0])
+			})
 		} catch (e) {
 			// TODO: throw notif
 			console.error(e)
@@ -54,7 +75,14 @@ const TicketDetailContent = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [router.query.id])
 
-	return <span>Dzengala</span>
+	return (
+		<Row gutter={[0, 16]}>
+			<Col span={24}>
+				{/* TODO: redirect to Tickets / My-Wallet / Tipster-detail */}
+				<BackButton backUrl={`/${PAGES.TICKETS}`} />
+			</Col>
+		</Row>
+	)
 }
 
 export default TicketDetailContent

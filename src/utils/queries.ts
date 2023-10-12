@@ -98,6 +98,14 @@ export const GET_USERS_TRANSACTIONS = gql`
 	}
 `
 
+export const GET_POSITION_BALANCE_TRANSACTION = gql`
+	query getPositionBalanceTransaction($id: String!) {
+		marketTransactions(where: { positionBalance_: { id: $id } }) {
+			timestamp
+		}
+	}
+`
+
 export const GET_USERS_STATISTICS = gql`
 	query getUser($id: String!) {
 		user(id: $id) {
@@ -305,22 +313,25 @@ export const GET_MATCH_DETAIL = gql`
 export const GET_PARLAY_DETAIL = gql`
 	query getParlayDetail($id: String!) {
 		parlayMarket(id: $id) {
-			id
-			claimed
-			sUSDPaid
-			timestamp
-			totalQuote
-			won
 			account
-			totalAmount
+			claimed
+			id
+			sUSDPaid
 			lastGameStarts
 			marketQuotes
-			positions(first: 10, skip: 0) {
+			totalQuote
+			totalAmount
+			timestamp
+			txHash
+			won
+			sportMarketsFromContract
+			positions {
 				claimable
 				id
 				side
 				market {
 					id
+					gameId
 					address
 					doubleChanceMarketType
 					homeTeam
@@ -329,9 +340,8 @@ export const GET_PARLAY_DETAIL = gql`
 					awayOdds
 					awayScore
 					awayTeam
+					drawOdds
 					betType
-					total
-					spread
 					finalResult
 					isCanceled
 					isOpen
@@ -339,7 +349,6 @@ export const GET_PARLAY_DETAIL = gql`
 					isResolved
 					maturityDate
 					tags
-					gameId
 				}
 			}
 			sportMarkets {
@@ -354,41 +363,36 @@ export const GET_PARLAY_DETAIL = gql`
 export const GET_POSITION_BALANCE_DETAIL = gql`
 	query getPositionBalanceDetail($id: String!) {
 		positionBalance(id: $id) {
-			account
+			sUSDPaid
+			firstTxHash
 			amount
 			id
-			sUSDPaid
+			claimed
+			account
 			position {
-				side
-				id
 				claimable
+				id
+				side
 				market {
+					id
 					address
+					doubleChanceMarketType
+					homeTeam
+					homeScore
+					homeOdds
+					gameId
 					awayOdds
 					awayScore
+					drawOdds
 					awayTeam
 					betType
-					downAddress
-					drawAddress
-					drawOdds
-					doubleChanceMarketType
 					finalResult
-					homeOdds
-					homeScore
-					homeTeam
-					id
 					isCanceled
 					isOpen
 					isPaused
 					isResolved
-					total
-					timestamp
-					resultDetails
-					tags
-					spread
-					total
 					maturityDate
-					gameId
+					tags
 				}
 			}
 		}
