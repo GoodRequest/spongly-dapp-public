@@ -50,7 +50,7 @@ export const OddButton = styled(Button)<{ active?: boolean; isMobilePanel?: bool
 		border-color: ${({ theme }) => theme['color-base-surface-quaternary']};
 		border-color: ${({ theme, active }) => (active ? theme['color-base-action-primary-default'] : theme['color-base-action-primary-default'])};
 		&:hover {
-			border-color: unset;
+			border-color: ${({ theme }) => theme['color-base-surface-quaternary']} !important;
 		}
 	}
 	@media (max-width: ${breakpoints.md}px) {
