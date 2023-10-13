@@ -22,9 +22,9 @@ import { roundPrice } from '@/utils/formatters/currency'
 import * as PSC from '@/layout/content/ContentStyles'
 import TicketBetContainer from '@/components/ticketBetContainer/TicketBetContainer'
 import PositionsList from '@/components/positionsList/PositionsList'
-import { Network } from '@/utils/constants'
+import { Network, OddsType } from '@/utils/constants'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
-import { formatPositionOdds } from '@/utils/formatters/quote'
+import { formatParlayQuote, formatPositionOdds, formatQuote } from '@/utils/formatters/quote'
 
 const TicketDetailContent = () => {
 	const { t } = useTranslation()
@@ -87,23 +87,27 @@ const TicketDetailContent = () => {
 				positionsWithMergedCombinedPositions?.forEach((item, index) => {
 					if (isParlay) {
 						if (!quote) {
-							quote = item?.isCombined ? item?.odds : Number(ticketsWithOtherAttrs?.[0]?.marketQuotes?.[index])
+							quote = item?.isCombined
+								? Number(formatParlayQuote(item?.odds))
+								: Number(formatParlayQuote(Number(ticketsWithOtherAttrs?.[0]?.marketQuotes?.[index])))
 						} else {
 							// eslint-disable-next-line
 							// @ts-ignore
-							quote *= item?.isCombined ? item.odds : Number(ticketsWithOtherAttrs?.[0].marketQuotes?.[index])
+							quote *= item?.isCombined
+								? Number(formatParlayQuote(item.odds))
+								: Number(formatParlayQuote(Number(ticketsWithOtherAttrs?.[0].marketQuotes?.[index])))
 						}
 					} else if (!quote) {
 						// eslint-disable-next-line
 							// @ts-ignore
-						quote = item?.isCombined ? item?.odds : formatPositionOdds(item)
+						quote = item?.isCombined ? Number(formatParlayQuote(item?.odds)) : formatPositionOdds(item)
 					} else {
 						// eslint-disable-next-line
 						// @ts-ignore
-						quote *= item?.isCombined ? item.odds : formatPositionOdds(item)
+						quote *= item?.isCombined ? Number(formatParlayQuote(item.odds)) : formatPositionOdds(item)
 					}
 				})
-				setQuote(quote)
+				setQuote(quote?.toFixed(2))
 			})
 		} catch (e) {
 			// TODO: throw notif
@@ -114,20 +118,20 @@ const TicketDetailContent = () => {
 	}
 
 	useEffect(() => {
-		if (router.query.ticketId) {
-			setIsLoading(true)
-			if (router.query.ticketId.includes('-')) {
-				fetchData(false)
+		if (router.isReady) {
+			if (router.query.ticketId) {
+				setIsLoading(true)
+				if (router.query.ticketId.includes('-')) {
+					fetchData(false)
+				} else {
+					fetchData(true)
+				}
 			} else {
-				fetchData(true)
+				router.push(`/${PAGES.TICKETS}`)
 			}
 		}
-		// else {
-		// 	NOTE: redirect to 404?
-		// }
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [router.query.ticketId])
+	}, [router.query.ticketId, router.isReady])
 
 	return (
 		<>
@@ -158,8 +162,8 @@ const TicketDetailContent = () => {
 					</Col>
 				)}
 			</Row>
-			<Row>
-				<PSC.MainContentContainer>
+			<Row style={{ marginTop: '16px' }}>
+				<PSC.MainContentContainer style={{ paddingRight: '32px' }}>
 					{positionsData ? <PositionsList positionsWithCombinedAttrs={positionsData} /> : <div>Is empty</div>}
 				</PSC.MainContentContainer>
 				<PSC.MobileHiddenCol span={8}>

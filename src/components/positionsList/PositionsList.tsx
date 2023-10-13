@@ -8,9 +8,22 @@ type Props = {
 }
 
 const PositionsList = ({ positionsWithCombinedAttrs }: Props) => {
-	// console.log(positionsWithCombinedAttrs)
-
-	return <SC.PositionsListWrapper>CONTENT</SC.PositionsListWrapper>
+	return (
+		<SC.PositionsListWrapper>
+			{positionsWithCombinedAttrs?.map((item) => {
+				return (
+					<SC.PositionListItem style={{ marginBottom: '16px' }}>
+						<SC.ColCenteredVertically span={12}>
+							{item.market?.homeTeam} VS
+							{item.market?.awayTeam}
+						</SC.ColCenteredVertically>
+						<SC.ColCenteredVertically span={6}>Position.</SC.ColCenteredVertically>
+						<SC.ColCenteredVertically span={6}>Copy position</SC.ColCenteredVertically>
+					</SC.PositionListItem>
+				)
+			})}
+		</SC.PositionsListWrapper>
+	)
 }
 
 export default PositionsList
