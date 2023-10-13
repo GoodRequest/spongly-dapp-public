@@ -1,6 +1,7 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Col } from 'antd'
 import { breakpoints } from '@/styles/theme'
+import { MATCHES, WALLET_TICKETS } from '@/utils/enums'
 
 export const MainContainer = styled.main`
 	margin-left: auto;
@@ -66,5 +67,35 @@ export const MainContentContainer = styled(Col)`
 
 	@media (max-width: ${breakpoints.semixxl}px) {
 		width: 100%;
+	}
+`
+
+export const Status = styled.div<{ visible: boolean; status?: WALLET_TICKETS }>`
+	display: ${({ visible }) => (visible ? 'block' : 'none')};
+	position: fixed;
+	right: -400px;
+	top: 250px;
+	width: 545px;
+	height: 721px;
+	border-radius: 721px;
+	background: #6c78ed;
+	filter: blur(175px);
+	${(p) =>
+		p.status === WALLET_TICKETS.SUCCESSFUL &&
+		css`
+			background: #aaff99; // TODO: add tokens from figma because not exist in figma
+		`}
+	${(p) =>
+		(p.status === WALLET_TICKETS.MISSED || p.status === WALLET_TICKETS.PAUSED_CANCELED) &&
+		css`
+			background: #ff6759;
+		`};
+	${(p) =>
+		p.status === WALLET_TICKETS.ONGOING &&
+		css`
+			background: #ff8833;
+		`};
+	@media (max-width: ${breakpoints.md}px) {
+		display: none;
 	}
 `

@@ -3,6 +3,8 @@ import { TextLGMedium, TextXSRegular } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
 export const Footer = styled.footer`
+	position: relative;
+	z-index: 2;
 	background: ${({ theme }) => theme['color-base-surface-primary']};
 	margin-top: 100px;
 	bottom: 0px;
