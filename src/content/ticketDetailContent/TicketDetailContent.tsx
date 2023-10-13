@@ -5,8 +5,14 @@ import { useLazyQuery } from '@apollo/client'
 import { useNetwork } from 'wagmi'
 import { Col, Row, Spin } from 'antd'
 import { GET_PARLAY_DETAIL, GET_POSITION_BALANCE_DETAIL, GET_POSITION_BALANCE_TRANSACTION } from '@/utils/queries'
-import { assignOtherAttrsToUserTicket, parseParlayToUserTicket, parsePositionBalanceToUserTicket } from '@/utils/helpers'
-import { UserTicket } from '@/typescript/types'
+import {
+	assignOtherAttrsToUserTicket,
+	getPositionsWithMergedCombinedPositions,
+	orderPositionsAsSportMarkets,
+	parseParlayToUserTicket,
+	parsePositionBalanceToUserTicket
+} from '@/utils/helpers'
+import { SGPItem, UserTicket } from '@/typescript/types'
 import networkConnector from '@/utils/networkConnector'
 import BackButton from '@/atoms/backButton/BackButton'
 import { PAGES } from '@/utils/enums'
@@ -16,6 +22,9 @@ import { roundPrice } from '@/utils/formatters/currency'
 import * as PSC from '@/layout/content/ContentStyles'
 import TicketBetContainer from '@/components/ticketBetContainer/TicketBetContainer'
 import PositionsList from '@/components/positionsList/PositionsList'
+import { Network } from '@/utils/constants'
+import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
+import { formatPositionOdds } from '@/utils/formatters/quote'
 
 const TicketDetailContent = () => {
 	const { t } = useTranslation()
@@ -25,9 +34,23 @@ const TicketDetailContent = () => {
 	const [fetchParlayDetail] = useLazyQuery(GET_PARLAY_DETAIL)
 	const [fetchPositionDetail] = useLazyQuery(GET_POSITION_BALANCE_DETAIL)
 	const [fetchPositionBalanceMarketTransactions] = useLazyQuery(GET_POSITION_BALANCE_TRANSACTION)
-	const [positionsData, setPositionsData] = useState<UserTicket>()
+	const [positionsData, setPositionsData] = useState<any>()
+	const [ticketData, setTicketData] = useState<UserTicket>()
+	const [quote, setQuote] = useState<any>()
 
 	const [isLoading, setIsLoading] = useState(false)
+
+	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
+
+	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
+		enabled: true
+	})
+
+	useEffect(() => {
+		if (sgpFeesRaw.isSuccess && sgpFeesRaw.data) {
+			setSgpFees(sgpFeesRaw.data)
+		}
+	}, [sgpFeesRaw.data, sgpFeesRaw.isSuccess])
 
 	const fetchData = async (isParlay: boolean) => {
 		try {
@@ -55,7 +78,32 @@ const TicketDetailContent = () => {
 
 			assignOtherAttrsToUserTicket([userTicket], marketData, chain?.id, signer).then((ticketsWithOtherAttrs) => {
 				// NOTE: always just one ticket
-				setPositionsData(ticketsWithOtherAttrs?.[0])
+				const orderedPositions = orderPositionsAsSportMarkets(ticketsWithOtherAttrs?.[0])
+
+				const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions, ticketsWithOtherAttrs?.[0], sgpFees)
+				setTicketData(ticketsWithOtherAttrs?.[0])
+				setPositionsData(positionsWithMergedCombinedPositions)
+				let quote: undefined | number
+				positionsWithMergedCombinedPositions?.forEach((item, index) => {
+					if (isParlay) {
+						if (!quote) {
+							quote = item?.isCombined ? item?.odds : Number(ticketsWithOtherAttrs?.[0]?.marketQuotes?.[index])
+						} else {
+							// eslint-disable-next-line
+							// @ts-ignore
+							quote *= item?.isCombined ? item.odds : Number(ticketsWithOtherAttrs?.[0].marketQuotes?.[index])
+						}
+					} else if (!quote) {
+						// eslint-disable-next-line
+							// @ts-ignore
+						quote = item?.isCombined ? item?.odds : formatPositionOdds(item)
+					} else {
+						// eslint-disable-next-line
+						// @ts-ignore
+						quote *= item?.isCombined ? item.odds : formatPositionOdds(item)
+					}
+				})
+				setQuote(quote)
 			})
 		} catch (e) {
 			// TODO: throw notif
@@ -81,14 +129,6 @@ const TicketDetailContent = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [router.query.ticketId])
 
-	// console.log(ticketData)
-	// tipsterAddress: string
-	// buyIn: number
-	// quote: string
-	// matches: number
-
-	// console.log(ticketData?.account)
-
 	return (
 		<>
 			<Row gutter={[0, 16]}>
@@ -105,11 +145,12 @@ const TicketDetailContent = () => {
 								{
 									<TicketStatisticRow
 										isLoading={isLoading}
-										tipsterAddress={positionsData?.account || ''}
-										buyIn={roundPrice(positionsData?.amount || 0, true)}
-										quote={'26,45'}
-										claim={'1200 $'}
-										matches={24}
+										tipsterAddress={ticketData?.account || ''}
+										buyIn={roundPrice(ticketData?.sUSDPaid, true)}
+										// changes if ticket type
+										claim={roundPrice(positionsData?.amount || 0, true)}
+										quote={quote}
+										matches={positionsData?.length}
 									/>
 								}
 							</Col>
@@ -118,7 +159,9 @@ const TicketDetailContent = () => {
 				)}
 			</Row>
 			<Row>
-				<PSC.MainContentContainer>{positionsData ? <PositionsList positionsData={positionsData} /> : <div>Is empty</div>}</PSC.MainContentContainer>
+				<PSC.MainContentContainer>
+					{positionsData ? <PositionsList positionsWithCombinedAttrs={positionsData} /> : <div>Is empty</div>}
+				</PSC.MainContentContainer>
 				<PSC.MobileHiddenCol span={8}>
 					<TicketBetContainer />
 				</PSC.MobileHiddenCol>

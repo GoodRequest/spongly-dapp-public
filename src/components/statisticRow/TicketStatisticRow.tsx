@@ -11,7 +11,7 @@ type Props = {
 	buyIn?: string | number
 	quote?: string
 	matches?: number
-	claim?: string
+	claim?: string | number
 	// copies
 }
 
