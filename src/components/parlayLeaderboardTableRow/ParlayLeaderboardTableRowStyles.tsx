@@ -6,8 +6,8 @@ import { breakpoints } from '@/styles/theme'
 export const ParlayLeaderboardTableRow = styled(Row)`
 	border-radius: 12px;
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
-	padding: 8px;
-	height: 80px;
+	padding: 24px;
+	//height: 80px;
 	margin-bottom: 16px;
 	@media (max-width: ${breakpoints.md}px) {
 		height: 160px;
@@ -25,7 +25,7 @@ export const BadgeCol = styled(Col)`
 `
 
 export const AddressCol = styled(Col)`
-	padding-left: 24px;
+	//padding-left: 24px;
 `
 
 export const BadgeIcon = styled.img`
@@ -34,10 +34,10 @@ export const BadgeIcon = styled.img`
 `
 
 export const CenterRowContent = styled(Col)`
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
-	align-items: center;
+	//display: flex;
+	//justify-content: center;
+	//flex-direction: column;
+	//align-items: center;
 `
 
 export const CenterDiv = styled.div`
@@ -76,14 +76,14 @@ export const ParlayDivider = styled(Divider)`
 		border-top: ${({ theme }) => `1px solid ${theme['color-base-action-primary-default']}`};
 		opacity: 0.5;
 		position: absolute;
-		margin-top: -90px;
+		margin-top: -84px;
 		z-index: 10;
 	}
 `
 
 export const ColumnNameText = styled.span`
 	display: none;
-	${TextXSMedium}
+	${TextXSMedium};
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
 	@media (max-width: ${breakpoints.md}px) {
 		display: block;

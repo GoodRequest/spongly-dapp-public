@@ -40,13 +40,13 @@ const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, 
 
 	return (
 		<>
-			<SC.ParlayLeaderboardTableRow align={'middle'}>
+			<SC.ParlayLeaderboardTableRow align={'middle'} gutter={[0, 32]}>
 				<Col md={{ span: 6, order: 1 }} xs={{ span: 18, order: 1 }}>
 					<Row align={'middle'} justify={'start'} wrap={false}>
 						{isBellowOrEqualResolution(size, RESOLUTIONS.MD) ? <SC.CenterDiv>{rankContent}</SC.CenterDiv> : rankContent}
 					</Row>
 				</Col>
-				<SC.CenterRowContent md={{ span: 3, order: 2 }} xs={{ span: 6, order: 6 }}>
+				<SC.CenterRowContent md={{ span: 4, order: 2 }} xs={{ span: 6, order: 6 }}>
 					{isLoading ? (
 						skeletonPreset(20)
 					) : (
@@ -86,7 +86,7 @@ const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, 
 						</>
 					)}
 				</SC.CenterRowContent>
-				<SC.CenterRowContent md={{ span: 4, order: 6 }} xs={{ span: 6, order: 2 }}>
+				<SC.CenterRowContent md={{ span: 3, order: 6 }} xs={{ span: 6, order: 2 }}>
 					{isLoading
 						? skeletonPreset(50)
 						: reward && (

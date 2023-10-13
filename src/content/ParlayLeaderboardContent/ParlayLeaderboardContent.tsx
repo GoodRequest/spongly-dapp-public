@@ -349,10 +349,10 @@ const ParlayLeaderboardContent = () => {
 					<Col span={4}>
 						<Sorter title={t('Positions')} name={PARLAY_LEADERBOARD_SORTING.POSITION} />
 					</Col>
-					<Col span={3}>
+					<Col span={4}>
 						<Sorter title={t('Buy-in')} name={PARLAY_LEADERBOARD_SORTING.PAID} />
 					</Col>
-					<Col span={4}>
+					<Col span={3}>
 						<Sorter title={t('Quote')} name={PARLAY_LEADERBOARD_SORTING.QUOTE} />
 					</Col>
 					<Col span={4}>
