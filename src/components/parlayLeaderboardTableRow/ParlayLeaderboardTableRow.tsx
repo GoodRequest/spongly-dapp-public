@@ -1,10 +1,7 @@
-import { Col, Row } from 'antd'
+import { Col } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 
 import { ParlayLeaderboardTableItem } from '@/typescript/types'
-import { isBellowOrEqualResolution } from '@/utils/helpers'
-import { useMedia } from '@/hooks/useMedia'
-import { RESOLUTIONS } from '@/utils/enums'
 import { formatAddress } from '@/utils/formatters/string'
 
 import * as SC from './ParlayLeaderboardTableRowStyles'
@@ -13,40 +10,31 @@ import BadgeIcon from '@/assets/icons/medal-star.svg'
 
 const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, reward, isLoading = false }: ParlayLeaderboardTableItem) => {
 	const { t } = useTranslation()
-	const size = useMedia()
 
 	const skeletonPreset = (width: number) => {
 		return <SC.StyledSkeleton title={false} active paragraph={{ rows: 1, width }} />
 	}
 
-	const rankContent = (
-		<>
-			<SC.BadgeCol>
-				<SC.BadgeIcon src={BadgeIcon} />
-				{isLoading ? skeletonPreset(15) : <SC.ParlayLeaderboardTableRankText>{rank}</SC.ParlayLeaderboardTableRankText>}
-			</SC.BadgeCol>
-			<SC.AddressCol flex={'auto'}>
-				{isLoading ? (
-					skeletonPreset(120)
-				) : (
-					<div style={{ minWidth: '80px' }}>
-						<SC.ColumnNameText>{t('Wallet')}</SC.ColumnNameText>
-						<SC.AddressText>{formatAddress(address)}</SC.AddressText>
-					</div>
-				)}
-			</SC.AddressCol>
-		</>
-	)
-
 	return (
 		<>
-			<SC.ParlayLeaderboardTableRow align={'middle'} gutter={[0, 32]}>
-				<Col md={{ span: 6, order: 1 }} xs={{ span: 18, order: 1 }}>
-					<Row align={'middle'} justify={'start'} wrap={false}>
-						{isBellowOrEqualResolution(size, RESOLUTIONS.MD) ? <SC.CenterDiv>{rankContent}</SC.CenterDiv> : rankContent}
-					</Row>
+			<SC.ParlayLeaderboardTableRow align={'middle'} gutter={[8, 32]}>
+				<Col md={{ span: 3, order: 1 }} xs={{ span: 6, order: 1 }}>
+					<SC.RankBadge>
+						<SC.BadgeIcon src={BadgeIcon} />
+						{isLoading ? skeletonPreset(15) : <SC.ParlayLeaderboardTableRankText>{rank}</SC.ParlayLeaderboardTableRankText>}
+					</SC.RankBadge>
 				</Col>
-				<SC.CenterRowContent md={{ span: 4, order: 2 }} xs={{ span: 6, order: 6 }}>
+				<Col md={{ span: 3, order: 1 }} xs={{ span: 12, order: 1 }}>
+					{isLoading ? (
+						skeletonPreset(120)
+					) : (
+						<div style={{ minWidth: '80px' }}>
+							<SC.ColumnNameText>{t('Wallet')}</SC.ColumnNameText>
+							<SC.AddressText>{formatAddress(address)}</SC.AddressText>
+						</div>
+					)}
+				</Col>
+				<Col md={{ span: 4, order: 2 }} xs={{ span: 6, order: 6 }}>
 					{isLoading ? (
 						skeletonPreset(20)
 					) : (
@@ -55,8 +43,8 @@ const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, 
 							<SC.ParlayLeaderboardTableText>{position}</SC.ParlayLeaderboardTableText>
 						</>
 					)}
-				</SC.CenterRowContent>
-				<SC.CenterRowContent md={{ span: 4, order: 3 }} xs={{ span: 6, order: 3 }}>
+				</Col>
+				<Col md={{ span: 4, order: 3 }} xs={{ span: 6, order: 3 }}>
 					{isLoading ? (
 						skeletonPreset(50)
 					) : (
@@ -65,8 +53,8 @@ const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, 
 							<SC.ParlayLeaderboardTableText>{paid} $</SC.ParlayLeaderboardTableText>
 						</>
 					)}
-				</SC.CenterRowContent>
-				<SC.CenterRowContent md={{ span: 3, order: 4 }} xs={{ span: 6, order: 4 }}>
+				</Col>
+				<Col md={{ span: 3, order: 4 }} xs={{ span: 6, order: 4 }}>
 					{isLoading ? (
 						skeletonPreset(20)
 					) : (
@@ -75,8 +63,8 @@ const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, 
 							<SC.ParlayLeaderboardTableText>{quote}</SC.ParlayLeaderboardTableText>
 						</>
 					)}
-				</SC.CenterRowContent>
-				<SC.CenterRowContent md={{ span: 4, order: 5 }} xs={{ span: 6, order: 5 }}>
+				</Col>
+				<Col md={{ span: 4, order: 5 }} xs={{ span: 6, order: 5 }}>
 					{isLoading ? (
 						skeletonPreset(50)
 					) : (
@@ -85,8 +73,8 @@ const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, 
 							<SC.ParlayLeaderboardTableText>{won}$</SC.ParlayLeaderboardTableText>
 						</>
 					)}
-				</SC.CenterRowContent>
-				<SC.CenterRowContent md={{ span: 3, order: 6 }} xs={{ span: 6, order: 2 }}>
+				</Col>
+				<Col md={{ span: 3, order: 6 }} xs={{ span: 6, order: 2 }}>
 					{isLoading
 						? skeletonPreset(50)
 						: reward && (
@@ -100,7 +88,7 @@ const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, 
 									</div>
 								</>
 						  )}
-				</SC.CenterRowContent>
+				</Col>
 			</SC.ParlayLeaderboardTableRow>
 			<SC.ParlayDivider />
 		</>
