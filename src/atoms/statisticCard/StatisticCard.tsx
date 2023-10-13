@@ -11,10 +11,20 @@ type Props = {
 	img?: string
 	showMobileInColumn?: boolean
 	isAddress?: boolean
+	addMobileBackground?: boolean
 }
-const StatisticCard = ({ value, title, isLoading = false, filled = false, img, showMobileInColumn = false, isAddress = false }: Props) => (
+const StatisticCard = ({
+	value,
+	title,
+	isLoading = false,
+	filled = false,
+	img,
+	showMobileInColumn = false,
+	isAddress = false,
+	addMobileBackground = false
+}: Props) => (
 	<SC.ColorWrapper filled={filled}>
-		<SC.StatisticCard filled={filled} showMobileInColumn={showMobileInColumn}>
+		<SC.StatisticCard filled={filled} showMobileInColumn={showMobileInColumn} addMobileBackground={addMobileBackground}>
 			{img && <SC.Image filled={filled} src={img} />}
 			<SC.StatisticWrapper isAddress={isAddress}>
 				<SC.Title>{title}</SC.Title>

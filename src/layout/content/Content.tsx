@@ -15,7 +15,8 @@ interface ILayout {
 const Content: FC<ILayout> = ({ children }) => {
 	const router = useRouter()
 	const { id } = router.query
-	const fullWidthPages = [`/${PAGES.PARLAY_SUPERSTARS}`, `/${PAGES.LEADERBOARD}`]
+	const fullWidthPages = [`/${PAGES.PARLAY_SUPERSTARS}`, `/${PAGES.LEADERBOARD}`, `/${PAGES.TICKET_DETAIL}`]
+
 	return (
 		<SC.MainContainer>
 			<Row gutter={30} style={{ display: 'flex', justifyContent: 'space-between' }}>

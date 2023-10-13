@@ -13,7 +13,7 @@ export const ColorWrapper = styled.div<{ filled: boolean }>`
 	border-radius: 12px;
 `
 
-export const StatisticCard = styled.div<{ filled: boolean; showMobileInColumn: boolean }>`
+export const StatisticCard = styled.div<{ filled: boolean; showMobileInColumn: boolean; addMobileBackground: boolean }>`
 	width: 100%;
 	border-radius: 12px;
 	padding: 8px;
@@ -24,21 +24,32 @@ export const StatisticCard = styled.div<{ filled: boolean; showMobileInColumn: b
 	justify-content: center;
 	background: ${({ filled }) => (filled ? 'radial-gradient(farthest-corner at bottom right, rgba(108, 120, 237, 0.5), transparent 200px)' : 'transparent')};
 	box-shadow: ${({ theme, filled }) => (filled ? theme['drop-shadow-xs'] : 'none')};
-
 	@media (max-width: ${breakpoints.lg}px) {
-		background: ${({ filled }) =>
-			filled ? 'radial-gradient(farthest-corner at bottom right, rgba(108, 120, 237, 0.5), transparent 1000px)' : 'transparent'};
+		background: ${({ filled, addMobileBackground, theme }) =>
+			filled
+				? 'radial-gradient(farthest-corner at bottom right, rgba(108, 120, 237, 0.5), transparent 1000px)'
+				: addMobileBackground
+				? theme['color-base-surface-secondary']
+				: 'transparent'};
 		flex-direction: ${({ showMobileInColumn }) => (showMobileInColumn ? 'column' : 'row')};
 	}
 
 	@media (max-width: ${breakpoints.md}px) {
-		background: ${({ filled }) =>
-			filled ? 'radial-gradient(farthest-corner at bottom right, rgba(108, 120, 237, 0.5), transparent 500px)' : 'transparent'};
+		background: ${({ filled, addMobileBackground, theme }) =>
+			filled
+				? 'radial-gradient(farthest-corner at bottom right, rgba(108, 120, 237, 0.5), transparent 500px)'
+				: addMobileBackground
+				? theme['color-base-surface-secondary']
+				: 'transparent'};
 	}
 
 	@media (max-width: ${breakpoints.sm}px) {
-		background: ${({ filled }) =>
-			filled ? 'radial-gradient(farthest-corner at bottom right, rgba(108, 120, 237, 0.5), transparent 300px)' : 'transparent'};
+		background: ${({ filled, addMobileBackground, theme }) =>
+			filled
+				? 'radial-gradient(farthest-corner at bottom right, rgba(108, 120, 237, 0.5), transparent 300px)'
+				: addMobileBackground
+				? theme['color-base-surface-secondary']
+				: 'transparent'};
 	}
 `
 

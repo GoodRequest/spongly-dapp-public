@@ -13,6 +13,10 @@ import { PAGES } from '@/utils/enums'
 import TicketStatisticRow from '@/components/statisticRow/TicketStatisticRow'
 import { roundPrice } from '@/utils/formatters/currency'
 
+import * as PSC from '@/layout/content/ContentStyles'
+import TicketBetContainer from '@/components/ticketBetContainer/TicketBetContainer'
+import PositionsList from '@/components/positionsList/PositionsList'
+
 const TicketDetailContent = () => {
 	const { t } = useTranslation()
 	const { chain } = useNetwork()
@@ -21,7 +25,7 @@ const TicketDetailContent = () => {
 	const [fetchParlayDetail] = useLazyQuery(GET_PARLAY_DETAIL)
 	const [fetchPositionDetail] = useLazyQuery(GET_POSITION_BALANCE_DETAIL)
 	const [fetchPositionBalanceMarketTransactions] = useLazyQuery(GET_POSITION_BALANCE_TRANSACTION)
-	const [ticketData, setTicketData] = useState<UserTicket>()
+	const [positionsData, setPositionsData] = useState<UserTicket>()
 
 	const [isLoading, setIsLoading] = useState(false)
 
@@ -31,13 +35,13 @@ const TicketDetailContent = () => {
 			let marketData
 			if (isParlay) {
 				const { data } = await fetchParlayDetail({
-					variables: { id: router.query.id },
+					variables: { id: router.query.ticketId },
 					context: { chainId: chain?.id }
 				})
 				userTicket = parseParlayToUserTicket(data?.parlayMarket)
 			} else {
 				const { data: positionDetailData } = await fetchPositionDetail({
-					variables: { id: router.query.id },
+					variables: { id: router.query.ticketId },
 					context: { chainId: chain?.id }
 				})
 				userTicket = parsePositionBalanceToUserTicket(positionDetailData?.positionBalance)
@@ -51,7 +55,7 @@ const TicketDetailContent = () => {
 
 			assignOtherAttrsToUserTicket([userTicket], marketData, chain?.id, signer).then((ticketsWithOtherAttrs) => {
 				// NOTE: always just one ticket
-				setTicketData(ticketsWithOtherAttrs?.[0])
+				setPositionsData(ticketsWithOtherAttrs?.[0])
 			})
 		} catch (e) {
 			// TODO: throw notif
@@ -62,9 +66,9 @@ const TicketDetailContent = () => {
 	}
 
 	useEffect(() => {
-		if (router.query.id) {
+		if (router.query.ticketId) {
 			setIsLoading(true)
-			if (router.query.id.includes('-')) {
+			if (router.query.ticketId.includes('-')) {
 				fetchData(false)
 			} else {
 				fetchData(true)
@@ -75,40 +79,51 @@ const TicketDetailContent = () => {
 		// }
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [router.query.id])
+	}, [router.query.ticketId])
 
-	console.log(ticketData)
+	// console.log(ticketData)
 	// tipsterAddress: string
 	// buyIn: number
 	// quote: string
 	// matches: number
 
-	console.log(ticketData?.account)
+	// console.log(ticketData?.account)
 
 	return (
-		<Row gutter={[0, 16]}>
-			<Col span={24}>
-				{/* TODO: redirect to Tickets / My-Wallet / Tipster-detail */}
-				<BackButton backUrl={router?.query?.previousPath ? (router.query.previousPath as string) : `/${PAGES.TICKETS}`} />
-			</Col>
-			{isLoading ? (
-				<Spin />
-			) : (
+		<>
+			<Row gutter={[0, 16]}>
 				<Col span={24}>
-					<Row gutter={[0, 16]}>
-						<Col span={24}>
-							{
-								<TicketStatisticRow
-									isLoading={isLoading}
-									tipsterAddress={ticketData?.account || ''}
-									buyIn={roundPrice(ticketData?.amount || 0, true)}
-								/>
-							}
-						</Col>
-					</Row>
+					{/* TODO: redirect to Tickets / My-Wallet / Tipster-detail */}
+					<BackButton backUrl={router?.query?.previousPath ? (router.query.previousPath as string) : `/${PAGES.TICKETS}`} />
 				</Col>
-			)}
-		</Row>
+				{isLoading ? (
+					<Spin />
+				) : (
+					<Col span={24}>
+						<Row gutter={[0, 16]}>
+							<Col span={24}>
+								{
+									<TicketStatisticRow
+										isLoading={isLoading}
+										tipsterAddress={positionsData?.account || ''}
+										buyIn={roundPrice(positionsData?.amount || 0, true)}
+										quote={'26,45'}
+										claim={'1200 $'}
+										matches={24}
+									/>
+								}
+							</Col>
+						</Row>
+					</Col>
+				)}
+			</Row>
+			<Row>
+				<PSC.MainContentContainer>{positionsData ? <PositionsList positionsData={positionsData} /> : <div>Is empty</div>}</PSC.MainContentContainer>
+				<PSC.MobileHiddenCol span={8}>
+					<TicketBetContainer />
+				</PSC.MobileHiddenCol>
+			</Row>
+		</>
 	)
 }
 

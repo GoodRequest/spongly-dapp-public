@@ -11,9 +11,11 @@ type Props = {
 	buyIn?: string | number
 	quote?: string
 	matches?: number
+	claim?: string
+	// copies
 }
 
-const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches }: Props) => {
+const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, claim }: Props) => {
 	const { t } = useTranslation()
 	const { address } = useAccount()
 	const isMounted = useIsMounted()
@@ -21,10 +23,10 @@ const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches }
 
 	// NOTE: Number of copies, claim value missing atm, we can add claim though
 	return (
-		<Row gutter={[0, 32]}>
+		<Row gutter={[8, 12]}>
 			{isMounted && (
 				<>
-					<Col lg={6} md={24} sm={24} xs={24}>
+					<Col lg={5} md={24} sm={24} xs={24}>
 						<StatisticCard
 							img={getWalletImage(address as string)}
 							filled={true}
@@ -33,14 +35,17 @@ const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches }
 							title={isMyWallet ? t('My wallet') : t('Wallet')}
 						/>
 					</Col>
-					<Col lg={6} md={8} sm={8} xs={8}>
-						<StatisticCard showMobileInColumn={true} isLoading={isLoading} value={buyIn} title={t('Buy in')} />
+					<Col lg={5} md={12} sm={12} xs={12}>
+						<StatisticCard showMobileInColumn={true} isLoading={isLoading} value={buyIn} title={t('Buy in')} addMobileBackground={true} />
 					</Col>
-					<Col lg={6} md={8} sm={8} xs={8}>
-						<StatisticCard isLoading={isLoading} showMobileInColumn={true} value={quote} title={t('Quote')} />
+					<Col lg={5} md={12} sm={12} xs={12}>
+						<StatisticCard isLoading={isLoading} showMobileInColumn={true} value={quote} title={t('Quote')} addMobileBackground={true} />
 					</Col>
-					<Col lg={6} md={8} sm={8} xs={8}>
-						<StatisticCard isLoading={isLoading} showMobileInColumn={true} value={matches} title={t('Matches')} />
+					<Col lg={4} md={12} sm={12} xs={12}>
+						<StatisticCard isLoading={isLoading} showMobileInColumn={true} value={matches} title={t('Matches')} addMobileBackground={true} />
+					</Col>
+					<Col lg={5} md={12} sm={12} xs={12}>
+						<StatisticCard isLoading={isLoading} showMobileInColumn={true} value={claim} title={t('Claim')} addMobileBackground={true} />
 					</Col>
 				</>
 			)}

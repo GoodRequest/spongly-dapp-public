@@ -267,7 +267,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 						<Button
 							btnStyle={'secondary'}
 							content={t('Show ticket detail')}
-							onClick={() => router.push(`/${PAGES.TICKET_DETAIL}/?id=${ticket.id}`)}
+							onClick={() => router.push(`/${PAGES.TICKET_DETAIL}/?ticketId=${ticket.id}`)}
 						/>
 					</Col>
 					{!!(ticket.isClaimable && isMyWallet) && (
