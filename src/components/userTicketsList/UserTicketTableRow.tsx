@@ -17,6 +17,7 @@ import {
 	getCanceledClaimAmount,
 	getEtherScanTxHash,
 	getPositionsWithMergedCombinedPositions,
+	getTicketTotalQuote,
 	getUserTicketType,
 	getUserTicketTypeName,
 	isClaimableUntil,
@@ -52,9 +53,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 	const [isExpanded, setIsExpanded] = useState(false)
 	const [isClaiming, setIsClaiming] = useState(false)
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
-
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
-
 	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
 		enabled: true
 	})
@@ -186,7 +185,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 
 	const ticketHeader = (
 		<SC.UserTicketTableRow show={ticket.isClaimable} align={'middle'} gutter={[16, 16]}>
-			<SC.TxCol md={{ span: 6, order: 1 }} xs={{ span: 24, order: 2 }}>
+			<SC.TxCol md={{ span: 3, order: 1 }} xs={{ span: 24, order: 2 }}>
 				<SC.TxHeader onClick={() => handleTxHashRedirect(ticket.txHash)}>
 					<SC.TxIcon src={DocumentIcon} alt='hash' />
 					<SC.AddressText>{ticket?.txHash}</SC.AddressText>
@@ -203,7 +202,14 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 					<SC.ColumnNameText>{t('Buy in')}</SC.ColumnNameText>
 				</>
 			</SC.CenterRowContent>
-
+			<SC.CenterRowContent md={{ span: 3, order: 3 }} xs={{ span: 12, order: 3 }}>
+				<>
+					<SC.ColumnValueText>
+						{Number(getTicketTotalQuote(ticket as any, 'positions' in ticket ? ticket.quote : undefined)).toFixed(2)}
+					</SC.ColumnValueText>
+					<SC.ColumnNameText>{t('Quote')}</SC.ColumnNameText>
+				</>
+			</SC.CenterRowContent>
 			<SC.CenterRowContent md={{ span: 5, order: 4 }} xs={{ span: 12, order: 4 }}>
 				<SC.ClaimValueText userTicketType={userTicketType}>{getClaimValue()}</SC.ClaimValueText>
 				<SC.ColumnNameText>{t('Claim')}</SC.ColumnNameText>
