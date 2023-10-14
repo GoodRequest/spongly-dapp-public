@@ -15,6 +15,10 @@ import CloseMenuIcon from '@/assets/icons/close-icon.svg'
 import LogoImg from '@/assets/icons/header-logo-placeholder.svg'
 
 import * as SC from './MobileMenuStyles'
+import { SOCIAL_LINKS } from '@/utils/constants'
+import TwitterIcon from '@/assets/icons/twitter.svg'
+import DiscordIcon from '@/assets/icons/discord.svg'
+import SettingsIcon from '@/assets/icons/settings-icon.svg'
 
 type Props = {
 	selected: string
@@ -51,14 +55,25 @@ const MobileMenu = ({ selected }: Props) => {
 			</SC.MenuWrapper>
 			<SC.OverlayDiv isOpen={isOpen}>
 				<SC.Wrapper isOpen={isOpen}>
-					<SC.Menu mode={'vertical'} onClick={(e) => handleSelect(e)} selectedKeys={[selected]}>
-						<SC.MenuItem key={PAGES.DASHBOARD}>{t('Dashboard')}</SC.MenuItem>
-						<SC.MenuItem key={PAGES.TICKETS}>{t('Tickets')}</SC.MenuItem>
-						<SC.MenuItem key={PAGES.LEADERBOARD}>{t('Leaderboard')}</SC.MenuItem>
-						<SC.MenuItem key={PAGES.MATCHES}>{t('Matches')}</SC.MenuItem>
-						<SC.MenuItem key={PAGES.MY_WALLET}>{t('My wallet')}</SC.MenuItem>
-						<SC.MenuItem key={PAGES.PARLAY_SUPERSTARS}>{t('Parlay Superstars')}</SC.MenuItem>
-					</SC.Menu>
+					<div>
+						<SC.Menu mode={'vertical'} onClick={(e) => handleSelect(e)} selectedKeys={[selected]}>
+							<SC.MenuItem key={PAGES.DASHBOARD}>{t('Dashboard')}</SC.MenuItem>
+							<SC.MenuItem key={PAGES.TICKETS}>{t('Tickets')}</SC.MenuItem>
+							<SC.MenuItem key={PAGES.MATCHES}>{t('Matches')}</SC.MenuItem>
+							<SC.MenuItem key={PAGES.LEADERBOARD}>{t('Leaderboard')}</SC.MenuItem>
+							<SC.MenuItem key={PAGES.PARLAY_SUPERSTARS}>{t('Parlay Superstars')}</SC.MenuItem>
+							<SC.MenuItem key={PAGES.MY_WALLET}>{t('My wallet')}</SC.MenuItem>
+						</SC.Menu>
+
+						<SC.ButtonWrapper>
+							<SC.SocialMediaButton href={SOCIAL_LINKS.TWITTER} target={'_blank'}>
+								<img src={TwitterIcon} alt='twitter' />
+							</SC.SocialMediaButton>
+							<SC.SocialMediaButton href={SOCIAL_LINKS.DISCORD} target={'_blank'}>
+								<img src={DiscordIcon} alt='discord' />
+							</SC.SocialMediaButton>
+						</SC.ButtonWrapper>
+					</div>
 					<div>
 						<Row gutter={[16, 16]}>
 							<Col span={12}>
@@ -73,8 +88,8 @@ const MobileMenu = ({ selected }: Props) => {
 									}
 								/> */}
 							</Col>
-							<Col span={12}>
-								{/* <Button
+							<Col span={24}>
+								<Button
 									btnStyle={'secondary'}
 									content={
 										<SC.CenterDiv>
@@ -82,7 +97,7 @@ const MobileMenu = ({ selected }: Props) => {
 											<span style={{ marginLeft: '8px' }}>{t('Settings')}</span>
 										</SC.CenterDiv>
 									}
-								/> */}
+								/>
 							</Col>
 							<Col span={24}>
 								<RainbowConnectButton.Custom>

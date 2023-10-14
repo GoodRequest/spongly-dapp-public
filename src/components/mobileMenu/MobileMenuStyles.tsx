@@ -1,7 +1,8 @@
 import { Menu as AntdMenu } from 'antd'
 import styled from 'styled-components'
 
-import { TextLGMedium, TextXSMedium } from '@/styles/typography'
+import { HeadingXSMedium, TextXSMedium } from '@/styles/typography'
+import { breakpoints } from '@/styles/theme'
 
 export const MenuWrapper = styled.div`
 	background: ${({ theme }) => theme['color-base-surface-tertiary']};
@@ -45,21 +46,31 @@ export const Wrapper = styled.div<{ isOpen?: boolean }>`
 	height: calc(100% - 60px);
 `
 
+export const CenterDiv = styled.div`
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+`
+
 export const Menu = styled(AntdMenu)`
 	background-color: transparent;
+	margin-top: 60px;
 	border-inline-end: 0px !important;
 `
 export const MenuItem = styled(AntdMenu.Item)`
-	${TextLGMedium};
+	padding-inline: 0 !important;
+	height: auto !important;
+	margin-bottom: 16px !important;
+	padding: 8px 16px !important;
+	${HeadingXSMedium};
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
 	&.ant-menu-item-selected {
+		background: ${({ theme }) => theme['color-base-action-secondary-default']} !important;
 		color: ${({ theme }) => theme['color-base-content-top']} !important;
-		background-color: transparent;
-		border-bottom: ${({ theme }) => `1px solid ${theme['color-base-action-secondary-default']}`};
-		border-radius: 0px;
 	}
 	:hover {
 		color: ${({ theme }) => theme['color-base-content-top']} !important;
+		background: ${({ theme }) => theme['color-base-action-secondary-default']} !important;
 	}
 	::after {
 		border-bottom-width: 0px !important;
@@ -71,12 +82,6 @@ export const MenuItem = styled(AntdMenu.Item)`
 			color: #60626c !important;
 		}
 	}
-`
-
-export const CenterDiv = styled.div`
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
 `
 
 export const DisconnectWrapper = styled.div`
@@ -103,4 +108,20 @@ export const LogoImg = styled.img`
 export const AddressText = styled.span`
 	margin-left: 8px;
 	${TextXSMedium}
+`
+export const ButtonWrapper = styled.div`
+	display: flex;
+	margin-left: 16px;
+`
+
+export const SocialMediaButton = styled.a`
+	cursor: pointer;
+	padding: 8px;
+	&:first-of-type {
+		margin-right: 16px;
+	}
+	img {
+		width: 24px;
+		height: 24px;
+	}
 `

@@ -260,7 +260,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 					))}
 				</Row>
 				<SC.StylesRow gutter={[16, 16]}>
-					<Col span={12}>
+					<Col span={24} md={12}>
 						<Button
 							btnStyle={'secondary'}
 							content={t('Show ticket detail')}
@@ -270,7 +270,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 						/>
 					</Col>
 					{!!(ticket.isClaimable && isMyWallet) && (
-						<Col span={12}>
+						<Col span={24} md={12}>
 							{!isClaiming ? (
 								<Button
 									btnStyle={'primary'}

@@ -7,12 +7,15 @@ import { useRouter } from 'next-translate-routes'
 import HeaderLogo from '@/components/headerLogo/HeaderLogo'
 import ConnectButton from '@/components/connectButton/ConnectButton'
 import MobileMenu from '@/components/mobileMenu/MobileMenu'
+import SettingsIcon from '@/assets/icons/settings-icon.svg'
 
 // utils
 import { PAGES } from '@/utils/enums'
 
 // styled
 import * as SC from './HeaderStyles'
+import { SettingButton } from './HeaderStyles'
+import TwitterIcon from '@/assets/icons/twitter.svg'
 
 const Header = () => {
 	const [selected, setSelected] = useState(PAGES.DASHBOARD)
@@ -28,10 +31,10 @@ const Header = () => {
 			<>
 				<SC.MenuItem key={PAGES.DASHBOARD}>{t('Dashboard')}</SC.MenuItem>
 				<SC.MenuItem key={PAGES.TICKETS}>{t('Tickets')}</SC.MenuItem>
-				<SC.MenuItem key={PAGES.LEADERBOARD}>{t('Leaderboard')}</SC.MenuItem>
 				<SC.MenuItem key={PAGES.MATCHES}>{t('Matches')}</SC.MenuItem>
-				<SC.MenuItem key={PAGES.MY_WALLET}>{t('My wallet')}</SC.MenuItem>
+				<SC.MenuItem key={PAGES.LEADERBOARD}>{t('Leaderboard')}</SC.MenuItem>
 				<SC.MenuItem key={PAGES.PARLAY_SUPERSTARS}>{t('Parlay Superstars')}</SC.MenuItem>
+				<SC.MenuItem key={PAGES.MY_WALLET}>{t('My wallet')}</SC.MenuItem>
 			</>
 		),
 		[]
@@ -71,7 +74,7 @@ const Header = () => {
 	return (
 		<>
 			<SC.XXLWrapper>
-				<SC.HeadRow align={'middle'} justify={'space-between'}>
+				<SC.HeadRow align={'middle'} justify={'space-between'} gutter={16}>
 					<Col flex={'80px'}>
 						<HeaderLogo />
 					</Col>
@@ -82,6 +85,11 @@ const Header = () => {
 					</Col>
 					<Col flex={'240px'}>
 						<ConnectButton />
+					</Col>
+					<Col flex={'52px'}>
+						<SC.SettingButton>
+							<img src={SettingsIcon} alt='settings' />
+						</SC.SettingButton>
 					</Col>
 				</SC.HeadRow>
 			</SC.XXLWrapper>
