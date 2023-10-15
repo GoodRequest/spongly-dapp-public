@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'next-export-i18n'
 
 import Button from '@/atoms/button/Button'
@@ -7,6 +7,7 @@ import Select from '@/atoms/select/Select'
 import { SETTINGS_OPTIONS_ENUM } from '@/utils/constants'
 import { SettingsSelect } from '@/components/settingsModal/SettingsModalStyles'
 import * as SC from './SettingsModalStyles'
+import { isWindowReady } from '@/utils/helpers'
 
 type Props = {
 	visible: boolean
@@ -16,9 +17,16 @@ type Props = {
 const SettingsModal = (props: Props) => {
 	const { t } = useTranslation()
 	const { visible, setVisible } = props
+	const defaultValue = typeof window !== 'undefined' ? localStorage.getItem('oddType') || SETTINGS_OPTIONS_ENUM.DECIMAL : SETTINGS_OPTIONS_ENUM.DECIMAL
+
+	const [value, setValue] = useState(defaultValue)
+	console.log('value', value)
 	const handleSubmitSettings = () => {
-		// TODO: ukladat do local storage  + syncnut hodnotu z local storage
-		setVisible(false)
+		if (isWindowReady()) {
+			// TODO: ukladat do local storage  + syncnut hodnotu z local storage
+			setVisible(false)
+			localStorage.setItem('oddType', value)
+		}
 	}
 
 	const settingsOptions = [
@@ -46,8 +54,10 @@ const SettingsModal = (props: Props) => {
 			<SC.SettingsModalBody>
 				<SettingsSelect>
 					<Select
+						onChange={(val) => setValue(val)}
+						popupClassName={'checkbox-dropdown'}
 						title={t('Quote display')}
-						defaultValue={SETTINGS_OPTIONS_ENUM.DECIMAL}
+						value={value}
 						options={settingsOptions}
 						placeholder={t('Select setting')}
 					/>

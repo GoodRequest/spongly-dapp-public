@@ -48,30 +48,28 @@ const Select = ({
 		</style>
 	`
 	return (
-		<>
+		<div>
 			{/* eslint-disable-next-line react/no-danger */}
 			{isDropdownOpen && <div dangerouslySetInnerHTML={{ __html: bodyStyle }} />}
-			<SC.SelectWrapper id={`select-container`}>
-				{title && <SC.Title>{title}</SC.Title>}
-				<SC.Select
-					size={'large'}
-					value={value}
-					placeholder={placeholder}
-					onChange={onChange}
-					className={className}
-					open={open}
-					onDropdownVisibleChange={handleDropdownOpenChange}
-					defaultValue={defaultValue}
-					allowClear={allowClear}
-					clearIcon={<img src={ClearIcon} width={16} height={16} alt='clear' />}
-					placement={placement || 'bottomRight'}
-					popupClassName={popUpClassName}
-					getPopupContainer={() => (useSelectContainer ? document.getElementById(`select-container`) || document.body : document.body)}
-				>
-					{selectOptions}
-				</SC.Select>
-			</SC.SelectWrapper>
-		</>
+			{title && <SC.Title>{title}</SC.Title>}
+			<SC.Select
+				size={'large'}
+				value={value}
+				placeholder={placeholder}
+				onChange={onChange}
+				className={className}
+				open={open}
+				onDropdownVisibleChange={handleDropdownOpenChange}
+				defaultValue={defaultValue}
+				allowClear={allowClear}
+				clearIcon={<img src={ClearIcon} width={16} height={16} alt='clear' />}
+				placement={placement || 'bottomRight'}
+				popupClassName={popUpClassName}
+				getPopupContainer={() => (useSelectContainer ? document.getElementById(`select-container`) || document.body : document.body)}
+			>
+				{selectOptions}
+			</SC.Select>
+		</div>
 	)
 }
 
