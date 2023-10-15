@@ -61,8 +61,12 @@ export const MobileHiddenCol = styled(Col)`
 	}
 `
 
-export const MainContentContainer = styled(Col)`
+export const MainContentContainer = styled(Col)<{ withPadding: boolean }>`
 	width: 66%;
+
+	@media (min-width: ${breakpoints.semixxl}px) {
+		padding-right: ${({ withPadding }) => (withPadding ? '32px' : '0')};
+	}
 
 	@media (max-width: ${breakpoints.semixxl}px) {
 		width: 100%;

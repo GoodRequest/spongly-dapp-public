@@ -22,9 +22,9 @@ import { roundPrice } from '@/utils/formatters/currency'
 import * as PSC from '@/layout/content/ContentStyles'
 import TicketBetContainer from '@/components/ticketBetContainer/TicketBetContainer'
 import PositionsList from '@/components/positionsList/PositionsList'
-import { Network, OddsType } from '@/utils/constants'
+import { Network } from '@/utils/constants'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
-import { formatParlayQuote, formatPositionOdds, formatQuote } from '@/utils/formatters/quote'
+import { formatParlayQuote, formatPositionOdds } from '@/utils/formatters/quote'
 
 const TicketDetailContent = () => {
 	const { t } = useTranslation()
@@ -163,8 +163,8 @@ const TicketDetailContent = () => {
 				)}
 			</Row>
 			<Row style={{ marginTop: '16px' }}>
-				<PSC.MainContentContainer style={{ paddingRight: '32px' }}>
-					{positionsData ? <PositionsList positionsWithCombinedAttrs={positionsData} /> : <div>Is empty</div>}
+				<PSC.MainContentContainer withPadding={true}>
+					{positionsData ? <PositionsList positionsWithCombinedAttrs={positionsData} marketQuotes={ticketData?.marketQuotes} /> : <div>Is empty</div>}
 				</PSC.MainContentContainer>
 				<PSC.MobileHiddenCol span={8}>
 					<TicketBetContainer />

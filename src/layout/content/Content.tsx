@@ -26,7 +26,7 @@ const Content: FC<ILayout> = ({ children }) => {
 					</Col>
 				) : (
 					<>
-						<SC.MainContentContainer>{children}</SC.MainContentContainer>
+						<SC.MainContentContainer withPadding={false}>{children}</SC.MainContentContainer>
 						<SC.MobileHiddenCol span={8}>
 							{router.pathname === `/${PAGES.DASHBOARD}` && <ParlayLeaderboard />}
 							<TicketBetContainer />
