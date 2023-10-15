@@ -18,6 +18,7 @@ const SettingsModal = (props: Props) => {
 	const { visible, setVisible } = props
 	const handleSubmitSettings = () => {
 		// TODO: ukladat do local storage  + syncnut hodnotu z local storage
+		setVisible(false)
 	}
 
 	const settingsOptions = [
@@ -44,7 +45,12 @@ const SettingsModal = (props: Props) => {
 		>
 			<SC.SettingsModalBody>
 				<SettingsSelect>
-					<Select title={t('Quote display')} open={true} allowClear options={settingsOptions} placeholder={t('Select setting')} />
+					<Select
+						title={t('Quote display')}
+						defaultValue={SETTINGS_OPTIONS_ENUM.DECIMAL}
+						options={settingsOptions}
+						placeholder={t('Select setting')}
+					/>
 				</SettingsSelect>
 			</SC.SettingsModalBody>
 		</Modal>

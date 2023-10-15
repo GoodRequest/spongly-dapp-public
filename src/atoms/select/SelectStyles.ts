@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Select as AntdSelect } from 'antd'
 
-import { TextLGMedium, TextSMMedium } from '@/styles/typography'
+import { TextLGMedium, TextMDRegular, TextSMMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
 export const Select = styled(AntdSelect)`
@@ -12,18 +12,18 @@ export const Select = styled(AntdSelect)`
 
 	.ant-select-selector {
 		border: none !important;
-		background-color: ${({ theme }) => theme['color-base-surface-quaternary']} !important;
+		background-color: ${({ theme }) => theme['color-base-surface-tertiary']} !important;
 		box-shadow: ${({ theme }) => theme['drop-shadow-xs']};
 		height: 60px !important;
 		display: flex !important;
 		align-items: center !important;
 		color: ${({ theme }) => theme['color-base-content-top']} !important;
-		${TextLGMedium};
+		${TextMDRegular};
 		@media (max-width: ${breakpoints.md}px) {
 			height: 48px !important;
 		}
 		.ant-select-selection-placeholder {
-			color: ${({ theme }) => theme['color-base-content-top']} !important;
+			color: ${({ theme }) => theme['color-base-content-tertiary']} !important;
 		}
 		.ant-select-selection-item {
 			color: ${({ theme }) => theme['color-base-content-top']} !important;
@@ -48,20 +48,26 @@ export const SelectWrapper = styled.div`
 	}
 
 	.ant-select-dropdown {
-		background-color: ${({ theme }) => theme['color-base-surface-quaternary']};
+		padding: 16px;
+		background-color: ${({ theme }) => theme['color-base-surface-tertiary']};
 	}
 
 	.ant-select-item-option {
 		margin-top: 4px;
-		${TextLGMedium};
+		${TextMDRegular};
+		padding: 12px;
+		color: ${({ theme }) => theme['color-base-content-tertiary']} !important;
 		:hover {
 			background-color: ${({ theme }) => theme['color-base-surface-secondary']} !important;
 		}
 	}
 
 	.ant-select-item-option-selected {
-		background-color: ${({ theme }) => theme['color-base-surface-secondary']} !important;
+		background-color: ${({ theme }) => theme['color-base-surface-top']} !important;
 		color: ${({ theme }) => theme['color-base-content-top']} !important;
+		&:hover {
+			background-color: ${({ theme }) => theme['color-base-surface-top']} !important;
+		}
 	}
 `
 export const SelectLabel = styled.div`
