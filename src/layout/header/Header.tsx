@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'next-export-i18n'
 import { Col } from 'antd'
 import { useRouter } from 'next-translate-routes'
@@ -8,24 +8,24 @@ import HeaderLogo from '@/components/headerLogo/HeaderLogo'
 import ConnectButton from '@/components/connectButton/ConnectButton'
 import MobileMenu from '@/components/mobileMenu/MobileMenu'
 import SettingsIcon from '@/assets/icons/settings-icon.svg'
+import SettingsModal from '@/components/settingsModal/SettingsModal'
 
 // utils
 import { PAGES } from '@/utils/enums'
 
 // styled
 import * as SC from './HeaderStyles'
-import { SettingButton } from './HeaderStyles'
-import TwitterIcon from '@/assets/icons/twitter.svg'
 
 const Header = () => {
 	const [selected, setSelected] = useState(PAGES.DASHBOARD)
 	const { t } = useTranslation()
 	const router = useRouter()
-
+	const [visibleSettingModal, setVisibleSettingModal] = useState(false)
 	const handleSelect = (e: any) => {
 		router.push(`/${e.key}`)
 	}
 
+	const modals = <SettingsModal visible={visibleSettingModal} setVisible={setVisibleSettingModal} />
 	const menuItems = useMemo(
 		() => (
 			<>
@@ -73,6 +73,7 @@ const Header = () => {
 
 	return (
 		<>
+			{modals}
 			<SC.XXLWrapper>
 				<SC.HeadRow align={'middle'} justify={'space-between'} gutter={16}>
 					<Col flex={'80px'}>
@@ -87,7 +88,7 @@ const Header = () => {
 						<ConnectButton />
 					</Col>
 					<Col flex={'52px'}>
-						<SC.SettingButton>
+						<SC.SettingButton onClick={() => setVisibleSettingModal(true)}>
 							<img src={SettingsIcon} alt='settings' />
 						</SC.SettingButton>
 					</Col>
@@ -98,13 +99,14 @@ const Header = () => {
 					<Col flex={'80px'}>
 						<HeaderLogo />
 					</Col>
-					{/* <Col flex={'300px'}> */}
-					<Col flex={'240px'}>
+					<Col flex={'292px'}>
 						<SC.WalletDiv>
 							<div style={{ width: '240px' }}>
 								<ConnectButton />
 							</div>
-							{/* <Settings /> */}
+							<SC.SettingButton onClick={() => setVisibleSettingModal(true)}>
+								<img src={SettingsIcon} alt='settings' />
+							</SC.SettingButton>
 						</SC.WalletDiv>
 					</Col>
 				</SC.HeadRow>

@@ -19,6 +19,7 @@ import { SOCIAL_LINKS } from '@/utils/constants'
 import TwitterIcon from '@/assets/icons/twitter.svg'
 import DiscordIcon from '@/assets/icons/discord.svg'
 import SettingsIcon from '@/assets/icons/settings-icon.svg'
+import SettingsModal from '@/components/settingsModal/SettingsModal'
 
 type Props = {
 	selected: string
@@ -30,6 +31,7 @@ const MobileMenu = ({ selected }: Props) => {
 
 	const [isOpen, setIsOpen] = useState(false)
 	const { address } = useAccount()
+	const [visibleSettingModal, setVisibleSettingModal] = useState(false)
 
 	const isMounted = useIsMounted()
 
@@ -45,9 +47,10 @@ const MobileMenu = ({ selected }: Props) => {
 	         }
 		</style>
 	`
-
+	const modals = <SettingsModal visible={visibleSettingModal} setVisible={setVisibleSettingModal} />
 	return (
 		<>
+			{modals}
 			{/* eslint-disable-next-line react/no-danger */}
 			{isOpen && <div dangerouslySetInnerHTML={{ __html: style }} />}
 			<SC.MenuWrapper onClick={() => setIsOpen(!isOpen)}>
@@ -91,6 +94,7 @@ const MobileMenu = ({ selected }: Props) => {
 							<Col span={24}>
 								<Button
 									btnStyle={'secondary'}
+									onClick={() => setVisibleSettingModal(true)}
 									content={
 										<SC.CenterDiv>
 											<SC.MenuLogo src={SettingsIcon} />

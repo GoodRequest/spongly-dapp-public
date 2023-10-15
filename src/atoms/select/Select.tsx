@@ -23,6 +23,7 @@ const Select = ({
 	popUpClassName,
 	title,
 	placeholder,
+	open,
 	allowClear
 }: Props) => {
 	const selectOptions = options?.map((option) => {
@@ -58,6 +59,7 @@ const Select = ({
 					placeholder={placeholder}
 					onChange={onChange}
 					className={className}
+					open={open}
 					onDropdownVisibleChange={handleDropdownOpenChange}
 					defaultValue={defaultValue}
 					allowClear={allowClear}

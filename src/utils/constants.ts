@@ -59,6 +59,13 @@ export enum PARLAY_LEADERBOARD_SORTING {
 	PAID = 'paid',
 	WON = 'won'
 }
+
+export enum SETTINGS_OPTIONS_ENUM {
+	NORMALIZED = 'NORMALIZED',
+	DECIMAL = 'DECIMAL',
+	AMERICAN = 'AMERICAN'
+}
+
 export enum LEADERBOARD_SORTING {
 	SUCCESS_RATE = 'successRate',
 	PROFITS = 'pnl',
