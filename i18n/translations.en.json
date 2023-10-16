@@ -130,6 +130,7 @@
     "Sentry test executed": "Sentry test executed",
     "Settings": "Settings",
     "Show all tickets": "Show all tickets",
+    "Show detail": "Show detail",
     "Show match details": "Show match details",
     "Show more": "Show more",
     "Show results ({{ resultsCount}})": "Show results ({{ resultsCount}})",

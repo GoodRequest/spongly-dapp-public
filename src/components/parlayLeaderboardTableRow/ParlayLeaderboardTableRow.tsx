@@ -10,7 +10,6 @@ import BadgeIcon from '@/assets/icons/medal-star.svg'
 
 const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, reward, isLoading = false }: ParlayLeaderboardTableItem) => {
 	const { t } = useTranslation()
-
 	const skeletonPreset = (width: number) => {
 		return <SC.StyledSkeleton title={false} active paragraph={{ rows: 1, width }} />
 	}
