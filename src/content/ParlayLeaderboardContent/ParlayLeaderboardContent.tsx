@@ -204,7 +204,7 @@ const ParlayLeaderboardContent = () => {
 	useEffect(() => {
 		const { direction, property } = decodeSorter()
 		setParlayLeaderboardData(sortData(parlayLeaderboardData, property as PARLAY_LEADERBOARD_SORTING, direction as ORDER_DIRECTION))
-	}, [query.sorter])
+	}, [parlayLeaderboardData, query.sorter])
 
 	useEffect(() => {
 		loadLeaderboard()
@@ -339,7 +339,7 @@ const ParlayLeaderboardContent = () => {
 			<SC.ParlayLeaderboardTableText>{t('Leader board')}</SC.ParlayLeaderboardTableText>
 			{/* // Sorters */}
 			<SCS.SorterRow>
-				<SCS.HorizontalSorters>
+				<SCS.HorizontalSorters $horizontalSpacing={16}>
 					<Col span={3}>
 						<Sorter title={t('Rank')} name={PARLAY_LEADERBOARD_SORTING.RANK} />
 					</Col>
@@ -349,10 +349,10 @@ const ParlayLeaderboardContent = () => {
 					<Col span={4}>
 						<Sorter title={t('Positions')} name={PARLAY_LEADERBOARD_SORTING.POSITION} />
 					</Col>
-					<Col span={3}>
+					<Col span={4}>
 						<Sorter title={t('Buy-in')} name={PARLAY_LEADERBOARD_SORTING.PAID} />
 					</Col>
-					<Col span={4}>
+					<Col span={3}>
 						<Sorter title={t('Quote')} name={PARLAY_LEADERBOARD_SORTING.QUOTE} />
 					</Col>
 					<Col span={4}>

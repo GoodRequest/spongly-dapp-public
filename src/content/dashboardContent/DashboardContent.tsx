@@ -2,20 +2,20 @@ import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next-translate-routes'
 import { useSelector } from 'react-redux'
 import { orderBy } from 'lodash'
-import PresentationSlider from '@/components/presentationSlider/PresentationSlider'
+
 import TicketList from '@/components/ticketList/TicketList'
 import { decodeSorter, pickListTypeFromQuery } from '@/utils/helpers'
 import { LIST_TYPE } from '@/utils/enums'
 import { ORDER_DIRECTION, TICKET_SORTING, TICKET_TYPE } from '@/utils/constants'
 import { RootState } from '@/redux/rootReducer'
 import { ITicketContent } from '@/content/ticketsContent/TicketsContent'
+import PresentationSlider from '@/components/presentationSlider/PresentationSlider'
 
 const DashboardContent = () => {
 	const router = useRouter()
 	const { data, isLoading, isFailure } = useSelector((state: RootState) => state.tickets.ticketList)
 	const [loading, setLoading] = useState(false)
 	const [activeKeysList, setActiveKeysList] = useState<string[]>([])
-
 	const onlyOpenTickets = useMemo(
 		() =>
 			orderBy(
