@@ -21,7 +21,6 @@ export const StartCenteredRow = styled(Row)`
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
-	cursor: pointer;
 `
 
 export const TeamImages = styled.div`

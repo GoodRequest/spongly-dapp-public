@@ -38,7 +38,7 @@ const ParlayLeaderboard = () => {
 							rank: data?.[i]?.rank,
 							address: data?.[i]?.account,
 							position: data?.[i]?.numberOfPositions,
-							quote: data?.[i]?.totalQuote ? Number(formatQuote(actualOddType, data?.[i]?.totalQuote)) : 0,
+							quote: data?.[i]?.totalQuote,
 							reward: getReward(i, chain?.id)
 						}
 						newParlayData.push(newItem)
@@ -77,10 +77,17 @@ const ParlayLeaderboard = () => {
 			)
 		}
 		return parlayLeaderboardData?.map((data, index) => (
-			<ParlayLeaderboardRow key={index} rank={data.rank} address={data.address} position={data.position} quote={data.quote} reward={data?.reward} />
+			<ParlayLeaderboardRow
+				key={index}
+				rank={data.rank}
+				address={data.address}
+				position={data.position}
+				quote={formatQuote(actualOddType, data.quote)}
+				reward={data?.reward}
+			/>
 		))
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [parlayLeaderboardData])
+	}, [parlayLeaderboardData, actualOddType])
 
 	return (
 		<SC.ParlayLeaderboardWrapper>

@@ -47,7 +47,7 @@ export type ParlayLeaderboardItem = {
 	rank: number
 	address: string
 	position: number
-	quote: number
+	quote: string | number
 	reward?: {
 		iconUrl: any
 		value: number
