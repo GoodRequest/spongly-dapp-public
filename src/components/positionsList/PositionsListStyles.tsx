@@ -12,12 +12,24 @@ export const PositionListItem = styled(Row)`
 	border-radius: 12px;
 	height: 140px;
 	padding: 24px;
+	margin-bottom: 16px;
 `
 
 export const ColCenteredVertically = styled(Col)`
 	display: flex;
 	align-items: center;
 	flex-direction: row;
+`
+
+export const TeamCol = styled(Col)`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+`
+export const Img = styled.img`
+	width: 48px;
+	height: 48px;
 `
 
 export const MediumSpan = styled.span`
@@ -47,4 +59,11 @@ export const Position = styled.div`
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+`
+
+export const OddsWrapper = styled.div`
+	width: 100%;
+	display: flex;
+	justify-content: space-evenly;
+	margin-top: 12px;
 `

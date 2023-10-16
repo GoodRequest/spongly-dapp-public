@@ -8,6 +8,7 @@ import { GET_PARLAY_DETAIL, GET_POSITION_BALANCE_DETAIL, GET_POSITION_BALANCE_TR
 import {
 	assignOtherAttrsToUserTicket,
 	getPositionsWithMergedCombinedPositions,
+	getTicketHistoricQuote,
 	orderPositionsAsSportMarkets,
 	parseParlayToUserTicket,
 	parsePositionBalanceToUserTicket
@@ -24,7 +25,6 @@ import TicketBetContainer from '@/components/ticketBetContainer/TicketBetContain
 import PositionsList from '@/components/positionsList/PositionsList'
 import { Network } from '@/utils/constants'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
-import { formatParlayQuote, formatPositionOdds } from '@/utils/formatters/quote'
 
 const TicketDetailContent = () => {
 	const { t } = useTranslation()
@@ -36,7 +36,6 @@ const TicketDetailContent = () => {
 	const [fetchPositionBalanceMarketTransactions] = useLazyQuery(GET_POSITION_BALANCE_TRANSACTION)
 	const [positionsData, setPositionsData] = useState<any>()
 	const [ticketData, setTicketData] = useState<UserTicket>()
-	const [quote, setQuote] = useState<any>()
 
 	const [isLoading, setIsLoading] = useState(false)
 
@@ -83,31 +82,6 @@ const TicketDetailContent = () => {
 				const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions, ticketsWithOtherAttrs?.[0], sgpFees)
 				setTicketData(ticketsWithOtherAttrs?.[0])
 				setPositionsData(positionsWithMergedCombinedPositions)
-				let quote: undefined | number
-				positionsWithMergedCombinedPositions?.forEach((item, index) => {
-					if (isParlay) {
-						if (!quote) {
-							quote = item?.isCombined
-								? Number(formatParlayQuote(item?.odds))
-								: Number(formatParlayQuote(Number(ticketsWithOtherAttrs?.[0]?.marketQuotes?.[index])))
-						} else {
-							// eslint-disable-next-line
-							// @ts-ignore
-							quote *= item?.isCombined
-								? Number(formatParlayQuote(item.odds))
-								: Number(formatParlayQuote(Number(ticketsWithOtherAttrs?.[0].marketQuotes?.[index])))
-						}
-					} else if (!quote) {
-						// eslint-disable-next-line
-							// @ts-ignore
-						quote = item?.isCombined ? Number(formatParlayQuote(item?.odds)) : formatPositionOdds(item)
-					} else {
-						// eslint-disable-next-line
-						// @ts-ignore
-						quote *= item?.isCombined ? Number(formatParlayQuote(item.odds)) : formatPositionOdds(item)
-					}
-				})
-				setQuote(quote?.toFixed(2))
 			})
 		} catch (e) {
 			// TODO: throw notif
@@ -153,7 +127,7 @@ const TicketDetailContent = () => {
 										buyIn={roundPrice(ticketData?.sUSDPaid, true)}
 										// changes if ticket type
 										claim={roundPrice(positionsData?.amount || 0, true)}
-										quote={quote}
+										quote={getTicketHistoricQuote(positionsData, ticketData?.marketQuotes)}
 										matches={positionsData?.length}
 									/>
 								}

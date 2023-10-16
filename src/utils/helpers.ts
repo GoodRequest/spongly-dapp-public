@@ -64,7 +64,7 @@ import { BetType } from '@/utils/tags'
 import OptimismIcon from '@/assets/icons/optimism-icon.svg'
 import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
 
-import { formatParlayQuote, formatQuote, formattedCombinedTypeMatch } from './formatters/quote'
+import { formatParlayQuote, formatPositionOdds, formatQuote, formattedCombinedTypeMatch } from './formatters/quote'
 import { roundToTwoDecimals } from './formatters/number'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
 
@@ -1341,4 +1341,22 @@ export const assignOtherAttrsToUserTicket = async (
 	})
 
 	return Promise.all(promises)
+}
+
+export const getTicketHistoricQuote = (positionsWithMergedCombinedPositions: PositionWithCombinedAttrs[], marketQuotes?: string[]) => {
+	const isParlay = positionsWithMergedCombinedPositions?.length > 1
+	let quote: undefined | number
+	positionsWithMergedCombinedPositions?.forEach((item, index) => {
+		if (isParlay) {
+			if (!quote) {
+				quote = item?.isCombined ? Number(formatParlayQuote(item?.odds)) : Number(formatParlayQuote(Number(marketQuotes?.[index])))
+			} else {
+				quote *= item?.isCombined ? Number(formatParlayQuote(item?.odds)) : Number(formatParlayQuote(Number(marketQuotes?.[index])))
+			}
+		} else {
+			quote = item?.isCombined ? Number(formatParlayQuote(item?.odds)) : Number(formatPositionOdds(item))
+		}
+	})
+
+	return quote?.toFixed(2)
 }
