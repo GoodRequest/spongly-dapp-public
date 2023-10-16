@@ -45,7 +45,8 @@ export const getTeamImageSource = (team: string, leagueTag: number) => {
 		leagueTag === 9288 ||
 		leagueTag === 9042 ||
 		leagueTag === 9076 ||
-		leagueTag === 19216
+		leagueTag === 19216 ||
+		leagueTag === 9536
 	) {
 		imagePath = `/logos/${TAGS_LIST.find((t: any) => t.id === leagueTag)?.label}/${team.trim().replaceAll(' ', '-').toLowerCase()}.webp`
 	} else if (leagueTag === 9153 || leagueTag === 9156) {
@@ -55,7 +56,7 @@ export const getTeamImageSource = (team: string, leagueTag: number) => {
 	} else if (leagueTag === 109021) {
 		imagePath = `/logos/PGA/${team.trim().replaceAll(' ', '-').toLowerCase()}.webp`
 	} else if (leagueTag === 109121) {
-		imagePath = `/logos/PGA/${fixOneSideMarketCompetitorName(team).replaceAll(' ', '-').toLowerCase()}.png`
+		imagePath = `/logos/PGA/${fixOneSideMarketCompetitorName(team).replaceAll(' ', '-').toLowerCase()}.webp`
 	} else {
 		imagePath = `/logos/${TAGS_LIST.find((t) => t.id === leagueTag)?.label}/${team.trim().replaceAll(' ', '-').toLowerCase()}.svg`
 	}
