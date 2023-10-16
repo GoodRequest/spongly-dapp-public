@@ -16,10 +16,6 @@ export const useMatchesWithChildMarkets = (matches: SportMarket[], sgpFees: SGPI
 			const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD)
 			const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL)
 			const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
-			if (match?.tags?.[0] === '9001') {
-				console.log(match?.tags?.[0])
-				console.log(combinedTypeMatch)
-			}
 			return {
 				...(winnerTypeMatch ?? matches.find((item) => item.gameId === match?.gameId)),
 				winnerTypeMatch,
@@ -36,8 +32,6 @@ export const useMatchesWithChildMarkets = (matches: SportMarket[], sgpFees: SGPI
 
 		setMatchesWithChildMarkets(newMatchesWithChildMarkets)
 	}, [matches, sgpFees, filterDuplicates])
-
-	// console.log(sgpFees)
 
 	return matchesWithChildMarkets
 }
