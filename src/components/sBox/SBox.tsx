@@ -1,5 +1,4 @@
 import React from 'react'
-import { useTranslation } from 'next-export-i18n'
 import * as SC from './SBoxStyles'
 
 type Props = {
@@ -9,7 +8,6 @@ type Props = {
 }
 
 const SBox = ({ title, value, extraContent }: Props) => {
-	const { t } = useTranslation()
 	return (
 		<SC.SBoxWrapper>
 			<SC.SBoxColWrapper>
