@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useTranslation } from 'next-export-i18n'
 
 import { useRouter } from 'next-translate-routes'
+import { change, getFormValues } from 'redux-form'
+import { useDispatch, useSelector } from 'react-redux'
 import Button from '@/atoms/button/Button'
 import Modal from '@/components/modal/Modal'
 import Select from '@/atoms/select/Select'
@@ -9,6 +11,9 @@ import { SettingsSelect } from '@/components/settingsModal/SettingsModalStyles'
 import * as SC from './SettingsModalStyles'
 import { isWindowReady } from '@/utils/helpers'
 import { OddsType } from '@/utils/constants'
+import { FORM } from '@/utils/enums'
+import { IUnsubmittedBetTicket } from '@/redux/betTickets/betTicketTypes'
+import { formatQuote } from '@/utils/formatters/quote'
 
 type Props = {
 	visible: boolean
@@ -18,16 +23,19 @@ type Props = {
 const SettingsModal = (props: Props) => {
 	const { t } = useTranslation()
 	const { visible, setVisible } = props
-	const defaultValue = typeof window !== 'undefined' ? localStorage.getItem('oddType') || OddsType.DECIMAL : OddsType.DECIMAL
+	const actualOddType = typeof window !== 'undefined' ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 	const router = useRouter()
-
-	const [value, setValue] = useState(defaultValue)
+	const dispatch = useDispatch()
+	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
+	const [value, setValue] = useState(actualOddType)
 	const handleSubmitSettings = () => {
 		if (isWindowReady()) {
 			setVisible(false)
 			localStorage.setItem('oddType', value)
-			// NOTE: reumnout page after change oddType
+			// NOTE: re-mount page after change oddType
 			router.replace(router.asPath)
+			// NOTE: change quote in BET_CONTAINER after change of type
+			dispatch(change(FORM.BET_TICKET, 'totalQuote', formatQuote(value, activeTicketValues.rawQuote)))
 		}
 	}
 

@@ -20,7 +20,7 @@ import { PAGES } from '@/utils/enums'
 const ParlayLeaderboard = () => {
 	const { t } = useTranslation()
 	const router = useRouter()
-
+	const actualOddType = typeof window !== 'undefined' ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const [parlayLeaderboardData, setParlayLeaderboardData] = useState<ParlayLeaderboardItem[] | undefined>(undefined)
 
@@ -38,7 +38,7 @@ const ParlayLeaderboard = () => {
 							rank: data?.[i]?.rank,
 							address: data?.[i]?.account,
 							position: data?.[i]?.numberOfPositions,
-							quote: data?.[i]?.totalQuote ? Number(formatQuote(OddsType.DECIMAL, data?.[i]?.totalQuote)) : 0,
+							quote: data?.[i]?.totalQuote ? Number(formatQuote(actualOddType, data?.[i]?.totalQuote)) : 0,
 							reward: getReward(i, chain?.id)
 						}
 						newParlayData.push(newItem)

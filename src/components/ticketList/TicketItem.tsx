@@ -12,7 +12,7 @@ import { SPORTS_MAP } from '@/utils/tags'
 import { convertPositionNameToPosition, getMatchOddsContract, getSymbolText } from '@/utils/markets'
 import networkConnector from '@/utils/networkConnector'
 import { Position } from '@/__generated__/resolvers-types'
-import { NO_TEAM_IMAGE_FALLBACK, TOTAL_WINNER_TAGS } from '@/utils/constants'
+import { NO_TEAM_IMAGE_FALLBACK, OddsType, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { formatParlayQuote, formatPositionOdds } from '@/utils/formatters/quote'
 import { roundToTwoDecimals } from '@/utils/formatters/number'
 
@@ -39,6 +39,7 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 	const router = useRouter()
 	const oddsSymbol = oddsInfo?.isCombined ? oddsInfo?.combinedPositionsText : getSymbolText(convertPositionNameToPosition(match.side), match.market)
 	const isTotalWinner = match.market?.tags && TOTAL_WINNER_TAGS.includes(match.market.tags?.[0])
+	const actualOddType = typeof window !== 'undefined' ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 
 	const fetchOddsData = async () => {
 		try {
@@ -74,11 +75,11 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 		}
 
 		if (oddsInfo.isParlay) {
-			return formatParlayQuote(Number(oddsInfo.quote))
+			return formatParlayQuote(Number(oddsInfo.quote), actualOddType)
 		}
 
 		if (!oddsInfo.isParlay) {
-			return formatPositionOdds(match)
+			return formatPositionOdds(match, actualOddType)
 		}
 
 		// rather show nothing then wrong odds

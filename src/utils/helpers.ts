@@ -354,14 +354,14 @@ export const getOddsBySide = (ticket: ITicket) => {
 	return undefined
 }
 
-export const getTicketTotalQuote = (ticket: ITicket, totalQuote?: any) => {
+export const getTicketTotalQuote = (ticket: ITicket, oddType: OddsType, totalQuote?: any) => {
 	if (totalQuote) {
-		return formatQuote(OddsType.DECIMAL, totalQuote ? bigNumberFormatter(totalQuote) : 0)
+		return formatQuote(oddType, totalQuote ? bigNumberFormatter(totalQuote) : 0)
 	}
 
 	const odds = getOddsBySide(ticket)
 	if (odds) {
-		return formatQuote(OddsType.DECIMAL, bigNumberFormatter(odds))
+		return formatQuote(oddType, bigNumberFormatter(odds))
 	}
 
 	return 0

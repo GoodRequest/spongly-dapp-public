@@ -338,7 +338,8 @@ const TicketBetContainer = () => {
 				const totalBonus = calculatedBonusPercentageDec ? round(calculatedBonusPercentageDec * 100, 2).toFixed(2) : null
 				return {
 					...activeTicketValues,
-					totalQuote: formatQuote(OddsType.DECIMAL, totalQuote),
+					totalQuote: formatQuote(actualOddType, totalQuote),
+					rawQuote: totalQuote,
 					totalBonus,
 					payout,
 					skew,
@@ -396,15 +397,15 @@ const TicketBetContainer = () => {
 
 					if (selectedMatch) {
 						if (selectedMatch?.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW) {
-							return formatQuote(OddsType.DECIMAL, selectedMatch.homeOdds)
+							return formatQuote(actualOddType, selectedMatch.homeOdds)
 						}
 						return formatQuote(
-							OddsType.DECIMAL,
+							actualOddType,
 							selectedMatch?.[getOddsPropertyFromBetOption(activeTicketValues?.matches?.[0]?.betOption as BET_OPTIONS.WINNER_HOME)]
 						)
 					}
 					return formatQuote(
-						OddsType.DECIMAL,
+						actualOddType,
 						Number(activeTicketValues?.matches?.[0]?.[getOddsPropertyFromBetOption(activeTicketValues?.matches?.[0]?.betOption)])
 					)
 				}
@@ -415,6 +416,7 @@ const TicketBetContainer = () => {
 					...activeTicketValues,
 					totalQuote,
 					totalBonus,
+					rawQuote: Number(activeTicketValues?.matches?.[0]?.[getOddsPropertyFromBetOption(activeTicketValues?.matches?.[0]?.betOption)]),
 					payout,
 					skew,
 					potentionalProfit: potentionalProfit > 0 ? round(potentionalProfit, 2).toFixed(2) : 0

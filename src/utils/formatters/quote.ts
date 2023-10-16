@@ -27,28 +27,28 @@ export const formatQuote = (oddsType: OddsType, quote: number | undefined | null
 	}
 }
 
-export const formatParlayQuote = (quote: number | undefined) => {
+export const formatParlayQuote = (quote: number | undefined, oddType: OddsType) => {
 	if (!quote) return ''
 	// AMM odds.
 	const ammOdds = quote / OPTIMISM_DIVISOR
 
-	return formatQuote(OddsType.DECIMAL, ammOdds)
+	return formatQuote(oddType, ammOdds)
 }
 
-export const formatPositionOdds = (match: Position) => {
+export const formatPositionOdds = (match: Position, oddType: OddsType) => {
 	switch (match.side) {
 		case PositionType.Away: {
 			const ammOdds = Number(match.market.awayOdds) / OPTIMISM_DIVISOR
-			return formatQuote(OddsType.DECIMAL, Number(ammOdds))
+			return formatQuote(oddType, Number(ammOdds))
 		}
 		case PositionType.Draw: {
 			const ammOdds = Number(match.market.drawOdds) / OPTIMISM_DIVISOR
-			return formatQuote(OddsType.DECIMAL, ammOdds)
+			return formatQuote(oddType, ammOdds)
 		}
 
 		case PositionType.Home: {
 			const ammOdds = Number(match.market.homeOdds) / OPTIMISM_DIVISOR
-			return formatQuote(OddsType.DECIMAL, ammOdds)
+			return formatQuote(oddType, ammOdds)
 		}
 		default:
 			return 0

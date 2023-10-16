@@ -23,7 +23,7 @@ import {
 	isClaimableUntil,
 	orderPositionsAsSportMarkets
 } from '@/utils/helpers'
-import { GAS_ESTIMATION_BUFFER, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE, USER_TICKET_TYPE } from '@/utils/constants'
+import { GAS_ESTIMATION_BUFFER, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE, OddsType, USER_TICKET_TYPE } from '@/utils/constants'
 import networkConnector from '@/utils/networkConnector'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
 import { roundPrice } from '@/utils/formatters/currency'
@@ -54,6 +54,8 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 	const [isClaiming, setIsClaiming] = useState(false)
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
+	const actualOddType = typeof window !== 'undefined' ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
+
 	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
 		enabled: true
 	})
@@ -205,7 +207,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 			<SC.CenterRowContent md={{ span: 3, order: 3 }} xs={{ span: 12, order: 3 }}>
 				<>
 					<SC.ColumnValueText>
-						{Number(getTicketTotalQuote(ticket as any, 'positions' in ticket ? ticket.quote : undefined)).toFixed(2)}
+						{Number(getTicketTotalQuote(ticket as any, actualOddType, 'positions' in ticket ? ticket.quote : undefined)).toFixed(2)}
 					</SC.ColumnValueText>
 					<SC.ColumnNameText>{t('Quote')}</SC.ColumnNameText>
 				</>

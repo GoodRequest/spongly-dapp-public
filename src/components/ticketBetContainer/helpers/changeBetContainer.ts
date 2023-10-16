@@ -26,7 +26,8 @@ const handleOnchangeForm = async (values: any, dispatch: any, props: any, prevVa
 				dispatch(change(FORM.BET_TICKET, 'potentionalProfit', ticketData.potentionalProfit)),
 				dispatch(change(FORM.BET_TICKET, 'totalBonus', ticketData.totalBonus)),
 				dispatch(change(FORM.BET_TICKET, 'totalQuote', ticketData.totalQuote)),
-				dispatch(change(FORM.BET_TICKET, 'maxBuyIn', ticketData.maxBuyIn))
+				dispatch(change(FORM.BET_TICKET, 'maxBuyIn', ticketData.maxBuyIn)),
+				dispatch(change(FORM.BET_TICKET, 'rawQuote', ticketData.rawQuote))
 			])
 		} catch (e) {
 			dispatch(change(FORM.BET_TICKET, 'matches', []))
