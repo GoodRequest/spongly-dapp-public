@@ -31,6 +31,7 @@ const OddButton = (props: Props) => {
 	const dispatch = useDispatch()
 	const { betOption, match, oddName, setVisibleParlayValidationModal, isMobilePanel, isHeader, disabled } = props
 	const unsubmittedTickets = useSelector((state: RootState) => state.betTickets.unsubmittedBetTickets.data)
+	const isSubmitting = useSelector((state: RootState) => state.betTickets.isSubmitting)
 	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
 	const isMatchInActiveTicket = activeTicketValues?.matches?.find((m) => m.gameId === match.gameId)
 	// TODO: refactore TicketPosition type and use Imatch type and remove as any
@@ -41,6 +42,7 @@ const OddButton = (props: Props) => {
 			value={betOption}
 			disabled={
 				disabled ||
+				isSubmitting ||
 				match.status === MATCH_STATUS.PAUSED ||
 				match.status === MATCH_STATUS.CANCELED ||
 				match.status === MATCH_STATUS.ONGOING ||
