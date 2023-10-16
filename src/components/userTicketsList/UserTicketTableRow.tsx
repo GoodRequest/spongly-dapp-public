@@ -260,15 +260,15 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 					))}
 				</Row>
 				<SC.StylesRow gutter={[16, 16]}>
-					<Col span={12}>
-						<Button
-							btnStyle={'secondary'}
-							content={t('Show ticket detail')}
-							onClick={() => {
-								// TODO: redirect to detail
-							}}
-						/>
-					</Col>
+					{/* <Col span={12}> */}
+					{/*	<Button */}
+					{/*		btnStyle={'secondary'} */}
+					{/*		content={t('Show ticket detail')} */}
+					{/*		onClick={() => { */}
+					{/*			// TODO: redirect to detail */}
+					{/*		}} */}
+					{/*	/> */}
+					{/* </Col> */}
 					{!!(ticket.isClaimable && isMyWallet) && (
 						<Col span={12}>
 							{!isClaiming ? (
