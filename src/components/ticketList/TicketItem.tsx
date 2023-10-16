@@ -5,6 +5,7 @@ import { useTranslation } from 'next-export-i18n'
 import { LoadingOutlined } from '@ant-design/icons'
 
 // utils
+import { useRouter } from 'next-translate-routes'
 import { getTeamImageSource } from '@/utils/images'
 import { getHandicapValue, getParlayItemStatus } from '@/utils/helpers'
 import { SPORTS_MAP } from '@/utils/tags'
@@ -19,6 +20,7 @@ import { roundToTwoDecimals } from '@/utils/formatters/number'
 import * as SC from './TicketItemStyles'
 import { Icon } from '@/styles/Icons'
 import * as SCS from '@/styles/GlobalStyles'
+import { PAGES } from '@/utils/enums'
 
 type Props = {
 	match: Position
@@ -34,7 +36,7 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 	const { sportsAMMContract } = networkConnector
 	const { t } = useTranslation()
 	const [oddsDataFromContract, setOddsDataFromContract] = useState()
-
+	const router = useRouter()
 	const oddsSymbol = oddsInfo?.isCombined ? oddsInfo?.combinedPositionsText : getSymbolText(convertPositionNameToPosition(match.side), match.market)
 	const isTotalWinner = match.market?.tags && TOTAL_WINNER_TAGS.includes(match.market.tags?.[0])
 
@@ -94,7 +96,7 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 		return ''
 	}
 	return (
-		<SC.TicketItemWrapper>
+		<SC.TicketItemWrapper onClick={() => router.push(`/${PAGES.MATCHES}/?id=${match.market.gameId}`)}>
 			<SC.TicketHeader>
 				<SC.SportLogo>
 					<Icon style={{ marginRight: 0, color: 'white' }} className={`icon icon--${SPORTS_MAP[Number(match?.market.tags?.[0])]?.toLowerCase()}`} />

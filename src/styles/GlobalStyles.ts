@@ -197,9 +197,9 @@ export const SorterRow = styled.div`
 	width: 100%;
 `
 
-export const HorizontalSorters = styled(Row)`
-	padding-left: 24px;
-	padding-right: 24px;
+export const HorizontalSorters = styled(Row)<{ $horizontalSpacing?: number }>`
+	padding-left: ${({ $horizontalSpacing }) => $horizontalSpacing || 24}px;
+	padding-right: ${({ $horizontalSpacing }) => $horizontalSpacing || 24}px;
 	display: flex;
 	width: 100%;
 	@media (max-width: ${breakpoints.md}px) {

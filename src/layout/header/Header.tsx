@@ -37,6 +37,7 @@ const Header = () => {
 				<SC.MenuItem key={PAGES.MY_WALLET}>{t('My wallet')}</SC.MenuItem>
 			</>
 		),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[]
 	)
 

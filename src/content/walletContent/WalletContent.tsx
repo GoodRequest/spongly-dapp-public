@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useAccount, useNetwork } from 'wagmi'
 import { useLazyQuery } from '@apollo/client'
 import { useTranslation } from 'next-export-i18n'
-import { max } from 'lodash'
 import { ethers } from 'ethers'
 import dayjs from 'dayjs'
 import { useRouter } from 'next-translate-routes'
@@ -19,10 +18,10 @@ import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
 // utils
 import { GET_USERS_STATISTICS, GET_USERS_TRANSACTIONS } from '@/utils/queries'
 import networkConnector from '@/utils/networkConnector'
-import { getUserTicketType, removeDuplicateSubstring, ticketTypeToWalletType } from '@/utils/helpers'
-import { MSG_TYPE, NOTIFICATION_TYPE, USER_TICKET_TYPE } from '@/utils/constants'
+import { formatTicketPositionsForStatistics, getUserTicketType, ticketTypeToWalletType } from '@/utils/helpers'
+import { MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE, USER_TICKET_TYPE } from '@/utils/constants'
 import { showNotifications } from '@/utils/tsxHelpers'
-import { PAGES, WALLET_TICKETS } from '@/utils/enums'
+import { PAGES } from '@/utils/enums'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
 
 // hooks
@@ -30,7 +29,6 @@ import { useIsMounted } from '@/hooks/useIsMounted'
 
 // types
 import { UserStatistic, UserTicket } from '@/typescript/types'
-import { ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
 
 // styles
 import * as SCS from '@/styles/GlobalStyles'
@@ -47,6 +45,7 @@ const MyWalletContent = () => {
 	const [fetchUserMarketTransactions] = useLazyQuery(GET_USERS_TRANSACTIONS)
 
 	const [userStatistic, setUserStatistic] = useState<undefined | UserStatistic>(undefined)
+
 	const [isLoading, setIsLoading] = useState(true)
 
 	const assignOtherAttrs = async (ticket: UserTicket[], marketTransactions: { timestamp: string; id: string }[]) => {
@@ -99,8 +98,8 @@ const MyWalletContent = () => {
 		const id = isMyWallet ? address?.toLocaleLowerCase() : String(router.query.id).toLowerCase()
 		setTimeout(() => {
 			Promise.all([
-				fetchUserStatistic({ variables: { id }, context: { chainId: chain?.id } }),
-				fetchUserMarketTransactions({ variables: { account: id }, context: { chainId: chain?.id } })
+				fetchUserStatistic({ variables: { id }, context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM } }),
+				fetchUserMarketTransactions({ variables: { account: id }, context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM } })
 			])
 				.then(async (values) => {
 					const marketData: { timestamp: string; id: string }[] = values?.[1]?.data?.marketTransactions?.map((item: any) => {
@@ -111,97 +110,19 @@ const MyWalletContent = () => {
 					})
 					const parlayData = values?.[0]?.data?.parlayMarkets
 					const positions = values?.[0]?.data?.positionBalances
+					const formattedTicketData = formatTicketPositionsForStatistics({ parlayMarkets: parlayData, positionBalances: positions })
 
-					const parlayTickets: UserTicket[] = parlayData?.map((parlay: ParlayMarket) => {
-						const newParlay = {
-							id: parlay?.id,
-							won: parlay?.won,
-							claimed: parlay?.claimed,
-							sUSDPaid: parlay?.sUSDPaid,
-							txHash: parlay?.txHash,
-							quote: parlay?.totalQuote,
-							amount: parlay?.totalAmount,
-							marketQuotes: parlay?.marketQuotes,
-							maturityDate: 0,
-							ticketType: WALLET_TICKETS.ALL,
-							timestamp: parlay.timestamp,
-							sportMarketsFromContract: parlay.sportMarketsFromContract,
-							isClaimable: false,
-							positions: parlay?.positions?.map((positionItem) => {
-								return {
-									// some are moved up so its easier to work with them
-									id: positionItem.id,
-									side: positionItem.side,
-									claimable: positionItem?.claimable,
-									isCanceled: positionItem?.market?.isCanceled,
-									isOpen: positionItem?.market?.isOpen,
-									isPaused: positionItem?.market?.isPaused,
-									isResolved: positionItem?.market?.isResolved,
-									maturityDate: Number(positionItem?.market?.maturityDate),
-									marketAddress: positionItem?.market?.address,
-									market: {
-										...positionItem.market,
-										homeTeam: removeDuplicateSubstring(positionItem?.market?.homeTeam),
-										awayTeam: removeDuplicateSubstring(positionItem?.market?.awayTeam)
-									}
-								}
-							}),
-							sportMarkets: parlay?.sportMarkets?.map((item) => ({
-								gameId: item.gameId,
-								address: item.address,
-								isCanceled: item.isCanceled
-							}))
-						}
+					const allTickets = [...formattedTicketData.parlayTickets, ...formattedTicketData.positionTickets]
 
-						const lastMaturityDate: number = max(newParlay?.positions?.map((item) => Number(item?.maturityDate))) || 0
-						newParlay.maturityDate = lastMaturityDate
-
-						return newParlay
-					})
-
-					const positionTickets: UserTicket[] = positions?.map((positionItem: PositionBalance) => {
-						return {
-							id: positionItem?.id,
-							won: undefined,
-							claimed: positionItem.claimed,
-							sUSDPaid: positionItem?.sUSDPaid,
-							txHash: positionItem?.firstTxHash,
-							amount: positionItem?.amount,
-							ticketType: WALLET_TICKETS.ALL,
-							maturityDate: Number(positionItem?.position?.market?.maturityDate),
-							isClaimable: false,
-							timestamp: 0,
-							positions: [
-								{
-									// some are moved up so its easier to work with them
-									id: positionItem.id,
-									side: positionItem.position.side,
-									claimable: positionItem?.position?.claimable,
-									isCanceled: positionItem?.position?.market?.isCanceled,
-									isOpen: positionItem?.position?.market?.isOpen,
-									isPaused: positionItem?.position?.market?.isPaused,
-									isResolved: positionItem?.position?.market?.isResolved,
-									marketAddress: positionItem?.position?.market?.address,
-									maturityDate: Number(positionItem?.position?.market?.maturityDate),
-									market: {
-										...positionItem.position?.market,
-										homeTeam: removeDuplicateSubstring(positionItem?.position?.market?.homeTeam),
-										awayTeam: removeDuplicateSubstring(positionItem?.position?.market?.awayTeam)
-									}
-								}
-							]
-						}
-					})
-
-					const wonTickets = [...parlayTickets, ...positionTickets]?.filter((item) => getUserTicketType(item) === USER_TICKET_TYPE.SUCCESS)
-					const lostTickets = [...parlayTickets, ...positionTickets]?.filter((item) => getUserTicketType(item) === USER_TICKET_TYPE.MISS)
+					const wonTickets = allTickets?.filter((item) => getUserTicketType(item) === USER_TICKET_TYPE.SUCCESS)
+					const lostTickets = allTickets?.filter((item) => getUserTicketType(item) === USER_TICKET_TYPE.MISS)
 
 					const numberOfAttempts = wonTickets.length + lostTickets.length
 					let successRate = 0.0
 					if (wonTickets.length !== 0) {
 						successRate = Number(((wonTickets.length / numberOfAttempts) * 100).toFixed(2))
 					}
-					assignOtherAttrs([...parlayTickets, ...positionTickets], marketData).then((ticketsWithOtherAttrs) => {
+					assignOtherAttrs(allTickets, marketData).then((ticketsWithOtherAttrs) => {
 						setUserStatistic({
 							user: { ...values?.[0]?.data?.user, successRate },
 							tickets: ticketsWithOtherAttrs.sort((a, b) => (Number(a.timestamp) < Number(b.timestamp) ? 1 : -1))
