@@ -55,8 +55,8 @@ export const formatPositionOdds = (match: Position, oddType: OddsType) => {
 	}
 }
 
-const formatMatchCombinedPositionsQuote = (position1: number, position2: number, SGPFee: number) => {
-	const odd = formatQuote(OddsType.DECIMAL, position1 * position2)
+const formatMatchCombinedPositionsQuote = (position1: number, position2: number, SGPFee: number, oddType: OddsType) => {
+	const odd = formatQuote(oddType, position1 * position2)
 	if (SGPFee) {
 		return floor(Number(odd) * SGPFee, 2).toFixed(2)
 	}
@@ -64,33 +64,37 @@ const formatMatchCombinedPositionsQuote = (position1: number, position2: number,
 	return odd
 }
 
-export const formattedCombinedTypeMatch = (match: IMatch, customBetOption?: BET_OPTIONS) => {
+export const formattedCombinedTypeMatch = (match: IMatch, oddType: OddsType, customBetOption?: BET_OPTIONS) => {
 	const betOption = customBetOption || match.betOption
 
 	if (betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER) {
 		return formatMatchCombinedPositionsQuote(
 			Number(match.winnerTypeMatch?.homeOdds),
 			Number(match.totalTypeMatch?.homeOdds),
-			Number(match.combinedTypeMatch?.SGPFee)
+			Number(match.combinedTypeMatch?.SGPFee),
+			oddType
 		)
 	}
 	if (betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER) {
 		return formatMatchCombinedPositionsQuote(
 			Number(match.winnerTypeMatch?.homeOdds),
 			Number(match.totalTypeMatch?.awayOdds),
-			Number(match.combinedTypeMatch?.SGPFee)
+			Number(match.combinedTypeMatch?.SGPFee),
+			oddType
 		)
 	}
 	if (betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER) {
 		return formatMatchCombinedPositionsQuote(
 			Number(match.winnerTypeMatch?.awayOdds),
 			Number(match.totalTypeMatch?.homeOdds),
-			Number(match.combinedTypeMatch?.SGPFee)
+			Number(match.combinedTypeMatch?.SGPFee),
+			oddType
 		)
 	}
 	return formatMatchCombinedPositionsQuote(
 		Number(match.winnerTypeMatch?.awayOdds),
 		Number(match.totalTypeMatch?.awayOdds),
-		Number(match.combinedTypeMatch?.SGPFee)
+		Number(match.combinedTypeMatch?.SGPFee),
+		oddType
 	)
 }
