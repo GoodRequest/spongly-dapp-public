@@ -72,6 +72,7 @@ const Content: FC<ILayout> = ({ children }) => {
 
 	useEffect(() => {
 		fetchStats()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	// Scrolling left / right with statistics
