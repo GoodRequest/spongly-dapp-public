@@ -37,6 +37,11 @@ export const TicketItemRow = styled(Row)`
 	}
 }
 `
+
+export const TicketItemTipsterWrapper = styled.div`
+	display: contents;
+	cursor: pointer;
+`
 export const StylesRow = styled(Row)`
 	margin-top: 16px;
 	@media (max-width: ${breakpoints.md}px) {

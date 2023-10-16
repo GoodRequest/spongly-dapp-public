@@ -347,10 +347,7 @@ export const getMatchStatus = (match: any, t: any) => {
 }
 
 export const getOddsBySide = (ticket: ITicket) => {
-	if (!ticket?.position) {
-		return undefined
-	}
-	const { side, market } = ticket.position
+	const { side, market } = ticket.position || ticket.positions[0]
 	if (side === PositionType.Home) return market.homeOdds
 	if (side === PositionType.Away) return market.awayOdds
 	if (side === PositionType.Draw) return market.drawOdds

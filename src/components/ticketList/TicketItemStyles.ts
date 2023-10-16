@@ -10,6 +10,10 @@ export const TicketItemWrapper = styled.div`
 	border-radius: 8px;
 	padding: 12px;
 	background: ${({ theme }) => theme['color-base-surface-quaternary']};
+	&:hover {
+		cursor: pointer;
+		outline: 1px solid ${({ theme }) => theme['color-base-action-primary-default']};
+	}
 	&:last-of-type {
 		margin-right: 0; /* Remove right margin for the last item */
 	}

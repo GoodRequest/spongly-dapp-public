@@ -7,13 +7,13 @@ const handleOnchangeForm = async (values: any, dispatch: any, props: any, prevVa
 	const valueOptions = values.matches.map((match: any) => match.betOption)
 	const prevValueOptions = prevValues.matches?.map((match: any) => match.betOption) || []
 	// NOTE: Trigger recalculate ticket only if those values changed
+	if (values.matches.length === 0) return
 	const shouldCalculate =
 		values.available !== prevValues.available ||
 		values.buyIn !== prevValues.buyIn ||
 		values.selectedStablecoin !== prevValues.selectedStablecoin ||
 		values.matches.length !== prevValues.matches.length ||
 		!isEqual(valueOptions, prevValueOptions)
-
 	if ((shouldCalculate && values.buyIn) || values.payout === 0) {
 		try {
 			dispatch({ type: ACTIVE_TICKET_PROCESSING.SET, payload: true })

@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-export-i18n'
 import { Row } from 'antd'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { useRouter } from 'next-translate-routes'
 
 import StatisticCard from '@/atoms/statisticCard/StatisticCard'
@@ -23,13 +23,12 @@ type Props = {
 const TicketsStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 	const { t } = useTranslation()
 	const { address } = useAccount()
-	const { chain } = useNetwork()
 	const isMounted = useIsMounted()
 	const router = useRouter()
 
 	return (
 		<Row gutter={[0, 32]}>
-			{isMounted && chain?.id && (
+			{isMounted && (
 				<>
 					<SC.StatisticCardCol lg={6} md={24} sm={24} xs={24}>
 						<StatisticCard

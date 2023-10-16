@@ -479,3 +479,9 @@ export const PCContentWrapper = styled.div`
 		display: none;
 	}
 `
+
+export const NotAvailableText = styled.div`
+	${TextMDMedium};
+	text-align: center;
+	color: ${({ theme }) => theme['color-base-content-quaternary']};
+`

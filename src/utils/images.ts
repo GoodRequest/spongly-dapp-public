@@ -63,7 +63,7 @@ export const getTeamImageSource = (team: string, leagueTag: number) => {
 	return imagePath
 }
 export const getWalletImage = (walletName: string) => {
-	const waletHashModulo: number = Math.abs(hashStringToNumber(walletName) % 12)
+	const waletHashModulo: number = Math.abs(hashStringToNumber(walletName || '') % 12)
 
 	// TODO: coral images from design
 	switch (waletHashModulo) {
