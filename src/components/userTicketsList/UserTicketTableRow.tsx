@@ -23,7 +23,7 @@ import {
 	isClaimableUntil,
 	orderPositionsAsSportMarkets
 } from '@/utils/helpers'
-import { GAS_ESTIMATION_BUFFER, MSG_TYPE, Network, NOTIFICATION_TYPE, USER_TICKET_TYPE } from '@/utils/constants'
+import { GAS_ESTIMATION_BUFFER, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE, USER_TICKET_TYPE } from '@/utils/constants'
 import networkConnector from '@/utils/networkConnector'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
 import { roundPrice } from '@/utils/formatters/currency'
@@ -93,7 +93,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 
 	const handleTxHashRedirect = (txHash: string) => {
 		const link = document.createElement('a')
-		const newHref = getEtherScanTxHash(chain?.id || 0, txHash)
+		const newHref = getEtherScanTxHash(chain?.id || NETWORK_IDS.OPTIMISM, txHash)
 		if (!newHref) {
 			showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to redirect') }], NOTIFICATION_TYPE.NOTIFICATION)
 		} else {
