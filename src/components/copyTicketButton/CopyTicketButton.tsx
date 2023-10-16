@@ -16,7 +16,7 @@ import { GET_SPORT_MARKETS_FOR_GAME } from '@/utils/queries'
 import Modal from '@/components/modal/Modal'
 import * as SC from './CopyTicketButtonStyles'
 import MatchRow from '@/components/ticketBetContainer/components/matchRow/MatchRow'
-import { MAX_TICKETS, Network } from '@/utils/constants'
+import { MAX_TICKETS, Network, NETWORK_IDS } from '@/utils/constants'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import { copyTicketToUnsubmittedTickets, getPositionsWithMergedCombinedPositions, orderPositionsAsSportMarkets } from '@/utils/helpers'
 import { SGPItem } from '@/typescript/types'
@@ -45,7 +45,7 @@ const CopyTicketButton = ({ ticket }: Props) => {
 	const [tempMatches, setTempMatches] = useState<any>()
 	const [activeMatches, setActiveMatches] = useState<any[]>([])
 
-	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
+	const sgpFeesRaw = useSGPFeesQuery((chain?.id as Network) || NETWORK_IDS.OPTIMISM, {
 		enabled: true
 	})
 	const matchesWithChildMarkets = useMatchesWithChildMarkets(tempMatches, sgpFees, false)
@@ -122,7 +122,7 @@ const CopyTicketButton = ({ ticket }: Props) => {
 		const gameIDQuery = activeMatches?.map((item) => item?.gameId)
 
 		// NOTE: fetch rest of the available betOptions
-		fetchMarketsForGame({ variables: { gameId_in: gameIDQuery }, context: { chainId: chain?.id } })
+		fetchMarketsForGame({ variables: { gameId_in: gameIDQuery }, context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM } })
 			.then(async (values) => {
 				try {
 					const marketOddsFromContract = await getMarketOddsFromContract([...values.data.sportMarkets])

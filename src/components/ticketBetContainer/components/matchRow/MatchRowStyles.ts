@@ -82,7 +82,7 @@ export const BetOptionButton = styled(Button)`
 `
 
 export const MatchOdd = styled.div`
-	width: 32px;
+	width: 38px;
 	${TextSMMedium};
 `
 

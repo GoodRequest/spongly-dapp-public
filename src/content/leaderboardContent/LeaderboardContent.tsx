@@ -163,10 +163,13 @@ const LeaderboardContent = () => {
 	// }, [])
 
 	useEffect(() => {
-		if (router.query.id) {
-			return
+		if (router.isReady) {
+			if (router.query.id) {
+				return
+			}
+			fetchData()
 		}
-		fetchData()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [direction, property, router.query.id])
 
 	return router.query.id ? (

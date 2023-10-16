@@ -16,7 +16,7 @@ import { useMatchesWithChildMarkets } from '@/hooks/useMatchesWithChildMarkets'
 
 // utils
 import { RESOLUTIONS } from '@/utils/enums'
-import { MATCHES_OFFSET, MATCHES_OFFSET_MOBILE, Network, STATIC } from '@/utils/constants'
+import { MATCHES_OFFSET, MATCHES_OFFSET_MOBILE, Network, NETWORK_IDS, STATIC } from '@/utils/constants'
 
 // components
 import MatchListItem from './MatchesListItem'
@@ -53,7 +53,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, item }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
+	const sgpFeesRaw = useSGPFeesQuery((chain?.id as Network) || NETWORK_IDS.OPTIMISM, {
 		enabled: true
 	})
 
