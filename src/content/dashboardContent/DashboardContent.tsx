@@ -2,12 +2,14 @@ import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next-translate-routes'
 import { useSelector } from 'react-redux'
 import { orderBy } from 'lodash'
+
 import TicketList from '@/components/ticketList/TicketList'
 import { decodeSorter, pickListTypeFromQuery } from '@/utils/helpers'
 import { LIST_TYPE } from '@/utils/enums'
 import { ORDER_DIRECTION, TICKET_SORTING, TICKET_TYPE } from '@/utils/constants'
 import { RootState } from '@/redux/rootReducer'
 import { ITicketContent } from '@/content/ticketsContent/TicketsContent'
+import PresentationSlider from '@/components/presentationSlider/PresentationSlider'
 
 const DashboardContent = () => {
 	const router = useRouter()
@@ -49,6 +51,7 @@ const DashboardContent = () => {
 
 	return (
 		<>
+			<PresentationSlider />
 			{pickListTypeFromQuery(router.query?.listType as string | undefined) === LIST_TYPE.TICKETS && (
 				<TicketList
 					type={TICKET_TYPE.HOT_TICKET}

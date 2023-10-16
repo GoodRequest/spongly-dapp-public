@@ -46,7 +46,6 @@ const Content: FC<ILayout> = ({ children }) => {
 	})
 
 	const fetchStats = async () => {
-		console.log('called stats')
 		try {
 			setIsLoading(true)
 			const { data } = await fetchUserStatistic({ variables: { id: address?.toLocaleLowerCase() }, context: { chainId: chain?.id } })
@@ -120,7 +119,7 @@ const Content: FC<ILayout> = ({ children }) => {
 		<SC.MainContainer>
 			<Row id={'scroll-container'} ref={eleRef} style={{ width: '100%', overflow: 'scroll', marginBottom: 40 }}>
 				{includes(userStatistics, router.pathname) ? (
-					isLoading && !statistics ? (
+					isLoading ? (
 						<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
 					) : (
 						!isLoading &&
