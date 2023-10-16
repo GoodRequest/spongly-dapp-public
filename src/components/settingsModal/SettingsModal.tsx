@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'next-export-i18n'
 
+import { useRouter } from 'next-translate-routes'
 import Button from '@/atoms/button/Button'
 import Modal from '@/components/modal/Modal'
 import Select from '@/atoms/select/Select'
-import { SETTINGS_OPTIONS_ENUM } from '@/utils/constants'
 import { SettingsSelect } from '@/components/settingsModal/SettingsModalStyles'
 import * as SC from './SettingsModalStyles'
 import { isWindowReady } from '@/utils/helpers'
+import { OddsType } from '@/utils/constants'
 
 type Props = {
 	visible: boolean
@@ -17,30 +18,31 @@ type Props = {
 const SettingsModal = (props: Props) => {
 	const { t } = useTranslation()
 	const { visible, setVisible } = props
-	const defaultValue = typeof window !== 'undefined' ? localStorage.getItem('oddType') || SETTINGS_OPTIONS_ENUM.DECIMAL : SETTINGS_OPTIONS_ENUM.DECIMAL
+	const defaultValue = typeof window !== 'undefined' ? localStorage.getItem('oddType') || OddsType.DECIMAL : OddsType.DECIMAL
+	const router = useRouter()
 
 	const [value, setValue] = useState(defaultValue)
-	console.log('value', value)
 	const handleSubmitSettings = () => {
 		if (isWindowReady()) {
-			// TODO: ukladat do local storage  + syncnut hodnotu z local storage
 			setVisible(false)
 			localStorage.setItem('oddType', value)
+			// NOTE: reumnout page after change oddType
+			router.replace(router.asPath)
 		}
 	}
 
 	const settingsOptions = [
 		{
 			label: t('Normalized Implied Odds'),
-			value: SETTINGS_OPTIONS_ENUM.NORMALIZED
+			value: OddsType.AMM
 		},
 		{
 			label: t('Decimal Odds'),
-			value: SETTINGS_OPTIONS_ENUM.DECIMAL
+			value: OddsType.DECIMAL
 		},
 		{
 			label: t('American Odds'),
-			value: SETTINGS_OPTIONS_ENUM.AMERICAN
+			value: OddsType.AMERICAN
 		}
 	]
 	return (

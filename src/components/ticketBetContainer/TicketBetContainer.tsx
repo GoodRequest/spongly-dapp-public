@@ -91,6 +91,7 @@ const TicketBetContainer = () => {
 	const size = useMedia()
 	const [deleteModal, setDeleteModal] = useState({ visible: false, id: 0 })
 	const isProcessing = useSelector((state: RootState) => state.betTickets.isProcessing)
+	const actualOddType = typeof window !== 'undefined' ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 
 	const [availablePerPosition, setAvailablePerPosition] = useState<any>({
 		[PositionNumber.HOME]: {
@@ -330,7 +331,7 @@ const TicketBetContainer = () => {
 
 				const calculatedBonusPercentageDec =
 					(activeTicketValues?.matches || []).reduce((accumulator, currentItem) => {
-						const bonusDecimal = getOddByBetType(currentItem as any, false).rawBonus / 100 + 1
+						const bonusDecimal = getOddByBetType(currentItem as any, false, actualOddType).rawBonus / 100 + 1
 						return accumulator * bonusDecimal
 					}, 1) - 1
 
@@ -370,7 +371,7 @@ const TicketBetContainer = () => {
 				const amountOfTokens =
 					fetchAmountOfTokensForXsUSDAmount(
 						Number(activeTicketValues?.buyIn),
-						getOddByBetType(activeTicketValues?.matches?.[0] as any, activeTicketValues.copied || false).rawOdd as any,
+						getOddByBetType(activeTicketValues?.matches?.[0] as any, activeTicketValues.copied || false, actualOddType).rawOdd as any,
 						singlesAmmMaximumUSDAmountQuote / divider,
 						availablePerPosition[getBetOptionFromMatchBetOption(activeTicketValues?.matches?.[0].betOption as any)].available || 0,
 						bigNumberFormatter(ammBalanceForSelectedPosition)
@@ -384,8 +385,8 @@ const TicketBetContainer = () => {
 				const potentionalProfit = Number(maxAvailableTokenAmount) - Number(activeTicketValues.buyIn)
 				const skew = 0
 				// TODO: calculate number from bonus?
-				const totalBonus = getOddByBetType(activeTicketValues?.matches?.[0] as any, false).rawBonus
-					? round(Number(getOddByBetType(activeTicketValues?.matches?.[0] as any, false).rawBonus), 2).toFixed(2)
+				const totalBonus = getOddByBetType(activeTicketValues?.matches?.[0] as any, false, actualOddType).rawBonus
+					? round(Number(getOddByBetType(activeTicketValues?.matches?.[0] as any, false, actualOddType).rawBonus), 2).toFixed(2)
 					: null
 				const getOdds = () => {
 					const selectedMatch = getMatchByBetOption(
