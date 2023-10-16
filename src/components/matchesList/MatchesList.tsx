@@ -69,7 +69,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, item }) => {
 	useEffect(() => {
 		setRenderList(slice(matchesWithChildMarkets, 0, matchOffsetByResolution))
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sgpFees, matchOffsetByResolution])
+	}, [sgpFees, matchOffsetByResolution, matchesWithChildMarkets])
 
 	useEffect(() => {
 		if (renderList?.length < matchesWithChildMarkets?.length) {
