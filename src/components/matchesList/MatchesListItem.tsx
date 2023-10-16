@@ -54,6 +54,7 @@ const MatchListItem: FC<IMatchListItem> = ({ match, keyValue, filter, loading = 
 			<SC.CollapsePanel
 				header={<MatchListHeader match={match as any} type={filter.status} setVisibleParlayValidationModal={setVisibleParlayValidationModal} />}
 				key={match.maturityDate}
+				onClick={() => console.log(match)}
 			>
 				{!loading && match.isOpen && isExpanded && (
 					<MatchListContent match={match as any} setVisibleParlayValidationModal={setVisibleParlayValidationModal} />
