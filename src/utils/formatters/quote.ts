@@ -27,12 +27,12 @@ export const formatQuote = (oddsType: OddsType, quote: number | undefined | null
 	}
 }
 
-export const formatParlayQuote = (quote: number | undefined, oddType: OddsType) => {
+export const formatParlayQuote = (quote: number | undefined, oddType?: OddsType) => {
 	if (!quote) return ''
 	// AMM odds.
 	const ammOdds = quote / OPTIMISM_DIVISOR
 
-	return formatQuote(oddType, ammOdds)
+	return formatQuote(oddType || OddsType.DECIMAL, ammOdds)
 }
 
 export const formatPositionOdds = (match: Position, oddType: OddsType) => {
@@ -56,9 +56,12 @@ export const formatPositionOdds = (match: Position, oddType: OddsType) => {
 }
 
 const formatMatchCombinedPositionsQuote = (position1: number, position2: number, SGPFee: number, oddType: OddsType) => {
-	const odd = formatQuote(oddType, position1 * position2)
+	const odd = { formattedOdd: formatQuote(oddType, position1 * position2), rawOdd: position1 * position2 }
 	if (SGPFee) {
-		return floor(Number(odd) * SGPFee, 2).toFixed(2)
+		return {
+			formattedOdd: floor(Number(odd.formattedOdd) * SGPFee, 2).toFixed(2),
+			rawOdd: Number(odd.rawOdd)
+		}
 	}
 
 	return odd

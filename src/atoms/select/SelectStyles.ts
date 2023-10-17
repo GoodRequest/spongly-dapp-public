@@ -4,6 +4,10 @@ import { Select as AntdSelect } from 'antd'
 import { TextMDRegular, TextSMMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
+export const SelectWrapper = styled.div`
+	width: 100%;
+`
+
 export const Select = styled(AntdSelect)`
 	// The reason for this is that Ant Design applies its own default styles to its components, which may have higher specificity or be applied later in the cascade than your custom styles. In order to override these default styles, you need to use the !important flag to ensure that your styles take precedence.
 	width: 100%;

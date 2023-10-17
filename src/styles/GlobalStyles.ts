@@ -2,7 +2,7 @@ import styled, { createGlobalStyle, css } from 'styled-components'
 import { Row, Typography, Empty as AntdEmpty } from 'antd'
 import { HeadingXSMedium, TextMDMedium, TextMDRegular, TextSMMedium, TextSorter } from '@/styles/typography'
 import worldFlag from '@/assets/icons/world-flag.png'
-import CechkIcon from '@/assets/icons/checked-select-icon.svg'
+import CheckIcon from '@/assets/icons/checked-select-icon.svg'
 import { decodeSorter } from '@/utils/helpers'
 import { TextLGMedium } from './typography'
 import { breakpoints } from '@/styles/theme'
@@ -37,19 +37,24 @@ export const GlobalStyle = createGlobalStyle`
 				background-color: ${({ theme }) => theme['color-base-surface-secondary']} !important;
 			}
 		}
+		// Witch checkbox icon
+		&.checkbox-dropdown {
+			.ant-select-item-option-selected {
+				&::before {
+					content: "";
+					display: inline-block;
+					width: 24px;
+					height: 24px;
+						background: url(${CheckIcon});
+					background-size: cover;
+					margin-right: 8px;
+				}
+			}
+		}
 		.ant-select-item-option-selected {
 			background-color: ${({ theme }) => theme['color-base-surface-secondary']} !important;
 			box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
 			color: ${({ theme }) => theme['color-base-content-top']} !important;
-			&::before {
-				content: "";
-				display: inline-block;
-				width: 24px;
-				height: 24px;
-				background: url(${CechkIcon});
-				background-size: cover; /* Adjust this property based on your icon's dimensions */
-				margin-right: 8px; /* Adjust the spacing as needed */
-			}
 		}
 	}
 

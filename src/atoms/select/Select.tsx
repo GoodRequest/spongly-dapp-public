@@ -9,7 +9,6 @@ type Props = SelectProps & {
 	onChange?: (value: any) => void
 	useSelectContainer?: boolean
 	title?: string | null | JSX.Element
-	popUpClassName?: string // TODO: popupClassName exists on antd select type 5.8. + (when update package use it instead of custom)
 }
 
 const Select = ({
@@ -20,7 +19,7 @@ const Select = ({
 	className,
 	placement,
 	useSelectContainer = true,
-	popUpClassName,
+	popupClassName,
 	title,
 	placeholder,
 	open,
@@ -48,7 +47,7 @@ const Select = ({
 		</style>
 	`
 	return (
-		<div>
+		<SC.SelectWrapper>
 			{/* eslint-disable-next-line react/no-danger */}
 			{isDropdownOpen && <div dangerouslySetInnerHTML={{ __html: bodyStyle }} />}
 			{title && <SC.Title>{title}</SC.Title>}
@@ -64,12 +63,12 @@ const Select = ({
 				allowClear={allowClear}
 				clearIcon={<img src={ClearIcon} width={16} height={16} alt='clear' />}
 				placement={placement || 'bottomRight'}
-				popupClassName={popUpClassName}
+				popupClassName={popupClassName}
 				getPopupContainer={() => (useSelectContainer ? document.getElementById(`select-container`) || document.body : document.body)}
 			>
 				{selectOptions}
 			</SC.Select>
-		</div>
+		</SC.SelectWrapper>
 	)
 }
 
