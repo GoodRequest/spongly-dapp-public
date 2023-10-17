@@ -173,17 +173,38 @@ const ParlayLeaderboardContent = () => {
 	}
 
 	const biweeklyPeriodOptions = (): Option[] => {
-		const newOptions: Option[] = []
+		// const newOptions: Option[] = []
 
-		for (let i = 0; i <= getCurrentBiweeklyPeriod(); i += 1) {
-			const newOption = {
-				label: `${t('Bi-weekly period')} ${i + 1}`,
-				value: `${i}`
-			}
-			newOptions.push(newOption)
-		}
+		// for (let i = 0; i <= getCurrentBiweeklyPeriod(); i += 1) {
+		// 	const newOption = {
+		// 		label: `${t('Bi-weekly period')} ${i + 1}`,
+		// 		value: `${i}`
+		// 	}
+		// 	newOptions.push(newOption)
+		// }
 
-		return newOptions
+		// console.log(newOptions)
+
+		// return newOptions
+		return [
+			{ label: 'Bi-weekly period 1', value: '0' },
+			{ label: 'Bi-weekly period 2', value: '1' },
+			{ label: 'Bi-weekly period 3', value: '2' },
+			{ label: 'Bi-weekly period 4', value: '3' },
+			{ label: 'Bi-weekly period 5', value: '4' },
+			{ label: 'Bi-weekly period 6', value: '5' },
+			{ label: 'Bi-weekly period 7', value: '6' },
+			{ label: 'Bi-weekly period 8', value: '7' },
+			{ label: 'Bi-weekly period 9', value: '8' },
+			{ label: 'Bi-weekly period 10', value: '9' },
+			{ label: 'Bi-weekly period 11', value: '10' },
+			{ label: 'Bi-weekly period 12', value: '11' },
+			{ label: 'Bi-weekly period 13', value: '12' },
+			{ label: 'Bi-weekly period 14', value: '13' },
+			{ label: 'Bi-weekly period 15', value: '14' },
+			{ label: 'Bi-weekly period 16', value: '15' },
+			{ label: 'Bi-weekly period 17', value: '16' }
+		]
 	}
 
 	const onPeriodChange = (value: string) => {
@@ -204,7 +225,8 @@ const ParlayLeaderboardContent = () => {
 	useEffect(() => {
 		const { direction, property } = decodeSorter()
 		setParlayLeaderboardData(sortData(parlayLeaderboardData, property as PARLAY_LEADERBOARD_SORTING, direction as ORDER_DIRECTION))
-	}, [parlayLeaderboardData, query.sorter])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [query.sorter])
 
 	useEffect(() => {
 		loadLeaderboard()

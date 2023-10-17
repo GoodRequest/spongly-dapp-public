@@ -52,7 +52,6 @@ export const SelectWrapper = styled.div`
 	}
 
 	.ant-select-item-option {
-		margin-top: 4px;
 		${TextLGMedium};
 		:hover {
 			background-color: ${({ theme }) => theme['color-base-surface-secondary']} !important;
