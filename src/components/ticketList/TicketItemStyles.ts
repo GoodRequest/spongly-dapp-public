@@ -98,6 +98,7 @@ export const TicketStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 		css`
 			position: relative;
 			color: ${({ theme }) => theme['color-base-state-warning-fg']};
+			background: ${({ theme }) => theme['color-base-state-warning-bg']};
 			& > span {
 				position: relative;
 				&::before {
@@ -117,22 +118,20 @@ export const TicketStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 	${(p) =>
 		p.matchStatus === MATCH_STATUS.SUCCESS &&
 		css`
+			background: ${({ theme }) => theme['color-base-state-success-bg']};
 			color: ${({ theme }) => theme['color-base-state-success-fg']};
 		`}
 	${(p) =>
 		p.matchStatus === MATCH_STATUS.MISS &&
 		css`
+			background: ${({ theme }) => theme['color-base-state-error-bg']};
 			color: ${({ theme }) => theme['color-base-state-error-fg']};
 		`}
 	${(p) =>
 		p.matchStatus === MATCH_STATUS.CANCELED &&
 		css`
+			background: ${({ theme }) => theme['color-base-state-error-bg']};
 			color: ${({ theme }) => theme['color-base-state-error-fg']};
-		`}
-	${(p) =>
-		p.matchStatus === MATCH_STATUS.ONGOING &&
-		css`
-			color: ${({ theme }) => theme['color-base-state-warning-fg']};
 		`}
 `
 
