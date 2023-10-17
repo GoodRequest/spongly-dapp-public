@@ -2,22 +2,41 @@ import styled from 'styled-components'
 import { TextSMRegular } from '@/styles/typography'
 import { FIELD_HEIGHT } from '@/utils/constants'
 
+export const LoaginOverlay = styled.div<{ show: boolean }>`
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background: ${({ theme }) => theme['color-base-surface-secondary']};
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	color: white;
+`
+
 export const StyledInput = styled.div<{ error: boolean }>`
 	span {
+		span {
+			height: ${FIELD_HEIGHT.small};
+		}
 		background: ${({ theme }) => theme['color-base-surface-quaternary']};
 		border: none;
-	}
-	input {
 		height: ${FIELD_HEIGHT.middle};
 		box-shadow: none;
 		border: none;
-		margin: 0;
 		-webkit-appearance: none;
 		background: ${({ theme }) => theme['color-base-surface-quaternary']};
-		padding: 12px 20px;
-		color: ${({ theme }) => theme['color-base-content-top']};
 		border-radius: 10px;
 		${TextSMRegular};
+	}
+	input {
+		color: white;
+		background: ${({ theme }) => theme['color-base-surface-quaternary']};
 		&.ant-input-sm {
 			border-radius: 8px;
 			height: ${FIELD_HEIGHT.small};
@@ -34,8 +53,4 @@ export const StyledInput = styled.div<{ error: boolean }>`
 			box-shadow: ${({ theme }) => theme['drop-shadow-xs']};
 		}
 	}
-`
-
-export const ErrorMessage = styled.div`
-	color: ${({ theme }) => theme['color-base-state-error-bg']};
 `
