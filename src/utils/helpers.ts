@@ -1357,3 +1357,90 @@ export const getTicketHistoricQuote = (positionsWithMergedCombinedPositions: Pos
 
 	return quote?.toFixed(2)
 }
+
+export const formatTicketPositionsForStatistics = (data: { parlayMarkets: ParlayMarket[]; positionBalances: PositionBalance[] }) => {
+	const parlayTickets: any[] = data.parlayMarkets?.map((parlay: ParlayMarket) => {
+		const newParlay = {
+			id: parlay?.id,
+			won: parlay?.won,
+			claimed: parlay?.claimed,
+			sUSDPaid: parlay?.sUSDPaid,
+			txHash: parlay?.txHash,
+			quote: parlay?.totalQuote,
+			amount: parlay?.totalAmount,
+			marketQuotes: parlay?.marketQuotes,
+			maturityDate: 0,
+			ticketType: WALLET_TICKETS.ALL,
+			timestamp: parlay.timestamp,
+			sportMarketsFromContract: parlay.sportMarketsFromContract,
+			isClaimable: false,
+			positions: parlay?.positions?.map((positionItem) => {
+				return {
+					// some are moved up so its easier to work with them
+					id: positionItem.id,
+					side: positionItem.side,
+					claimable: positionItem?.claimable,
+					isCanceled: positionItem?.market?.isCanceled,
+					isOpen: positionItem?.market?.isOpen,
+					isPaused: positionItem?.market?.isPaused,
+					isResolved: positionItem?.market?.isResolved,
+					maturityDate: Number(positionItem?.market?.maturityDate),
+					marketAddress: positionItem?.market?.address,
+					market: {
+						...positionItem.market,
+						homeTeam: removeDuplicateSubstring(positionItem?.market?.homeTeam),
+						awayTeam: removeDuplicateSubstring(positionItem?.market?.awayTeam)
+					}
+				}
+			}),
+			sportMarkets: parlay?.sportMarkets?.map((item) => ({
+				gameId: item.gameId,
+				address: item.address,
+				isCanceled: item.isCanceled
+			}))
+		}
+
+		const lastMaturityDate: number = max(newParlay?.positions?.map((item) => Number(item?.maturityDate))) || 0
+		newParlay.maturityDate = lastMaturityDate
+
+		return newParlay
+	})
+	const positionTickets: any[] = data.positionBalances?.map((positionItem: PositionBalance) => {
+		return {
+			id: positionItem?.id,
+			won: undefined,
+			claimed: positionItem.claimed,
+			sUSDPaid: positionItem?.sUSDPaid,
+			txHash: positionItem?.firstTxHash,
+			amount: positionItem?.amount,
+			quote: null,
+			ticketType: WALLET_TICKETS.ALL,
+			maturityDate: Number(positionItem?.position?.market?.maturityDate),
+			isClaimable: false,
+			timestamp: 0,
+			positions: [
+				{
+					// some are moved up so its easier to work with them
+					id: positionItem.id,
+					side: positionItem.position.side,
+					claimable: positionItem?.position?.claimable,
+					isCanceled: positionItem?.position?.market?.isCanceled,
+					isOpen: positionItem?.position?.market?.isOpen,
+					isPaused: positionItem?.position?.market?.isPaused,
+					isResolved: positionItem?.position?.market?.isResolved,
+					marketAddress: positionItem?.position?.market?.address,
+					maturityDate: Number(positionItem?.position?.market?.maturityDate),
+					market: {
+						...positionItem.position?.market,
+						homeTeam: removeDuplicateSubstring(positionItem?.position?.market?.homeTeam),
+						awayTeam: removeDuplicateSubstring(positionItem?.position?.market?.awayTeam)
+					}
+				}
+			]
+		}
+	})
+	return {
+		parlayTickets,
+		positionTickets
+	}
+}

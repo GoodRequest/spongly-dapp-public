@@ -13,11 +13,12 @@ import { PAGES } from '@/utils/enums'
 import SBox from '@/components/sBox/SBox'
 import { GET_USERS_STATISTICS } from '@/utils/queries'
 import { roundPrice } from '@/utils/formatters/currency'
-import { formatTicketPositionsForStatistics, getUserTicketType } from '@/utils/helpers'
+import { getUserTicketType, parseParlayToUserTicket, parsePositionBalanceToUserTicket } from '@/utils/helpers'
 import { USER_TICKET_TYPE } from '@/utils/constants'
 import SuccessIcon from '@/assets/icons/success-rate-statistics-icon.png'
 import ProfitsTicketsIcon from '@/assets/icons/profits-tickets-statistics-icon.png'
 import Button from '@/atoms/button/Button'
+import { ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
 
 interface ILayout {
 	children: ReactNode
@@ -49,7 +50,10 @@ const Content: FC<ILayout> = ({ children }) => {
 		try {
 			setIsLoading(true)
 			const { data } = await fetchUserStatistic({ variables: { id: address?.toLocaleLowerCase() }, context: { chainId: chain?.id } })
-			const formattedTicketData = formatTicketPositionsForStatistics({ parlayMarkets: data.parlayMarkets, positionBalances: data.positionBalances })
+			const formattedTicketData = {
+				parlayTickets: data?.parlayMarkets?.map((item: ParlayMarket) => parseParlayToUserTicket(item)),
+				positionTickets: data?.positionBalances?.map((item: PositionBalance) => parsePositionBalanceToUserTicket(item))
+			}
 			const wonTickets = [...formattedTicketData.parlayTickets, ...formattedTicketData.positionTickets]?.filter(
 				(item) => getUserTicketType(item) === USER_TICKET_TYPE.SUCCESS
 			)
