@@ -163,10 +163,12 @@ const LeaderboardContent = () => {
 	// }, [])
 
 	useEffect(() => {
-		if (router.query.id) {
-			return
+		if (router.isReady) {
+			if (router.query.id) {
+				return
+			}
+			fetchData()
 		}
-		fetchData()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [direction, property, router.query.id])
 
@@ -217,7 +219,7 @@ const LeaderboardContent = () => {
 						return (
 							<SC.LeaderboardContentRow align={'middle'} gutter={[0, 16]}>
 								<Col span={12} md={6}>
-									<SC.Wallet>
+									<SC.Wallet onClick={() => router.push(`/${PAGES.LEADERBOARD}/?id=${item.id}`)}>
 										<SC.WalletIcon imageSrc={getWalletImage(item.id)} />
 										<SC.Title>
 											<SC.Value>{formatAccount(item.id)}</SC.Value>
@@ -247,7 +249,7 @@ const LeaderboardContent = () => {
 									</SC.Title>
 								</Col>
 								<Col span={24} md={5}>
-									<SCS.LoadMore onClick={() => router.push(`/${PAGES.LEADERBOARD}/?id=${item.id}`)}>{t('Show more')}</SCS.LoadMore>
+									<SCS.LoadMore onClick={() => router.push(`/${PAGES.LEADERBOARD}/?id=${item.id}`)}>{t('Show detail')}</SCS.LoadMore>
 								</Col>
 							</SC.LeaderboardContentRow>
 						)

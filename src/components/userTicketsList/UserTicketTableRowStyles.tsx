@@ -214,6 +214,7 @@ export const TicketDivider = styled(Divider)<{ showClaimed: boolean }>`
 		border-top: ${({ theme }) => `1px solid ${theme['color-base-surface-quintarny']}`};
 		position: absolute;
 		left: 0px;
+		top: 124px;
 		z-index: 10;
 	}
 `

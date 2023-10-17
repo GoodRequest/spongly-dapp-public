@@ -17,7 +17,7 @@ import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
 import { GET_USERS_STATISTICS, GET_USERS_TRANSACTIONS } from '@/utils/queries'
 import networkConnector from '@/utils/networkConnector'
 import { assignOtherAttrsToUserTicket, getUserTicketType, parseParlayToUserTicket, parsePositionBalanceToUserTicket } from '@/utils/helpers'
-import { MSG_TYPE, NOTIFICATION_TYPE, USER_TICKET_TYPE } from '@/utils/constants'
+import { MSG_TYPE, NOTIFICATION_TYPE, USER_TICKET_TYPE, NETWORK_IDS } from '@/utils/constants'
 import { showNotifications } from '@/utils/tsxHelpers'
 import { PAGES } from '@/utils/enums'
 
@@ -43,6 +43,7 @@ const MyWalletContent = () => {
 	const [fetchUserMarketTransactions] = useLazyQuery(GET_USERS_TRANSACTIONS)
 
 	const [userStatistic, setUserStatistic] = useState<undefined | UserStatistic>(undefined)
+
 	const [isLoading, setIsLoading] = useState(true)
 
 	const fetchStatistics = () => {
@@ -50,8 +51,8 @@ const MyWalletContent = () => {
 		const id = isMyWallet ? address?.toLocaleLowerCase() : String(router.query.id).toLowerCase()
 		setTimeout(() => {
 			Promise.all([
-				fetchUserStatistic({ variables: { id }, context: { chainId: chain?.id } }),
-				fetchUserMarketTransactions({ variables: { account: id }, context: { chainId: chain?.id } })
+				fetchUserStatistic({ variables: { id }, context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM } }),
+				fetchUserMarketTransactions({ variables: { account: id }, context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM } })
 			])
 				.then(async (values) => {
 					const marketData: { timestamp: string; id: string }[] = values?.[1]?.data?.marketTransactions?.map((item: any) => {

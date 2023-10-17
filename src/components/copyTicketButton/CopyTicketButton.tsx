@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { groupBy, isEmpty, toPairs } from 'lodash'
+import { isEmpty } from 'lodash'
 import { change, getFormValues } from 'redux-form'
 import { useTranslation } from 'next-export-i18n'
 import { useNetwork } from 'wagmi'
@@ -16,13 +16,13 @@ import { GET_SPORT_MARKETS_FOR_GAME } from '@/utils/queries'
 import Modal from '@/components/modal/Modal'
 import * as SC from './CopyTicketButtonStyles'
 import MatchRow from '@/components/ticketBetContainer/components/matchRow/MatchRow'
-import { MAX_TICKETS, Network } from '@/utils/constants'
+import { MAX_TICKETS, Network, NETWORK_IDS } from '@/utils/constants'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
-import { BetType } from '@/utils/tags'
-import { copyTicketToUnsubmittedTickets, orderPositionsAsSportMarkets } from '@/utils/helpers'
+import { copyTicketToUnsubmittedTickets, getPositionsWithMergedCombinedPositions, orderPositionsAsSportMarkets } from '@/utils/helpers'
 import { SGPItem } from '@/typescript/types'
 import networkConnector from '@/utils/networkConnector'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
+import { useMatchesWithChildMarkets } from '@/hooks/useMatchesWithChildMarkets'
 
 type Props = {
 	ticket: any
@@ -34,7 +34,6 @@ const CopyTicketButton = ({ ticket }: Props) => {
 	const dispatch = useDispatch()
 	const [fetchMarketsForGame] = useLazyQuery(GET_SPORT_MARKETS_FOR_GAME)
 	const { sportsAMMContract } = networkConnector
-	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 
 	const betTicket: Partial<IUnsubmittedBetTicket> = useSelector((state: RootState) => getFormValues(FORM.BET_TICKET)(state))
 	const unsubmittedTickets = useSelector((state: RootState) => state.betTickets.unsubmittedBetTickets.data)
@@ -45,13 +44,19 @@ const CopyTicketButton = ({ ticket }: Props) => {
 	const [copyModal, setCopyModal] = useState<{ visible: boolean; onlyCopy: boolean }>({ visible: false, onlyCopy: false })
 	const [tempMatches, setTempMatches] = useState<any>()
 	const [activeMatches, setActiveMatches] = useState<any[]>([])
-	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
+
+	const sgpFeesRaw = useSGPFeesQuery((chain?.id as Network) || NETWORK_IDS.OPTIMISM, {
 		enabled: true
 	})
+	const matchesWithChildMarkets = useMatchesWithChildMarkets(tempMatches, sgpFees, false)
+
+	const orderedPositions = orderPositionsAsSportMarkets(ticket)
+
+	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions, ticket, sgpFees)
 
 	const formatMatchesToTicket = async () => {
 		return Promise.all(
-			orderedPositions
+			positionsWithMergedCombinedPositions
 				?.filter((item) => item.market.isOpen)
 				.map(async (item) => {
 					const data = await sportsAMMContract?.getMarketDefaultOdds(item.market.address, false)
@@ -61,9 +66,7 @@ const CopyTicketButton = ({ ticket }: Props) => {
 						homeOdds: bigNumberFormatter(data?.[0] || 0),
 						awayOdds: bigNumberFormatter(data?.[1] || 0),
 						drawOdds: bigNumberFormatter(data?.[2] || 0),
-						betOption: item?.isCombined
-							? item?.combinedPositionsText?.replace('&', '')
-							: getSymbolText(convertPositionNameToPosition(item.side), item.market)
+						betOption: item?.isCombined ? item?.combinedPositionsText : getSymbolText(convertPositionNameToPosition(item.side), item.market)
 					}
 				})
 		)
@@ -87,40 +90,11 @@ const CopyTicketButton = ({ ticket }: Props) => {
 		}
 	}, [sgpFeesRaw.data, sgpFeesRaw.isSuccess])
 
-	// TODO: daniel zrefactoruje tak nahradit generickym hookom ktory spravi
-	const getMatchesWithChildMarkets = useMemo(() => {
-		const matchesWithChildMarkets = toPairs(groupBy(tempMatches, 'gameId')).map(([, markets]) => {
-			const [match] = markets
-			const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
-			const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
-			const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD)
-			const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL)
-			const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
-			return {
-				...(winnerTypeMatch ?? tempMatches.find((item: any) => item.gameId === match?.gameId)),
-				winnerTypeMatch,
-				doubleChanceTypeMatches,
-				spreadTypeMatch,
-				totalTypeMatch,
-				combinedTypeMatch
-			}
-		})
-		return matchesWithChildMarkets?.map((item) => {
-			if (item?.winnerTypeMatch && item?.totalTypeMatch && item?.combinedTypeMatch) {
-				return {
-					...item,
-					betOption: `${item.winnerTypeMatch.betOption}&${item.totalTypeMatch.betOption}`
-				}
-			}
-
-			return item
-		})
-	}, [sgpFees, tempMatches])
 	const handleAddTicket = async () => {
 		const largestId = unsubmittedTickets?.reduce((maxId, ticket) => {
 			return Math.max(maxId, ticket.id as number)
 		}, 0)
-		const matches = getMatchesWithChildMarkets || []
+		const matches = matchesWithChildMarkets || []
 
 		const data = unsubmittedTickets
 			? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -137,8 +111,8 @@ const CopyTicketButton = ({ ticket }: Props) => {
 		await dispatch({ type: ACTIVE_BET_TICKET.ACTIVE_BET_TICKET_SET, payload: { data: { id: (largestId || 1) + 1 } } })
 	}
 	const handleCopyTicket = async () => {
-		copyTicketToUnsubmittedTickets(getMatchesWithChildMarkets as any, unsubmittedTickets, dispatch, activeTicketValues.id)
-		dispatch(change(FORM.BET_TICKET, 'matches', getMatchesWithChildMarkets))
+		copyTicketToUnsubmittedTickets(matchesWithChildMarkets as any, unsubmittedTickets, dispatch, activeTicketValues.id)
+		dispatch(change(FORM.BET_TICKET, 'matches', matchesWithChildMarkets))
 		dispatch(change(FORM.BET_TICKET, 'copied', true))
 		// helper variable which says that ticket has matches which were copied
 	}
@@ -148,7 +122,7 @@ const CopyTicketButton = ({ ticket }: Props) => {
 		const gameIDQuery = activeMatches?.map((item) => item?.gameId)
 
 		// NOTE: fetch rest of the available betOptions
-		fetchMarketsForGame({ variables: { gameId_in: gameIDQuery }, context: { chainId: chain?.id } })
+		fetchMarketsForGame({ variables: { gameId_in: gameIDQuery }, context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM } })
 			.then(async (values) => {
 				try {
 					const marketOddsFromContract = await getMarketOddsFromContract([...values.data.sportMarkets])
@@ -197,7 +171,7 @@ const CopyTicketButton = ({ ticket }: Props) => {
 			<SC.ModalDescriptionWarning>{t('Odds might slightly differ')}</SC.ModalDescriptionWarning>
 			<Row>
 				<SC.MatchContainerRow span={24}>
-					{getMatchesWithChildMarkets?.map((match: any, key: any) => (
+					{matchesWithChildMarkets?.map((match: any, key: any) => (
 						<MatchRow readOnly copied key={`matchRow-${key}`} match={match} />
 					))}
 				</SC.MatchContainerRow>

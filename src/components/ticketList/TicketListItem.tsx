@@ -56,14 +56,12 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 	const [activeMatches, setActiveMatches] = useState<any[]>([])
 	const [isExpanded, setIsExpanded] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
-
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
-
 	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions, ticket, sgpFees)
 
 	const formatMatchesToTicket = async () => {
 		return Promise.all(
-			orderedPositions
+			positionsWithMergedCombinedPositions
 				?.filter((item) => item.market.isOpen)
 				.map(async (item) => {
 					const data = await sportsAMMContract?.getMarketDefaultOdds(item.market.address, false)
@@ -73,9 +71,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 						homeOdds: bigNumberFormatter(data?.[0] || 0),
 						awayOdds: bigNumberFormatter(data?.[1] || 0),
 						drawOdds: bigNumberFormatter(data?.[2] || 0),
-						betOption: item?.isCombined
-							? item?.combinedPositionsText?.replace('&', '')
-							: getSymbolText(convertPositionNameToPosition(item.side), item.market)
+						betOption: item?.isCombined ? item?.combinedPositionsText : getSymbolText(convertPositionNameToPosition(item.side), item.market)
 					}
 				})
 		)
@@ -84,8 +80,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 	useEffect(() => {
 		const filterOngoingMatches = async () => {
 			const matches = await formatMatchesToTicket()
-
-			const filterOngoingMatches = matches.filter((match) => !(match.awayOdds === 0 && match.homeOdds === 0 && match.awayOdds === 0))
+			const filterOngoingMatches = matches.filter((match) => !(match.awayOdds === 0 && match.homeOdds === 0))
 			setActiveMatches(filterOngoingMatches)
 		}
 
