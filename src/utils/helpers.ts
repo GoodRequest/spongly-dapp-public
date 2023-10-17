@@ -67,6 +67,7 @@ import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
 import { formatParlayQuote, formatPositionOdds, formatQuote, formattedCombinedTypeMatch } from './formatters/quote'
 import { roundToTwoDecimals } from './formatters/number'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
+import { roundPrice } from './formatters/currency'
 
 export const getCurrentBiweeklyPeriod = () => {
 	const startOfPeriod = dayjs(START_OF_BIWEEKLY_PERIOD)
@@ -1443,4 +1444,11 @@ export const formatTicketPositionsForStatistics = (data: { parlayMarkets: Parlay
 		parlayTickets,
 		positionTickets
 	}
+}
+
+export const getUserTicketClaimValue = (ticket: UserTicket, userTicketType: USER_TICKET_TYPE) => {
+	if (userTicketType === USER_TICKET_TYPE.MISS) return `0 $`
+	if (userTicketType === USER_TICKET_TYPE.SUCCESS) return `+ ${roundPrice(ticket?.amount, true)}`
+	if (userTicketType === USER_TICKET_TYPE.CANCELED) return ` + ${getCanceledClaimAmount(ticket)}`
+	return roundPrice(ticket?.amount, true)
 }

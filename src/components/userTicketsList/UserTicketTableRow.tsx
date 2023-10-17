@@ -19,6 +19,7 @@ import {
 	getEtherScanTxHash,
 	getPositionsWithMergedCombinedPositions,
 	getTicketTotalQuote,
+	getUserTicketClaimValue,
 	getUserTicketType,
 	getUserTicketTypeName,
 	isClaimableUntil,
@@ -117,13 +118,6 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 
 	const isParlay = ticket?.positions?.length > 1
 
-	const getClaimValue = () => {
-		if (userTicketType === USER_TICKET_TYPE.MISS) return `0 $`
-		if (userTicketType === USER_TICKET_TYPE.SUCCESS) return `+ ${roundPrice(ticket?.amount, true)}`
-		if (userTicketType === USER_TICKET_TYPE.CANCELED) return ` + ${getCanceledClaimAmount(ticket)}`
-		return roundPrice(ticket?.amount, true)
-	}
-
 	const handleClaim = async () => {
 		const { parlayMarketsAMMContract, signer } = networkConnector
 		setIsClaiming(true)
@@ -214,7 +208,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 				</>
 			</SC.CenterRowContent>
 			<SC.CenterRowContent md={{ span: 5, order: 4 }} xs={{ span: 12, order: 4 }}>
-				<SC.ClaimValueText userTicketType={userTicketType}>{getClaimValue()}</SC.ClaimValueText>
+				<SC.ClaimValueText userTicketType={userTicketType}>{getUserTicketClaimValue(ticket, userTicketType)}</SC.ClaimValueText>
 				<SC.ColumnNameText>{t('Claim')}</SC.ColumnNameText>
 			</SC.CenterRowContent>
 			<SC.ClaimColContent show={!!(isMyWallet && userTicketType === USER_TICKET_TYPE.SUCCESS)} md={{ span: 4, order: 5 }} xs={{ span: 24, order: 5 }}>

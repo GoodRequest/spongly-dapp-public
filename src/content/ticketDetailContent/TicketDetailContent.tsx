@@ -9,6 +9,7 @@ import {
 	assignOtherAttrsToUserTicket,
 	getPositionsWithMergedCombinedPositions,
 	getTicketHistoricQuote,
+	getUserTicketType,
 	orderPositionsAsSportMarkets,
 	parseParlayToUserTicket,
 	parsePositionBalanceToUserTicket
@@ -23,7 +24,7 @@ import { roundPrice } from '@/utils/formatters/currency'
 import * as PSC from '@/layout/content/ContentStyles'
 import TicketBetContainer from '@/components/ticketBetContainer/TicketBetContainer'
 import PositionsList from '@/components/positionsList/PositionsList'
-import { Network } from '@/utils/constants'
+import { Network, USER_TICKET_TYPE } from '@/utils/constants'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 
 const TicketDetailContent = () => {
@@ -36,6 +37,7 @@ const TicketDetailContent = () => {
 	const [fetchPositionBalanceMarketTransactions] = useLazyQuery(GET_POSITION_BALANCE_TRANSACTION)
 	const [positionsData, setPositionsData] = useState<any>()
 	const [ticketData, setTicketData] = useState<UserTicket>()
+	const [userTicketType, setUserTicketType] = useState<USER_TICKET_TYPE | undefined>(undefined)
 
 	const [isLoading, setIsLoading] = useState(false)
 
@@ -107,11 +109,16 @@ const TicketDetailContent = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [router.query.ticketId, router.isReady])
 
+	useEffect(() => {
+		if (ticketData) {
+			setUserTicketType(getUserTicketType(ticketData))
+		}
+	}, [ticketData])
+
 	return (
 		<>
 			<Row gutter={[0, 16]}>
 				<Col span={24}>
-					{/* TODO: redirect to Tickets / My-Wallet / Tipster-detail */}
 					<BackButton backUrl={router?.query?.previousPath ? (router.query.previousPath as string) : `/${PAGES.TICKETS}`} />
 				</Col>
 				{isLoading ? (
@@ -125,7 +132,7 @@ const TicketDetailContent = () => {
 										isLoading={isLoading}
 										tipsterAddress={ticketData?.account || ''}
 										buyIn={roundPrice(ticketData?.sUSDPaid, true)}
-										// changes if ticket type
+										userTicketType={userTicketType}
 										claim={roundPrice(positionsData?.amount || 0, true)}
 										quote={getTicketHistoricQuote(positionsData, ticketData?.marketQuotes)}
 										matches={positionsData?.length}
