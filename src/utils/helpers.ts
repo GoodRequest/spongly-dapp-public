@@ -334,8 +334,8 @@ export const getParlayItemStatus = (position: Position, isPlayedNow: boolean, t:
 		} else {
 			result = `${position.market.homeScore || '?'} : ${position.market.awayScore || '?'}`
 		}
-		if (position.claimable) return { status: MATCH_STATUS.SUCCESS, text: t('Success {{ date }} ({{ result }})', { date, result }) }
-		return { status: MATCH_STATUS.MISS, text: t('Miss {{ date }} ({{ result }})', { date, result }) }
+		if (position.claimable) return { status: MATCH_STATUS.SUCCESS, text: t('Success {{ date }} ({{ result }})', { date, result }), result }
+		return { status: MATCH_STATUS.MISS, text: t('Miss {{ date }} ({{ result }})', { date, result }), result }
 	}
 	return { status: MATCH_STATUS.OPEN, text: dayjs(toNumber(position.market.maturityDate) * 1000).format('MMM DD | HH:mm') }
 }

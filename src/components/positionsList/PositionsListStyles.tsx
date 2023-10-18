@@ -1,6 +1,6 @@
 import { Col, Row } from 'antd'
 import styled from 'styled-components'
-import { TextMDMedium, TextXLMedium } from '@/styles/typography'
+import { TextMDMedium, TextXLMedium, TextXSRegular } from '@/styles/typography'
 import { MATCH_STATUS } from '@/utils/constants'
 
 export const PositionsListWrapper = styled.div`
@@ -27,6 +27,7 @@ export const TeamCol = styled(Col)`
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	text-align: center;
 `
 export const Img = styled.img`
 	width: 48px;
@@ -37,6 +38,10 @@ export const MediumSpan = styled.span`
 	${TextMDMedium};
 `
 
+export const SmallSpan = styled.span`
+	${TextXSRegular};
+`
+
 export const MediumSpanGreen = styled(MediumSpan)`
 	color: ${({ theme }) => theme['color-base-state-success-fg']};
 `
@@ -45,9 +50,26 @@ export const MediumSpanGrey = styled.span`
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
 `
 
-export const VSSpan = styled.span`
+export const BetOption = styled.div`
+	border-radius: 6px;
+	border: ${({ theme }) => `2px solid ${theme['color-base-action-primary-default']}`};
+	background: ${({ theme }) => theme['color-base-state-info-bg']};
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 32px;
+	min-width: 52px;
+	padding: 8px;
+`
+
+export const VSSpan = styled.span<{ status: MATCH_STATUS }>`
 	${TextXLMedium}
-	color: ${({ theme }) => theme['color-base-content-quaternary']};
+	color: ${({ theme, status }) =>
+		status === MATCH_STATUS.SUCCESS
+			? theme['color-base-state-success-fg']
+			: status === MATCH_STATUS.MISS
+			? theme['color-base-state-error-fg']
+			: theme['color-base-content-quaternary']};
 `
 
 export const BlackBox = styled.div`
@@ -66,6 +88,5 @@ export const OddsWrapper = styled.div`
 	width: 100%;
 	display: flex;
 	justify-content: space-evenly;
-	margin-top: 12px;
+	align-items: center;
 `
-export const State = styled.div<{ status: MATCH_STATUS }>``
