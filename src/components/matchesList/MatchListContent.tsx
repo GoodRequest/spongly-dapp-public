@@ -74,9 +74,11 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleParlayValida
 				{doubleChanceTypeMatches && doubleChanceTypeMatches.length > 0 && !(chain?.id === NETWORK_IDS.OPTIMISM_GOERLI) && (
 					<SC.MobileWrapper>
 						<SC.RadioMobileHeader>{t('Double chance')}</SC.RadioMobileHeader>
-						{formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, false, actualOddType, BET_OPTIONS.DOUBLE_CHANCE_HOME).rawOdd) === '0' && (
-							<SC.WarningText>{t('Coming soon')}</SC.WarningText>
-						)}
+						{formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, false, actualOddType, BET_OPTIONS.DOUBLE_CHANCE_HOME).rawOdd) === '0' &&
+							formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, false, actualOddType, BET_OPTIONS.WINNER_HOME).rawOdd) !== '0' && (
+								<SC.WarningText>{t('Coming soon')}</SC.WarningText>
+							)}
+
 						{isPlayingNow ? (
 							<SC.NotAvailableText>{t('Currently not available')}</SC.NotAvailableText>
 						) : (
@@ -259,7 +261,11 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleParlayValida
 						<SC.ExtendedMatchContentItemHeader>{t('Double chance')}</SC.ExtendedMatchContentItemHeader>
 						<SC.ExtendedRowItemContent>
 							{formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, false, actualOddType, BET_OPTIONS.DOUBLE_CHANCE_HOME).rawOdd) ===
-								'0' && <SC.WarningText>{t('Coming soon')}</SC.WarningText>}
+								'0' &&
+								formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, false, actualOddType, BET_OPTIONS.WINNER_HOME).rawOdd) !== '0' && (
+									<SC.WarningText>{t('Coming soon')}</SC.WarningText>
+								)}
+
 							{isPlayingNow ? (
 								<SC.NotAvailableText>{t('Currently not available')}</SC.NotAvailableText>
 							) : (

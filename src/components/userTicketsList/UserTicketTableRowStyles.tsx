@@ -99,6 +99,9 @@ export const CenterRowContent = styled(Col)`
 	justify-content: center;
 	flex-direction: column;
 	align-items: center;
+	@media (max-width: ${breakpoints.md}px) {
+		align-items: flex-start;
+	}
 `
 
 export const ClaimColContent = styled(Col)<{ show: boolean }>`
@@ -222,11 +225,11 @@ export const TicketDivider = styled(Divider)<{ showClaimed: boolean }>`
 export const ClaimButtonWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
-	${TextSMMedium};
+	${TextSMMedium}
 	@media (max-width: ${breakpoints.md}px) {
 		flex-direction: row;
-		justify-content: center;
 		align-items: center;
+		justify-content: center;
 	}
 `
 
@@ -239,7 +242,7 @@ export const ClaimValue = styled.span`
 	${TextXSMedium};
 	@media (max-width: ${breakpoints.md}px) {
 		margin-top: 0;
-		margin-left: 8px;
+		margin-left: 4px;
 	}
 `
 export const StylesRow = styled(Row)`

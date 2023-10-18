@@ -104,7 +104,10 @@ const MatchHeaderPC = ({
 							<SC.MatchItemCol span={getSpanNumber(BetType.DOUBLE_CHANCE)}>
 								<SC.Header>{t('Double chance')}</SC.Header>
 								{formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, false, actualOddType, BET_OPTIONS.DOUBLE_CHANCE_HOME).rawOdd) ===
-									'0' && <SC.WarningText>{t('Coming soon')}</SC.WarningText>}
+									'0' &&
+									formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, false, actualOddType, BET_OPTIONS.WINNER_AWAY).rawOdd) !==
+										'0' && <SC.WarningText>{t('Coming soon')}</SC.WarningText>}
+
 								<SC.RowItemContent>
 									<SC.RadioGroup>
 										<OddButton

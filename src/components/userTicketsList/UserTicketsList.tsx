@@ -91,8 +91,6 @@ const UserTicketsList = ({ tickets, isLoading, refetch, isMyWallet }: Props) => 
 
 	useEffect(() => {
 		setShownTickets(sortedTickets?.slice(0, pagination.page * 10))
-		// NOTE: Do not update query when wallet is not connected -> instead useEffect in WalletContent will redirect to dashboard
-		// TODO: zistit ako toto vyriesit pri updatovani query ak neni walletka pripojena a sucasne som na detaile a nie my-wallet
 		if (router.query.id) {
 			router.replace(
 				{
