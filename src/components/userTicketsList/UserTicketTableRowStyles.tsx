@@ -99,6 +99,9 @@ export const CenterRowContent = styled(Col)`
 	justify-content: center;
 	flex-direction: column;
 	align-items: center;
+	@media (max-width: ${breakpoints.md}px) {
+		align-items: flex-start;
+	}
 `
 
 export const ClaimColContent = styled(Col)<{ show: boolean }>`
@@ -223,6 +226,11 @@ export const ClaimButtonWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	${TextSMMedium}
+	@media (max-width: ${breakpoints.md}px) {
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
 `
 
 export const ClaimText = styled.span`
@@ -231,7 +239,11 @@ export const ClaimText = styled.span`
 
 export const ClaimValue = styled.span`
 	margin-top: -4px;
-	${TextXSMedium}
+	${TextXSMedium};
+	@media (max-width: ${breakpoints.md}px) {
+		margin-top: 0;
+		margin-left: 4px;
+	}
 `
 export const StylesRow = styled(Row)`
 	margin-top: 16px;

@@ -196,13 +196,13 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 				<SC.TicketTypeTag ticketType={userTicketType}>{getUserTicketTypeName(userTicketType, t)}</SC.TicketTypeTag>
 			</SC.TagColContent>
 
-			<SC.CenterRowContent md={{ span: 3, order: 3 }} xs={{ span: 12, order: 3 }}>
+			<SC.CenterRowContent md={{ span: 3, order: 3 }} xs={{ span: 8, order: 3 }}>
 				<>
 					<SC.ColumnValueText>{roundPrice(ticket?.sUSDPaid, true)}</SC.ColumnValueText>
 					<SC.ColumnNameText>{t('Buy in')}</SC.ColumnNameText>
 				</>
 			</SC.CenterRowContent>
-			<SC.CenterRowContent md={{ span: 3, order: 3 }} xs={{ span: 12, order: 3 }}>
+			<SC.CenterRowContent md={{ span: 3, order: 3 }} xs={{ span: 8, order: 3 }}>
 				<>
 					<SC.ColumnValueText>
 						{Number(getTicketTotalQuote(ticket as any, 'positions' in ticket ? ticket.quote : undefined)).toFixed(2)}
@@ -210,7 +210,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 					<SC.ColumnNameText>{t('Quote')}</SC.ColumnNameText>
 				</>
 			</SC.CenterRowContent>
-			<SC.CenterRowContent md={{ span: 5, order: 4 }} xs={{ span: 12, order: 4 }}>
+			<SC.CenterRowContent md={{ span: 5, order: 4 }} xs={{ span: 8, order: 4 }}>
 				<SC.ClaimValueText userTicketType={userTicketType}>{getClaimValue()}</SC.ClaimValueText>
 				<SC.ColumnNameText>{t('Claim')}</SC.ColumnNameText>
 			</SC.CenterRowContent>
@@ -276,7 +276,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 					{/*	/> */}
 					{/* </Col> */}
 					{!!(ticket.isClaimable && isMyWallet) && (
-						<Col span={12}>
+						<Col span={12} xs={24}>
 							{!isClaiming ? (
 								<Button
 									btnStyle={'primary'}
