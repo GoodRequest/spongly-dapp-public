@@ -13,21 +13,10 @@ type Props = {
 	match: TicketPosition
 	betOption: BET_OPTIONS
 }
-
 const OddValue = (props: Props) => {
 	const { match, betOption } = props
 	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
 	const actualOddType = typeof window !== 'undefined' ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
-	console.log('test', {
-		match,
-		betOption,
-		raw: Number(formatQuote(OddsType.AMM, 0.9093879163306605 * 0.5378639223801356))
-		// formatted: formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, !!activeTicketValues.copied, actualOddType, betOption).formattedOdd),
-		// formatted2: formatQuote(actualOddType, getOddByBetType(match as any, !!activeTicketValues.copied, actualOddType, betOption).rawOdd),
-		// formatted3: formatQuote(OddsType.AMM, 0.9)
-	})
-	// 1 and O -> 0.9093879163306605 * 0.5378639223801356 * 0.9
-
 	// TODO: refactore TicketPosition type and use Imatch type and remove as any
 	return formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, !!activeTicketValues.copied, actualOddType, betOption).rawOdd) > MIN_ODD_TRESHOLD ? (
 		<SC.Odd>
