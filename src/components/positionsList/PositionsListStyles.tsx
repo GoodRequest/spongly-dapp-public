@@ -1,6 +1,7 @@
 import { Col, Row } from 'antd'
 import styled from 'styled-components'
 import { TextMDMedium, TextXLMedium } from '@/styles/typography'
+import { MATCH_STATUS } from '@/utils/constants'
 
 export const PositionsListWrapper = styled.div`
 	${TextMDMedium};
@@ -49,7 +50,7 @@ export const VSSpan = styled.span`
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
 `
 
-export const Position = styled.div`
+export const BlackBox = styled.div`
 	margin: 16px;
 	border-radius: 12px;
 	width: 100%;
@@ -67,3 +68,4 @@ export const OddsWrapper = styled.div`
 	justify-content: space-evenly;
 	margin-top: 12px;
 `
+export const State = styled.div<{ status: MATCH_STATUS }>``
