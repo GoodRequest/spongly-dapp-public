@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { Col, Skeleton } from 'antd'
+import { Col, Row, Skeleton } from 'antd'
 import { breakpoints } from '@/styles/theme'
 import { WALLET_TICKETS } from '@/utils/enums'
 
@@ -23,11 +23,38 @@ export const MainContainer = styled.main`
 		margin-left: 16px;
 	}
 `
-export const StatsOverlayWrapper = styled.div`
+
+export const StatsWrapper = styled.div`
+	width: 100%;
+	overflow: hidden;
+	margin-bottom: 40px;
+	@media (max-width: ${breakpoints.md}px) {
+		overflow: auto;
+	}
+`
+
+export const StatsOverlayWrapper = styled(Row)`
 	display: flex;
 	width: 100%;
-	justify-content: space-between;
-	@media (max-width: ${breakpoints.lg}px) {
+	flex-wrap: wrap;
+	.ant-col:not(:last-child) {
+		padding-right: 16px;
+	}
+	@media (max-width: ${breakpoints.xl}px) and (min-width: ${breakpoints.md}px) {
+		.ant-col {
+			padding-right: 0 !important;
+			&:nth-child(1),
+			&:nth-child(2) {
+				padding-bottom: 16px;
+			}
+			&:nth-child(1),
+			&:nth-child(3) {
+				padding-right: 16px !important;
+			}
+		}
+	}
+	@media (max-width: ${breakpoints.md}px) {
+		justify-content: space-between;
 		cursor: grab;
 		min-width: 1200px;
 	}
@@ -81,7 +108,8 @@ export const MainContentContainer = styled(Col)`
 export const RowSkeleton = styled(Skeleton)`
 	margin-bottom: 16px;
 	.ant-skeleton-content {
-		padding: 40px 60px;
+		padding: 10px 40px;
+		height: 80px;
 		background: ${({ theme }) => theme['color-base-surface-secondary']};
 		margin: 16px 0 16px 0;
 		border-radius: 12px;

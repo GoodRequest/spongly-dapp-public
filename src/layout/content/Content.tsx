@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect, useRef, useState } from 'react'
+import React, { FC, ReactNode, useEffect, useState } from 'react'
 import { Col, Row } from 'antd'
 import { useRouter } from 'next-translate-routes'
 import { includes } from 'lodash'
@@ -15,9 +15,13 @@ import { GET_USERS_STATISTICS } from '@/utils/queries'
 import { roundPrice } from '@/utils/formatters/currency'
 import { formatTicketPositionsForStatistics, getUserTicketType } from '@/utils/helpers'
 import { USER_TICKET_TYPE } from '@/utils/constants'
-import SuccessIcon from '@/assets/icons/success-rate-statistics-icon.png'
-import ProfitsTicketsIcon from '@/assets/icons/profits-tickets-statistics-icon.png'
+import SuccessIcon from '@/assets/icons/stat-successrate-icon.svg'
+import ProfitsIcon from '@/assets/icons/stat-profits-icon.svg'
+import BalanceIcon from '@/assets/icons/stat-balance-icon.svg'
+
 import Button from '@/atoms/button/Button'
+import { useIsMounted } from '@/hooks/useIsMounted'
+import { StatsOverlayWrapper } from './ContentStyles'
 
 interface ILayout {
 	children: ReactNode
@@ -39,7 +43,7 @@ const Content: FC<ILayout> = ({ children }) => {
 	const { chain } = useNetwork()
 	const [statistics, setStatistics] = useState<IStatistics>()
 	const [isLoading, setIsLoading] = useState(false)
-	const eleRef = useRef<HTMLDivElement | null>(null)
+	const isMounted = useIsMounted()
 
 	const { data } = useBalance({
 		address
@@ -71,96 +75,72 @@ const Content: FC<ILayout> = ({ children }) => {
 	}
 
 	useEffect(() => {
-		fetchStats()
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
-
-	// Scrolling left / right with statistics
-	// eslint-disable-next-line consistent-return
-	useEffect(() => {
-		const ele = eleRef.current
-		if (ele) {
-			let pos = { top: 0, left: 0, x: 0, y: 0 }
-
-			const mouseDownHandler = (e: MouseEvent) => {
-				ele.style.userSelect = 'none'
-
-				pos = {
-					left: ele.scrollLeft,
-					top: ele.scrollTop,
-					x: e.clientX,
-					y: e.clientY
-				}
-				const mouseMoveHandler = (e: MouseEvent) => {
-					const dx = e.clientX - pos.x
-					const dy = e.clientY - pos.y
-
-					ele.scrollTop = pos.top - dy
-					ele.scrollLeft = pos.left - dx
-				}
-
-				const mouseUpHandler = () => {
-					document.removeEventListener('mousemove', mouseMoveHandler)
-					document.removeEventListener('mouseup', mouseUpHandler)
-				}
-
-				document.addEventListener('mousemove', mouseMoveHandler)
-				document.addEventListener('mouseup', mouseUpHandler)
-			}
-
-			ele.addEventListener('mousedown', mouseDownHandler)
-
-			return () => {
-				ele.removeEventListener('mousedown', mouseDownHandler)
-			}
+		if (chain?.id && isMounted) {
+			fetchStats()
 		}
-	}, [])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [chain?.id, isMounted])
 
 	return (
 		<SC.MainContainer>
-			<Row id={'scroll-container'} ref={eleRef} style={{ width: '100%', overflow: 'scroll', marginBottom: 40 }}>
-				{includes(userStatistics, router.pathname) ? (
-					isLoading ? (
-						<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
-					) : (
-						!isLoading &&
-						statistics && (
-							<SC.StatsOverlayWrapper>
-								<Col span={6} style={{ paddingRight: 16 }}>
-									<SBox
-										title={t('Account balance')}
-										value={`${Number(data?.formatted).toFixed(4)} ${data?.symbol}`}
-										extraContent={<img src={ProfitsTicketsIcon} alt={'stat'} />}
-									/>
+			{chain?.id && isMounted && (
+				<SC.StatsWrapper>
+					{includes(userStatistics, router.pathname) ? (
+						isLoading ? (
+							<StatsOverlayWrapper>
+								<Col span={12} xs={6} md={12} xl={6}>
+									<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
 								</Col>
-								<Col span={6} style={{ paddingRight: 16 }}>
-									<SBox
-										title={t('Profits')}
-										value={`${roundPrice(statistics?.pnl)} $`}
-										extraContent={<img src={ProfitsTicketsIcon} alt={'stat'} />}
-									/>
+								<Col span={12} xs={6} md={12} xl={6}>
+									<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
 								</Col>
-								<Col span={6} style={{ paddingRight: 16 }}>
-									<SBox
-										title={t('Success rate')}
-										value={`${statistics.successRate} %`}
-										extraContent={<img src={SuccessIcon} alt={'stat'} />}
-									/>
+								<Col span={12} xs={6} md={12} xl={6}>
+									<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
 								</Col>
-								<Col span={6}>
-									<SBox
-										title={t('My tickets')}
-										value={statistics.trades}
-										extraContent={
-											<Button btnStyle={'primary'} onClick={() => router.push(`/${PAGES.MY_WALLET}`)} content={t('Show all')} />
-										}
-									/>
+								<Col span={12} xs={6} md={12} xl={6}>
+									<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
 								</Col>
-							</SC.StatsOverlayWrapper>
+							</StatsOverlayWrapper>
+						) : (
+							!isLoading &&
+							statistics && (
+								<SC.StatsOverlayWrapper>
+									<Col span={12} xs={6} md={12} xl={6}>
+										<SBox
+											title={t('Account balance')}
+											value={`${Number(data?.formatted).toFixed(4)} ${data?.symbol}`}
+											extraContent={<img src={BalanceIcon} alt={'stat'} />}
+										/>
+									</Col>
+									<Col span={12} xs={6} md={12} xl={6}>
+										<SBox
+											title={t('Profits')}
+											value={`${roundPrice(statistics?.pnl)} $`}
+											extraContent={<img src={ProfitsIcon} alt={'stat'} />}
+										/>
+									</Col>
+									<Col span={12} xs={6} md={12} xl={6}>
+										<SBox
+											title={t('Success rate')}
+											value={statistics.successRate ? `${statistics.successRate} %` : '-'}
+											extraContent={<img src={SuccessIcon} alt={'stat'} />}
+										/>
+									</Col>
+									<Col span={12} xs={6} md={12} xl={6}>
+										<SBox
+											title={t('My tickets')}
+											value={statistics.trades || 0}
+											extraContent={
+												<Button btnStyle={'primary'} onClick={() => router.push(`/${PAGES.MY_WALLET}`)} content={t('Show all')} />
+											}
+										/>
+									</Col>
+								</SC.StatsOverlayWrapper>
+							)
 						)
-					)
-				) : null}
-			</Row>
+					) : null}
+				</SC.StatsWrapper>
+			)}
 
 			<Row gutter={[30, 30]} style={{ display: 'flex', justifyContent: 'space-between' }}>
 				{includes(fullWidthPages, router.pathname) && !id ? (
