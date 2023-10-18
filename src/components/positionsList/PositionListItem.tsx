@@ -71,7 +71,6 @@ const PositionListItem = ({ position, quote }: Props) => {
 
 	const league = TAGS_LIST.find((item) => item.id === Number(position?.market?.tags?.[0]))
 	// disabled={!(isMyWallet && isOpen && isntPlayedNow)}
-	console.log(positionState)
 
 	return (
 		<SC.PositionListItem>
@@ -122,17 +121,7 @@ const PositionListItem = ({ position, quote }: Props) => {
 			</SC.ColCenteredVertically>
 			<SC.ColCenteredVertically span={6}>
 				{canBeCopied ? (
-					<div
-						style={{
-							display: 'flex',
-							flexDirection: 'column',
-							justifyContent: 'center',
-							alignItems: 'center',
-							width: '100%',
-							paddingLeft: '32px',
-							paddingRight: '32px'
-						}}
-					>
+					<SC.ButtonWrapper>
 						<SC.SmallSpan>{positionState?.text}</SC.SmallSpan>
 						<Button
 							btnStyle={'primary'}
@@ -141,7 +130,7 @@ const PositionListItem = ({ position, quote }: Props) => {
 							size={'large'}
 							content={<SC.MediumSpan>{t('Copy Position')}</SC.MediumSpan>}
 						/>
-					</div>
+					</SC.ButtonWrapper>
 				) : (
 					<SC.BlackBox style={{ paddingLeft: '16px', paddingRight: '16px' }}>
 						<SC.SmallSpan>{t('Status')}</SC.SmallSpan>

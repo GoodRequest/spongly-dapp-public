@@ -116,6 +116,8 @@ const TicketDetailContent = () => {
 		}
 	}, [ticketData])
 
+	console.log(ticketData)
+
 	return (
 		<>
 			<Row gutter={[0, 16]}>
@@ -137,6 +139,7 @@ const TicketDetailContent = () => {
 										claim={getUserTicketClaimValue(ticketData, userTicketType)}
 										quote={getTicketHistoricQuote(positionsData, ticketData?.marketQuotes)}
 										matches={positionsData?.length}
+										txHash={ticketData?.txHash}
 									/>
 								}
 							</Col>

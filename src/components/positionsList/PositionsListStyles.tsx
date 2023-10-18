@@ -90,3 +90,13 @@ export const OddsWrapper = styled.div`
 	justify-content: space-evenly;
 	align-items: center;
 `
+
+export const ButtonWrapper = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	padding-left: 32px;
+	padding-right: 32px;
+`
