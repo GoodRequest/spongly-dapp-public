@@ -4,6 +4,7 @@ import { useAccount } from 'wagmi'
 import StatisticCard from '@/atoms/statisticCard/StatisticCard'
 import { getWalletImage } from '@/utils/images'
 import { useIsMounted } from '@/hooks/useIsMounted'
+import { USER_TICKET_TYPE } from '@/utils/constants'
 
 type Props = {
 	isLoading: boolean
@@ -12,10 +13,11 @@ type Props = {
 	quote?: string
 	matches?: number
 	claim?: string | number
+	userTicketType?: USER_TICKET_TYPE
 	// copies
 }
 
-const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, claim }: Props) => {
+const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, claim, userTicketType }: Props) => {
 	const { t } = useTranslation()
 	const { address } = useAccount()
 	const isMounted = useIsMounted()
@@ -45,7 +47,14 @@ const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, 
 						<StatisticCard isLoading={isLoading} showMobileInColumn={true} value={matches} title={t('Matches')} addMobileBackground={true} />
 					</Col>
 					<Col lg={5} md={12} sm={12} xs={12}>
-						<StatisticCard isLoading={isLoading} showMobileInColumn={true} value={claim} title={t('Claim')} addMobileBackground={true} />
+						<StatisticCard
+							colorValue={userTicketType === USER_TICKET_TYPE.SUCCESS ? 'green' : userTicketType === USER_TICKET_TYPE.MISS ? 'red' : 'default'}
+							isLoading={isLoading}
+							showMobileInColumn={true}
+							value={claim}
+							title={t('Claim')}
+							addMobileBackground={true}
+						/>
 					</Col>
 				</>
 			)}

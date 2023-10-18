@@ -12,6 +12,7 @@ type Props = {
 	showMobileInColumn?: boolean
 	isAddress?: boolean
 	addMobileBackground?: boolean
+	colorValue?: 'red' | 'green' | 'default'
 }
 const StatisticCard = ({
 	value,
@@ -21,7 +22,8 @@ const StatisticCard = ({
 	img,
 	showMobileInColumn = false,
 	isAddress = false,
-	addMobileBackground = false
+	addMobileBackground = false,
+	colorValue = 'default'
 }: Props) => (
 	<SC.ColorWrapper filled={filled}>
 		<SC.StatisticCard filled={filled} showMobileInColumn={showMobileInColumn} addMobileBackground={addMobileBackground}>
@@ -34,7 +36,9 @@ const StatisticCard = ({
 						<SC.SecondAddressPart>{String(value)?.slice(-3)}</SC.SecondAddressPart>
 					</SC.AddressContainer>
 				) : (
-					<SC.Value filled={filled}>{isLoading ? <Spin indicator={<LoadingOutlined spin />} /> : value}</SC.Value>
+					<SC.Value color={colorValue} filled={filled}>
+						{isLoading ? <Spin indicator={<LoadingOutlined spin />} /> : value}
+					</SC.Value>
 				)}
 			</SC.StatisticWrapper>
 		</SC.StatisticCard>

@@ -1446,7 +1446,9 @@ export const formatTicketPositionsForStatistics = (data: { parlayMarkets: Parlay
 	}
 }
 
-export const getUserTicketClaimValue = (ticket: UserTicket, userTicketType: USER_TICKET_TYPE) => {
+export const getUserTicketClaimValue = (ticket: UserTicket | undefined, userTicketType: USER_TICKET_TYPE | undefined) => {
+	if (!ticket || !userTicketType) return '0 $'
+
 	if (userTicketType === USER_TICKET_TYPE.MISS) return `0 $`
 	if (userTicketType === USER_TICKET_TYPE.SUCCESS) return `+ ${roundPrice(ticket?.amount, true)}`
 	if (userTicketType === USER_TICKET_TYPE.CANCELED) return ` + ${getCanceledClaimAmount(ticket)}`

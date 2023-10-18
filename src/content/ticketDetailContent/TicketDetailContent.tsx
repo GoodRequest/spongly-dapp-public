@@ -9,6 +9,7 @@ import {
 	assignOtherAttrsToUserTicket,
 	getPositionsWithMergedCombinedPositions,
 	getTicketHistoricQuote,
+	getUserTicketClaimValue,
 	getUserTicketType,
 	orderPositionsAsSportMarkets,
 	parseParlayToUserTicket,
@@ -133,7 +134,7 @@ const TicketDetailContent = () => {
 										tipsterAddress={ticketData?.account || ''}
 										buyIn={roundPrice(ticketData?.sUSDPaid, true)}
 										userTicketType={userTicketType}
-										claim={roundPrice(positionsData?.amount || 0, true)}
+										claim={getUserTicketClaimValue(ticketData, userTicketType)}
 										quote={getTicketHistoricQuote(positionsData, ticketData?.marketQuotes)}
 										matches={positionsData?.length}
 									/>
