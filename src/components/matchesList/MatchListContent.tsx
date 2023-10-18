@@ -72,9 +72,10 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleParlayValida
 				{doubleChanceTypeMatches && doubleChanceTypeMatches.length > 0 && !(chain?.id === NETWORK_IDS.OPTIMISM_GOERLI) && (
 					<SC.MobileWrapper>
 						<SC.RadioMobileHeader>{t('Double chance')}</SC.RadioMobileHeader>
-						{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd === 0 && (
-							<SC.WarningText>{t('Coming soon')}</SC.WarningText>
-						)}
+						{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd === '0' &&
+							getOddByBetType(match as any, false, BET_OPTIONS.WINNER_HOME).formattedOdd !== '0' && (
+								<SC.WarningText>{t('Coming soon')}</SC.WarningText>
+							)}
 						{isPlayingNow ? (
 							<SC.NotAvailableText>{t('Currently not available')}</SC.NotAvailableText>
 						) : (
@@ -256,9 +257,10 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleParlayValida
 					<SC.ExtendedMatchContentItemCol>
 						<SC.ExtendedMatchContentItemHeader>{t('Double chance')}</SC.ExtendedMatchContentItemHeader>
 						<SC.ExtendedRowItemContent>
-							{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd === 0 && (
-								<SC.WarningText>{t('Coming soon')}</SC.WarningText>
-							)}
+							{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd === '0' &&
+								getOddByBetType(match as any, false, BET_OPTIONS.WINNER_HOME).formattedOdd !== '0' && (
+									<SC.WarningText>{t('Coming soon')}</SC.WarningText>
+								)}
 							{isPlayingNow ? (
 								<SC.NotAvailableText>{t('Currently not available')}</SC.NotAvailableText>
 							) : (

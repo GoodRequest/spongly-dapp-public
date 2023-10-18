@@ -204,7 +204,8 @@ const ParlayLeaderboardContent = () => {
 	useEffect(() => {
 		const { direction, property } = decodeSorter()
 		setParlayLeaderboardData(sortData(parlayLeaderboardData, property as PARLAY_LEADERBOARD_SORTING, direction as ORDER_DIRECTION))
-	}, [parlayLeaderboardData, query.sorter])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [query.sorter])
 
 	useEffect(() => {
 		loadLeaderboard()

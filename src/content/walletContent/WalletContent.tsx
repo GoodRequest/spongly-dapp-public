@@ -122,7 +122,7 @@ const MyWalletContent = () => {
 					{({ account, chain, openConnectModal, mounted }) => {
 						const connected = mounted && account && chain
 
-						if (!connected && isMyWallet && !isLoading) {
+						if (!connected && isMyWallet) {
 							return (
 								<SCS.Empty
 									image={EmptyStateImage}
