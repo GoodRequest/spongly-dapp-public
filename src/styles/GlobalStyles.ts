@@ -37,7 +37,7 @@ export const GlobalStyle = createGlobalStyle`
 				background-color: ${({ theme }) => theme['color-base-surface-secondary']} !important;
 			}
 		}
-		// Witch checkbox icon
+		// With checkbox icon
 		&.checkbox-dropdown {
 			.ant-select-item-option-selected {
 				&::before {

@@ -118,25 +118,9 @@ export const SettingButton = styled.div`
 	box-shadow: ${({ theme }) => theme['drop-shadow-xs']};
 	border-radius: 8px;
 	align-items: center;
-	justify-content: center;
-	//
-	//background: red;
-	//border-radius: 8px;
-	//height: 52px;
-	//width: 52px;
-	//// padding: 18px;
-	//// cursor: pointer;
-	//// &:first-of-type {
-	//// 	margin-right: 16px;
-	//// }
+	justify-content: center;}
 	img {
 		width: 24px;
 		height: 24px;
 	}
-	// &:hover {
-	// 	background: ${({ theme }) => theme['color-base-action-secondary-hover']};
-	// }
-	// @media (max-width: ${breakpoints.md}px) {
-	// 	padding: 8px;
-	// }
 `

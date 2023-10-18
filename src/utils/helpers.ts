@@ -951,7 +951,7 @@ export const getOddByBetType = (market: IMatch, copied: boolean, oddType: OddsTy
 		case BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER:
 		case BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER:
 			return {
-				// TODO: combined notwork for AMERICAN  / AMM quote type
+				// TODO: combined match bet options not work for AMERICAN  / AMM quote type
 				formattedOdd: formattedCombinedTypeMatch(market, oddType, betOption).formattedOdd,
 				rawOdd: formattedCombinedTypeMatch(market, oddType, betOption).rawOdd,
 				formattedBonus: 0, // NOTE: combined markets don't have bonus
