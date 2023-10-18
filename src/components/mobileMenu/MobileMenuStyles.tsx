@@ -1,8 +1,6 @@
 import { Menu as AntdMenu } from 'antd'
 import styled from 'styled-components'
-
 import { HeadingXSMedium, TextXSMedium } from '@/styles/typography'
-import { breakpoints } from '@/styles/theme'
 
 export const MenuWrapper = styled.div`
 	background: ${({ theme }) => theme['color-base-surface-tertiary']};
@@ -65,12 +63,11 @@ export const MenuItem = styled(AntdMenu.Item)`
 	${HeadingXSMedium};
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
 	&.ant-menu-item-selected {
-		background: ${({ theme }) => theme['color-base-action-secondary-default']} !important;
+		background: none !important;
 		color: ${({ theme }) => theme['color-base-content-top']} !important;
 	}
 	:hover {
 		color: ${({ theme }) => theme['color-base-content-top']} !important;
-		background: ${({ theme }) => theme['color-base-action-secondary-default']} !important;
 	}
 	::after {
 		border-bottom-width: 0px !important;
