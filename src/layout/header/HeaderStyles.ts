@@ -118,7 +118,7 @@ export const SettingButton = styled.div`
 	box-shadow: ${({ theme }) => theme['drop-shadow-xs']};
 	border-radius: 8px;
 	align-items: center;
-	justify-content: center;}
+	justify-content: center;
 	img {
 		width: 24px;
 		height: 24px;

@@ -5,7 +5,7 @@ import { useTranslation } from 'next-export-i18n'
 // utils
 import { NETWORK_IDS, OddsType, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { BET_OPTIONS } from '@/utils/enums'
-import { getHandicapValue, getOddByBetType } from '@/utils/helpers'
+import { getHandicapValue, getOddByBetType, isWindowReady } from '@/utils/helpers'
 import { formatQuote } from '@/utils/formatters/quote'
 import { roundToTwoDecimals } from '@/utils/formatters/number'
 
@@ -30,7 +30,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleParlayValida
 	const { winnerTypeMatch, doubleChanceTypeMatches, spreadTypeMatch, totalTypeMatch, combinedTypeMatch } = match
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(winnerTypeMatch?.tags[0] as any)
 	const isPlayingNow = !match.isResolved && !match.homeOdds && !match.awayOdds
-	const actualOddType = typeof window !== 'undefined' ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 
 	return (
 		<SC.PanelContent>

@@ -13,7 +13,7 @@ import { ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
 
 // utils
 import { GET_TICKETS } from '@/utils/queries'
-import { getClosedTicketType, getTicketTotalQuote, getTicketType, removeDuplicatesByGameId, removeDuplicateSubstring } from '@/utils/helpers'
+import { getClosedTicketType, getTicketTotalQuote, getTicketType, isWindowReady, removeDuplicatesByGameId, removeDuplicateSubstring } from '@/utils/helpers'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import { ISuccessRateData, ITicket } from '@/typescript/types'
 import { ENDPOINTS, OddsType } from '@/utils/constants'
@@ -33,7 +33,7 @@ const useFetchTickets = () => {
 	const [fetchTicketsData0] = useLazyQuery(GET_TICKETS)
 	const [fetchTicketsData1] = useLazyQuery(GET_TICKETS)
 	const [fetchTicketsData2] = useLazyQuery(GET_TICKETS)
-	const actualOddType = typeof window !== 'undefined' ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 	const fetchSuccessRateData = async (): Promise<ISuccessRateData> => {
 		try {
 			const response = await fetch(ENDPOINTS.GET_SUCCESS_RATE())

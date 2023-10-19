@@ -21,6 +21,7 @@ import {
 	getUserTicketType,
 	getUserTicketTypeName,
 	isClaimableUntil,
+	isWindowReady,
 	orderPositionsAsSportMarkets
 } from '@/utils/helpers'
 import { GAS_ESTIMATION_BUFFER, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE, OddsType, USER_TICKET_TYPE } from '@/utils/constants'
@@ -54,7 +55,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 	const [isClaiming, setIsClaiming] = useState(false)
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
-	const actualOddType = typeof window !== 'undefined' ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 
 	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
 		enabled: true

@@ -7,7 +7,7 @@ import { useRouter } from 'next-translate-routes'
 import ParlayLeaderboardRow from './components/ParlayLeaderboardRow'
 import { ParlayLeaderboardItem } from '@/typescript/types'
 import { getReq } from '@/utils/requests'
-import { getCurrentBiweeklyPeriod, getReward } from '@/utils/helpers'
+import { getCurrentBiweeklyPeriod, getReward, isWindowReady } from '@/utils/helpers'
 import { ENDPOINTS, MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE, OddsType } from '@/utils/constants'
 
 import * as SC from './ParlayLeaderboardStyles'
@@ -20,7 +20,7 @@ import { PAGES } from '@/utils/enums'
 const ParlayLeaderboard = () => {
 	const { t } = useTranslation()
 	const router = useRouter()
-	const actualOddType = typeof window !== 'undefined' ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const [parlayLeaderboardData, setParlayLeaderboardData] = useState<ParlayLeaderboardItem[] | undefined>(undefined)
 

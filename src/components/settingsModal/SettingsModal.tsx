@@ -23,7 +23,7 @@ type Props = {
 const SettingsModal = (props: Props) => {
 	const { t } = useTranslation()
 	const { visible, setVisible } = props
-	const actualOddType = typeof window !== 'undefined' ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 	const router = useRouter()
 	const dispatch = useDispatch()
 	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket

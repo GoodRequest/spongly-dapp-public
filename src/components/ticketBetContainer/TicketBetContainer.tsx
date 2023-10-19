@@ -46,6 +46,7 @@ import {
 	getStablecoinDecimals,
 	isBellowOrEqualResolution,
 	isCombined,
+	isWindowReady,
 	updateUnsubmittedTicketMatches
 } from '@/utils/helpers'
 import { getSportsAMMQuoteMethod } from '@/utils/amm'
@@ -91,7 +92,7 @@ const TicketBetContainer = () => {
 	const size = useMedia()
 	const [deleteModal, setDeleteModal] = useState({ visible: false, id: 0 })
 	const isProcessing = useSelector((state: RootState) => state.betTickets.isProcessing)
-	const actualOddType = typeof window !== 'undefined' ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 
 	const [availablePerPosition, setAvailablePerPosition] = useState<any>({
 		[PositionNumber.HOME]: {

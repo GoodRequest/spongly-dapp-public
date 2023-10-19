@@ -9,7 +9,7 @@ import { BET_OPTIONS, MATCHES, PAGES } from '@/utils/enums'
 import OddButton from '@/components/oddButton/OddButton'
 import OddValue from '@/components/oddButton/OddValue'
 import { BetType } from '@/utils/tags'
-import { getOddByBetType } from '@/utils/helpers'
+import { getOddByBetType, isWindowReady } from '@/utils/helpers'
 import * as SCS from '@/styles/GlobalStyles'
 import { roundToTwoDecimals } from '@/utils/formatters/number'
 import { NETWORK_IDS, OddsType, TOTAL_WINNER_TAGS } from '@/utils/constants'
@@ -45,7 +45,7 @@ const MatchHeaderPC = ({
 	const { winnerTypeMatch, doubleChanceTypeMatches, spreadTypeMatch, totalTypeMatch } = match
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(winnerTypeMatch?.tags[0] as any)
 	const isOnlyWinner = winnerTypeMatch && doubleChanceTypeMatches?.length === 0 && !spreadTypeMatch && !totalTypeMatch
-	const actualOddType = typeof window !== 'undefined' ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 	const router = useRouter()
 	const getSpanNumber = (betType: BetType) => {
 		if (isOnlyWinner) return 15

@@ -7,7 +7,7 @@ import { LoadingOutlined } from '@ant-design/icons'
 // utils
 import { useRouter } from 'next-translate-routes'
 import { getTeamImageSource } from '@/utils/images'
-import { getHandicapValue, getParlayItemStatus } from '@/utils/helpers'
+import { getHandicapValue, getParlayItemStatus, isWindowReady } from '@/utils/helpers'
 import { SPORTS_MAP } from '@/utils/tags'
 import { convertPositionNameToPosition, getMatchOddsContract, getSymbolText } from '@/utils/markets'
 import networkConnector from '@/utils/networkConnector'
@@ -39,7 +39,7 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 	const router = useRouter()
 	const oddsSymbol = oddsInfo?.isCombined ? oddsInfo?.combinedPositionsText : getSymbolText(convertPositionNameToPosition(match.side), match.market)
 	const isTotalWinner = match.market?.tags && TOTAL_WINNER_TAGS.includes(match.market.tags?.[0])
-	const actualOddType = typeof window !== 'undefined' ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 
 	const fetchOddsData = async () => {
 		try {
