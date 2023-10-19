@@ -7,7 +7,7 @@ export const SBoxWrapper = styled.div`
 	padding-right: 20px;
 	align-items: center;
 	justify-content: space-between;
-	height: 90px;
+	height: 80px;
 	width: 100%;
 	border-radius: 12px;
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
