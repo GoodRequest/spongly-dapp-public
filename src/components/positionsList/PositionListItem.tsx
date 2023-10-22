@@ -125,10 +125,10 @@ const PositionListItem = ({ position, quote }: Props) => {
 						<SC.SmallSpan>{positionState?.text}</SC.SmallSpan>
 						<Button
 							btnStyle={'primary'}
-							style={{ marginTop: '16px', maxHeight: '48px' }}
+							style={{ marginTop: '16px', maxHeight: '40px' }}
 							onClick={() => console.log('TO DO')}
 							size={'large'}
-							content={<SC.MediumSpan>{t('Copy Position')}</SC.MediumSpan>}
+							content={<span>{t('Copy Position')}</span>}
 						/>
 					</SC.ButtonWrapper>
 				) : (
