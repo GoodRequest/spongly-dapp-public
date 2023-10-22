@@ -29,7 +29,6 @@ import { Network, USER_TICKET_TYPE } from '@/utils/constants'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 
 const TicketDetailContent = () => {
-	const { t } = useTranslation()
 	const { chain } = useNetwork()
 	const router = useRouter()
 	const { signer } = networkConnector
@@ -147,7 +146,11 @@ const TicketDetailContent = () => {
 			</Row>
 			<Row style={{ marginTop: '16px' }}>
 				<PSC.MainContentContainer withPadding={true}>
-					{positionsData ? <PositionsList positionsWithCombinedAttrs={positionsData} marketQuotes={ticketData?.marketQuotes} /> : <div>Is empty</div>}
+					{positionsData ? (
+						<PositionsList sgpFees={sgpFees} positionsWithCombinedAttrs={positionsData} marketQuotes={ticketData?.marketQuotes} />
+					) : (
+						<div>Is empty</div>
+					)}
 				</PSC.MainContentContainer>
 				<PSC.MobileHiddenCol span={8}>
 					<TicketBetContainer />

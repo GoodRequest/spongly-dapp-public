@@ -2,14 +2,18 @@ import { useTranslation } from 'next-export-i18n'
 import React, { useEffect, useState } from 'react'
 import { Row } from 'antd'
 import { toNumber } from 'lodash'
+import Flag from 'react-world-flags'
+import { useLazyQuery } from '@apollo/client'
+import { useNetwork } from 'wagmi'
 
 // utils
-import Flag from 'react-world-flags'
 import { getTeamImageSource } from '@/utils/images'
-import { MATCH_STATUS, NO_TEAM_IMAGE_FALLBACK, STATIC, TOTAL_WINNER_TAGS } from '@/utils/constants'
+import { MATCH_STATUS, NETWORK_IDS, NO_TEAM_IMAGE_FALLBACK, STATIC, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { getParlayItemStatus } from '@/utils/helpers'
 import networkConnector from '@/utils/networkConnector'
-import { convertPositionNameToPosition, getMatchOddsContract, getSymbolText } from '@/utils/markets'
+import { convertPositionNameToPosition, getMarketOddsFromContract, getMatchOddsContract, getSymbolText } from '@/utils/markets'
+import { TAGS_LIST } from '@/utils/tags'
+import { GET_SPORT_MARKETS_FOR_GAME } from '@/utils/queries'
 
 // types
 import { Position } from '@/__generated__/resolvers-types'
@@ -21,21 +25,23 @@ import Button from '@/atoms/button/Button'
 // styles
 import * as SC from './PositionsListStyles'
 import * as PSC from '@/components/ticketList/TicketItemStyles'
-import { TAGS_LIST } from '@/utils/tags'
 import { FlagWorldBig } from '@/styles/GlobalStyles'
 
 type Props = {
 	position: PositionWithCombinedAttrs
 	quote: string | number
+	copyTicket: (positions: any) => void
 }
 
-const PositionListItem = ({ position, quote }: Props) => {
+const PositionListItem = ({ position, quote, copyTicket }: Props) => {
 	const { sportsAMMContract } = networkConnector
 	const { t } = useTranslation()
+	const { chain } = useNetwork()
+
+	const [fetchMarketsForGame] = useLazyQuery(GET_SPORT_MARKETS_FOR_GAME)
 
 	const [imgSrcHome, setImgSrcHome] = useState<string>(getTeamImageSource(position?.market?.homeTeam || '', toNumber(position?.market?.tags?.[0])))
 	const [imgSrcAway, setImgSrcAway] = useState<string>(getTeamImageSource(position?.market?.awayTeam || '', toNumber(position?.market?.tags?.[0])))
-
 	const [oddsDataFromContract, setOddsDataFromContract] = useState()
 
 	const betOption = position?.isCombined ? position?.combinedPositionsText : getSymbolText(convertPositionNameToPosition(position?.side), position.market)
@@ -71,6 +77,28 @@ const PositionListItem = ({ position, quote }: Props) => {
 
 	const league = TAGS_LIST.find((item) => item.id === Number(position?.market?.tags?.[0]))
 	// disabled={!(isMyWallet && isOpen && isntPlayedNow)}
+
+	const getOtherMarkets = async () => {
+		// TODO loading
+		const gameIDQuery = [position.market.gameId]
+
+		fetchMarketsForGame({ variables: { gameId_in: gameIDQuery }, context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM } }).then(async (values) => {
+			try {
+				const marketOddsFromContract = await getMarketOddsFromContract([...values.data.sportMarkets])
+
+				const tempMatches = marketOddsFromContract.map((marketOdds) => {
+					return {
+						...marketOdds,
+						betOption
+					}
+				})
+				copyTicket(tempMatches)
+				// copyTicket tempMatches
+			} catch (err) {
+				console.error(err)
+			}
+		})
+	}
 
 	return (
 		<SC.PositionListItem gutter={[0, 16]}>
@@ -126,7 +154,7 @@ const PositionListItem = ({ position, quote }: Props) => {
 						<Button
 							btnStyle={'primary'}
 							style={{ marginTop: '16px', maxHeight: '40px' }}
-							onClick={() => console.log('TO DO')}
+							onClick={() => getOtherMarkets()}
 							size={'large'}
 							content={<span>{t('Copy Position')}</span>}
 						/>
