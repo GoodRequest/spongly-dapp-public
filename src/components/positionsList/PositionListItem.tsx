@@ -30,10 +30,10 @@ import { FlagWorldBig } from '@/styles/GlobalStyles'
 type Props = {
 	position: PositionWithCombinedAttrs
 	quote: string | number
-	copyTicket: (positions: any) => void
+	openCopyModal: (positions: any) => void
 }
 
-const PositionListItem = ({ position, quote, copyTicket }: Props) => {
+const PositionListItem = ({ position, quote, openCopyModal }: Props) => {
 	const { sportsAMMContract } = networkConnector
 	const { t } = useTranslation()
 	const { chain } = useNetwork()
@@ -92,7 +92,7 @@ const PositionListItem = ({ position, quote, copyTicket }: Props) => {
 						betOption
 					}
 				})
-				copyTicket(tempMatches)
+				openCopyModal(tempMatches)
 				// copyTicket tempMatches
 			} catch (err) {
 				console.error(err)
