@@ -60,7 +60,7 @@ const TicketListItemHeader: FC<ITicketContent> = ({ ticket }) => {
 				<SC.ColHeader>{t('Buy-In')}</SC.ColHeader>
 			</Col>
 			<Col md={{ span: 3, order: 4 }} xs={{ span: 8, order: 5 }}>
-				<SC.ColContent>{round(totalTicketQuote, 2).toFixed(2)}</SC.ColContent>
+				<SC.ColContent>{round(totalTicketQuote as any, 2).toFixed(2)}</SC.ColContent>
 				<SC.ColHeader>{t('Quote')}</SC.ColHeader>
 			</Col>
 			<Col md={{ span: 3, order: 4 }} xs={{ span: 8, order: 6 }}>
