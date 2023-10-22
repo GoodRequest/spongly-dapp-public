@@ -1,34 +1,28 @@
 import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { map, slice } from 'lodash'
 import { useTranslation } from 'next-export-i18n'
-import { useDispatch, useSelector } from 'react-redux'
-import { change, getFormValues } from 'redux-form'
 import { Col, Row } from 'antd'
 import { useNetwork } from 'wagmi'
 import { useRouter } from 'next/router'
-import { RootState } from '@/redux/rootReducer'
 
 // components
 import { ITicketContent } from '@/content/ticketsContent/TicketsContent'
 import TicketListItem from '@/components/ticketList/TicketListItem'
 import Sorter from '@/components/Sorter'
 import Select from '@/atoms/select/Select'
+import CopyModal from '@/components/copyModal/CopyModal'
 
 // assets
 import ArrowIcon from '@/assets/icons/arrow-down.svg'
 import SortIcon from '@/assets/icons/sort-icon.svg'
-import Modal from '@/components/modal/Modal'
-import Button from '@/atoms/button/Button'
-import MatchRow from '@/components/ticketBetContainer/components/matchRow/MatchRow'
 
 // types
-import { ACTIVE_BET_TICKET, IUnsubmittedBetTicket, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 import { SGPItem } from '@/typescript/types'
 
 // utils
-import { MAX_TICKETS, Network, ORDER_DIRECTION, TICKET_SORTING, TICKET_TYPE } from '@/utils/constants'
-import { copyTicketToUnsubmittedTickets, getTicketsTypeName, setSort } from '@/utils/helpers'
-import { FORM, PAGES } from '@/utils/enums'
+import { Network, ORDER_DIRECTION, TICKET_SORTING, TICKET_TYPE } from '@/utils/constants'
+import { getTicketsTypeName, setSort } from '@/utils/helpers'
+import { PAGES } from '@/utils/enums'
 
 // hooks
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
@@ -50,17 +44,14 @@ interface ITicketList {
 const LIST_SIZE = 10
 
 const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = [], loading, failure, activeKeysList, setActiveKeysList }) => {
-	const [renderList, setRenderList] = useState<ITicketContent[]>(slice(list, 0, LIST_SIZE))
 	const { t } = useTranslation()
-	const dispatch = useDispatch()
 	const { chain } = useNetwork()
 	const router = useRouter()
 
+	const [renderList, setRenderList] = useState<ITicketContent[]>(slice(list, 0, LIST_SIZE))
 	const [hasMore, setHasMore] = useState(list.length > LIST_SIZE)
-	const unsubmittedTickets = useSelector((state: RootState) => state.betTickets.unsubmittedBetTickets.data)
-	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
 	const [tempMatches, setTempMatches] = useState<any>()
-	const [copyModal, setCopyModal] = useState<{ visible: boolean; onlyCopy: boolean }>({ visible: false, onlyCopy: false })
+	const [copyModal, setCopyModal] = useState<{ open: boolean; onlyCopy: boolean }>({ open: false, onlyCopy: false })
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
 
 	const matchesWithChildMarkets = useMatchesWithChildMarkets(tempMatches, sgpFees, false)
@@ -132,34 +123,6 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 		}
 	]
 
-	const handleCopyTicket = async () => {
-		copyTicketToUnsubmittedTickets(matchesWithChildMarkets as any, unsubmittedTickets, dispatch, activeTicketValues.id)
-		dispatch(change(FORM.BET_TICKET, 'matches', matchesWithChildMarkets))
-		dispatch(change(FORM.BET_TICKET, 'copied', true))
-		// helper variable which says that ticket has matches which were copied
-	}
-
-	const handleAddTicket = async () => {
-		const largestId = unsubmittedTickets?.reduce((maxId, ticket) => {
-			return Math.max(maxId, ticket.id as number)
-		}, 0)
-		const matches = matchesWithChildMarkets || []
-
-		const data = unsubmittedTickets
-			? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			  [...unsubmittedTickets, { id: (largestId || 1) + 1, matches, copied: true }]
-			: [{ id: 1, matches, copied: true }]
-
-		await dispatch({
-			type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_UPDATE,
-			payload: {
-				data
-			}
-		})
-		// NOTE: set active state for new ticket item in HorizontalScroller id === data.length (actual state of tickets and set active ticket to last item)
-		await dispatch({ type: ACTIVE_BET_TICKET.ACTIVE_BET_TICKET_SET, payload: { data: { id: (largestId || 1) + 1 } } })
-	}
-
 	const handleSubmitSort = (value: string) => {
 		if (!value) {
 			// clear sort
@@ -169,75 +132,6 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 			setSort(property, direction as ORDER_DIRECTION)
 		}
 	}
-
-	const modals = (
-		<Modal
-			open={copyModal.visible}
-			onCancel={() => {
-				setCopyModal({ visible: false, onlyCopy: false })
-			}}
-			centered
-		>
-			{copyModal.onlyCopy ? (
-				<SC.ModalTitle>{t('Do you wish to add these matches?')}</SC.ModalTitle>
-			) : (
-				<>
-					<SC.ModalTitle>{t('Your ticket already includes matches')}</SC.ModalTitle>
-					<SC.ModalDescription style={{ marginBottom: '8px' }}>
-						{t('Do you wish to replace these matches or create a new ticket?')}
-					</SC.ModalDescription>
-				</>
-			)}
-			<SC.ModalDescriptionWarning>{t('Odds might slightly differ')}</SC.ModalDescriptionWarning>
-			<Row>
-				<SC.MatchContainerRow span={24}>
-					{matchesWithChildMarkets?.map((match: any, key: any) => (
-						<MatchRow readOnly copied key={`matchRow-${key}`} match={match} />
-					))}
-				</SC.MatchContainerRow>
-			</Row>
-			<Row gutter={[16, 16]}>
-				{copyModal.onlyCopy ? (
-					<Col span={24}>
-						<Button
-							btnStyle={'secondary'}
-							content={t('Add these to ticket')}
-							onClick={() => {
-								setCopyModal({ visible: false, onlyCopy: false })
-								handleCopyTicket()
-							}}
-						/>
-					</Col>
-				) : (
-					<>
-						<Col span={24}>
-							<Button
-								btnStyle={'secondary'}
-								content={`${t('Replace existing ticket')} (Ticket ${
-									Number(unsubmittedTickets?.map((e) => e.id).indexOf(activeTicketValues.id)) + 1
-								})`}
-								onClick={() => {
-									setCopyModal({ visible: false, onlyCopy: false })
-									handleCopyTicket()
-								}}
-							/>
-						</Col>
-						<Col span={24}>
-							<Button
-								btnStyle={'primary'}
-								content={`${t('Create new ticket')} (Ticket ${Number(unsubmittedTickets?.length) + 1})`}
-								disabled={unsubmittedTickets?.length === MAX_TICKETS}
-								onClick={() => {
-									setCopyModal({ visible: false, onlyCopy: false })
-									handleAddTicket()
-								}}
-							/>
-						</Col>
-					</>
-				)}
-			</Row>
-		</Modal>
-	)
 
 	const ticketList = useMemo(
 		() =>
@@ -259,6 +153,12 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 
 	return (
 		<>
+			<CopyModal
+				isOpen={copyModal.open}
+				onlyCopy={copyModal.onlyCopy}
+				handleClose={() => setCopyModal({ open: false, onlyCopy: false })}
+				matchesWithChildMarkets={matchesWithChildMarkets}
+			/>
 			<SC.TicketListWrapper>
 				<SC.PCRow type={type} gutter={0}>
 					<Col span={20}>
@@ -340,7 +240,6 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 					</Col>
 				</Row>
 			</SC.TicketListWrapper>
-			{modals}
 		</>
 	)
 }

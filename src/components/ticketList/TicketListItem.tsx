@@ -115,13 +115,13 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 				} catch (err) {
 					setTempMatches(activeMatches)
 				} finally {
-					setCopyModal({ visible: true, onlyCopy })
+					setCopyModal({ open: true, onlyCopy })
 					setIsLoading(false)
 				}
 			})
 			.catch(() => {
 				setTempMatches(activeMatches)
-				setCopyModal({ visible: true, onlyCopy })
+				setCopyModal({ open: true, onlyCopy })
 				setIsLoading(false)
 			})
 	}
