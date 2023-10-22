@@ -73,10 +73,10 @@ const PositionListItem = ({ position, quote }: Props) => {
 	// disabled={!(isMyWallet && isOpen && isntPlayedNow)}
 
 	return (
-		<SC.PositionListItem>
-			<SC.ColCenteredVertically span={12}>
+		<SC.PositionListItem gutter={[0, 16]}>
+			<SC.ColCenteredVertically lg={{ span: 12 }} md={{ span: 24 }} sm={{ span: 24 }} xs={{ span: 24 }}>
 				<Row style={{ width: '100%' }}>
-					<SC.TeamCol span={8}>
+					<SC.TeamCol span={10}>
 						<SC.Img
 							src={imgSrcHome}
 							alt={position.market?.homeTeam}
@@ -86,16 +86,16 @@ const PositionListItem = ({ position, quote }: Props) => {
 						/>
 						<SC.MediumSpan> {position.market?.homeTeam}</SC.MediumSpan>
 					</SC.TeamCol>
-					<SC.TeamCol span={8} style={{ height: '100%' }}>
+					<SC.TeamCol span={4} style={{ height: '100%' }}>
 						{league?.country && league?.country !== STATIC.WORLD && (
-							<div style={{ width: '68px', height: '68px' }}>
+							<SC.FlagWrapper>
 								<Flag code={league.country} />
-							</div>
+							</SC.FlagWrapper>
 						)}
 						{league?.country && league?.country === STATIC.WORLD && <FlagWorldBig />}
 						<SC.VSSpan status={positionState.status}>{positionState?.result ? positionState?.result : 'VS'}</SC.VSSpan>
 					</SC.TeamCol>
-					<SC.TeamCol span={8}>
+					<SC.TeamCol span={10}>
 						{!isTotalWinner && (
 							<>
 								<SC.Img
@@ -111,7 +111,7 @@ const PositionListItem = ({ position, quote }: Props) => {
 					</SC.TeamCol>
 				</Row>
 			</SC.ColCenteredVertically>
-			<SC.ColCenteredVertically span={6}>
+			<SC.ColCenteredVertically lg={{ span: 6 }} md={{ span: 12 }} sm={{ span: 24 }} xs={{ span: 24 }}>
 				<SC.BlackBox>
 					<SC.OddsWrapper>
 						<SC.BetOption>{betOption}</SC.BetOption>
@@ -119,7 +119,7 @@ const PositionListItem = ({ position, quote }: Props) => {
 					</SC.OddsWrapper>
 				</SC.BlackBox>
 			</SC.ColCenteredVertically>
-			<SC.ColCenteredVertically span={6}>
+			<SC.ColCenteredVertically lg={{ span: 6 }} md={{ span: 12 }} sm={{ span: 24 }} xs={{ span: 24 }}>
 				{canBeCopied ? (
 					<SC.ButtonWrapper>
 						<SC.SmallSpan>{positionState?.text}</SC.SmallSpan>
@@ -132,7 +132,7 @@ const PositionListItem = ({ position, quote }: Props) => {
 						/>
 					</SC.ButtonWrapper>
 				) : (
-					<SC.BlackBox style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+					<SC.BlackBox>
 						<SC.SmallSpan>{t('Status')}</SC.SmallSpan>
 						<PSC.TicketStatus style={{ marginTop: '12px' }} matchStatus={positionState.status}>
 							{positionState?.status}
