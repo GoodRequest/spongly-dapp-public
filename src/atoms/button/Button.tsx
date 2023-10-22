@@ -1,22 +1,14 @@
 import React from 'react'
+import { ButtonProps as AntdButtonProps, Spin } from 'antd'
 import * as SC from './ButtonStyles'
 
-interface IButton {
-	type?: 'primary' | 'link' | 'text' | 'default' | 'ghost' | 'dashed' | undefined
+type ButtonProps = AntdButtonProps & {
 	btnStyle?: 'primary' | 'secondary' | 'tertiary'
-	onClick?: React.MouseEventHandler
 	content: JSX.Element | string
-	id?: string
-	disabled?: boolean
-	className?: string
-	style?: any
-	htmlType?: string
-	isLoading?: boolean
-	size?: 'small' | 'large' | 'middle'
 	disabledPopoverText?: string
 }
 
-const Button: React.FC<IButton> = ({
+const Button: React.FC<ButtonProps> = ({
 	type = 'primary',
 	btnStyle = 'primary',
 	htmlType = 'button',
@@ -26,10 +18,11 @@ const Button: React.FC<IButton> = ({
 	disabled = false,
 	style = {},
 	size,
-	isLoading,
+	loading,
 	disabledPopoverText
 }) => {
 	const buttonStyle = () => {
+		const contentWrapper = loading ? <Spin /> : content
 		switch (btnStyle) {
 			case 'primary':
 				return disabled && disabledPopoverText ? (
@@ -37,28 +30,26 @@ const Button: React.FC<IButton> = ({
 						<SC.PrimaryButton
 							htmlType={htmlType as any}
 							type={type}
-							loading={isLoading}
 							onClick={onClick}
-							disabled={disabled}
+							disabled={disabled || !!loading}
 							style={style}
 							size={size}
 							className={className}
 						>
-							{content}
+							{contentWrapper}
 						</SC.PrimaryButton>
 					</SC.Popover>
 				) : (
 					<SC.PrimaryButton
 						htmlType={htmlType as any}
 						type={type}
-						loading={isLoading}
 						onClick={onClick}
-						disabled={disabled}
+						disabled={disabled || !!loading}
 						style={style}
 						size={size}
 						className={className}
 					>
-						{content}
+						{contentWrapper}
 					</SC.PrimaryButton>
 				)
 			case 'secondary':
@@ -67,40 +58,54 @@ const Button: React.FC<IButton> = ({
 						<SC.SecondaryButton
 							htmlType={htmlType as any}
 							type={type}
-							loading={isLoading}
+							loading={loading}
 							onClick={onClick}
-							disabled={disabled}
+							disabled={disabled || !!loading}
 							size={size}
 							style={style}
 							className={className}
 						>
-							{content}
+							{contentWrapper}
 						</SC.SecondaryButton>
 					</SC.Popover>
 				) : (
 					<SC.SecondaryButton
 						htmlType={htmlType as any}
 						type={type}
-						loading={isLoading}
+						loading={loading}
 						onClick={onClick}
-						disabled={disabled}
+						disabled={disabled || !!loading}
 						size={size}
 						style={style}
 						className={className}
 					>
-						{content}
+						{contentWrapper}
 					</SC.SecondaryButton>
 				)
 			case 'tertiary':
 				return disabled && disabledPopoverText ? (
 					<SC.Popover title={disabledPopoverText}>
-						<SC.TertiaryButton htmlType={htmlType as any} type={type} loading={isLoading} onClick={onClick} disabled={disabled} style={style}>
-							{content}
+						<SC.TertiaryButton
+							htmlType={htmlType as any}
+							type={type}
+							loading={loading}
+							onClick={onClick}
+							disabled={disabled || !!loading}
+							style={style}
+						>
+							{contentWrapper}
 						</SC.TertiaryButton>
 					</SC.Popover>
 				) : (
-					<SC.TertiaryButton htmlType={htmlType as any} type={type} loading={isLoading} onClick={onClick} disabled={disabled} style={style}>
-						{content}
+					<SC.TertiaryButton
+						htmlType={htmlType as any}
+						type={type}
+						loading={loading}
+						onClick={onClick}
+						disabled={disabled || !!loading}
+						style={style}
+					>
+						{contentWrapper}
 					</SC.TertiaryButton>
 				)
 			default:
@@ -108,14 +113,14 @@ const Button: React.FC<IButton> = ({
 					<SC.PrimaryButton
 						htmlType={htmlType as any}
 						type={type}
-						loading={isLoading}
+						loading={loading}
 						onClick={onClick}
-						disabled={disabled}
+						disabled={disabled || !!loading}
 						size={size}
 						style={style}
 						className={className}
 					>
-						{content}
+						{contentWrapper}
 					</SC.PrimaryButton>
 				)
 		}

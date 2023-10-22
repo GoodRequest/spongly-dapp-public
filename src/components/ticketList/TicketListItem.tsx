@@ -166,7 +166,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 										disabledPopoverText={t('Matches are no longer open to copy')}
 										disabled={activeMatches?.length === 0} // If ticket with active matches is empty disable button
 										btnStyle={'primary'}
-										isLoading={isLoading}
+										loading={isLoading}
 										content={type === TICKET_TYPE.ONGOING_TICKET ? t('Copy open positions') : t('Copy ticket')}
 										onClick={async () => {
 											// NOTE: if ticket has matches open modal which ask if you want to replace ticket or create new one
