@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { getFormValues } from 'redux-form'
+import { useDispatch, useSelector } from 'react-redux'
+import { change, getFormValues } from 'redux-form'
 import { isEmpty } from 'lodash'
 import { useTranslation } from 'next-export-i18n'
 import { Row } from 'antd'
@@ -25,6 +25,7 @@ import { useMatchesWithChildMarkets } from '@/hooks/useMatchesWithChildMarkets'
 // styles
 import * as SC from './PositionsListStyles'
 import * as PSC from '@/components/ticketList/TicketListStyles'
+import { copyTicketToUnsubmittedTickets } from '@/utils/helpers'
 
 type Props = {
 	positionsWithCombinedAttrs: PositionWithCombinedAttrs[]
@@ -34,8 +35,13 @@ type Props = {
 
 const PositionsList = ({ positionsWithCombinedAttrs, marketQuotes, sgpFees }: Props) => {
 	const { t } = useTranslation()
-	const [copyModal, setCopyModal] = useState<{ visible: boolean; onlyCopy: boolean }>({ visible: false, onlyCopy: false })
+	const dispatch = useDispatch()
+
 	const betTicket: Partial<IUnsubmittedBetTicket> = useSelector((state: RootState) => getFormValues(FORM.BET_TICKET)(state))
+	const unsubmittedTickets = useSelector((state: RootState) => state.betTickets.unsubmittedBetTickets.data)
+	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
+
+	const [copyModal, setCopyModal] = useState<{ visible: boolean; onlyCopy: boolean }>({ visible: false, onlyCopy: false })
 	const [modalPositions, setModalPositions] = useState<any>(undefined)
 
 	const matchesWithChildMarkets = useMatchesWithChildMarkets(modalPositions, sgpFees, false)
@@ -63,6 +69,12 @@ const PositionsList = ({ positionsWithCombinedAttrs, marketQuotes, sgpFees }: Pr
 		setCopyModal({ visible: true, onlyCopy: isEmpty(betTicket?.matches) })
 	}
 
+	const handleCopyTicket = async () => {
+		copyTicketToUnsubmittedTickets(matchesWithChildMarkets as any, unsubmittedTickets, dispatch, activeTicketValues.id)
+		dispatch(change(FORM.BET_TICKET, 'matches', matchesWithChildMarkets))
+		dispatch(change(FORM.BET_TICKET, 'copied', true))
+	}
+
 	const modals = (
 		<Modal
 			open={copyModal.visible}
@@ -78,6 +90,9 @@ const PositionsList = ({ positionsWithCombinedAttrs, marketQuotes, sgpFees }: Pr
 						<MatchRow readOnly copied key={`matchRow-${key}`} match={match} />
 					))}
 				</PSC.MatchContainerRow>
+				<button type={'button'} onClick={() => handleCopyTicket()}>
+					AddToForm
+				</button>
 			</Row>
 		</Modal>
 	)
