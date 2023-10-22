@@ -33,7 +33,7 @@ const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, 
 							img={getWalletImage(address as string)}
 							filled={true}
 							isAddress={true}
-							value={address}
+							value={tipsterAddress}
 							title={isMyWallet ? t('My wallet') : t('Wallet')}
 						/>
 					</Col>

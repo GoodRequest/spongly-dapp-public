@@ -25,7 +25,7 @@ interface ILayout {
 const Content: FC<ILayout> = ({ children }) => {
 	const router = useRouter()
 	const { id } = router.query
-	const fullWidthPages = [`/${PAGES.PARLAY_SUPERSTARS}`, `/${PAGES.LEADERBOARD}`]
+	const fullWidthPages = [`/${PAGES.PARLAY_SUPERSTARS}`, `/${PAGES.LEADERBOARD}`, `/${PAGES.TICKET_DETAIL}`]
 	const { chain } = useNetwork()
 	const isMounted = useIsMounted()
 

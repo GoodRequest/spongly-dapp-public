@@ -58,12 +58,9 @@ export const Title = styled.span`
 	white-space: nowrap;
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
 `
-export const Value = styled.span<{ filled: boolean; color: string; isTxnHash: boolean }>`
+export const Value = styled.span<{ filled: boolean; color: string }>`
 	${TextXLSemibold};
 	white-space: nowrap;
-	overflow: ${({ isTxnHash }) => (isTxnHash ? 'hidden' : 'unset')};
-	text-overflow: ${({ isTxnHash }) => (isTxnHash ? 'ellipsis' : 'unset')};
-	max-width: ${({ isTxnHash }) => (isTxnHash ? '100%' : 'unset')};
 	font-size: ${({ filled }) => (filled ? '1.125rem' : '1.3rem')};
 	color: ${({ color, theme }) =>
 		color === 'red' ? theme['color-base-state-error-fg'] : color === 'green' ? theme['color-base-state-success-fg'] : theme['color-base-content-top']};
@@ -112,4 +109,11 @@ export const TxIcon = styled.img`
 export const TxWrapper = styled.div`
 	display: flex;
 	flex-direction: row;
+`
+
+export const TxEllipsis = styled.div`
+	max-width: calc(100% - 24px);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 `

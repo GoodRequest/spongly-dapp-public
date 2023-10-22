@@ -116,8 +116,6 @@ const TicketDetailContent = () => {
 		}
 	}, [ticketData])
 
-	console.log(ticketData)
-
 	return (
 		<>
 			<Row gutter={[0, 16]}>

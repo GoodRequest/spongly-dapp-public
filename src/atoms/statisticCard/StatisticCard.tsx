@@ -31,11 +31,7 @@ const StatisticCard = ({
 	<SC.ColorWrapper filled={filled}>
 		<SC.StatisticCard filled={filled} showMobileInColumn={showMobileInColumn} addMobileBackground={addMobileBackground}>
 			{img && <SC.Image filled={filled} src={img} />}
-			<SC.StatisticWrapper
-				isTxnHash={isTxnHash}
-				isAddress={isAddress}
-				// style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}
-			>
+			<SC.StatisticWrapper isTxnHash={isTxnHash} isAddress={isAddress}>
 				<SC.Title>{title}</SC.Title>
 				{isAddress ? (
 					<SC.AddressContainer>
@@ -43,13 +39,13 @@ const StatisticCard = ({
 						<SC.SecondAddressPart>{String(value)?.slice(-3)}</SC.SecondAddressPart>
 					</SC.AddressContainer>
 				) : (
-					<SC.Value isTxnHash={isTxnHash} color={colorValue} filled={filled}>
+					<SC.Value color={colorValue} filled={filled}>
 						{isLoading ? (
 							<Spin indicator={<LoadingOutlined spin />} />
 						) : isTxnHash ? (
 							<SC.TxWrapper>
 								<SC.TxIcon src={DocumentIcon} alt='hash' />
-								{value}
+								<SC.TxEllipsis>{value}</SC.TxEllipsis>
 							</SC.TxWrapper>
 						) : (
 							value
