@@ -7,13 +7,16 @@ import { MATCH_RESULT, TEAM_TYPE } from '@/utils/enums'
 
 export const MatchDetailWrapper = styled.div`
 	width: 100%;
-	margin: 40px 15px 15px 15px;
 	padding: 24px;
+	position: relative;
 	border-radius: 12px;
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 `
 export const MatchDetailHeader = styled.div`
-	margin-bottom: 30px;
+	margin-bottom: 24px;
+	@media (max-width: ${breakpoints.md}px) {
+		margin-bottom: 0;
+	}
 `
 export const HeaderTeam = styled.div`
 	${HeadingXSMedium};
@@ -83,7 +86,7 @@ export const HeaderStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 			color: ${({ theme }) => theme['color-base-state-warning-fg']};
 		`};
 	@media (max-width: ${breakpoints.md}px) {
-		margin-bottom: 16px;
+		margin-top: 16px;
 	}
 `
 
@@ -198,5 +201,28 @@ export const RowSkeleton = styled(Skeleton)`
 				background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(0, 0, 0, 0.2) 37%, rgba(255, 255, 255, 0.05) 63%) !important;
 			}
 		}
+	}
+`
+export const Separator = styled.div`
+	width: calc(100% + 48px);
+	margin-left: -24px;
+	border-bottom: 1.5px solid ${({ theme }) => theme['color-base-surface-quintarny']};
+	margin-top: 24px;
+	height: 1px;
+	transform: rotate(0deg);
+	margin-bottom: 24px;
+`
+export const LeagueIconOverlay = styled.i`
+	position: absolute;
+	z-index: 1;
+	top: -120px;
+	left: -80px;
+	color: white;
+	opacity: 0.02;
+	font-size: 400px;
+	line-height: 400px;
+	font-style: normal;
+	@media (max-width: ${breakpoints.md}px) {
+		display: none;
 	}
 `

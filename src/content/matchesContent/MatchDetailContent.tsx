@@ -20,6 +20,7 @@ import { BetType, TAGS_LIST } from '@/utils/tags'
 import MatchListContent from '@/components/matchesList/MatchListContent'
 import { getMarketOddsFromContract } from '@/utils/markets'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
+import { LeagueIconOverlay } from './MatchDetailContentStyles'
 
 const MatchDetail = () => {
 	const { t } = useTranslation()
@@ -85,10 +86,8 @@ const MatchDetail = () => {
 	}, [])
 
 	return (
-		<Row gutter={30}>
-			<Col span={24}>
-				<BackButton backUrl={`/${PAGES.MATCHES}`} />
-			</Col>
+		<Row style={{ position: 'relative', overflow: 'hidden' }} gutter={30}>
+			<SC.LeagueIconOverlay className={matchDetailData?.league?.logoClass} />
 			<SC.MatchDetailWrapper>
 				{!matchDetailData ? (
 					<SC.RowSkeleton active loading paragraph={{ rows: 10 }} />
@@ -96,7 +95,7 @@ const MatchDetail = () => {
 					<>
 						<SC.MatchDetailHeader>
 							<Row justify={'center'}>
-								<SC.HeaderCol span={8} order={2} md={{ order: 1 }}>
+								<SC.HeaderCol span={8}>
 									<SC.MatchIcon result={getMatchResult(matchDetailData)} team={TEAM_TYPE.HOME_TEAM}>
 										<img
 											src={getTeamImageSource(matchDetailData?.homeTeam || '', toNumber(matchDetailData?.tags?.[0]))}
@@ -107,11 +106,11 @@ const MatchDetail = () => {
 									</SC.MatchIcon>
 									<SC.HeaderTeam>{matchDetailData?.homeTeam}</SC.HeaderTeam>
 								</SC.HeaderCol>
-								<SC.HeaderCol span={8} order={3} md={{ order: 2 }}>
+								<SC.HeaderCol span={8}>
 									<SCS.LeagueIcon className={matchDetailData.league.logoClass} />
 									<SC.HeaderVersusText>VS</SC.HeaderVersusText>
 								</SC.HeaderCol>
-								<SC.HeaderCol span={8} order={3} md={{ order: 3 }}>
+								<SC.HeaderCol span={8}>
 									<SC.MatchIcon result={getMatchResult(matchDetailData)} team={TEAM_TYPE.AWAY_TEAM}>
 										<img
 											src={getTeamImageSource(matchDetailData?.awayTeam || '', toNumber(matchDetailData?.tags?.[0]))}
@@ -122,10 +121,13 @@ const MatchDetail = () => {
 									</SC.MatchIcon>
 									<SC.HeaderTeam>{matchDetailData?.awayTeam}</SC.HeaderTeam>
 								</SC.HeaderCol>
-								<Col span={24} order={1} md={{ order: 4, span: 6 }}>
+								<Col span={24} md={6}>
 									<SC.HeaderStatus matchStatus={getMatchStatus(matchDetailData, t).status}>
 										<span>{getMatchStatus(matchDetailData, t).text}</span>
 									</SC.HeaderStatus>
+								</Col>
+								<Col span={24} md={0}>
+									<SC.Separator />
 								</Col>
 							</Row>
 						</SC.MatchDetailHeader>

@@ -33,7 +33,6 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleParlayValida
 	return (
 		<SC.PanelContent>
 			<SC.SmallMatchContentWrapper>
-				<SC.AllPositionsHeader>{t('All positions')}</SC.AllPositionsHeader>
 				{winnerTypeMatch && (
 					<SC.MobileWrapper>
 						<SC.RadioMobileHeader>{t('Winner')}</SC.RadioMobileHeader>

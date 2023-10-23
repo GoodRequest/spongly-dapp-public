@@ -7,7 +7,6 @@ import { breakpoints } from '@/styles/theme'
 
 export const HeadRow = styled(Row)`
 	padding-top: 16px;
-	margin-bottom: 24px;
 	height: 84px;
 	background: ${({ theme }) => theme['color-base-surface-top']};
 

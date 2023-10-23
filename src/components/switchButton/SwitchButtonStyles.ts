@@ -2,6 +2,8 @@ import styled from 'styled-components'
 
 export const SwitchContainer = styled.div`
 	display: flex;
+	position: relative;
+	z-index: 2;
 	font-weight: 500;
 	font-size: 16px;
 	width: 100%;
@@ -10,7 +12,6 @@ export const SwitchContainer = styled.div`
 	background: ${({ theme }) => theme['color-base-surface-top']};
 	height: 48px;
 	overflow: hidden;
-	margin-bottom: 40px;
 `
 
 export const Segment = styled.div<{ active: boolean }>`
