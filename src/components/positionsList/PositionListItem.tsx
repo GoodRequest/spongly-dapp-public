@@ -8,19 +8,18 @@ import { useNetwork } from 'wagmi'
 
 // utils
 import { getTeamImageSource } from '@/utils/images'
-import { MATCH_STATUS, NETWORK_IDS, NO_TEAM_IMAGE_FALLBACK, STATIC, TOTAL_WINNER_TAGS } from '@/utils/constants'
+import { MATCH_STATUS, NO_TEAM_IMAGE_FALLBACK, STATIC, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { getParlayItemStatus } from '@/utils/helpers'
 import networkConnector from '@/utils/networkConnector'
-import { convertPositionNameToPosition, getMarketOddsFromContract, getMatchOddsContract, getSymbolText } from '@/utils/markets'
+import { convertPositionNameToPosition, getMatchOddsContract, getSymbolText } from '@/utils/markets'
 import { TAGS_LIST } from '@/utils/tags'
-import { GET_SPORT_MARKETS_FOR_GAME } from '@/utils/queries'
 
 // types
 import { Position } from '@/__generated__/resolvers-types'
 import { PositionWithCombinedAttrs } from '@/typescript/types'
 
-// atomss
-import Button from '@/atoms/button/Button'
+// components
+import CopyTicketButton from '../copyTicketButton/CopyTicketButton'
 
 // styles
 import * as SC from './PositionsListStyles'
@@ -30,15 +29,12 @@ import { FlagWorldBig } from '@/styles/GlobalStyles'
 type Props = {
 	position: PositionWithCombinedAttrs
 	quote: string | number
-	openCopyModal: (positions: any) => void
+	copyButtonTicket: any
 }
 
-const PositionListItem = ({ position, quote, openCopyModal }: Props) => {
+const PositionListItem = ({ position, quote, copyButtonTicket }: Props) => {
 	const { sportsAMMContract } = networkConnector
 	const { t } = useTranslation()
-	const { chain } = useNetwork()
-
-	const [fetchMarketsForGame] = useLazyQuery(GET_SPORT_MARKETS_FOR_GAME)
 
 	const [imgSrcHome, setImgSrcHome] = useState<string>(getTeamImageSource(position?.market?.homeTeam || '', toNumber(position?.market?.tags?.[0])))
 	const [imgSrcAway, setImgSrcAway] = useState<string>(getTeamImageSource(position?.market?.awayTeam || '', toNumber(position?.market?.tags?.[0])))
@@ -72,27 +68,6 @@ const PositionListItem = ({ position, quote, openCopyModal }: Props) => {
 
 	const league = TAGS_LIST.find((item) => item.id === Number(position?.market?.tags?.[0]))
 	// disabled={!(isMyWallet && isOpen && isntPlayedNow)}
-
-	const getOtherMarkets = async () => {
-		// TODO loading
-		const gameIDQuery = [position.market.gameId]
-
-		fetchMarketsForGame({ variables: { gameId_in: gameIDQuery }, context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM } }).then(async (values) => {
-			try {
-				const marketOddsFromContract = await getMarketOddsFromContract([...values.data.sportMarkets])
-
-				const tempMatches = marketOddsFromContract.map((marketOdds) => {
-					return {
-						...marketOdds,
-						betOption
-					}
-				})
-				openCopyModal(tempMatches)
-			} catch (err) {
-				console.error(err)
-			}
-		})
-	}
 
 	return (
 		<SC.PositionListItem gutter={[0, 16]}>
@@ -144,14 +119,8 @@ const PositionListItem = ({ position, quote, openCopyModal }: Props) => {
 			<SC.ColCenteredVertically lg={{ span: 6 }} md={{ span: 12 }} sm={{ span: 24 }} xs={{ span: 24 }}>
 				{canBeCopied ? (
 					<SC.ButtonWrapper>
-						<SC.SmallSpan>{positionState?.text}</SC.SmallSpan>
-						<Button
-							btnStyle={'primary'}
-							style={{ marginTop: '16px', maxHeight: '40px' }}
-							onClick={() => getOtherMarkets()}
-							size={'large'}
-							content={<span>{t('Copy Position')}</span>}
-						/>
+						<SC.SmallSpan style={{ marginBottom: '12px' }}>{positionState?.text}</SC.SmallSpan>
+						<CopyTicketButton ticket={copyButtonTicket} isPosition={true} />
 					</SC.ButtonWrapper>
 				) : (
 					<SC.BlackBox>

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { useTranslation } from 'next-export-i18n'
 import { useRouter } from 'next-translate-routes'
 import { useLazyQuery } from '@apollo/client'
 import { useNetwork } from 'wagmi'
 import { Col, Row, Spin } from 'antd'
+
+// utils
 import { GET_PARLAY_DETAIL, GET_POSITION_BALANCE_DETAIL, GET_POSITION_BALANCE_TRANSACTION } from '@/utils/queries'
 import {
 	assignOtherAttrsToUserTicket,
@@ -15,18 +16,26 @@ import {
 	parseParlayToUserTicket,
 	parsePositionBalanceToUserTicket
 } from '@/utils/helpers'
-import { SGPItem, UserTicket } from '@/typescript/types'
 import networkConnector from '@/utils/networkConnector'
-import BackButton from '@/atoms/backButton/BackButton'
 import { PAGES } from '@/utils/enums'
-import TicketStatisticRow from '@/components/statisticRow/TicketStatisticRow'
 import { roundPrice } from '@/utils/formatters/currency'
+import { Network, USER_TICKET_TYPE } from '@/utils/constants'
 
-import * as PSC from '@/layout/content/ContentStyles'
+// hooks
+import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
+
+// types
+import { SGPItem, UserTicket } from '@/typescript/types'
+
+// components
+import BackButton from '@/atoms/backButton/BackButton'
+import TicketStatisticRow from '@/components/statisticRow/TicketStatisticRow'
 import TicketBetContainer from '@/components/ticketBetContainer/TicketBetContainer'
 import PositionsList from '@/components/positionsList/PositionsList'
-import { Network, USER_TICKET_TYPE } from '@/utils/constants'
-import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
+
+// styles
+
+import * as PSC from '@/layout/content/ContentStyles'
 
 const TicketDetailContent = () => {
 	const { chain } = useNetwork()
@@ -147,12 +156,7 @@ const TicketDetailContent = () => {
 			<Row style={{ marginTop: '16px' }}>
 				<PSC.MainContentContainer withPadding={true}>
 					{positionsData ? (
-						<PositionsList
-							ticketData={ticketData}
-							sgpFees={sgpFees}
-							positionsWithCombinedAttrs={positionsData}
-							marketQuotes={ticketData?.marketQuotes}
-						/>
+						<PositionsList ticketData={ticketData} positionsWithCombinedAttrs={positionsData} marketQuotes={ticketData?.marketQuotes} />
 					) : (
 						<div>Is empty</div>
 					)}

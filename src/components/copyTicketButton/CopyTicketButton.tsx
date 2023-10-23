@@ -26,9 +26,10 @@ import { useMatchesWithChildMarkets } from '@/hooks/useMatchesWithChildMarkets'
 
 type Props = {
 	ticket: any
+	isPosition?: boolean
 }
 
-const CopyTicketButton = ({ ticket }: Props) => {
+const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 	const { t } = useTranslation()
 	const { chain } = useNetwork()
 	const dispatch = useDispatch()
@@ -226,7 +227,7 @@ const CopyTicketButton = ({ ticket }: Props) => {
 				disabled={activeMatches?.length === 0} // If ticket with active matches is empty disable button
 				btnStyle={'primary'}
 				// TODO: opravit text podla toho aky druh je vybraty
-				content={t('Copy ticket')}
+				content={isPosition ? t('Copy position') : t('Copy ticket')}
 				isLoading={isLoading}
 				onClick={async () => {
 					// NOTE: if ticket has matches open modal which ask if you want to replace ticket or create new one

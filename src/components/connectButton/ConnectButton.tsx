@@ -19,7 +19,7 @@ import Modal from '@/components/modal/Modal'
 import { useIsMounted } from '@/hooks/useIsMounted'
 
 import * as SC from './ConnectButtonStyles'
-import * as SCS from '@/components/copyModal/CopyModalStyles'
+import * as SCS from '@/components/copyTicketButton/CopyTicketButtonStyles'
 import * as SCG from '@/styles/GlobalStyles'
 
 // assets
