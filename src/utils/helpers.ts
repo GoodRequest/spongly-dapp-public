@@ -1119,7 +1119,7 @@ export const getCombinedPositionsOdds = (positions: PositionWithIndex[], ticket:
 	const combinedOdds = firstPositionOdds * secondPositionOdds
 
 	if (!sgpFees) {
-		return combinedOdds
+		return floor(combinedOdds, 2).toFixed(2)
 	}
 
 	let sgpItem: undefined | SGPItem
@@ -1133,7 +1133,7 @@ export const getCombinedPositionsOdds = (positions: PositionWithIndex[], ticket:
 	})
 
 	if (!sgpItem) {
-		return combinedOdds
+		return floor(combinedOdds, 2).toFixed(2)
 	}
 
 	// TODO: totalquote wont match this quote. Same on Overtime

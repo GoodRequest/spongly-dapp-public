@@ -27,8 +27,8 @@ const PositionsList = ({ positionsWithCombinedAttrs, marketQuotes, ticketData, i
 	const isParlay = positionsWithCombinedAttrs?.length > 1
 
 	const getOdds = (item: PositionWithCombinedAttrs, index: number) => {
-		if (item?.isCombined) {
-			return formatParlayQuote(item?.odds)
+		if (item?.isCombined && item?.odds) {
+			return item.odds
 		}
 
 		if (isParlay) {
