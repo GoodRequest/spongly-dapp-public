@@ -219,15 +219,6 @@ export const SelectSorters = styled.div`
 		display: flex;
 	}
 `
-export const SelectSorterTitle = styled.div`
-	display: flex;
-	align-items: center;
-	img {
-		margin-right: 8px;
-		width: 16px;
-		height: 16px;
-	}
-`
 
 export const FlagWorld = styled.div`
 	height: 20px;
