@@ -12,13 +12,14 @@ import {
 	getTicketHistoricQuote,
 	getUserTicketClaimValue,
 	getUserTicketType,
+	isWindowReady,
 	orderPositionsAsSportMarkets,
 	parseParlayToUserTicket,
 	parsePositionBalanceToUserTicket
 } from '@/utils/helpers'
 import networkConnector from '@/utils/networkConnector'
 import { roundPrice } from '@/utils/formatters/currency'
-import { Network, USER_TICKET_TYPE } from '@/utils/constants'
+import { Network, OddsType, USER_TICKET_TYPE } from '@/utils/constants'
 
 // hooks
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
@@ -48,10 +49,10 @@ const TicketDetailContent = () => {
 	const [positionsData, setPositionsData] = useState<any>()
 	const [ticketData, setTicketData] = useState<UserTicket>()
 	const [userTicketType, setUserTicketType] = useState<USER_TICKET_TYPE | undefined>(undefined)
-
 	const [isLoading, setIsLoading] = useState(true)
-
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
+
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 
 	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
 		enabled: true
@@ -99,6 +100,7 @@ const TicketDetailContent = () => {
 
 				const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions, ticketsWithOtherAttrs?.[0], sgpFees)
 				setTicketData(ticketsWithOtherAttrs?.[0])
+				setUserTicketType(getUserTicketType(ticketsWithOtherAttrs?.[0]))
 				setPositionsData(positionsWithMergedCombinedPositions)
 			})
 		} catch (e) {
@@ -116,12 +118,6 @@ const TicketDetailContent = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [router.isReady])
 
-	useEffect(() => {
-		if (ticketData) {
-			setUserTicketType(getUserTicketType(ticketData))
-		}
-	}, [ticketData])
-
 	const isMyWallet = ticketData?.account?.toLocaleLowerCase() === address?.toLocaleLowerCase()
 
 	return (
@@ -135,7 +131,7 @@ const TicketDetailContent = () => {
 							buyIn={roundPrice(ticketData?.sUSDPaid, true)}
 							userTicketType={userTicketType}
 							claim={getUserTicketClaimValue(ticketData, userTicketType)}
-							quote={getTicketHistoricQuote(positionsData, ticketData?.marketQuotes)}
+							quote={getTicketHistoricQuote(positionsData, actualOddType, ticketData?.marketQuotes)}
 							matches={positionsData?.length}
 							txHash={ticketData?.txHash}
 							isMyWallet={isMyWallet}

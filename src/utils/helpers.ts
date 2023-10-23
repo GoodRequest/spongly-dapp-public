@@ -1342,7 +1342,7 @@ export const assignOtherAttrsToUserTicket = async (
 	return Promise.all(promises)
 }
 
-export const getTicketHistoricQuote = (positionsWithMergedCombinedPositions: PositionWithCombinedAttrs[], marketQuotes?: string[]) => {
+export const getTicketHistoricQuote = (positionsWithMergedCombinedPositions: PositionWithCombinedAttrs[], actualOddType: OddsType, marketQuotes?: string[]) => {
 	const isParlay = positionsWithMergedCombinedPositions?.length > 1
 	let quote: undefined | number
 	positionsWithMergedCombinedPositions?.forEach((item, index) => {
@@ -1353,7 +1353,7 @@ export const getTicketHistoricQuote = (positionsWithMergedCombinedPositions: Pos
 				quote *= item?.isCombined ? Number(formatParlayQuote(item?.odds)) : Number(formatParlayQuote(Number(marketQuotes?.[index])))
 			}
 		} else {
-			quote = item?.isCombined ? Number(formatParlayQuote(item?.odds)) : Number(formatPositionOdds(item))
+			quote = item?.isCombined ? Number(formatParlayQuote(item?.odds)) : Number(formatPositionOdds(item, actualOddType))
 		}
 	})
 
