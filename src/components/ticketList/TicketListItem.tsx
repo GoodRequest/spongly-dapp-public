@@ -9,6 +9,7 @@ import TicketListItemHeader from '@/components/ticketList/TicketListItemHeader'
 import { ITicketContent } from '@/content/ticketsContent/TicketsContent'
 import Button from '@/atoms/button/Button'
 import TicketItem from '@/components/ticketList/TicketItem'
+import CopyTicketButton from '../copyTicketButton/CopyTicketButton'
 
 // utils
 import { PAGES } from '@/utils/enums'
@@ -20,7 +21,6 @@ import { SGPItem } from '@/typescript/types'
 
 // styles
 import * as SC from './TicketListStyles'
-import CopyTicketButton from '../copyTicketButton/CopyTicketButton'
 
 interface ITicketListItem extends ITicketContent {
 	type: string

@@ -36,7 +36,7 @@ const MatchHeaderMobile = ({
 	return (
 		<SC.MobileContentWrapper>
 			<SC.MatchItemRow type={type} key={`${match.maturityDate}-${MATCHES.OPEN}`}>
-				<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCHES}/?id=${match.gameId}`)} $alignItems={'flex-start'} span={24}>
+				<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCH_DETAIL}/?id=${match.gameId}`)} $alignItems={'flex-start'} span={24}>
 					{getContestedTeams}
 				</SC.MatchItemCol>
 			</SC.MatchItemRow>

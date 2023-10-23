@@ -99,7 +99,7 @@ export const Status = styled.div<{ visible: boolean; status?: WALLET_TICKETS }>`
 		css`
 			background: #ff8833;
 		`};
-	@media (max-width: ${breakpoints.md}px) {
+	@media (max-width: ${breakpoints.semixxl}px) {
 		display: none;
 	}
 `

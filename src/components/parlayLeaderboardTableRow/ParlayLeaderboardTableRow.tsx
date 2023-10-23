@@ -1,5 +1,6 @@
 import { Col } from 'antd'
 import { useTranslation } from 'next-export-i18n'
+import { useRouter } from 'next-translate-routes'
 
 import { ParlayLeaderboardTableItem } from '@/typescript/types'
 import { formatAddress } from '@/utils/formatters/string'
@@ -7,9 +8,11 @@ import { formatAddress } from '@/utils/formatters/string'
 import * as SC from './ParlayLeaderboardTableRowStyles'
 
 import BadgeIcon from '@/assets/icons/medal-star.svg'
+import { PAGES } from '@/utils/enums'
 
 const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, reward, isLoading = false }: ParlayLeaderboardTableItem) => {
 	const { t } = useTranslation()
+	const router = useRouter()
 	const skeletonPreset = (width: number) => {
 		return <SC.StyledSkeleton title={false} active paragraph={{ rows: 1, width }} />
 	}
@@ -27,7 +30,7 @@ const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, 
 					{isLoading ? (
 						skeletonPreset(120)
 					) : (
-						<div style={{ minWidth: '80px' }}>
+						<div style={{ minWidth: '80px', cursor: 'pointer' }} onClick={() => router.push(`/${PAGES.LEADERBOARD}/?id=${address}`)}>
 							<SC.ColumnNameText>{t('Wallet')}</SC.ColumnNameText>
 							<SC.AddressText>{formatAddress(address)}</SC.AddressText>
 						</div>

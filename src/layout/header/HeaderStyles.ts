@@ -107,3 +107,20 @@ export const MobileWrapper = styled.div`
 		display: block;
 	}
 `
+export const SettingButton = styled.div`
+	height: 52px;
+	width: 52px;
+	padding-left: 6px;
+	padding-right: 6px;
+	display: flex;
+	cursor: pointer;
+	background: ${({ theme }) => theme['color-base-surface-tertiary']};
+	box-shadow: ${({ theme }) => theme['drop-shadow-xs']};
+	border-radius: 8px;
+	align-items: center;
+	justify-content: center;
+	img {
+		width: 24px;
+		height: 24px;
+	}
+`

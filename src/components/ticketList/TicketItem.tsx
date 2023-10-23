@@ -7,12 +7,12 @@ import { LoadingOutlined } from '@ant-design/icons'
 // utils
 import { useRouter } from 'next-translate-routes'
 import { getTeamImageSource } from '@/utils/images'
-import { getHandicapValue, getParlayItemStatus } from '@/utils/helpers'
+import { getHandicapValue, getParlayItemStatus, isWindowReady } from '@/utils/helpers'
 import { SPORTS_MAP } from '@/utils/tags'
 import { convertPositionNameToPosition, getMatchOddsContract, getSymbolText } from '@/utils/markets'
 import networkConnector from '@/utils/networkConnector'
 import { Position } from '@/__generated__/resolvers-types'
-import { NO_TEAM_IMAGE_FALLBACK, TOTAL_WINNER_TAGS } from '@/utils/constants'
+import { NO_TEAM_IMAGE_FALLBACK, OddsType, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { formatParlayQuote, formatPositionOdds } from '@/utils/formatters/quote'
 import { roundToTwoDecimals } from '@/utils/formatters/number'
 
@@ -39,6 +39,7 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 	const router = useRouter()
 	const oddsSymbol = oddsInfo?.isCombined ? oddsInfo?.combinedPositionsText : getSymbolText(convertPositionNameToPosition(match.side), match.market)
 	const isTotalWinner = match.market?.tags && TOTAL_WINNER_TAGS.includes(match.market.tags?.[0])
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 
 	const fetchOddsData = async () => {
 		try {
@@ -74,11 +75,11 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 		}
 
 		if (oddsInfo.isParlay) {
-			return formatParlayQuote(Number(oddsInfo.quote))
+			return formatParlayQuote(Number(oddsInfo.quote), actualOddType)
 		}
 
 		if (!oddsInfo.isParlay) {
-			return formatPositionOdds(match)
+			return formatPositionOdds(match, actualOddType)
 		}
 
 		// rather show nothing then wrong odds
@@ -96,7 +97,7 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 		return ''
 	}
 	return (
-		<SC.TicketItemWrapper onClick={() => router.push(`/${PAGES.MATCHES}/?id=${match.market.gameId}`)}>
+		<SC.TicketItemWrapper onClick={() => router.push(`/${PAGES.MATCH_DETAIL}/?id=${match.market.gameId}`)}>
 			<SC.TicketHeader>
 				<SC.SportLogo>
 					<Icon style={{ marginRight: 0, color: 'white' }} className={`icon icon--${SPORTS_MAP[Number(match?.market.tags?.[0])]?.toLowerCase()}`} />

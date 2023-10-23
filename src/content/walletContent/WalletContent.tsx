@@ -10,7 +10,6 @@ import { Col, Row } from 'antd'
 import UserStatisticRow from '@/components/statisticRow/UserStatisticRow'
 import Button from '@/atoms/button/Button'
 import UserTicketsList from '@/components/userTicketsList/UserTicketsList'
-import BackButton from '@/atoms/backButton/BackButton'
 import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
 
 // utils
@@ -19,7 +18,6 @@ import networkConnector from '@/utils/networkConnector'
 import { assignOtherAttrsToUserTicket, getUserTicketType, parseParlayToUserTicket, parsePositionBalanceToUserTicket } from '@/utils/helpers'
 import { MSG_TYPE, NOTIFICATION_TYPE, USER_TICKET_TYPE, NETWORK_IDS } from '@/utils/constants'
 import { showNotifications } from '@/utils/tsxHelpers'
-import { PAGES } from '@/utils/enums'
 
 // hooks
 import { useIsMounted } from '@/hooks/useIsMounted'
@@ -113,10 +111,6 @@ const MyWalletContent = () => {
 
 	return (
 		<Row gutter={[0, 16]}>
-			<Col span={24}>
-				<BackButton backUrl={`/${PAGES.LEADERBOARD}`} />
-			</Col>
-
 			<Col span={24}>
 				<RainbowConnectButton.Custom>
 					{({ account, chain, openConnectModal, mounted }) => {

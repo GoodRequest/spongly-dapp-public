@@ -13,7 +13,6 @@ import Select from '@/atoms/select/Select'
 
 // assets
 import ArrowIcon from '@/assets/icons/arrow-down.svg'
-import SortIcon from '@/assets/icons/sort-icon.svg'
 
 // types
 import { SGPItem } from '@/typescript/types'
@@ -182,18 +181,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 										</Col>
 									</SCS.HorizontalSorters>
 									<SCS.SelectSorters>
-										<Select
-											title={
-												<SCS.SelectSorterTitle>
-													<img src={SortIcon} alt={'Sorter'} />
-													{t('Sort by')}
-												</SCS.SelectSorterTitle>
-											}
-											allowClear
-											options={sortOptions}
-											placeholder={t('Sort by')}
-											onChange={handleSubmitSort}
-										/>
+										<Select allowClear options={sortOptions} placeholder={t('Sort by')} onChange={handleSubmitSort} />
 									</SCS.SelectSorters>
 								</SCS.SorterRow>
 							)}

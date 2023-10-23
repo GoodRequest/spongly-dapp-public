@@ -9,6 +9,8 @@ import { PositionWithCombinedAttrs } from '@/typescript/types'
 
 // utils
 import { formatParlayQuote, formatPositionOdds } from '@/utils/formatters/quote'
+import { isWindowReady } from '@/utils/helpers'
+import { OddsType } from '@/utils/constants'
 
 // styles
 import * as SC from './PositionsListStyles'
@@ -20,6 +22,7 @@ type Props = {
 }
 
 const PositionsList = ({ positionsWithCombinedAttrs, marketQuotes, ticketData }: Props) => {
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 	const isParlay = positionsWithCombinedAttrs?.length > 1
 
 	const getOdds = (item: PositionWithCombinedAttrs, index: number) => {
@@ -31,8 +34,13 @@ const PositionsList = ({ positionsWithCombinedAttrs, marketQuotes, ticketData }:
 			return formatParlayQuote(Number(marketQuotes?.[index]))
 		}
 
-		return formatPositionOdds(item)
+		return formatPositionOdds(item, actualOddType)
 	}
+
+	const hasOpenPositions = positionsWithCombinedAttrs?.some(
+		// TODO: ongoing is not good because it is isOpen and isResolved at the same time
+		(item) => item?.market?.isOpen && !item?.market?.isPaused && !item?.market?.isCanceled && !item?.market?.isResolved
+	)
 
 	const getCopyButtonTicket = (item: PositionWithCombinedAttrs, index: number) => {
 		const newTicketsData = {
@@ -52,7 +60,7 @@ const PositionsList = ({ positionsWithCombinedAttrs, marketQuotes, ticketData }:
 					return <PositionListItem position={item} quote={getOdds(item, index)} copyButtonTicket={getCopyButtonTicket(item, index)} />
 				})}
 			</SC.PositionsListWrapper>
-			<CopyTicketButton ticket={ticketData} />
+			{hasOpenPositions && <CopyTicketButton ticket={ticketData} />}
 		</>
 	)
 }

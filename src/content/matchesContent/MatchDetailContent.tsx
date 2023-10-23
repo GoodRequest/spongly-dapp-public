@@ -6,8 +6,7 @@ import { useRouter } from 'next-translate-routes'
 import { groupBy, toNumber, toPairs } from 'lodash'
 import { useNetwork } from 'wagmi'
 
-import BackButton from '@/atoms/backButton/BackButton'
-import { PAGES, SWITCH_BUTTON_OPTIONS, TEAM_TYPE } from '@/utils/enums'
+import { SWITCH_BUTTON_OPTIONS, TEAM_TYPE } from '@/utils/enums'
 import * as SC from './MatchDetailContentStyles'
 import * as SCS from '@/styles/GlobalStyles'
 import SwitchButton from '@/components/switchButton/SwitchButton'
@@ -20,6 +19,7 @@ import { BetType, TAGS_LIST } from '@/utils/tags'
 import MatchListContent from '@/components/matchesList/MatchListContent'
 import { getMarketOddsFromContract } from '@/utils/markets'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
+import Custom404 from '@/pages/404'
 
 const MatchDetail = () => {
 	const { t } = useTranslation()
@@ -27,6 +27,8 @@ const MatchDetail = () => {
 	const router = useRouter()
 	const [tab, setTab] = useState(SWITCH_BUTTON_OPTIONS.OPTION_1)
 	const [matchDetailData, setMatchDetailData] = useState<any>(null)
+	const [loading, setLoading] = useState(false)
+
 	const onChangeSwitch = (option: SWITCH_BUTTON_OPTIONS) => {
 		setTab(option)
 	}
@@ -37,6 +39,7 @@ const MatchDetail = () => {
 	})
 
 	const fetchData = useCallback(() => {
+		setLoading(true)
 		setTimeout(() => {
 			fetchMatchDetail({
 				variables: {
@@ -68,11 +71,14 @@ const MatchDetail = () => {
 							}) // NOTE: remove broken results.
 							.filter((item) => item.winnerTypeMatch)
 						setMatchDetailData({ ...matchesWithChildMarkets[0], league, status: getMatchStatus(matchesWithChildMarkets[0], t).status })
+						setLoading(false)
 					})
 				})
 				.catch((e) => {
 					// eslint-disable-next-line no-console
 					console.error(e)
+					setMatchDetailData(null)
+					setLoading(false)
 					showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while loading detail of match') }], NOTIFICATION_TYPE.NOTIFICATION)
 				})
 		}, 500)
@@ -80,19 +86,18 @@ const MatchDetail = () => {
 	}, [router.query.id, sgpFeesRaw.data, t])
 
 	useEffect(() => {
-		fetchData()
+		if (router.isReady) {
+			fetchData()
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+	}, [router.isReady])
 
 	return (
 		<Row gutter={30}>
-			<Col span={24}>
-				<BackButton backUrl={`/${PAGES.MATCHES}`} />
-			</Col>
 			<SC.MatchDetailWrapper>
-				{!matchDetailData ? (
+				{!matchDetailData && loading ? (
 					<SC.RowSkeleton active loading paragraph={{ rows: 10 }} />
-				) : (
+				) : matchDetailData ? (
 					<>
 						<SC.MatchDetailHeader>
 							<Row justify={'center'}>
@@ -134,6 +139,8 @@ const MatchDetail = () => {
 						{/* // TODO: stats */}
 						{/* {SWITCH_BUTTON_OPTIONS.OPTION_2 === tab && <h1>{'Stats'}</h1>} */}
 					</>
+				) : (
+					<Custom404 />
 				)}
 			</SC.MatchDetailWrapper>
 		</Row>

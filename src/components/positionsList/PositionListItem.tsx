@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { Row } from 'antd'
 import { toNumber } from 'lodash'
 import Flag from 'react-world-flags'
-import { useLazyQuery } from '@apollo/client'
-import { useNetwork } from 'wagmi'
 
 // utils
 import { getTeamImageSource } from '@/utils/images'

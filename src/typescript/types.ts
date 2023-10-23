@@ -47,7 +47,7 @@ export type ParlayLeaderboardItem = {
 	rank: number
 	address: string
 	position: number
-	quote: number
+	quote: string | number
 	reward?: {
 		iconUrl: any
 		value: number
@@ -91,7 +91,7 @@ export type ITicket = ParlayMarket &
 		ticketType: TICKET_TYPE
 		closedTicketType: CLOSED_TICKET_TYPE
 		buyIn: number
-		totalTicketQuote: number
+		totalTicketQuote: number | string
 	}
 
 export type SGPItem = { tags: number[]; combination: BetType[]; SGPFee: number }
