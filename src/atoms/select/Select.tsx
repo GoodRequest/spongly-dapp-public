@@ -18,7 +18,7 @@ const Select = ({
 	value,
 	className,
 	placement,
-	useSelectContainer = true,
+	useSelectContainer,
 	popupClassName,
 	title,
 	placeholder,
@@ -47,7 +47,7 @@ const Select = ({
 		</style>
 	`
 	return (
-		<SC.SelectWrapper>
+		<SC.SelectWrapper id={'select-container'}>
 			{/* eslint-disable-next-line react/no-danger */}
 			{isDropdownOpen && <div dangerouslySetInnerHTML={{ __html: bodyStyle }} />}
 			{title && <SC.Title>{title}</SC.Title>}
