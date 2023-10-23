@@ -7,6 +7,7 @@ import { map } from 'lodash'
 import { Col, Row } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { change, getFormValues } from 'redux-form'
+import { useRouter } from 'next-translate-routes'
 
 // components
 import Button from '@/atoms/button/Button'

@@ -19,9 +19,10 @@ type Props = {
 	positionsWithCombinedAttrs: PositionWithCombinedAttrs[]
 	marketQuotes?: string[]
 	ticketData?: any
+	isMyWallet: boolean
 }
 
-const PositionsList = ({ positionsWithCombinedAttrs, marketQuotes, ticketData }: Props) => {
+const PositionsList = ({ positionsWithCombinedAttrs, marketQuotes, ticketData, isMyWallet }: Props) => {
 	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 	const isParlay = positionsWithCombinedAttrs?.length > 1
 
@@ -57,10 +58,17 @@ const PositionsList = ({ positionsWithCombinedAttrs, marketQuotes, ticketData }:
 		<>
 			<SC.PositionsListWrapper>
 				{positionsWithCombinedAttrs?.map((item, index) => {
-					return <PositionListItem position={item} quote={getOdds(item, index)} copyButtonTicket={getCopyButtonTicket(item, index)} />
+					return (
+						<PositionListItem
+							position={item}
+							isMyWallet={isMyWallet}
+							quote={getOdds(item, index)}
+							copyButtonTicket={getCopyButtonTicket(item, index)}
+						/>
+					)
 				})}
 			</SC.PositionsListWrapper>
-			{hasOpenPositions && <CopyTicketButton ticket={ticketData} />}
+			{hasOpenPositions && !isMyWallet && <CopyTicketButton ticket={ticketData} />}
 		</>
 	)
 }

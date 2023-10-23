@@ -1,6 +1,5 @@
 import { Col, Row } from 'antd'
 import { useTranslation } from 'next-export-i18n'
-import { useAccount } from 'wagmi'
 import StatisticCard from '@/atoms/statisticCard/StatisticCard'
 import { getWalletImage } from '@/utils/images'
 import { useIsMounted } from '@/hooks/useIsMounted'
@@ -15,15 +14,13 @@ type Props = {
 	claim?: string | number
 	userTicketType?: USER_TICKET_TYPE
 	txHash?: string
+	isMyWallet: boolean
 }
 
-const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, claim, userTicketType, txHash }: Props) => {
+const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, claim, userTicketType, txHash, isMyWallet }: Props) => {
 	const { t } = useTranslation()
-	const { address } = useAccount()
 	const isMounted = useIsMounted()
-	const isMyWallet = tipsterAddress === address
 
-	console.log(isLoading)
 	// NOTE: Number of copies, claim value missing atm, we can add claim though
 	return (
 		<Row gutter={[8, 12]}>
@@ -31,7 +28,7 @@ const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, 
 				<>
 					<Col lg={4} md={24} sm={24} xs={24}>
 						<StatisticCard
-							img={getWalletImage(address as string)}
+							img={getWalletImage(tipsterAddress as string)}
 							filled={true}
 							isAddress={true}
 							value={tipsterAddress}

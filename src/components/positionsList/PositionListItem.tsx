@@ -28,9 +28,10 @@ type Props = {
 	position: PositionWithCombinedAttrs
 	quote: string | number
 	copyButtonTicket: any
+	isMyWallet: boolean
 }
 
-const PositionListItem = ({ position, quote, copyButtonTicket }: Props) => {
+const PositionListItem = ({ position, quote, copyButtonTicket, isMyWallet }: Props) => {
 	const { sportsAMMContract } = networkConnector
 	const { t } = useTranslation()
 
@@ -65,7 +66,6 @@ const PositionListItem = ({ position, quote, copyButtonTicket }: Props) => {
 	const canBeCopied = positionState.status === MATCH_STATUS.OPEN
 
 	const league = TAGS_LIST.find((item) => item.id === Number(position?.market?.tags?.[0]))
-	// disabled={!(isMyWallet && isOpen && isntPlayedNow)}
 
 	return (
 		<SC.PositionListItem gutter={[0, 16]}>
@@ -115,7 +115,7 @@ const PositionListItem = ({ position, quote, copyButtonTicket }: Props) => {
 				</SC.BlackBox>
 			</SC.ColCenteredVertically>
 			<SC.ColCenteredVertically lg={{ span: 6 }} md={{ span: 12 }} sm={{ span: 24 }} xs={{ span: 24 }}>
-				{canBeCopied ? (
+				{canBeCopied && !isMyWallet ? (
 					<SC.ButtonWrapper>
 						<SC.SmallSpan style={{ marginBottom: '12px' }}>{positionState?.text}</SC.SmallSpan>
 						<CopyTicketButton ticket={copyButtonTicket} isPosition={true} />
@@ -124,7 +124,7 @@ const PositionListItem = ({ position, quote, copyButtonTicket }: Props) => {
 					<SC.BlackBox>
 						<SC.SmallSpan>{t('Status')}</SC.SmallSpan>
 						<PSC.TicketStatus style={{ marginTop: '12px' }} matchStatus={positionState.status}>
-							{positionState?.status}
+							<span>{positionState?.status}</span>
 						</PSC.TicketStatus>
 					</SC.BlackBox>
 				)}

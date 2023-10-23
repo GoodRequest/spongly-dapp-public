@@ -80,7 +80,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 								<Button
 									btnStyle={'secondary'}
 									content={t('Show ticket detail')}
-									onClick={() => router.push(`/${PAGES.TICKET_DETAIL}/?ticketId=${ticket.id}&previousPath=${router.asPath}`)}
+									onClick={() => router.push(`/${PAGES.TICKET_DETAIL}/?ticketId=${ticket.id}`)}
 								/>
 							</Col>
 						</SC.StylesRow>

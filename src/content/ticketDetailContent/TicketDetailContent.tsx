@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next-translate-routes'
 import { useLazyQuery } from '@apollo/client'
-import { useNetwork } from 'wagmi'
-import { Col, Row, Spin } from 'antd'
+import { useAccount, useNetwork } from 'wagmi'
+import { Col, Row } from 'antd'
 
 // utils
 import { GET_PARLAY_DETAIL, GET_POSITION_BALANCE_DETAIL, GET_POSITION_BALANCE_TRANSACTION } from '@/utils/queries'
@@ -17,7 +17,6 @@ import {
 	parsePositionBalanceToUserTicket
 } from '@/utils/helpers'
 import networkConnector from '@/utils/networkConnector'
-import { PAGES } from '@/utils/enums'
 import { roundPrice } from '@/utils/formatters/currency'
 import { Network, USER_TICKET_TYPE } from '@/utils/constants'
 
@@ -28,22 +27,24 @@ import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 import { SGPItem, UserTicket } from '@/typescript/types'
 
 // components
-import BackButton from '@/atoms/backButton/BackButton'
 import TicketStatisticRow from '@/components/statisticRow/TicketStatisticRow'
 import TicketBetContainer from '@/components/ticketBetContainer/TicketBetContainer'
 import PositionsList from '@/components/positionsList/PositionsList'
+import Custom404 from '@/pages/404'
 
 // styles
 import * as PSC from '@/layout/content/ContentStyles'
-import Custom404 from '@/pages/404'
 
 const TicketDetailContent = () => {
 	const { chain } = useNetwork()
 	const router = useRouter()
+	const { address } = useAccount()
 	const { signer } = networkConnector
+
 	const [fetchParlayDetail] = useLazyQuery(GET_PARLAY_DETAIL)
 	const [fetchPositionDetail] = useLazyQuery(GET_POSITION_BALANCE_DETAIL)
 	const [fetchPositionBalanceMarketTransactions] = useLazyQuery(GET_POSITION_BALANCE_TRANSACTION)
+
 	const [positionsData, setPositionsData] = useState<any>()
 	const [ticketData, setTicketData] = useState<UserTicket>()
 	const [userTicketType, setUserTicketType] = useState<USER_TICKET_TYPE | undefined>(undefined)
@@ -62,9 +63,14 @@ const TicketDetailContent = () => {
 		}
 	}, [sgpFeesRaw.data, sgpFeesRaw.isSuccess])
 
-	const fetchData = async (isParlay: boolean) => {
+	const fetchData = async () => {
 		try {
 			setIsLoading(true)
+			let isParlay = true
+			if (router.query.ticketId?.includes('-')) {
+				isParlay = false
+			}
+
 			let userTicket
 			let marketData
 			if (isParlay) {
@@ -95,33 +101,28 @@ const TicketDetailContent = () => {
 				setTicketData(ticketsWithOtherAttrs?.[0])
 				setPositionsData(positionsWithMergedCombinedPositions)
 			})
-			setIsLoading(false)
 		} catch (e) {
-			setIsLoading(false)
 			// TODO: throw notif
 			console.error(e)
+		} finally {
+			setIsLoading(false)
 		}
 	}
 
 	useEffect(() => {
 		if (router.isReady) {
-			if (router.query.ticketId) {
-				if (router.query.ticketId.includes('-')) {
-					fetchData(false)
-				} else {
-					fetchData(true)
-				}
-				// TODO no data -> show 404 cmp
-			}
+			fetchData()
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [router.query.ticketId, router.isReady])
+	}, [router.isReady])
 
 	useEffect(() => {
 		if (ticketData) {
 			setUserTicketType(getUserTicketType(ticketData))
 		}
 	}, [ticketData])
+
+	const isMyWallet = ticketData?.account?.toLocaleLowerCase() === address?.toLocaleLowerCase()
 
 	return (
 		<>
@@ -137,6 +138,7 @@ const TicketDetailContent = () => {
 							quote={getTicketHistoricQuote(positionsData, ticketData?.marketQuotes)}
 							matches={positionsData?.length}
 							txHash={ticketData?.txHash}
+							isMyWallet={isMyWallet}
 						/>
 					</Col>
 				</Row>
@@ -144,7 +146,12 @@ const TicketDetailContent = () => {
 			<Row style={{ marginTop: '16px' }}>
 				<PSC.MainContentContainer withPadding={true}>
 					{positionsData || isLoading ? (
-						<PositionsList ticketData={ticketData} positionsWithCombinedAttrs={positionsData} marketQuotes={ticketData?.marketQuotes} />
+						<PositionsList
+							isMyWallet={isMyWallet}
+							ticketData={ticketData}
+							positionsWithCombinedAttrs={positionsData}
+							marketQuotes={ticketData?.marketQuotes}
+						/>
 					) : (
 						<div style={{ marginTop: '-16px' }}>
 							<Custom404 />
