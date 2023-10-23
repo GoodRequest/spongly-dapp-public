@@ -23,6 +23,7 @@ const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, 
 	const isMounted = useIsMounted()
 	const isMyWallet = tipsterAddress === address
 
+	console.log(isLoading)
 	// NOTE: Number of copies, claim value missing atm, we can add claim though
 	return (
 		<Row gutter={[8, 12]}>

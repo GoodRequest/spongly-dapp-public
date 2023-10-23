@@ -34,8 +34,8 @@ import TicketBetContainer from '@/components/ticketBetContainer/TicketBetContain
 import PositionsList from '@/components/positionsList/PositionsList'
 
 // styles
-
 import * as PSC from '@/layout/content/ContentStyles'
+import Custom404 from '@/pages/404'
 
 const TicketDetailContent = () => {
 	const { chain } = useNetwork()
@@ -48,7 +48,7 @@ const TicketDetailContent = () => {
 	const [ticketData, setTicketData] = useState<UserTicket>()
 	const [userTicketType, setUserTicketType] = useState<USER_TICKET_TYPE | undefined>(undefined)
 
-	const [isLoading, setIsLoading] = useState(false)
+	const [isLoading, setIsLoading] = useState(true)
 
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
 
@@ -64,6 +64,7 @@ const TicketDetailContent = () => {
 
 	const fetchData = async (isParlay: boolean) => {
 		try {
+			setIsLoading(true)
 			let userTicket
 			let marketData
 			if (isParlay) {
@@ -94,25 +95,23 @@ const TicketDetailContent = () => {
 				setTicketData(ticketsWithOtherAttrs?.[0])
 				setPositionsData(positionsWithMergedCombinedPositions)
 			})
+			setIsLoading(false)
 		} catch (e) {
+			setIsLoading(false)
 			// TODO: throw notif
 			console.error(e)
-		} finally {
-			setIsLoading(false)
 		}
 	}
 
 	useEffect(() => {
 		if (router.isReady) {
 			if (router.query.ticketId) {
-				setIsLoading(true)
 				if (router.query.ticketId.includes('-')) {
 					fetchData(false)
 				} else {
 					fetchData(true)
 				}
-			} else {
-				router.push(`/${PAGES.TICKETS}`)
+				// TODO no data -> show 404 cmp
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -126,39 +125,30 @@ const TicketDetailContent = () => {
 
 	return (
 		<>
-			<Row gutter={[0, 16]}>
-				<Col span={24}>
-					<BackButton backUrl={router?.query?.previousPath ? (router.query.previousPath as string) : `/${PAGES.TICKETS}`} />
-				</Col>
-				{isLoading ? (
-					<Spin />
-				) : (
+			{(positionsData || isLoading) && (
+				<Row gutter={[0, 16]}>
 					<Col span={24}>
-						<Row gutter={[0, 16]}>
-							<Col span={24}>
-								{
-									<TicketStatisticRow
-										isLoading={isLoading}
-										tipsterAddress={ticketData?.account || ''}
-										buyIn={roundPrice(ticketData?.sUSDPaid, true)}
-										userTicketType={userTicketType}
-										claim={getUserTicketClaimValue(ticketData, userTicketType)}
-										quote={getTicketHistoricQuote(positionsData, ticketData?.marketQuotes)}
-										matches={positionsData?.length}
-										txHash={ticketData?.txHash}
-									/>
-								}
-							</Col>
-						</Row>
+						<TicketStatisticRow
+							isLoading={isLoading}
+							tipsterAddress={ticketData?.account || ''}
+							buyIn={roundPrice(ticketData?.sUSDPaid, true)}
+							userTicketType={userTicketType}
+							claim={getUserTicketClaimValue(ticketData, userTicketType)}
+							quote={getTicketHistoricQuote(positionsData, ticketData?.marketQuotes)}
+							matches={positionsData?.length}
+							txHash={ticketData?.txHash}
+						/>
 					</Col>
-				)}
-			</Row>
+				</Row>
+			)}
 			<Row style={{ marginTop: '16px' }}>
 				<PSC.MainContentContainer withPadding={true}>
-					{positionsData ? (
+					{positionsData || isLoading ? (
 						<PositionsList ticketData={ticketData} positionsWithCombinedAttrs={positionsData} marketQuotes={ticketData?.marketQuotes} />
 					) : (
-						<div>Is empty</div>
+						<div style={{ marginTop: '-16px' }}>
+							<Custom404 />
+						</div>
 					)}
 				</PSC.MainContentContainer>
 				<PSC.MobileHiddenCol span={8}>
