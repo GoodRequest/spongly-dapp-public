@@ -11,7 +11,7 @@ import ParlayLeaderboardTableRow from '@/components/parlayLeaderboardTableRow/Pa
 import ParlayLeaderboardUserRow from '@/components/parlayLeaderboardTableRow/ParlayLeaderboardUserRow'
 import { ENDPOINTS, MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE, OddsType, ORDER_DIRECTION, PARLAY_LEADERBOARD_SORTING } from '@/utils/constants'
 import { getReq } from '@/utils/requests'
-import { decodeSorter, getCurrentBiweeklyPeriod, getPeriodEndsText, getReward, setSort } from '@/utils/helpers'
+import { decodeSorter, getCurrentBiweeklyPeriod, getPeriodEndsText, getReward, isWindowReady, setSort } from '@/utils/helpers'
 import { useIsMounted } from '@/hooks/useIsMounted'
 import { Option, ParlayLeaderboardTableItem } from '@/typescript/types'
 
@@ -40,6 +40,8 @@ const ParlayLeaderboardContent = () => {
 	const router = useRouter()
 	const { chain } = useNetwork()
 	const { address } = useAccount()
+
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 
 	const { query, isReady } = useRouter()
 
@@ -257,7 +259,7 @@ const ParlayLeaderboardContent = () => {
 					address={data.address}
 					position={data.position}
 					paid={data.paid ? round(Number(data?.paid), 2).toFixed(2) : 0}
-					quote={data.quote ? formatQuote(OddsType.DECIMAL, data?.quote) : 0}
+					quote={data.quote ? formatQuote(actualOddType, data?.quote) : 0}
 					won={data.won ? round(Number(data?.won), 2).toFixed(2) : 0}
 					reward={getReward(data?.rank ? data.rank - 1 : undefined, chain?.id)}
 				/>

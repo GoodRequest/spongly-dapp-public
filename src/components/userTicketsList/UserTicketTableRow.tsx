@@ -23,9 +23,10 @@ import {
 	getUserTicketType,
 	getUserTicketTypeName,
 	isClaimableUntil,
+	isWindowReady,
 	orderPositionsAsSportMarkets
 } from '@/utils/helpers'
-import { GAS_ESTIMATION_BUFFER, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE, STABLE_COIN, USER_TICKET_TYPE } from '@/utils/constants'
+import { GAS_ESTIMATION_BUFFER, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE, OddsType, STABLE_COIN, USER_TICKET_TYPE } from '@/utils/constants'
 import networkConnector from '@/utils/networkConnector'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
 import { FORM } from '@/utils/enums'
@@ -61,6 +62,8 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 	const { address } = useAccount()
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
+
 	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
 	const multipleCollateralBalance = useMultipleCollateralBalanceQuery(address || '', chain?.id || NETWORK_IDS.OPTIMISM)?.data
 	const available = multipleCollateralBalance?.[(activeTicketValues?.selectedStablecoin as keyof typeof multipleCollateralBalance) ?? STABLE_COIN.S_USD] ?? 0
@@ -115,7 +118,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 		}
 	}
 
-	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions, ticket, sgpFees)
+	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions as any, ticket, sgpFees)
 	const hasOpenPositions = positionsWithMergedCombinedPositions?.some(
 		// TODO: ongoing is not good because it is isOpen and isResolved at the same time
 		(item) => item?.market?.isOpen && !item?.market?.isPaused && !item?.market?.isCanceled && !item?.market?.isResolved
@@ -217,7 +220,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 			<SC.CenterRowContent md={{ span: 3, order: 3 }} xs={{ span: 8, order: 3 }}>
 				<>
 					<SC.ColumnValueText>
-						{Number(getTicketTotalQuote(ticket as any, 'positions' in ticket ? ticket.quote : undefined)).toFixed(2)}
+						{Number(getTicketTotalQuote(ticket as any, actualOddType, 'positions' in ticket ? ticket.quote : undefined)).toFixed(2)}
 					</SC.ColumnValueText>
 					<SC.ColumnNameText>{t('Quote')}</SC.ColumnNameText>
 				</>

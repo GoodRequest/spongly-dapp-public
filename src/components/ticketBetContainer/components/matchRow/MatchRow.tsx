@@ -12,8 +12,8 @@ import MatchListContent from '../../../matchesList/MatchListContent'
 // utils
 import { getTeamImageSource } from '@/utils/images'
 import { FORM } from '@/utils/enums'
-import { getOddByBetType } from '@/utils/helpers'
-import { NO_TEAM_IMAGE_FALLBACK, TOTAL_WINNER_TAGS } from '@/utils/constants'
+import { getOddByBetType, isWindowReady } from '@/utils/helpers'
+import { NO_TEAM_IMAGE_FALLBACK, OddsType, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { getPossibleBetOptions } from '@/utils/markets'
 
 // redux
@@ -38,7 +38,8 @@ const MatchRow: FC<IMatchRow> = ({ match, deleteHandler, copied, readOnly }) => 
 	const [modalOpen, setModalOpen] = useState(false)
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(match?.winnerTypeMatch?.tags[0] as any)
 	const formValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
-
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
+	
 	const [teamImages] = useState({
 		awayTeam: getTeamImageSource(match?.awayTeam || '', toNumber(match?.tags?.[0])),
 		homeTeam: getTeamImageSource(match?.homeTeam || '', toNumber(match?.tags?.[0]))
@@ -90,10 +91,10 @@ const MatchRow: FC<IMatchRow> = ({ match, deleteHandler, copied, readOnly }) => 
 					</SC.BetOptionButton>
 				</Col>
 				<SC.OddCol xs={5} sm={3} md={readOnly ? 3 : 5} xl={readOnly ? 3 : 5}>
-					<SC.MatchOdd>{getOddByBetType(match as any, copied ? true : !!formValues.copied).formattedOdd}</SC.MatchOdd>
+					<SC.MatchOdd>{getOddByBetType(match as any, copied ? true : !!formValues.copied, actualOddType).formattedOdd}</SC.MatchOdd>
 					{!readOnly && (
-						<SC.BonusText hide={getOddByBetType(match as any, copied ? true : !!formValues.copied).rawBonus <= 0}>
-							{getOddByBetType(match as any, copied ? true : !!formValues.copied).formattedBonus}
+						<SC.BonusText hide={getOddByBetType(match as any, copied ? true : !!formValues.copied, actualOddType).rawBonus <= 0}>
+							{getOddByBetType(match as any, copied ? true : !!formValues.copied, actualOddType).formattedBonus}
 						</SC.BonusText>
 					)}
 				</SC.OddCol>

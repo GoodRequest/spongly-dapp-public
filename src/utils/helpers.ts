@@ -354,14 +354,14 @@ export const getOddsBySide = (ticket: ITicket) => {
 	return undefined
 }
 
-export const getTicketTotalQuote = (ticket: ITicket, totalQuote?: any) => {
+export const getTicketTotalQuote = (ticket: ITicket, oddType: OddsType, totalQuote?: any) => {
 	if (totalQuote) {
-		return formatQuote(OddsType.DECIMAL, totalQuote ? bigNumberFormatter(totalQuote) : 0)
+		return formatQuote(oddType, totalQuote ? bigNumberFormatter(totalQuote) : 0)
 	}
 
 	const odds = getOddsBySide(ticket)
 	if (odds) {
-		return formatQuote(OddsType.DECIMAL, bigNumberFormatter(odds))
+		return formatQuote(oddType, bigNumberFormatter(odds))
 	}
 
 	return 0
@@ -780,7 +780,7 @@ export const getSelectedCoinIndex = (selectedCoin?: string): number => {
 	}
 }
 
-export const getOddByBetType = (market: IMatch, copied: boolean, customBetOption?: BET_OPTIONS) => {
+export const getOddByBetType = (market: IMatch, copied: boolean, oddType: OddsType, customBetOption?: BET_OPTIONS) => {
 	// customBetOption is used for override match betOption (using in MatchListContent where we need to return odds based on type of odds in dropdown)
 	// TODO: add logic for bonuses or create new function for bonuses
 	const betOption = customBetOption || market.betOption
@@ -789,21 +789,21 @@ export const getOddByBetType = (market: IMatch, copied: boolean, customBetOption
 		// 1, 2, X
 		case BET_OPTIONS.WINNER_HOME:
 			return {
-				formattedOdd: formatQuote(OddsType.DECIMAL, market.homeOdds),
+				formattedOdd: formatQuote(oddType, market.homeOdds),
 				rawOdd: market.homeOdds,
 				formattedBonus: getFormattedBonus(market.homeBonus),
 				rawBonus: (market.homeBonus || 0) > 0 ? market.homeBonus || 0 : 0
 			}
 		case BET_OPTIONS.WINNER_AWAY:
 			return {
-				formattedOdd: formatQuote(OddsType.DECIMAL, market.awayOdds),
+				formattedOdd: formatQuote(oddType, market.awayOdds),
 				rawOdd: market.awayOdds,
 				formattedBonus: getFormattedBonus(market.awayBonus),
 				rawBonus: (market.awayBonus || 0) > 0 ? market.awayBonus || 0 : 0
 			}
 		case BET_OPTIONS.WINNER_DRAW:
 			return {
-				formattedOdd: formatQuote(OddsType.DECIMAL, market.drawOdds),
+				formattedOdd: formatQuote(oddType, market.drawOdds),
 				rawOdd: market.drawOdds,
 				formattedBonus: getFormattedBonus(market.drawBonus),
 				rawBonus: (market.drawBonus || 0) > 0 ? market.drawBonus || 0 : 0
@@ -812,13 +812,13 @@ export const getOddByBetType = (market: IMatch, copied: boolean, customBetOption
 		case BET_OPTIONS.HANDICAP_HOME:
 			return copied
 				? {
-						formattedOdd: formatQuote(OddsType.DECIMAL, market.homeOdds),
+						formattedOdd: formatQuote(oddType, market.homeOdds),
 						rawOdd: market.homeOdds,
 						formattedBonus: getFormattedBonus(market.homeBonus),
 						rawBonus: (market.homeBonus || 0) > 0 ? market.homeBonus || 0 : 0
 				  }
 				: {
-						formattedOdd: formatQuote(OddsType.DECIMAL, market.spreadTypeMatch?.homeOdds),
+						formattedOdd: formatQuote(oddType, market.spreadTypeMatch?.homeOdds),
 						rawOdd: market.spreadTypeMatch?.homeOdds,
 						formattedBonus: getFormattedBonus(market.spreadTypeMatch?.homeBonus),
 						rawBonus: (market.spreadTypeMatch?.homeBonus || 0) > 0 ? market.spreadTypeMatch?.homeBonus || 0 : 0
@@ -826,13 +826,13 @@ export const getOddByBetType = (market: IMatch, copied: boolean, customBetOption
 		case BET_OPTIONS.HANDICAP_AWAY:
 			return copied
 				? {
-						formattedOdd: formatQuote(OddsType.DECIMAL, market.awayOdds),
+						formattedOdd: formatQuote(oddType, market.awayOdds),
 						rawOdd: market.awayOdds,
 						formattedBonus: getFormattedBonus(market.awayBonus),
 						rawBonus: (market.awayBonus || 0) > 0 ? market.awayBonus || 0 : 0
 				  }
 				: {
-						formattedOdd: formatQuote(OddsType.DECIMAL, market.spreadTypeMatch?.awayOdds),
+						formattedOdd: formatQuote(oddType, market.spreadTypeMatch?.awayOdds),
 						rawOdd: market.spreadTypeMatch?.awayOdds,
 						formattedBonus: getFormattedBonus(market.spreadTypeMatch?.awayBonus),
 						rawBonus: (market.spreadTypeMatch?.awayBonus || 0) > 0 ? market.spreadTypeMatch?.awayBonus || 0 : 0
@@ -841,13 +841,13 @@ export const getOddByBetType = (market: IMatch, copied: boolean, customBetOption
 		case BET_OPTIONS.TOTAL_OVER:
 			return copied
 				? {
-						formattedOdd: formatQuote(OddsType.DECIMAL, market.homeOdds),
+						formattedOdd: formatQuote(oddType, market.homeOdds),
 						rawOdd: market.homeOdds,
 						formattedBonus: getFormattedBonus(market.homeBonus),
 						rawBonus: (market.homeBonus || 0) > 0 ? market.homeBonus || 0 : 0
 				  }
 				: {
-						formattedOdd: formatQuote(OddsType.DECIMAL, market.totalTypeMatch?.homeOdds),
+						formattedOdd: formatQuote(oddType, market.totalTypeMatch?.homeOdds),
 						rawOdd: market.totalTypeMatch?.homeOdds,
 						formattedBonus: getFormattedBonus(market.totalTypeMatch?.homeBonus),
 						rawBonus: (market.totalTypeMatch?.homeBonus || 0) > 0 ? market.totalTypeMatch?.homeBonus || 0 : 0
@@ -855,13 +855,13 @@ export const getOddByBetType = (market: IMatch, copied: boolean, customBetOption
 		case BET_OPTIONS.TOTAL_UNDER:
 			return copied
 				? {
-						formattedOdd: formatQuote(OddsType.DECIMAL, market.awayOdds),
+						formattedOdd: formatQuote(oddType, market.awayOdds),
 						rawOdd: market.awayOdds,
 						formattedBonus: getFormattedBonus(market.awayBonus),
 						rawBonus: (market.awayBonus || 0) > 0 ? market.awayBonus || 0 : 0
 				  }
 				: {
-						formattedOdd: formatQuote(OddsType.DECIMAL, market.totalTypeMatch?.awayOdds),
+						formattedOdd: formatQuote(oddType, market.totalTypeMatch?.awayOdds),
 						rawOdd: market.totalTypeMatch?.awayOdds,
 						formattedBonus: getFormattedBonus(market.totalTypeMatch?.awayBonus),
 						rawBonus: (market.totalTypeMatch?.awayBonus || 0) > 0 ? market.totalTypeMatch?.awayBonus || 0 : 0
@@ -870,14 +870,14 @@ export const getOddByBetType = (market: IMatch, copied: boolean, customBetOption
 		case BET_OPTIONS.DOUBLE_CHANCE_HOME:
 			return copied
 				? {
-						formattedOdd: formatQuote(OddsType.DECIMAL, market.homeOdds),
+						formattedOdd: formatQuote(oddType, market.homeOdds),
 						rawOdd: market.homeOdds,
 						formattedBonus: getFormattedBonus(market.homeBonus),
 						rawBonus: (market.homeBonus || 0) > 0 ? market.homeBonus || 0 : 0
 				  }
 				: {
 						formattedOdd: formatQuote(
-							OddsType.DECIMAL,
+							oddType,
 							market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)
 								?.homeOdds
 						),
@@ -897,14 +897,14 @@ export const getOddByBetType = (market: IMatch, copied: boolean, customBetOption
 		case BET_OPTIONS.DOUBLE_CHANCE_AWAY:
 			return copied
 				? {
-						formattedOdd: formatQuote(OddsType.DECIMAL, market.awayOdds),
+						formattedOdd: formatQuote(oddType, market.awayOdds),
 						rawOdd: market.awayOdds,
 						formattedBonus: getFormattedBonus(market.awayBonus),
 						rawBonus: (market.awayBonus || 0) > 0 ? market.awayBonus || 0 : 0
 				  }
 				: {
 						formattedOdd: formatQuote(
-							OddsType.DECIMAL,
+							oddType,
 							market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)
 								?.homeOdds
 						),
@@ -924,14 +924,14 @@ export const getOddByBetType = (market: IMatch, copied: boolean, customBetOption
 		case BET_OPTIONS.DOUBLE_CHANCE_DRAW:
 			return copied
 				? {
-						formattedOdd: formatQuote(OddsType.DECIMAL, market.drawOdds),
+						formattedOdd: formatQuote(oddType, market.drawOdds),
 						rawOdd: market.drawOdds,
 						formattedBonus: getFormattedBonus(market.drawBonus),
 						rawBonus: (market.drawBonus || 0) > 0 ? market.drawBonus || 0 : 0
 				  }
 				: {
 						formattedOdd: formatQuote(
-							OddsType.DECIMAL,
+							oddType,
 							market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeOdds
 						),
 						rawOdd: market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeOdds,
@@ -951,8 +951,9 @@ export const getOddByBetType = (market: IMatch, copied: boolean, customBetOption
 		case BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER:
 		case BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_UNDER:
 			return {
-				formattedOdd: formattedCombinedTypeMatch(market, betOption),
-				rawOdd: formattedCombinedTypeMatch(market, betOption),
+				// TODO: combined match bet options not work for AMERICAN  / AMM quote type
+				formattedOdd: formattedCombinedTypeMatch(market, oddType, betOption).formattedOdd,
+				rawOdd: formattedCombinedTypeMatch(market, oddType, betOption).rawOdd,
 				formattedBonus: 0, // NOTE: combined markets don't have bonus
 				rawBonus: 0
 			}

@@ -60,7 +60,7 @@ const MobileHeader: FC<IMobileHeader> = ({ tickets = [], addTicket, setActiveTic
 				<Select
 					options={options}
 					placement={rolledUp ? 'bottomLeft' : 'topLeft'}
-					popUpClassName={'ticket-select'}
+					popupClassName={'ticket-select'}
 					useSelectContainer={false}
 					onChange={(value: number) => onChangeSelect(value)}
 					value={`${t('TICKET')} ${activeTicket?.id}`}

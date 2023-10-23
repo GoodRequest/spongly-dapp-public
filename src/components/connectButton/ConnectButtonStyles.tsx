@@ -81,7 +81,7 @@ export const CurrencyInfo = styled(Info)`
 `
 
 export const AddressInfo = styled.span`
-	${TextXSMedium}
+	${TextXSMedium};
 `
 
 export const AddressRow = styled(Row)`

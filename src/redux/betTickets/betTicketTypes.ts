@@ -38,6 +38,7 @@ export interface IUnsubmittedBetTicket {
 	payout?: number
 	potentionalProfit?: number
 	available?: number
+	rawQuote?: number | string
 	fees?: {
 		parlay: number
 		safebox: number

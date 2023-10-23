@@ -3,15 +3,18 @@ import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'next-export-i18n'
 import { useNetwork } from 'wagmi'
 import { useRouter } from 'next/router'
+
 import * as SC from '../MatchesListStyles'
 import { BET_OPTIONS, MATCHES, PAGES } from '@/utils/enums'
 import OddButton from '@/components/oddButton/OddButton'
 import OddValue from '@/components/oddButton/OddValue'
 import { BetType } from '@/utils/tags'
-import { getOddByBetType } from '@/utils/helpers'
+import { getOddByBetType, isWindowReady } from '@/utils/helpers'
 import * as SCS from '@/styles/GlobalStyles'
 import { roundToTwoDecimals } from '@/utils/formatters/number'
-import { NETWORK_IDS, TOTAL_WINNER_TAGS } from '@/utils/constants'
+import { NETWORK_IDS, OddsType, TOTAL_WINNER_TAGS } from '@/utils/constants'
+import { formatQuote } from '@/utils/formatters/quote'
+
 // icons
 import PauseIcon from '@/assets/icons/pause.svg'
 import ClockIcon from '@/assets/icons/clock.svg'
@@ -42,6 +45,7 @@ const MatchHeaderPC = ({
 	const { winnerTypeMatch, doubleChanceTypeMatches, spreadTypeMatch, totalTypeMatch } = match
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(winnerTypeMatch?.tags[0] as any)
 	const isOnlyWinner = winnerTypeMatch && doubleChanceTypeMatches?.length === 0 && !spreadTypeMatch && !totalTypeMatch
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 	const router = useRouter()
 	const getSpanNumber = (betType: BetType) => {
 		if (isOnlyWinner) return 15
@@ -99,10 +103,11 @@ const MatchHeaderPC = ({
 						!(chain?.id === NETWORK_IDS.OPTIMISM_GOERLI) && (
 							<SC.MatchItemCol span={getSpanNumber(BetType.DOUBLE_CHANCE)}>
 								<SC.Header>{t('Double chance')}</SC.Header>
-								{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd === '0' &&
-									getOddByBetType(match as any, false, BET_OPTIONS.WINNER_HOME).formattedOdd !== '0' && (
-										<SC.WarningText>{t('Coming soon')}</SC.WarningText>
-									)}
+								{formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, false, actualOddType, BET_OPTIONS.DOUBLE_CHANCE_HOME).rawOdd) ===
+									'0' &&
+									formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, false, actualOddType, BET_OPTIONS.WINNER_AWAY).rawOdd) !==
+										'0' && <SC.WarningText>{t('Coming soon')}</SC.WarningText>}
+
 								<SC.RowItemContent>
 									<SC.RadioGroup>
 										<OddButton

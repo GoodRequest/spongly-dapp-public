@@ -59,6 +59,7 @@ export enum PARLAY_LEADERBOARD_SORTING {
 	PAID = 'paid',
 	WON = 'won'
 }
+
 export enum LEADERBOARD_SORTING {
 	SUCCESS_RATE = 'successRate',
 	PROFITS = 'pnl',

@@ -7,7 +7,7 @@ import { useRouter } from 'next-translate-routes'
 import ParlayLeaderboardRow from './components/ParlayLeaderboardRow'
 import { ParlayLeaderboardItem } from '@/typescript/types'
 import { getReq } from '@/utils/requests'
-import { getCurrentBiweeklyPeriod, getReward } from '@/utils/helpers'
+import { getCurrentBiweeklyPeriod, getReward, isWindowReady } from '@/utils/helpers'
 import { ENDPOINTS, MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE, OddsType } from '@/utils/constants'
 
 import * as SC from './ParlayLeaderboardStyles'
@@ -20,7 +20,7 @@ import { PAGES } from '@/utils/enums'
 const ParlayLeaderboard = () => {
 	const { t } = useTranslation()
 	const router = useRouter()
-
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const [parlayLeaderboardData, setParlayLeaderboardData] = useState<ParlayLeaderboardItem[] | undefined>(undefined)
 
@@ -38,7 +38,7 @@ const ParlayLeaderboard = () => {
 							rank: data?.[i]?.rank,
 							address: data?.[i]?.account,
 							position: data?.[i]?.numberOfPositions,
-							quote: data?.[i]?.totalQuote ? Number(formatQuote(OddsType.DECIMAL, data?.[i]?.totalQuote)) : 0,
+							quote: data?.[i]?.totalQuote,
 							reward: getReward(i, chain?.id)
 						}
 						newParlayData.push(newItem)
@@ -77,10 +77,17 @@ const ParlayLeaderboard = () => {
 			)
 		}
 		return parlayLeaderboardData?.map((data, index) => (
-			<ParlayLeaderboardRow key={index} rank={data.rank} address={data.address} position={data.position} quote={data.quote} reward={data?.reward} />
+			<ParlayLeaderboardRow
+				key={index}
+				rank={data.rank}
+				address={data.address}
+				position={data.position}
+				quote={formatQuote(actualOddType, data.quote)}
+				reward={data?.reward}
+			/>
 		))
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [parlayLeaderboardData])
+	}, [parlayLeaderboardData, actualOddType])
 
 	return (
 		<SC.ParlayLeaderboardWrapper>
