@@ -227,7 +227,7 @@ const CopyTicketButton = ({ ticket }: Props) => {
 				btnStyle={'primary'}
 				// TODO: opravit text podla toho aky druh je vybraty
 				content={t('Copy ticket')}
-				isLoading={isLoading}
+				loading={isLoading}
 				onClick={async () => {
 					// NOTE: if ticket has matches open modal which ask if you want to replace ticket or create new one
 					if (!isEmpty(betTicket?.matches)) {

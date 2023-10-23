@@ -1,10 +1,12 @@
 import { useTranslation } from 'next-export-i18n'
-import { useNetwork } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 import { ethers } from 'ethers'
 import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
 import { map } from 'lodash'
-import { Col, Row, Spin } from 'antd'
+import { Col, Row } from 'antd'
+import { useDispatch, useSelector } from 'react-redux'
+import { change, getFormValues } from 'redux-form'
 
 // components
 import Button from '@/atoms/button/Button'
@@ -24,16 +26,19 @@ import {
 	isWindowReady,
 	orderPositionsAsSportMarkets
 } from '@/utils/helpers'
-import { GAS_ESTIMATION_BUFFER, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE, OddsType, USER_TICKET_TYPE } from '@/utils/constants'
+import { GAS_ESTIMATION_BUFFER, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE, OddsType, STABLE_COIN, USER_TICKET_TYPE } from '@/utils/constants'
 import networkConnector from '@/utils/networkConnector'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
+import { FORM } from '@/utils/enums'
 import { roundPrice } from '@/utils/formatters/currency'
 
 // types
 import { SGPItem, UserTicket } from '@/typescript/types'
+import { IUnsubmittedBetTicket } from '@/redux/betTickets/betTicketTypes'
 
 // hooks
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
+import useMultipleCollateralBalanceQuery from '@/hooks/useMultipleCollateralBalanceQuery'
 
 import * as SC from './UserTicketTableRowStyles'
 
@@ -47,16 +52,21 @@ type Props = {
 	isMyWallet?: boolean
 }
 
-const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
+const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 	const { t } = useTranslation()
 	const { chain } = useNetwork()
 	const [expiryDate, setExpiryDate] = useState(0)
 	const [isExpanded, setIsExpanded] = useState(false)
 	const [isClaiming, setIsClaiming] = useState(false)
+	const dispatch = useDispatch()
+	const { address } = useAccount()
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
 	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 
+	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
+	const multipleCollateralBalance = useMultipleCollateralBalanceQuery(address || '', chain?.id || NETWORK_IDS.OPTIMISM)?.data
+	const available = multipleCollateralBalance?.[(activeTicketValues?.selectedStablecoin as keyof typeof multipleCollateralBalance) ?? STABLE_COIN.S_USD] ?? 0
 	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
 		enabled: true
 	})
@@ -108,7 +118,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 		}
 	}
 
-	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions, ticket, sgpFees)
+	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions as any, ticket, sgpFees)
 	const hasOpenPositions = positionsWithMergedCombinedPositions?.some(
 		// TODO: ongoing is not good because it is isOpen and isResolved at the same time
 		(item) => item?.market?.isOpen && !item?.market?.isPaused && !item?.market?.isCanceled && !item?.market?.isResolved
@@ -143,6 +153,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 				if (txResult && txResult.transactionHash) {
 					showNotifications([{ type: MSG_TYPE.SUCCESS, message: t('Claimed successfully') }], NOTIFICATION_TYPE.NOTIFICATION)
 					refetch()
+					dispatch(change(FORM.BET_TICKET, 'available', available))
 				}
 			} catch (e) {
 				const err: any = e
@@ -171,6 +182,7 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 				if (txResult && txResult.transactionHash) {
 					showNotifications([{ type: MSG_TYPE.SUCCESS, message: t('Claimed successfully') }], NOTIFICATION_TYPE.NOTIFICATION)
 					refetch()
+					dispatch(change(FORM.BET_TICKET, 'available', available))
 				}
 			} catch (e) {
 				const err: any = e
@@ -218,26 +230,23 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 				<SC.ColumnNameText>{t('Claim')}</SC.ColumnNameText>
 			</SC.CenterRowContent>
 			<SC.ClaimColContent show={!!(isMyWallet && userTicketType === USER_TICKET_TYPE.SUCCESS)} md={{ span: 4, order: 5 }} xs={{ span: 24, order: 5 }}>
-				{!isClaiming ? (
-					<Button
-						btnStyle={'primary'}
-						onClick={() => handleClaim()}
-						disabled={!ticket.isClaimable}
-						size={'large'}
-						content={
-							!ticket.isClaimable ? (
-								t('Claimed')
-							) : (
-								<SC.ClaimButtonWrapper>
-									<SC.ClaimText>{t('Claim')}</SC.ClaimText>
-									<SC.ClaimValue>{claimableUntil}</SC.ClaimValue>
-								</SC.ClaimButtonWrapper>
-							)
-						}
-					/>
-				) : (
-					<Spin />
-				)}
+				<Button
+					btnStyle={'primary'}
+					onClick={() => handleClaim()}
+					disabled={!ticket.isClaimable || isClaiming}
+					size={'large'}
+					loading={isClaiming}
+					content={
+						!ticket.isClaimable ? (
+							t('Claimed')
+						) : (
+							<SC.ClaimButtonWrapper>
+								<SC.ClaimText>{t('Claim')}</SC.ClaimText>
+								<SC.ClaimValue>{claimableUntil}</SC.ClaimValue>
+							</SC.ClaimButtonWrapper>
+						)
+					}
+				/>
 			</SC.ClaimColContent>
 			<SC.TicketDivider showClaimed={ticket.isClaimable} />
 		</SC.UserTicketTableRow>
@@ -280,20 +289,18 @@ const UserTicketTableRow = ({ ticket, refetch, isMyWallet }: Props) => {
 					{/* </Col> */}
 					{!!(ticket.isClaimable && isMyWallet) && (
 						<Col span={12} xs={24}>
-							{!isClaiming ? (
-								<Button
-									btnStyle={'primary'}
-									onClick={() => handleClaim()}
-									content={
-										<SC.ClaimButtonWrapper>
-											<SC.ClaimText>{t('Claim')}</SC.ClaimText>
-											<SC.ClaimValue>{claimableUntil}</SC.ClaimValue>
-										</SC.ClaimButtonWrapper>
-									}
-								/>
-							) : (
-								<Spin />
-							)}
+							<Button
+								btnStyle={'primary'}
+								disabled={!ticket.isClaimable}
+								loading={isClaiming}
+								onClick={() => handleClaim()}
+								content={
+									<SC.ClaimButtonWrapper>
+										<SC.ClaimText>{t('Claim')}</SC.ClaimText>
+										<SC.ClaimValue>{claimableUntil}</SC.ClaimValue>
+									</SC.ClaimButtonWrapper>
+								}
+							/>
 						</Col>
 					)}
 					{hasOpenPositions && !isMyWallet && (

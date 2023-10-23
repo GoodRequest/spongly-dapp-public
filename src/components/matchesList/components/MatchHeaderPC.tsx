@@ -61,7 +61,7 @@ const MatchHeaderPC = ({
 		<SC.PCContentWrapper>
 			{type === MATCHES.OPEN && (
 				<SC.MatchItemRow type={type} key={`${match.maturityDate}-${MATCHES.OPEN}`}>
-					<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCHES}/?id=${match.gameId}`)} $alignItems={'flex-start'} span={8}>
+					<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCH_DETAIL}/?id=${match.gameId}`)} $alignItems={'flex-start'} span={8}>
 						{getContestedTeams}
 					</SC.MatchItemCol>
 					{includes(getBaseBetTypes(), BetType.WINNER) && (
@@ -191,7 +191,7 @@ const MatchHeaderPC = ({
 			)}
 			{type === MATCHES.ONGOING && (
 				<SC.MatchItemRow gutter={16} type={MATCHES.ONGOING} key={`${match.maturityDate}-${MATCHES.ONGOING}`}>
-					<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCHES}/?id=${match.gameId}`)} $alignItems={'flex-start'} span={18}>
+					<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCH_DETAIL}/?id=${match.gameId}`)} $alignItems={'flex-start'} span={18}>
 						{getContestedTeams}
 					</SC.MatchItemCol>
 					<SC.MatchItemCol span={6}>
@@ -205,7 +205,7 @@ const MatchHeaderPC = ({
 			)}
 			{type === MATCHES.FINISHED && (
 				<SC.MatchItemRow gutter={16} type={MATCHES.FINISHED} key={`${match.maturityDate}-${MATCHES.FINISHED}`}>
-					<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCHES}/?id=${match.gameId}`)} $alignItems={'flex-start'} span={18}>
+					<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCH_DETAIL}/?id=${match.gameId}`)} $alignItems={'flex-start'} span={18}>
 						{getContestedTeams}
 					</SC.MatchItemCol>
 					<SC.MatchItemCol span={6}>
@@ -216,7 +216,7 @@ const MatchHeaderPC = ({
 			)}
 			{type === MATCHES.PAUSED && (
 				<SC.MatchItemRow gutter={16} type={MATCHES.PAUSED} key={`${match.maturityDate}-${MATCHES.PAUSED}`}>
-					<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCHES}/?id=${match.gameId}`)} $alignItems={'flex-start'} span={18}>
+					<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCH_DETAIL}/?id=${match.gameId}`)} $alignItems={'flex-start'} span={18}>
 						{getContestedTeams}
 					</SC.MatchItemCol>
 					<SC.MatchItemCol span={6}>

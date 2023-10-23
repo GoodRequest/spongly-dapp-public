@@ -52,6 +52,9 @@ const Header = () => {
 			case `/${PAGES.MATCHES}`:
 				setSelected(PAGES.MATCHES)
 				break
+			case `/${PAGES.MATCH_DETAIL}`:
+				setSelected(PAGES.MATCHES)
+				break
 			case `/${PAGES.PARLAY_SUPERSTARS}`:
 				setSelected(PAGES.PARLAY_SUPERSTARS)
 				break
