@@ -106,7 +106,7 @@ const SportFilter: FC<SportFilterProps> = ({ onReset, onShowResults, resultsCoun
 			<Button
 				disabled={resultsCount === 0}
 				btnStyle={'primary'}
-				isLoading={isLoading}
+				loading={isLoading}
 				content={<span>{t('Show results ({{ resultsCount}})', { resultsCount })}</span>}
 				onClick={() => {
 					if (resultsCount) {
