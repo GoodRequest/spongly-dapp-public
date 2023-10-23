@@ -118,6 +118,11 @@ export const ButtonWrapper = styled.div`
 	padding-left: 32px;
 	padding-right: 32px;
 	${TextMDMedium};
+
+	@media (min-width: ${breakpoints.semixxl}px) {
+		padding-left: 16px;
+		padding-right: 16px;
+	}
 `
 
 export const FlagWrapper = styled.div`

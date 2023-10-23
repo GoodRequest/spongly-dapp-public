@@ -42,7 +42,7 @@ const PositionListItem = ({ position, quote, openCopyModal }: Props) => {
 
 	const [imgSrcHome, setImgSrcHome] = useState<string>(getTeamImageSource(position?.market?.homeTeam || '', toNumber(position?.market?.tags?.[0])))
 	const [imgSrcAway, setImgSrcAway] = useState<string>(getTeamImageSource(position?.market?.awayTeam || '', toNumber(position?.market?.tags?.[0])))
-	const [oddsDataFromContract, setOddsDataFromContract] = useState()
+	const [isPlayedNow, setIsPlayedNow] = useState(false)
 
 	const betOption = position?.isCombined ? position?.combinedPositionsText : getSymbolText(convertPositionNameToPosition(position?.side), position.market)
 	const isTotalWinner = position.market?.tags && TOTAL_WINNER_TAGS.includes(position.market.tags?.[0])
@@ -50,7 +50,12 @@ const PositionListItem = ({ position, quote, openCopyModal }: Props) => {
 	const fetchOddsData = async () => {
 		try {
 			const data = await sportsAMMContract?.getMarketDefaultOdds(position.market.address, false)
-			setOddsDataFromContract(data)
+
+			if (data) {
+				if (position.market.isOpen && getMatchOddsContract(position.side, data) === '0' && !position.market.isPaused) {
+					setIsPlayedNow(true)
+				}
+			}
 		} catch (error) {
 			// eslint-disable-next-line no-console
 			console.error('error', error)
@@ -62,17 +67,7 @@ const PositionListItem = ({ position, quote, openCopyModal }: Props) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	const isPlayedNow = () => {
-		if (oddsDataFromContract) {
-			if (position.market.isOpen && getMatchOddsContract(position.side, oddsDataFromContract) === '0' && !position.market.isPaused) {
-				return true
-			}
-		}
-
-		return false
-	}
-
-	const positionState = getParlayItemStatus(position as Position, isPlayedNow(), t)
+	const positionState = getParlayItemStatus(position as Position, isPlayedNow, t)
 	const canBeCopied = positionState.status === MATCH_STATUS.OPEN
 
 	const league = TAGS_LIST.find((item) => item.id === Number(position?.market?.tags?.[0]))
@@ -93,7 +88,6 @@ const PositionListItem = ({ position, quote, openCopyModal }: Props) => {
 					}
 				})
 				openCopyModal(tempMatches)
-				// copyTicket tempMatches
 			} catch (err) {
 				console.error(err)
 			}
