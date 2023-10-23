@@ -96,7 +96,7 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 		return ''
 	}
 	return (
-		<SC.TicketItemWrapper onClick={() => router.push(`/${PAGES.MATCHES}/?id=${match.market.gameId}`)}>
+		<SC.TicketItemWrapper onClick={() => router.push(`/${PAGES.MATCH_DETAIL}/?id=${match.market.gameId}`)}>
 			<SC.TicketHeader>
 				<SC.SportLogo>
 					<Icon style={{ marginRight: 0, color: 'white' }} className={`icon icon--${SPORTS_MAP[Number(match?.market.tags?.[0])]?.toLowerCase()}`} />

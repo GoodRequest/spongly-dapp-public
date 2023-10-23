@@ -3,6 +3,7 @@ export enum PAGES {
 	DASHBOARD = 'dashboard',
 	TICKETS = 'tickets',
 	MATCHES = 'matches',
+	MATCH_DETAIL = 'match-detail',
 	MY_WALLET = 'my-wallet',
 	LEADERBOARD = 'leaderboard',
 	PARLAY_SUPERSTARS = 'parlay-superstars'
