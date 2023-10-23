@@ -10,7 +10,6 @@ import { ITicketContent } from '@/content/ticketsContent/TicketsContent'
 import TicketListItem from '@/components/ticketList/TicketListItem'
 import Sorter from '@/components/Sorter'
 import Select from '@/atoms/select/Select'
-import CopyModal from '@/components/copyModal/CopyModal'
 
 // assets
 import ArrowIcon from '@/assets/icons/arrow-down.svg'
@@ -26,7 +25,6 @@ import { PAGES } from '@/utils/enums'
 
 // hooks
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
-import { useMatchesWithChildMarkets } from '@/hooks/useMatchesWithChildMarkets'
 
 // styles
 import * as SC from './TicketListStyles'
@@ -50,11 +48,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 
 	const [renderList, setRenderList] = useState<ITicketContent[]>(slice(list, 0, LIST_SIZE))
 	const [hasMore, setHasMore] = useState(list.length > LIST_SIZE)
-	const [tempMatches, setTempMatches] = useState<any>()
-	const [copyModal, setCopyModal] = useState<{ open: boolean; onlyCopy: boolean }>({ open: false, onlyCopy: false })
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
-
-	const matchesWithChildMarkets = useMatchesWithChildMarkets(tempMatches, sgpFees, false)
 
 	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
 		enabled: true
@@ -144,103 +138,91 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 					activeKeysList={activeKeysList}
 					sgpFees={sgpFees}
 					setActiveKeysList={setActiveKeysList}
-					setCopyModal={setCopyModal}
-					setTempMatches={setTempMatches}
 				/>
 			)),
 		[activeKeysList, renderList, setActiveKeysList, type, sgpFees]
 	)
 
 	return (
-		<>
-			<CopyModal
-				isOpen={copyModal.open}
-				onlyCopy={copyModal.onlyCopy}
-				handleClose={() => setCopyModal({ open: false, onlyCopy: false })}
-				matchesWithChildMarkets={matchesWithChildMarkets}
-			/>
-			<SC.TicketListWrapper>
-				<SC.PCRow type={type} gutter={0}>
-					<Col span={20}>
-						<h1>{getTicketsTypeName(type, t)}</h1>
-						{type === TICKET_TYPE.HOT_TICKET && <SC.HotTicketDescription>{t('Top 10 tickets you shouldn’t miss!')}</SC.HotTicketDescription>}
-					</Col>
-				</SC.PCRow>
+		<SC.TicketListWrapper>
+			<SC.PCRow type={type} gutter={0}>
+				<Col span={20}>
+					<h1>{getTicketsTypeName(type, t)}</h1>
+					{type === TICKET_TYPE.HOT_TICKET && <SC.HotTicketDescription>{t('Top 10 tickets you shouldn’t miss!')}</SC.HotTicketDescription>}
+				</Col>
+			</SC.PCRow>
 
-				<Row>
-					<Col span={24}>
-						{loading || failure ? (
-							<>
-								<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
-								<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
-								<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
-							</>
-						) : (
-							<>
-								{type !== TICKET_TYPE.HOT_TICKET && (
-									<SCS.SorterRow>
-										<SCS.HorizontalSorters>
-											<Col span={5}>
-												<Sorter title={t('Wallet')} />
-											</Col>
-											<Col span={8}>
-												<Sorter title={t('Success rate')} name={TICKET_SORTING.SUCCESS_RATE} />
-											</Col>
-											<Col span={3}>
-												<Sorter title={t('Buy in')} name={TICKET_SORTING.BUY_IN} />
-											</Col>
-											<Col span={3}>
-												<Sorter title={t('Quote')} name={TICKET_SORTING.TOTAL_TICKET_QUOTE} />
-											</Col>
-											<Col span={3}>
-												<Sorter title={t('Matches')} name={TICKET_SORTING.MATCHES} />
-											</Col>
-										</SCS.HorizontalSorters>
-										<SCS.SelectSorters>
-											<Select
-												title={
-													<SCS.SelectSorterTitle>
-														<img src={SortIcon} alt={'Sorter'} />
-														{t('Sort by')}
-													</SCS.SelectSorterTitle>
-												}
-												allowClear
-												options={sortOptions}
-												placeholder={t('Sort by')}
-												onChange={handleSubmitSort}
-											/>
-										</SCS.SelectSorters>
-									</SCS.SorterRow>
-								)}
-								{renderList.length > 0 ? (
-									ticketList
-								) : (
-									<SC.TicketItemEmptyState>
-										<Row>
-											<Col span={5}>
-												<SC.EmptyImage />
-											</Col>
-											<Col span={19}>
-												<h4>
-													{t('There are currently no {{ticketsType}}', { ticketsType: getTicketsTypeName(type, t)?.toLowerCase() })}
-												</h4>
-												<p>{t('You can try other type')}</p>
-											</Col>
-										</Row>
-									</SC.TicketItemEmptyState>
-								)}
-								{hasMore && (
-									<SCS.LoadMore onClick={addTicketsToList}>
-										{type === TICKET_TYPE.HOT_TICKET ? t('Show all tickets') : t('Show more')}
-										<SCS.Icon degree={type === TICKET_TYPE.HOT_TICKET ? 270 : 0} icon={ArrowIcon} />
-									</SCS.LoadMore>
-								)}
-							</>
-						)}
-					</Col>
-				</Row>
-			</SC.TicketListWrapper>
-		</>
+			<Row>
+				<Col span={24}>
+					{loading || failure ? (
+						<>
+							<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
+							<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
+							<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
+						</>
+					) : (
+						<>
+							{type !== TICKET_TYPE.HOT_TICKET && (
+								<SCS.SorterRow>
+									<SCS.HorizontalSorters>
+										<Col span={5}>
+											<Sorter title={t('Wallet')} />
+										</Col>
+										<Col span={8}>
+											<Sorter title={t('Success rate')} name={TICKET_SORTING.SUCCESS_RATE} />
+										</Col>
+										<Col span={3}>
+											<Sorter title={t('Buy in')} name={TICKET_SORTING.BUY_IN} />
+										</Col>
+										<Col span={3}>
+											<Sorter title={t('Quote')} name={TICKET_SORTING.TOTAL_TICKET_QUOTE} />
+										</Col>
+										<Col span={3}>
+											<Sorter title={t('Matches')} name={TICKET_SORTING.MATCHES} />
+										</Col>
+									</SCS.HorizontalSorters>
+									<SCS.SelectSorters>
+										<Select
+											title={
+												<SCS.SelectSorterTitle>
+													<img src={SortIcon} alt={'Sorter'} />
+													{t('Sort by')}
+												</SCS.SelectSorterTitle>
+											}
+											allowClear
+											options={sortOptions}
+											placeholder={t('Sort by')}
+											onChange={handleSubmitSort}
+										/>
+									</SCS.SelectSorters>
+								</SCS.SorterRow>
+							)}
+							{renderList.length > 0 ? (
+								ticketList
+							) : (
+								<SC.TicketItemEmptyState>
+									<Row>
+										<Col span={5}>
+											<SC.EmptyImage />
+										</Col>
+										<Col span={19}>
+											<h4>{t('There are currently no {{ticketsType}}', { ticketsType: getTicketsTypeName(type, t)?.toLowerCase() })}</h4>
+											<p>{t('You can try other type')}</p>
+										</Col>
+									</Row>
+								</SC.TicketItemEmptyState>
+							)}
+							{hasMore && (
+								<SCS.LoadMore onClick={addTicketsToList}>
+									{type === TICKET_TYPE.HOT_TICKET ? t('Show all tickets') : t('Show more')}
+									<SCS.Icon degree={type === TICKET_TYPE.HOT_TICKET ? 270 : 0} icon={ArrowIcon} />
+								</SCS.LoadMore>
+							)}
+						</>
+					)}
+				</Col>
+			</Row>
+		</SC.TicketListWrapper>
 	)
 }
 
