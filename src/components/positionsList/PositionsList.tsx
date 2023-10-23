@@ -30,14 +30,16 @@ import { convertPositionNameToPosition, getMarketOddsFromContract, getSymbolText
 import networkConnector from '@/utils/networkConnector'
 import { GET_SPORT_MARKETS_FOR_GAME } from '@/utils/queries'
 import { NETWORK_IDS } from '@/utils/constants'
+import CopyTicketButton from '../copyTicketButton/CopyTicketButton'
 
 type Props = {
 	positionsWithCombinedAttrs: PositionWithCombinedAttrs[]
 	marketQuotes?: string[]
 	sgpFees?: SGPItem[]
+	ticketData?: any
 }
 
-const PositionsList = ({ positionsWithCombinedAttrs, marketQuotes, sgpFees }: Props) => {
+const PositionsList = ({ positionsWithCombinedAttrs, marketQuotes, sgpFees, ticketData }: Props) => {
 	const { t } = useTranslation()
 	const { chain } = useNetwork()
 	const { sportsAMMContract } = networkConnector
@@ -135,9 +137,10 @@ const PositionsList = ({ positionsWithCombinedAttrs, marketQuotes, sgpFees }: Pr
 					return <PositionListItem openCopyModal={openCopyModal} position={item} quote={getOdds(item, index)} />
 				})}
 			</SC.PositionsListWrapper>
-			{gamesToCopy?.length > 0 && (
+			<CopyTicketButton ticket={ticketData} />
+			{/* {gamesToCopy?.length > 0 && (
 				<Button btnStyle={'primary'} onClick={() => getOtherMarkets()} size={'large'} content={<span>{t('Copy open positions')}</span>} />
-			)}
+			)} */}
 		</>
 	)
 }

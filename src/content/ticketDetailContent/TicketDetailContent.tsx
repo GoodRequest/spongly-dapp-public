@@ -147,7 +147,12 @@ const TicketDetailContent = () => {
 			<Row style={{ marginTop: '16px' }}>
 				<PSC.MainContentContainer withPadding={true}>
 					{positionsData ? (
-						<PositionsList sgpFees={sgpFees} positionsWithCombinedAttrs={positionsData} marketQuotes={ticketData?.marketQuotes} />
+						<PositionsList
+							ticketData={ticketData}
+							sgpFees={sgpFees}
+							positionsWithCombinedAttrs={positionsData}
+							marketQuotes={ticketData?.marketQuotes}
+						/>
 					) : (
 						<div>Is empty</div>
 					)}
