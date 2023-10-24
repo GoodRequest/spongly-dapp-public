@@ -14,7 +14,7 @@ import { GET_MATCH_DETAIL } from '@/utils/queries'
 import { getTeamImageSource } from '@/utils/images'
 import { MSG_TYPE, Network, NO_TEAM_IMAGE_FALLBACK, NOTIFICATION_TYPE, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { showNotifications } from '@/utils/tsxHelpers'
-import { getMatchResult, getMatchScore, getMatchStatus, isAboveOrEqualResolution, isBellowOrEqualResolution } from '@/utils/helpers'
+import { getMatchResult, getMatchDetailScoreText, getMatchStatus, isAboveOrEqualResolution, isBellowOrEqualResolution } from '@/utils/helpers'
 import { BetType, TAGS_LIST } from '@/utils/tags'
 import MatchListContent from '@/components/matchesList/MatchListContent'
 import { getMarketOddsFromContract } from '@/utils/markets'
@@ -95,7 +95,7 @@ const MatchDetail = () => {
 	}, [router.isReady])
 
 	return (
-		<Row style={{ position: 'relative', overflow: 'hidden' }} gutter={30}>
+		<Row gutter={30}>
 			<SC.MatchDetailWrapper>
 				{!matchDetailData && loading ? (
 					<SC.RowSkeleton active loading paragraph={{ rows: 10 }} />
@@ -116,7 +116,7 @@ const MatchDetail = () => {
 								</SC.HeaderCol>
 								<SC.HeaderCol span={isTotalWinner ? 12 : 8}>
 									<SCS.LeagueIcon className={matchDetailData.league.logoClass} />
-									<SC.HeaderResultText>{getMatchScore(matchDetailData, t, isTotalWinner)}</SC.HeaderResultText>
+									<SC.HeaderResultText>{getMatchDetailScoreText(matchDetailData, t, isTotalWinner)}</SC.HeaderResultText>
 									{isAboveOrEqualResolution(size, RESOLUTIONS.LG) && (
 										<SC.HeaderStatus matchStatus={getMatchStatus(matchDetailData, t).status}>
 											<span>{getMatchStatus(matchDetailData, t).text}</span>

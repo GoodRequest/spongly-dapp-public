@@ -439,7 +439,7 @@ export const getMatchResult = (match: SportMarket) => {
 	return undefined
 }
 
-export const getMatchScore = (match: SportMarket, t: any, isTotalWinner?: boolean) => {
+export const getMatchDetailScoreText = (match: SportMarket, t: any, isTotalWinner?: boolean) => {
 	if (isTotalWinner) {
 		if (match.isCanceled || match.isPaused || match.isOpen) {
 			return ''
