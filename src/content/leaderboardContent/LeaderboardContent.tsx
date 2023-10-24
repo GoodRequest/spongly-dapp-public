@@ -6,10 +6,8 @@ import { useRouter } from 'next-translate-routes'
 import { LoadingOutlined } from '@ant-design/icons'
 
 // components, assets, atoms
-import * as SC from './LeaderboardContentStyles'
 import Sorter from '@/components/Sorter'
 import Select from '@/atoms/select/Select'
-import SortIcon from '@/assets/icons/sort-icon.svg'
 
 // utils
 import { GET_TIPSTERS } from '@/utils/queries'
@@ -21,6 +19,7 @@ import { getWalletImage } from '@/utils/images'
 
 // styles
 import * as SCS from '@/styles/GlobalStyles'
+import * as SC from './LeaderboardContentStyles'
 
 // types
 import { LeaderboardUser } from '@/typescript/types'

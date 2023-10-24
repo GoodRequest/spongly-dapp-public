@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { Col, Row, Skeleton } from 'antd'
+import { Col } from 'antd'
 import { breakpoints } from '@/styles/theme'
 import { WALLET_TICKETS } from '@/utils/enums'
 

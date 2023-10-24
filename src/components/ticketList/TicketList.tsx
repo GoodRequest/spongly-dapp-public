@@ -16,7 +16,6 @@ import Select from '@/atoms/select/Select'
 
 // assets
 import ArrowIcon from '@/assets/icons/arrow-down.svg'
-import SortIcon from '@/assets/icons/sort-icon.svg'
 import Modal from '@/components/modal/Modal'
 import Button from '@/atoms/button/Button'
 import MatchRow from '@/components/ticketBetContainer/components/matchRow/MatchRow'

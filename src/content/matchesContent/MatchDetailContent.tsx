@@ -6,7 +6,7 @@ import { useRouter } from 'next-translate-routes'
 import { groupBy, toNumber, toPairs } from 'lodash'
 import { useNetwork } from 'wagmi'
 
-import { MATCH_RESULT, RESOLUTIONS, SWITCH_BUTTON_OPTIONS, TEAM_TYPE } from '@/utils/enums'
+import { RESOLUTIONS, SWITCH_BUTTON_OPTIONS, TEAM_TYPE } from '@/utils/enums'
 import * as SC from './MatchDetailContentStyles'
 import * as SCS from '@/styles/GlobalStyles'
 import SwitchButton from '@/components/switchButton/SwitchButton'
