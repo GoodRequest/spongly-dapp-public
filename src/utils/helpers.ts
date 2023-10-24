@@ -338,12 +338,18 @@ export const getParlayItemStatus = (position: Position, isPlayedNow: boolean, t:
 }
 
 export const getMatchStatus = (match: any, t: any) => {
-	const date = dayjs(toNumber(match?.maturityDate) * 1000).format('| MMM DD')
+	const date = dayjs(toNumber(match?.maturityDate) * 1000)
+		.format('| MMM DD')
+		.toUpperCase()
 	if (match.isOpen && !match.isPaused && !match.homeOdds && !match.awayOdds) return { status: MATCH_STATUS.ONGOING, text: t('Playing now') }
 	if (match?.isCanceled) return { status: MATCH_STATUS.CANCELED, text: t('Canceled {{ date }}', { date }) }
 	if (match?.isPaused) return { status: MATCH_STATUS.PAUSED, text: t('Paused {{ date }}', { date }) }
-	if (match.isResolved) return { status: MATCH_STATUS.SUCCESS, text: `Match end | ${match.homeScore || '?'} : ${match.awayScore || '?'}` }
-	return { status: MATCH_STATUS.OPEN, text: dayjs(toNumber(match?.maturityDate) * 1000).format('MMM DD | HH:mm') }
+	return {
+		status: MATCH_STATUS.OPEN,
+		text: dayjs(toNumber(match?.maturityDate) * 1000)
+			.format('MMM DD | HH:mm')
+			.toUpperCase()
+	}
 }
 
 export const getOddsBySide = (ticket: ITicket) => {

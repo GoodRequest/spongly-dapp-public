@@ -25,16 +25,14 @@ export const HeaderTeam = styled.div`
 	@media (max-width: ${breakpoints.md}px) {
 		${TextMDSemibold};
 		margin-top: 8px;
-		height: 48px;
+		height: auto;
 	}
 `
-export const HeaderVersusText = styled.div`
+export const HeaderResultText = styled.div`
 	${HeadingXSMedium};
 	text-align: center;
-	color: ${({ theme }) => theme['color-base-content-quaternary']};
 	@media (max-width: ${breakpoints.md}px) {
 		${TextMDSemibold};
-		color: ${({ theme }) => theme['color-base-content-quaternary']};
 	}
 `
 const flicker = keyframes`
@@ -47,6 +45,7 @@ const flicker = keyframes`
 `
 export const HeaderStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 	${TextXSMedium};
+	margin-top: 16px;
 	padding: 12px;
 	text-align: center;
 	position: relative;
@@ -63,7 +62,7 @@ export const HeaderStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 				&::before {
 					content: '';
 					position: absolute;
-					left: -10px;
+					left: -6px;
 					top: 50%;
 					transform: translate(-50%, -50%);
 					width: 8px;
@@ -85,9 +84,6 @@ export const HeaderStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 		css`
 			color: ${({ theme }) => theme['color-base-state-warning-fg']};
 		`};
-	@media (max-width: ${breakpoints.md}px) {
-		margin-top: 16px;
-	}
 `
 
 export const MatchIcon = styled.div`
@@ -100,6 +96,7 @@ export const MatchIcon = styled.div`
 	@media (max-width: ${breakpoints.md}px) {
 		background: ${({ theme }) => theme['color-base-surface-quaternary']};
 		border-radius: 999px;
+		border: 2px solid ${({ theme }) => theme['color-base-surface-secondary']};
 		height: 48px;
 		width: 48px;
 	}
@@ -163,10 +160,8 @@ export const HeaderCol = styled(Col)<{ result?: MATCH_RESULT; team?: TEAM_TYPE }
 		`};
 
 	@media (max-width: ${breakpoints.md}px) {
-		justify-content: flex-start;
-		border: none;
-		background: none;
-		box-shadow: none;
+		padding: 16px;
+		justify-content: center;
 	}
 `
 export const RowSkeleton = styled(Skeleton)`

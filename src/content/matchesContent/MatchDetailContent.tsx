@@ -6,7 +6,7 @@ import { useRouter } from 'next-translate-routes'
 import { groupBy, toNumber, toPairs } from 'lodash'
 import { useNetwork } from 'wagmi'
 
-import { SWITCH_BUTTON_OPTIONS, TEAM_TYPE } from '@/utils/enums'
+import { RESOLUTIONS, SWITCH_BUTTON_OPTIONS, TEAM_TYPE } from '@/utils/enums'
 import * as SC from './MatchDetailContentStyles'
 import * as SCS from '@/styles/GlobalStyles'
 import SwitchButton from '@/components/switchButton/SwitchButton'
@@ -14,12 +14,13 @@ import { GET_MATCH_DETAIL } from '@/utils/queries'
 import { getTeamImageSource } from '@/utils/images'
 import { MSG_TYPE, Network, NO_TEAM_IMAGE_FALLBACK, NOTIFICATION_TYPE } from '@/utils/constants'
 import { showNotifications } from '@/utils/tsxHelpers'
-import { getMatchResult, getMatchStatus } from '@/utils/helpers'
+import { getMatchResult, getMatchStatus, isAboveOrEqualResolution, isBellowOrEqualResolution } from '@/utils/helpers'
 import { BetType, TAGS_LIST } from '@/utils/tags'
 import MatchListContent from '@/components/matchesList/MatchListContent'
 import { getMarketOddsFromContract } from '@/utils/markets'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 import Custom404 from '@/pages/404'
+import { useMedia } from '@/hooks/useMedia'
 
 const MatchDetail = () => {
 	const { t } = useTranslation()
@@ -28,6 +29,7 @@ const MatchDetail = () => {
 	const [tab, setTab] = useState(SWITCH_BUTTON_OPTIONS.OPTION_1)
 	const [matchDetailData, setMatchDetailData] = useState<any>(null)
 	const [loading, setLoading] = useState(false)
+	const size = useMedia()
 
 	const onChangeSwitch = (option: SWITCH_BUTTON_OPTIONS) => {
 		setTab(option)
@@ -114,7 +116,14 @@ const MatchDetail = () => {
 								</SC.HeaderCol>
 								<SC.HeaderCol span={8}>
 									<SCS.LeagueIcon className={matchDetailData.league.logoClass} />
-									<SC.HeaderVersusText>VS</SC.HeaderVersusText>
+									<SC.HeaderResultText>
+										{matchDetailData.isResolved ? `${matchDetailData.homeScore || '?'} : ${matchDetailData.awayScore || '?'}` : 'VS'}
+									</SC.HeaderResultText>
+									{isAboveOrEqualResolution(size, RESOLUTIONS.LG) && (
+										<SC.HeaderStatus matchStatus={getMatchStatus(matchDetailData, t).status}>
+											<span>{getMatchStatus(matchDetailData, t).text}</span>
+										</SC.HeaderStatus>
+									)}
 								</SC.HeaderCol>
 								<SC.HeaderCol result={getMatchResult(matchDetailData)} team={TEAM_TYPE.AWAY_TEAM} span={8}>
 									<SC.MatchIcon>
@@ -127,11 +136,13 @@ const MatchDetail = () => {
 									</SC.MatchIcon>
 									<SC.HeaderTeam>{matchDetailData?.awayTeam}</SC.HeaderTeam>
 								</SC.HeaderCol>
-								<Col span={24} md={6}>
-									<SC.HeaderStatus matchStatus={getMatchStatus(matchDetailData, t).status}>
-										<span>{getMatchStatus(matchDetailData, t).text}</span>
-									</SC.HeaderStatus>
-								</Col>
+								{isBellowOrEqualResolution(size, RESOLUTIONS.MD) && (
+									<Col span={24} md={6}>
+										<SC.HeaderStatus matchStatus={getMatchStatus(matchDetailData, t).status}>
+											<span>{getMatchStatus(matchDetailData, t).text}</span>
+										</SC.HeaderStatus>
+									</Col>
+								)}
 								<Col span={24} md={0}>
 									<SC.Separator />
 								</Col>
