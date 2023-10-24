@@ -64,6 +64,7 @@ const MatchHeaderMobile = ({
 							setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 							isHeader
 							match={match}
+							oddName={isTotalWinner ? t('NO') : BET_OPTIONS.WINNER_AWAY}
 							betOption={BET_OPTIONS.WINNER_AWAY}
 							isMobilePanel
 						/>

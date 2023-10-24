@@ -12,6 +12,9 @@ export const MatchListWrapper = styled.div`
 	border-radius: 12px;
 	padding-top: 24px;
 	${TextSMMedium}
+	&:first-child {
+		padding-top: 0;
+	}
 `
 
 export const MatchCollapse = styled(Collapse)<{ isExpanded: boolean }>`

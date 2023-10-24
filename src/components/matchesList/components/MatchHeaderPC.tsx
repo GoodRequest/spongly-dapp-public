@@ -86,6 +86,7 @@ const MatchHeaderPC = ({
 										setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 										isHeader
 										match={match}
+										oddName={isTotalWinner ? t('NO') : BET_OPTIONS.WINNER_AWAY}
 										betOption={BET_OPTIONS.WINNER_AWAY}
 									/>
 								</SC.RadioGroup>

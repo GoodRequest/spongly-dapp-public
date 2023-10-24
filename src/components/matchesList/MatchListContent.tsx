@@ -59,6 +59,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleParlayValida
 									setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 									match={match}
 									betOption={BET_OPTIONS.WINNER_AWAY}
+									oddName={isTotalWinner ? t('NO') : BET_OPTIONS.WINNER_AWAY}
 									isMobilePanel
 								/>
 							</SC.RadioMobileGroup>
@@ -243,6 +244,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleParlayValida
 										setVisibleParlayValidationModal={setVisibleParlayValidationModal}
 										match={match}
 										betOption={BET_OPTIONS.WINNER_AWAY}
+										oddName={isTotalWinner ? t('NO') : BET_OPTIONS.WINNER_AWAY}
 									/>
 								</SC.ExtendedMatchContentRadioButtonGroup>
 							)}
