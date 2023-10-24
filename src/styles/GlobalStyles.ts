@@ -79,47 +79,70 @@ export const GlobalStyle = createGlobalStyle`
 	}
 	// Antd Notifications
 	.ant-notification {
-		.ant-notification-notice {
-			height: 80px;
-			border-radius: 12px;
-			background: ${({ theme }) => theme['color-base-surface-tertiary']};
-			.ant-notification-notice-description {
-				color: white
+		.ant-notification-notice-wrapper {
+			border-radius: 14px;
+			.ant-notification-notice {
+				height: 80px;
+				border-radius: 12px;
+				padding: 16px;
+				background: ${({ theme }) => theme['color-base-surface-tertiary']};
+				.ant-notification-notice-description {
+					color: ${({ theme }) => theme['color-base-content-top']};
+					margin-inline-start: 46px
+				}
 			}
-		}
-		.ant-notification-notice::after {
-			content: "";
-			position: absolute;
-			bottom: 0;
-			left: 50%;
-			width: 90%;
-			height: 4px;
-			margin-left: -45%;
-			margin-right: -45%;
-		}
-		.ant-notification-notice-error {
-			box-shadow: 0px 15px 30px -6px rgba(225, 29, 72, 0.04), 0px 25px 50px -12px rgba(225, 29, 72, 0.25);
-		}
-		.ant-notification-notice-error::after {
-			background-color: ${({ theme }) => theme['color-base-action-destructive-default']};
-		}
-		.ant-notification-notice-warning {
-			box-shadow: 0px 15px 30px -6px rgba(255, 136, 51, 0.04), 0px 25px 50px -12px rgba(255, 136, 51, 0.25);
-		}
-		.ant-notification-notice-warning::after {
-			background-color: ${({ theme }) => theme['color-base-state-warning-fg']};
-		}
-		.ant-notification-notice-info {
-			box-shadow: 0px 15px 30px -6px rgba(102, 116, 255, 0.04), 0px 25px 50px -12px rgba(102, 116, 255, 0.25);
-		}
-		.ant-notification-notice-info::after {
-			background-color: ${({ theme }) => theme['color-base-action-primary-default']};
-		}
-		.ant-notification-notice-success {
-			box-shadow: 0px 15px 30px -6px rgba(168, 229, 138, 0.04), 0px 25px 50px -12px rgba(168, 229, 138, 0.25);
-		}
-		.ant-notification-notice-success::after {
-			background-color: ${({ theme }) => theme['color-base-state-success-fg']};
+			.ant-notification-notice::after {
+				content: "";
+				position: absolute;
+				border-radius: 4px;
+				bottom: 0;
+				left: 50%;
+				width: 90%;
+				height: 4px;
+				margin-left: -45%;
+				margin-right: -45%;
+			}
+			.ant-notification-notice-icon {
+				padding: 8px;
+				border-radius: 8px;
+				top: 20px;
+			}
+			.ant-notification-notice-error {
+				box-shadow: 0px 15px 30px -6px rgba(225, 29, 72, 0.04), 0px 25px 50px -12px rgba(225, 29, 72, 0.25);
+				.ant-notification-notice-icon {
+					background: ${({ theme }) => theme['color-base-action-destructive-bg10']};
+				}
+			}
+			.ant-notification-notice-error::after {
+				background-color: ${({ theme }) => theme['color-base-action-destructive-default']};
+			}
+			.ant-notification-notice-warning {
+				box-shadow: 0px 15px 30px -6px rgba(255, 136, 51, 0.04), 0px 25px 50px -12px rgba(255, 136, 51, 0.25);
+				.ant-notification-notice-icon {
+					background: ${({ theme }) => theme['color-base-state-warning-bg']};
+				}
+			}
+			.ant-notification-notice-warning::after {
+				background-color: ${({ theme }) => theme['color-base-state-warning-fg']};
+			}
+			.ant-notification-notice-info {
+				box-shadow: 0px 15px 30px -6px rgba(102, 116, 255, 0.04), 0px 25px 50px -12px rgba(102, 116, 255, 0.25);
+				.ant-notification-notice-icon {
+					background: ${({ theme }) => theme['color-base-action-primary-bg10']};
+				}
+			}
+			.ant-notification-notice-info::after {
+				background-color: ${({ theme }) => theme['color-base-action-primary-default']};
+			}
+			.ant-notification-notice-success {
+				box-shadow: 0px 15px 30px -6px rgba(168, 229, 138, 0.04), 0px 25px 50px -12px rgba(168, 229, 138, 0.25);
+				.ant-notification-notice-icon {
+					background: ${({ theme }) => theme['color-base-state-success-bg']};
+				}
+			}
+			.ant-notification-notice-success::after {
+				background-color: ${({ theme }) => theme['color-base-state-success-fg']};
+			}
 		}
 
 	}
