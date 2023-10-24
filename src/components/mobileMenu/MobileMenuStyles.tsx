@@ -52,9 +52,13 @@ export const CenterDiv = styled.div`
 
 export const Menu = styled(AntdMenu)`
 	background-color: transparent;
-	margin-top: 60px;
 	border-inline-end: 0px !important;
 `
+
+export const MenuItems = styled.div`
+	overflow: auto;
+`
+
 export const MenuItem = styled(AntdMenu.Item)`
 	padding-inline: 0 !important;
 	height: auto !important;
