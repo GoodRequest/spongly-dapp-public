@@ -319,9 +319,9 @@ export const getReward = (index: number | undefined, chainId: number | undefined
 }
 
 export const getParlayItemStatus = (position: Position, isPlayedNow: boolean, t: any) => {
-	const date = dayjs(toNumber(position.market.maturityDate) * 1000).format('MMM DD | HH:mm')
+	const date = dayjs(toNumber(position.market.maturityDate) * 1000).format('MMM DD, YYYY | HH:mm')
 	if (isPlayedNow) {
-		return { status: MATCH_STATUS.ONGOING, text: t('Playing now') }
+		return { status: MATCH_STATUS.ONGOING, text: t('Playing now'), date }
 	}
 	if (position.market.isCanceled) return { status: MATCH_STATUS.CANCELED, text: t('Canceled {{ date }}', { date }), date }
 	if (position.market.isPaused) return { status: MATCH_STATUS.PAUSED, text: t('Paused {{ date }}', { date }), date }

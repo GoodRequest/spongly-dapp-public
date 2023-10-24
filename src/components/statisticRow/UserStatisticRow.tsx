@@ -35,6 +35,7 @@ const UserStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 							isAddress={true}
 							value={isMounted ? (isMyWallet ? address : String(router.query.id) || '') : ''}
 							title={isMyWallet ? t('My wallet') : t('Wallet')}
+							isMyWallet={isMyWallet}
 						/>
 					</Col>
 					<Col lg={6} md={8} sm={8} xs={8}>

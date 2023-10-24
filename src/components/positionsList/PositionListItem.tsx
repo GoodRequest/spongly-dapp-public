@@ -2,11 +2,10 @@ import { useTranslation } from 'next-export-i18n'
 import React, { useEffect, useState } from 'react'
 import { Row } from 'antd'
 import { toNumber } from 'lodash'
-import Flag from 'react-world-flags'
 
 // utils
 import { getTeamImageSource } from '@/utils/images'
-import { MATCH_STATUS, NO_TEAM_IMAGE_FALLBACK, STATIC, TOTAL_WINNER_TAGS } from '@/utils/constants'
+import { MATCH_STATUS, NO_TEAM_IMAGE_FALLBACK, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { getParlayItemStatus } from '@/utils/helpers'
 import networkConnector from '@/utils/networkConnector'
 import { convertPositionNameToPosition, getMatchOddsContract, getSymbolText } from '@/utils/markets'
@@ -22,7 +21,7 @@ import CopyTicketButton from '../copyTicketButton/CopyTicketButton'
 // styles
 import * as SC from './PositionsListStyles'
 import * as PSC from '@/components/ticketList/TicketItemStyles'
-import { FlagWorldBig } from '@/styles/GlobalStyles'
+import * as SCS from '@/styles/GlobalStyles'
 
 type Props = {
 	position: PositionWithCombinedAttrs
@@ -82,12 +81,7 @@ const PositionListItem = ({ position, quote, copyButtonTicket, isMyWallet }: Pro
 						<SC.MediumSpan> {position.market?.homeTeam}</SC.MediumSpan>
 					</SC.TeamCol>
 					<SC.TeamCol span={4} style={{ height: '100%' }}>
-						{league?.country && league?.country !== STATIC.WORLD && (
-							<SC.FlagWrapper>
-								<Flag code={league.country} />
-							</SC.FlagWrapper>
-						)}
-						{league?.country && league?.country === STATIC.WORLD && <FlagWorldBig />}
+						<SCS.LeagueIcon className={league?.logoClass} />
 						<SC.VSSpan status={positionState.status}>{positionState?.result ? positionState?.result : 'VS'}</SC.VSSpan>
 					</SC.TeamCol>
 					<SC.TeamCol span={10}>
@@ -117,7 +111,7 @@ const PositionListItem = ({ position, quote, copyButtonTicket, isMyWallet }: Pro
 			<SC.ColCenteredVertically lg={{ span: 6 }} md={{ span: 12 }} sm={{ span: 24 }} xs={{ span: 24 }}>
 				{canBeCopied && !isMyWallet ? (
 					<SC.ButtonWrapper>
-						<SC.SmallSpan style={{ marginBottom: '12px' }}>{positionState?.text}</SC.SmallSpan>
+						<SC.SmallSpan style={{ marginBottom: '12px' }}>{positionState?.date}</SC.SmallSpan>
 						<CopyTicketButton ticket={copyButtonTicket} isPosition={true} />
 					</SC.ButtonWrapper>
 				) : (

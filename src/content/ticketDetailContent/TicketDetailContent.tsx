@@ -19,7 +19,7 @@ import {
 } from '@/utils/helpers'
 import networkConnector from '@/utils/networkConnector'
 import { roundPrice } from '@/utils/formatters/currency'
-import { Network, OddsType, USER_TICKET_TYPE } from '@/utils/constants'
+import { Network, NETWORK_IDS, OddsType, USER_TICKET_TYPE } from '@/utils/constants'
 
 // hooks
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
@@ -54,7 +54,7 @@ const TicketDetailContent = () => {
 
 	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 
-	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
+	const sgpFeesRaw = useSGPFeesQuery((chain?.id as Network) || NETWORK_IDS.OPTIMISM, {
 		enabled: true
 	})
 
@@ -139,7 +139,7 @@ const TicketDetailContent = () => {
 					</Col>
 				</Row>
 			)}
-			<Row style={{ marginTop: '16px' }}>
+			<Row style={{ marginTop: '40px' }}>
 				<PSC.MainContentContainer withPadding={true}>
 					{positionsData || ticketData || isLoading ? (
 						<PositionsList

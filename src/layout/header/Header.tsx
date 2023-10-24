@@ -49,6 +49,9 @@ const Header = () => {
 			case `/${PAGES.TICKETS}`:
 				setSelected(PAGES.TICKETS)
 				break
+			case `/${PAGES.TICKET_DETAIL}`:
+				setSelected(PAGES.TICKETS)
+				break
 			case `/${PAGES.MATCHES}`:
 				setSelected(PAGES.MATCHES)
 				break

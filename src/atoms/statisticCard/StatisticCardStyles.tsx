@@ -32,6 +32,8 @@ export const StatisticCard = styled.div<{ filled: boolean; showMobileInColumn: b
 				? theme['color-base-surface-secondary']
 				: 'transparent'};
 		flex-direction: ${({ showMobileInColumn }) => (showMobileInColumn ? 'column' : 'row')};
+		align-items: ${({ showMobileInColumn }) => (showMobileInColumn ? 'start' : 'center')};
+		justify-content: ${({ showMobileInColumn }) => (showMobileInColumn ? 'center' : 'start')};
 	}
 
 	@media (max-width: ${breakpoints.md}px) {
@@ -70,7 +72,7 @@ export const StatisticWrapper = styled.div<{ isAddress: boolean; isTxnHash: bool
 	display: flex;
 	flex-direction: column;
 	margin-left: 16px;
-	max-width: ${({ isAddress, isTxnHash }) => (isAddress ? 'calc(100% - 68px - 16px)' : isTxnHash ? '100%' : '')};
+	max-width: ${({ isAddress, isTxnHash }) => (isAddress ? 'calc(100% - 68px - 16px)' : isTxnHash ? 'calc(100% - 16px)' : '')};
 `
 
 export const AddressContainer = styled.div`

@@ -35,6 +35,7 @@ const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, 
 							isAddress={true}
 							value={tipsterAddress}
 							title={isMyWallet ? t('My wallet') : t('Wallet')}
+							isMyWallet={isMyWallet}
 						/>
 					</Col>
 					<Col lg={4} md={24} sm={24} xs={24}>
