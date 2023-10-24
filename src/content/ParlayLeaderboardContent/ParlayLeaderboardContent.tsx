@@ -41,7 +41,7 @@ const ParlayLeaderboardContent = () => {
 	const { chain } = useNetwork()
 	const { address } = useAccount()
 
-	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) || OddsType.DECIMAL : OddsType.DECIMAL
 
 	const { query, isReady } = useRouter()
 

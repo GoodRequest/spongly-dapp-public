@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'next-export-i18n'
-
 import { useRouter } from 'next-translate-routes'
 import { change, getFormValues } from 'redux-form'
 import { useDispatch, useSelector } from 'react-redux'
+
 import Button from '@/atoms/button/Button'
 import Modal from '@/components/modal/Modal'
 import Select from '@/atoms/select/Select'
@@ -23,7 +23,7 @@ type Props = {
 const SettingsModal = (props: Props) => {
 	const { t } = useTranslation()
 	const { visible, setVisible } = props
-	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) || OddsType.DECIMAL : OddsType.DECIMAL
 	const router = useRouter()
 	const dispatch = useDispatch()
 	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
