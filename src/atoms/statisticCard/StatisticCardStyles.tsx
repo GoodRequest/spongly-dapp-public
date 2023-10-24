@@ -72,6 +72,7 @@ export const StatisticWrapper = styled.div<{ isAddress: boolean; isTxnHash: bool
 	display: flex;
 	flex-direction: column;
 	margin-left: 16px;
+	cursor: ${({ isTxnHash }) => (isTxnHash ? 'pointer' : 'default')};
 	max-width: ${({ isAddress, isTxnHash }) => (isAddress ? 'calc(100% - 68px - 16px)' : isTxnHash ? 'calc(100% - 16px)' : '')};
 `
 
