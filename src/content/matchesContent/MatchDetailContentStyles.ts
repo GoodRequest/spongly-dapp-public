@@ -90,66 +90,13 @@ export const HeaderStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 	}
 `
 
-export const MatchIcon = styled.div<{ result?: MATCH_RESULT; team: TEAM_TYPE }>`
+export const MatchIcon = styled.div`
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
 	border-radius: 999px;
-	// TODO: Uncomment when designer add styles for thsoe states
-	// background: ${({ theme }) => theme['color-base-surface-quaternary']};
-	//border: 2px solid ${({ theme }) => theme['color-base-action-primary-default']};
 	padding: 16px;
 	position: relative;
-	/* TODO: Uncomment when designer add styles for thsoe states
-	${(p) =>
-		p.result === MATCH_RESULT.DRAW &&
-		css`
-			background: ${({ theme }) => theme['color-base-state-warning-bg']};
-			border: 2px solid ${({ theme }) => theme['color-base-state-warning-fg']};
-		`};
-	${(p) =>
-		p.result === MATCH_RESULT.HOME &&
-		p.team === TEAM_TYPE.HOME_TEAM &&
-		css`
-			background: ${({ theme }) => theme['color-base-state-success-bg']};
-			border: 2px solid ${({ theme }) => theme['color-base-state-success-fg']};
-			&::before {
-				content: '\\2713';
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				font-size: 20px;
-				position: absolute;
-				top: 12px;
-				right: 0;
-				height: 32px;
-				width: 32px;
-				background: ${({ theme }) => theme['color-base-state-success-fg']};
-				border-radius: 50%;
-			}
-		`};
-	${(p) =>
-		p.result === MATCH_RESULT.AWAY &&
-		p.team === TEAM_TYPE.AWAY_TEAM &&
-		css`
-			background: ${({ theme }) => theme['color-base-state-success-bg']};
-			border: 2px solid ${({ theme }) => theme['color-base-state-success-fg']};
-			&::before {
-				content: '\\2713';
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				font-size: 20px;
-				position: absolute;
-				top: 12px;
-				right: 0;
-				height: 32px;
-				width: 32px;
-				background: ${({ theme }) => theme['color-base-state-success-fg']};
-				border-radius: 50%;
-			}
-		`};
-	*/
 	@media (max-width: ${breakpoints.md}px) {
 		background: ${({ theme }) => theme['color-base-surface-quaternary']};
 		border-radius: 999px;
@@ -173,19 +120,53 @@ export const MatchIcon = styled.div<{ result?: MATCH_RESULT; team: TEAM_TYPE }>`
 	}
 `
 
-export const HeaderCol = styled(Col)`
+export const HeaderCol = styled(Col)<{ result?: MATCH_RESULT; team?: TEAM_TYPE }>`
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	${(p) =>
+		p.team &&
+		css`
+			border: 1px solid ${({ theme }) => theme['color-base-surface-quintarny']};
+			background: ${({ theme }) => theme['color-base-surface-primary']};
+			border-radius: 12px;
+		`};
+	// Home win
+	${(p) =>
+		p.result === MATCH_RESULT.HOME &&
+		p.team === TEAM_TYPE.HOME_TEAM &&
+		css`
+			border: 1px solid ${({ theme }) => theme['color-base-surface-quintarny']};
+			background: ${({ theme }) => theme['color-base-surface-quintarny']};
+			box-shadow: 0px 0px 4px 0px #6674ff, 0px 0px 16px 0px rgba(102, 116, 255, 0.85);
+			border-radius: 12px;
+		`};
+	// Away win
+	${(p) =>
+		p.result === MATCH_RESULT.AWAY &&
+		p.team === TEAM_TYPE.AWAY_TEAM &&
+		css`
+			border: 1px solid ${({ theme }) => theme['color-base-surface-quintarny']};
+			background: ${({ theme }) => theme['color-base-surface-quintarny']};
+			box-shadow: 0px 0px 4px 0px #6674ff, 0px 0px 16px 0px rgba(102, 116, 255, 0.85);
+			border-radius: 12px;
+		`};
+	// Draw
+	${(p) =>
+		p.result === MATCH_RESULT.DRAW &&
+		css`
+			border: 1px solid ${({ theme }) => theme['color-base-surface-quintarny']};
+			background: ${({ theme }) => theme['color-base-surface-quintarny']};
+			box-shadow: 0px 0px 4px 0px #6674ff, 0px 0px 16px 0px rgba(102, 116, 255, 0.85);
+			border-radius: 12px;
+		`};
+
 	@media (max-width: ${breakpoints.md}px) {
 		justify-content: flex-start;
-	}
-`
-export const FlagWrapper = styled.div`
-	width: 80px;
-	@media (max-width: ${breakpoints.md}px) {
-		width: 40px;
+		border: none;
+		background: none;
+		box-shadow: none;
 	}
 `
 export const RowSkeleton = styled(Skeleton)`
@@ -211,18 +192,4 @@ export const Separator = styled.div`
 	height: 1px;
 	transform: rotate(0deg);
 	margin-bottom: 24px;
-`
-export const LeagueIconOverlay = styled.i`
-	position: absolute;
-	z-index: 1;
-	top: -120px;
-	left: -80px;
-	color: white;
-	opacity: 0.02;
-	font-size: 400px;
-	line-height: 400px;
-	font-style: normal;
-	@media (max-width: ${breakpoints.md}px) {
-		display: none;
-	}
 `

@@ -94,7 +94,6 @@ const MatchDetail = () => {
 
 	return (
 		<Row style={{ position: 'relative', overflow: 'hidden' }} gutter={30}>
-			<SC.LeagueIconOverlay className={matchDetailData?.league?.logoClass} />
 			<SC.MatchDetailWrapper>
 				{!matchDetailData && loading ? (
 					<SC.RowSkeleton active loading paragraph={{ rows: 10 }} />
@@ -102,8 +101,8 @@ const MatchDetail = () => {
 					<>
 						<SC.MatchDetailHeader>
 							<Row justify={'center'}>
-								<SC.HeaderCol span={8}>
-									<SC.MatchIcon result={getMatchResult(matchDetailData)} team={TEAM_TYPE.HOME_TEAM}>
+								<SC.HeaderCol result={getMatchResult(matchDetailData)} team={TEAM_TYPE.HOME_TEAM} span={8}>
+									<SC.MatchIcon>
 										<img
 											src={getTeamImageSource(matchDetailData?.homeTeam || '', toNumber(matchDetailData?.tags?.[0]))}
 											onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
@@ -117,8 +116,8 @@ const MatchDetail = () => {
 									<SCS.LeagueIcon className={matchDetailData.league.logoClass} />
 									<SC.HeaderVersusText>VS</SC.HeaderVersusText>
 								</SC.HeaderCol>
-								<SC.HeaderCol span={8}>
-									<SC.MatchIcon result={getMatchResult(matchDetailData)} team={TEAM_TYPE.AWAY_TEAM}>
+								<SC.HeaderCol result={getMatchResult(matchDetailData)} team={TEAM_TYPE.AWAY_TEAM} span={8}>
+									<SC.MatchIcon>
 										<img
 											src={getTeamImageSource(matchDetailData?.awayTeam || '', toNumber(matchDetailData?.tags?.[0]))}
 											onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
