@@ -23,6 +23,7 @@ import {
 	getUserTicketClaimValue,
 	getUserTicketType,
 	getUserTicketTypeName,
+	handleTxHashRedirect,
 	isClaimableUntil,
 	isWindowReady,
 	orderPositionsAsSportMarkets
@@ -106,20 +107,6 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 	const dateDiff = dayjs(expiryDate * 1000).diff(now, 'm')
 	const claimableUntil = !!(ticket.isClaimable && isMyWallet) && isClaimableUntil(dateDiff)
 
-	const handleTxHashRedirect = (txHash: string) => {
-		const link = document.createElement('a')
-		const newHref = getEtherScanTxHash(chain?.id || NETWORK_IDS.OPTIMISM, txHash)
-		if (!newHref) {
-			showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to redirect') }], NOTIFICATION_TYPE.NOTIFICATION)
-		} else {
-			link.href = newHref
-			link.setAttribute('target', '_blank')
-			document.body.appendChild(link)
-			link.click()
-			document.body.removeChild(link)
-		}
-	}
-
 	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions as any, ticket, sgpFees)
 	const hasOpenPositions = positionsWithMergedCombinedPositions?.some(
 		// TODO: ongoing is not good because it is isOpen and isResolved at the same time
@@ -196,7 +183,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 	const ticketHeader = (
 		<SC.UserTicketTableRow show={ticket.isClaimable} align={'middle'} gutter={[16, 16]}>
 			<SC.TxCol md={{ span: 3, order: 1 }} xs={{ span: 24, order: 2 }}>
-				<SC.TxHeader onClick={() => handleTxHashRedirect(ticket.txHash)}>
+				<SC.TxHeader onClick={() => handleTxHashRedirect(t, ticket.txHash, chain?.id)}>
 					<SC.TxIcon src={DocumentIcon} alt='hash' />
 					<SC.AddressText>{ticket?.txHash}</SC.AddressText>
 				</SC.TxHeader>

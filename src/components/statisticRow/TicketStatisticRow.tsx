@@ -1,9 +1,11 @@
 import { Col, Row } from 'antd'
 import { useTranslation } from 'next-export-i18n'
+import { useNetwork } from 'wagmi'
 import StatisticCard from '@/atoms/statisticCard/StatisticCard'
 import { getWalletImage } from '@/utils/images'
 import { useIsMounted } from '@/hooks/useIsMounted'
 import { USER_TICKET_TYPE } from '@/utils/constants'
+import { handleTxHashRedirect } from '@/utils/helpers'
 
 type Props = {
 	isLoading: boolean
@@ -20,8 +22,8 @@ type Props = {
 const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, claim, userTicketType, txHash, isMyWallet }: Props) => {
 	const { t } = useTranslation()
 	const isMounted = useIsMounted()
+	const { chain } = useNetwork()
 
-	// NOTE: Number of copies, claim value missing atm, we can add claim though
 	return (
 		<Row gutter={[8, 12]}>
 			{isMounted && (
@@ -43,6 +45,7 @@ const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, 
 							value={txHash}
 							title={t('Txn hash')}
 							addMobileBackground={true}
+							onClick={() => handleTxHashRedirect(t, txHash, chain?.id)}
 						/>
 					</Col>
 					<Col lg={4} md={12} sm={12} xs={12}>

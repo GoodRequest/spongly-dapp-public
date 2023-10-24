@@ -15,6 +15,7 @@ type Props = {
 	isTxnHash?: boolean
 	addMobileBackground?: boolean
 	colorValue?: 'red' | 'green' | 'default'
+	onClick?: () => void
 }
 const StatisticCard = ({
 	value,
@@ -26,9 +27,10 @@ const StatisticCard = ({
 	isAddress = false,
 	isTxnHash = false,
 	addMobileBackground = false,
-	colorValue = 'default'
+	colorValue = 'default',
+	onClick
 }: Props) => (
-	<SC.ColorWrapper filled={filled}>
+	<SC.ColorWrapper filled={filled} onClick={onClick}>
 		<SC.StatisticCard filled={filled} showMobileInColumn={showMobileInColumn} addMobileBackground={addMobileBackground}>
 			{img && <SC.Image filled={filled} src={img} />}
 			<SC.StatisticWrapper isTxnHash={isTxnHash} isAddress={isAddress}>

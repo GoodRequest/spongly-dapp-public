@@ -68,7 +68,7 @@ const PositionsList = ({ positionsWithCombinedAttrs, marketQuotes, ticketData, i
 					)
 				})}
 			</SC.PositionsListWrapper>
-			{hasOpenPositions && !isMyWallet && <CopyTicketButton ticket={ticketData} />}
+			{hasOpenPositions && !isMyWallet && positionsWithCombinedAttrs?.length > 1 && <CopyTicketButton ticket={ticketData} />}
 		</>
 	)
 }

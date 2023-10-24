@@ -122,9 +122,9 @@ const PositionListItem = ({ position, quote, copyButtonTicket, isMyWallet }: Pro
 					</SC.ButtonWrapper>
 				) : (
 					<SC.BlackBox>
-						<SC.SmallSpan>{t('Status')}</SC.SmallSpan>
+						<SC.SmallSpan style={{ marginBottom: '12px' }}>{positionState?.date}</SC.SmallSpan>
 						<PSC.TicketStatus style={{ marginTop: '12px' }} matchStatus={positionState.status}>
-							<span>{positionState?.text}</span>
+							<span>{positionState?.text === 'Playing now' ? positionState?.text : positionState?.status}</span>
 						</PSC.TicketStatus>
 					</SC.BlackBox>
 				)}

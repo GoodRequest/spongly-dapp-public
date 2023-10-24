@@ -15,6 +15,7 @@ import {
 	MSG_TYPE,
 	Network,
 	NETWORK_IDS,
+	NOTIFICATION_TYPE,
 	OddsType,
 	OPTIMISM_DIVISOR,
 	ORDER_DIRECTION,
@@ -68,6 +69,7 @@ import { formatParlayQuote, formatPositionOdds, formatQuote, formattedCombinedTy
 import { roundToTwoDecimals } from './formatters/number'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
 import { roundPrice } from './formatters/currency'
+import { showNotifications } from './tsxHelpers'
 
 export const getCurrentBiweeklyPeriod = () => {
 	const startOfPeriod = dayjs(START_OF_BIWEEKLY_PERIOD)
@@ -317,12 +319,12 @@ export const getReward = (index: number | undefined, chainId: number | undefined
 }
 
 export const getParlayItemStatus = (position: Position, isPlayedNow: boolean, t: any) => {
-	const date = dayjs(toNumber(position.market.maturityDate) * 1000).format('| MMM DD')
+	const date = dayjs(toNumber(position.market.maturityDate) * 1000).format('MMM DD | HH:mm')
 	if (isPlayedNow) {
 		return { status: MATCH_STATUS.ONGOING, text: t('Playing now') }
 	}
-	if (position.market.isCanceled) return { status: MATCH_STATUS.CANCELED, text: t('Canceled {{ date }}', { date }) }
-	if (position.market.isPaused) return { status: MATCH_STATUS.PAUSED, text: t('Paused {{ date }}', { date }) }
+	if (position.market.isCanceled) return { status: MATCH_STATUS.CANCELED, text: t('Canceled {{ date }}', { date }), date }
+	if (position.market.isPaused) return { status: MATCH_STATUS.PAUSED, text: t('Paused {{ date }}', { date }), date }
 	if (position.market.isResolved) {
 		let result = ''
 		if (position.market?.tags && position.market?.tags && TOTAL_WINNER_TAGS.includes(position.market.tags?.[0])) {
@@ -334,10 +336,10 @@ export const getParlayItemStatus = (position: Position, isPlayedNow: boolean, t:
 		} else {
 			result = `${position.market.homeScore || '?'} : ${position.market.awayScore || '?'}`
 		}
-		if (position.claimable) return { status: MATCH_STATUS.SUCCESS, text: t('Success {{ date }} ({{ result }})', { date, result }), result }
-		return { status: MATCH_STATUS.MISS, text: t('Miss {{ date }} ({{ result }})', { date, result }), result }
+		if (position.claimable) return { status: MATCH_STATUS.SUCCESS, text: t('Success {{ date }} ({{ result }})', { date, result }), date, result }
+		return { status: MATCH_STATUS.MISS, text: t('Miss {{ date }} ({{ result }})', { date, result }), date, result }
 	}
-	return { status: MATCH_STATUS.OPEN, text: dayjs(toNumber(position.market.maturityDate) * 1000).format('MMM DD | HH:mm') }
+	return { status: MATCH_STATUS.OPEN, text: dayjs(toNumber(position.market.maturityDate) * 1000).format('MMM DD | HH:mm'), date }
 }
 
 export const getMatchStatus = (match: any, t: any) => {
@@ -1348,12 +1350,12 @@ export const getTicketHistoricQuote = (positionsWithMergedCombinedPositions: Pos
 	positionsWithMergedCombinedPositions?.forEach((item, index) => {
 		if (isParlay) {
 			if (!quote) {
-				quote = item?.isCombined ? Number(formatParlayQuote(item?.odds)) : Number(formatParlayQuote(Number(marketQuotes?.[index])))
+				quote = item?.isCombined ? Number(item?.odds) : Number(formatParlayQuote(Number(marketQuotes?.[index])))
 			} else {
-				quote *= item?.isCombined ? Number(formatParlayQuote(item?.odds)) : Number(formatParlayQuote(Number(marketQuotes?.[index])))
+				quote *= item?.isCombined ? Number(item?.odds) : Number(formatParlayQuote(Number(marketQuotes?.[index])))
 			}
 		} else {
-			quote = item?.isCombined ? Number(formatParlayQuote(item?.odds)) : Number(formatPositionOdds(item, actualOddType))
+			quote = item?.isCombined ? Number(item?.odds) : Number(formatPositionOdds(item, actualOddType))
 		}
 	})
 
@@ -1454,4 +1456,23 @@ export const getUserTicketClaimValue = (ticket: UserTicket | undefined, userTick
 	if (userTicketType === USER_TICKET_TYPE.SUCCESS) return `+ ${roundPrice(ticket?.amount, true)}`
 	if (userTicketType === USER_TICKET_TYPE.CANCELED) return ` + ${getCanceledClaimAmount(ticket)}`
 	return roundPrice(ticket?.amount, true)
+}
+
+export const handleTxHashRedirect = (t: any, txHash?: string, chainId?: number) => {
+	if (!txHash) {
+		showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to redirect') }], NOTIFICATION_TYPE.NOTIFICATION)
+	}
+
+	const link = document.createElement('a')
+	const newHref = getEtherScanTxHash(chainId || NETWORK_IDS.OPTIMISM, txHash || '')
+	if (!newHref) {
+		showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to redirect') }], NOTIFICATION_TYPE.NOTIFICATION)
+		document.body.removeChild(link)
+	} else {
+		link.href = newHref
+		link.setAttribute('target', '_blank')
+		document.body.appendChild(link)
+		link.click()
+		document.body.removeChild(link)
+	}
 }
