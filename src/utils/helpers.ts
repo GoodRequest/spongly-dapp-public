@@ -438,6 +438,29 @@ export const getMatchResult = (match: SportMarket) => {
 	if (match.finalResult === '3') return MATCH_RESULT.DRAW
 	return undefined
 }
+
+export const getMatchScore = (match: SportMarket, t: any, isTotalWinner?: boolean) => {
+	if (isTotalWinner) {
+		if (match.isCanceled || match.isPaused || match.isOpen) {
+			return ''
+		}
+		if (match.isResolved && getMatchResult(match) === MATCH_RESULT.HOME) {
+			return t('Won')
+		}
+		if (match.isResolved && getMatchResult(match) === MATCH_RESULT.AWAY) {
+			return t('Did not win')
+		}
+	} else {
+		if (match.isResolved && !match.isCanceled && !match.isPaused) {
+			return `${match.homeScore || '?'} : ${match.awayScore || '?'}`
+		}
+		if (match.isCanceled || match.isPaused) {
+			return 'VS'
+		}
+	}
+	return 'VS'
+}
+
 export const getTicketType = (market: ParlayMarket | PositionBalance): TICKET_TYPE | undefined => {
 	if (isTicketOpen(market)) return TICKET_TYPE.OPEN_TICKET
 	if (isTicketClosed(market)) return TICKET_TYPE.CLOSED_TICKET

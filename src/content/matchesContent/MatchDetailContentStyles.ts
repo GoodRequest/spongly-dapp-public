@@ -122,6 +122,7 @@ export const HeaderCol = styled(Col)<{ result?: MATCH_RESULT; team?: TEAM_TYPE }
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	padding: 16px;
 	${(p) =>
 		p.team &&
 		css`
@@ -158,11 +159,6 @@ export const HeaderCol = styled(Col)<{ result?: MATCH_RESULT; team?: TEAM_TYPE }
 			box-shadow: 0px 0px 4px 0px #6674ff, 0px 0px 16px 0px rgba(102, 116, 255, 0.85);
 			border-radius: 12px;
 		`};
-
-	@media (max-width: ${breakpoints.md}px) {
-		padding: 16px;
-		justify-content: center;
-	}
 `
 export const RowSkeleton = styled(Skeleton)`
 	margin-top: 40px;
