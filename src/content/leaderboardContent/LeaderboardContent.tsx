@@ -193,18 +193,7 @@ const LeaderboardContent = () => {
 					</Col>
 				</SCS.HorizontalSorters>
 				<SCS.SelectSorters>
-					<Select
-						title={
-							<SCS.SelectSorterTitle>
-								<img src={SortIcon} alt={'Sorter'} />
-								{t('Sort by')}
-							</SCS.SelectSorterTitle>
-						}
-						allowClear
-						options={sortOptions}
-						placeholder={t('Sort by')}
-						onChange={handleSubmitSort}
-					/>
+					<Select allowClear options={sortOptions} placeholder={t('Sort by')} onChange={handleSubmitSort} />
 				</SCS.SelectSorters>
 			</SCS.SorterRow>
 			{loading && tipstersData.length === 0 ? (

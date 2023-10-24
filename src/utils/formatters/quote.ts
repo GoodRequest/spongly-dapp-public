@@ -27,70 +27,78 @@ export const formatQuote = (oddsType: OddsType, quote: number | undefined | null
 	}
 }
 
-export const formatParlayQuote = (quote: number | undefined) => {
+export const formatParlayQuote = (quote: number | undefined, oddType?: OddsType) => {
 	if (!quote) return ''
 	// AMM odds.
 	const ammOdds = quote / OPTIMISM_DIVISOR
 
-	return formatQuote(OddsType.DECIMAL, ammOdds)
+	return formatQuote(oddType || OddsType.DECIMAL, ammOdds)
 }
 
-export const formatPositionOdds = (match: Position) => {
+export const formatPositionOdds = (match: Position, oddType: OddsType) => {
 	switch (match.side) {
 		case PositionType.Away: {
 			const ammOdds = Number(match.market.awayOdds) / OPTIMISM_DIVISOR
-			return formatQuote(OddsType.DECIMAL, Number(ammOdds))
+			return formatQuote(oddType, Number(ammOdds))
 		}
 		case PositionType.Draw: {
 			const ammOdds = Number(match.market.drawOdds) / OPTIMISM_DIVISOR
-			return formatQuote(OddsType.DECIMAL, ammOdds)
+			return formatQuote(oddType, ammOdds)
 		}
 
 		case PositionType.Home: {
 			const ammOdds = Number(match.market.homeOdds) / OPTIMISM_DIVISOR
-			return formatQuote(OddsType.DECIMAL, ammOdds)
+			return formatQuote(oddType, ammOdds)
 		}
 		default:
 			return 0
 	}
 }
 
-const formatMatchCombinedPositionsQuote = (position1: number, position2: number, SGPFee: number) => {
-	const odd = formatQuote(OddsType.DECIMAL, position1 * position2)
+const formatMatchCombinedPositionsQuote = (position1: number, position2: number, SGPFee: number, oddType: OddsType) => {
+	// TODO: combined match bet options not work for AMERICAN  / AMM quote type
+	const odd = { formattedOdd: formatQuote(oddType, position1 * position2), rawOdd: position1 * position2 }
 	if (SGPFee) {
-		return floor(Number(odd) * SGPFee, 2).toFixed(2)
+		return {
+			formattedOdd: floor(Number(odd.formattedOdd) * SGPFee, 2).toFixed(2),
+			rawOdd: Number(odd.rawOdd)
+		}
 	}
 
 	return odd
 }
 
-export const formattedCombinedTypeMatch = (match: IMatch, customBetOption?: BET_OPTIONS) => {
+export const formattedCombinedTypeMatch = (match: IMatch, oddType: OddsType, customBetOption?: BET_OPTIONS) => {
 	const betOption = customBetOption || match.betOption
-
+	// TODO: combined match bet options not work for AMERICAN  / AMM quote type
 	if (betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER) {
 		return formatMatchCombinedPositionsQuote(
 			Number(match.winnerTypeMatch?.homeOdds),
 			Number(match.totalTypeMatch?.homeOdds),
-			Number(match.combinedTypeMatch?.SGPFee)
+			Number(match.combinedTypeMatch?.SGPFee),
+			oddType
 		)
 	}
 	if (betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER) {
 		return formatMatchCombinedPositionsQuote(
 			Number(match.winnerTypeMatch?.homeOdds),
 			Number(match.totalTypeMatch?.awayOdds),
-			Number(match.combinedTypeMatch?.SGPFee)
+			Number(match.combinedTypeMatch?.SGPFee),
+			oddType
 		)
 	}
 	if (betOption === BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_AWAY_OVER) {
 		return formatMatchCombinedPositionsQuote(
 			Number(match.winnerTypeMatch?.awayOdds),
 			Number(match.totalTypeMatch?.homeOdds),
-			Number(match.combinedTypeMatch?.SGPFee)
+			Number(match.combinedTypeMatch?.SGPFee),
+			oddType
 		)
 	}
 	return formatMatchCombinedPositionsQuote(
 		Number(match.winnerTypeMatch?.awayOdds),
 		Number(match.totalTypeMatch?.awayOdds),
-		Number(match.combinedTypeMatch?.SGPFee)
+		Number(match.combinedTypeMatch?.SGPFee),
+		oddType
 	)
 }

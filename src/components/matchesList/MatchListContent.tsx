@@ -3,9 +3,10 @@ import { useNetwork } from 'wagmi'
 import { useTranslation } from 'next-export-i18n'
 
 // utils
-import { NETWORK_IDS, TOTAL_WINNER_TAGS } from '@/utils/constants'
+import { NETWORK_IDS, OddsType, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { BET_OPTIONS } from '@/utils/enums'
-import { getHandicapValue, getOddByBetType } from '@/utils/helpers'
+import { getHandicapValue, getOddByBetType, isWindowReady } from '@/utils/helpers'
+import { formatQuote } from '@/utils/formatters/quote'
 import { roundToTwoDecimals } from '@/utils/formatters/number'
 
 // redux
@@ -29,6 +30,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleParlayValida
 	const { winnerTypeMatch, doubleChanceTypeMatches, spreadTypeMatch, totalTypeMatch, combinedTypeMatch } = match
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(winnerTypeMatch?.tags[0] as any)
 	const isPlayingNow = !match.isResolved && !match.homeOdds && !match.awayOdds
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) || OddsType.DECIMAL : OddsType.DECIMAL
 
 	return (
 		<SC.PanelContent>
@@ -71,10 +73,11 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleParlayValida
 				{doubleChanceTypeMatches && doubleChanceTypeMatches.length > 0 && !(chain?.id === NETWORK_IDS.OPTIMISM_GOERLI) && (
 					<SC.MobileWrapper>
 						<SC.RadioMobileHeader>{t('Double chance')}</SC.RadioMobileHeader>
-						{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd === '0' &&
-							getOddByBetType(match as any, false, BET_OPTIONS.WINNER_HOME).formattedOdd !== '0' && (
+						{formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, false, actualOddType, BET_OPTIONS.DOUBLE_CHANCE_HOME).rawOdd) === '0' &&
+							formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, false, actualOddType, BET_OPTIONS.WINNER_HOME).rawOdd) !== '0' && (
 								<SC.WarningText>{t('Coming soon')}</SC.WarningText>
 							)}
+
 						{isPlayingNow ? (
 							<SC.NotAvailableText>{t('Currently not available')}</SC.NotAvailableText>
 						) : (
@@ -256,10 +259,12 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleParlayValida
 					<SC.ExtendedMatchContentItemCol>
 						<SC.ExtendedMatchContentItemHeader>{t('Double chance')}</SC.ExtendedMatchContentItemHeader>
 						<SC.ExtendedRowItemContent>
-							{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd === '0' &&
-								getOddByBetType(match as any, false, BET_OPTIONS.WINNER_HOME).formattedOdd !== '0' && (
+							{formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, false, actualOddType, BET_OPTIONS.DOUBLE_CHANCE_HOME).rawOdd) ===
+								'0' &&
+								formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, false, actualOddType, BET_OPTIONS.WINNER_HOME).rawOdd) !== '0' && (
 									<SC.WarningText>{t('Coming soon')}</SC.WarningText>
 								)}
+
 							{isPlayingNow ? (
 								<SC.NotAvailableText>{t('Currently not available')}</SC.NotAvailableText>
 							) : (

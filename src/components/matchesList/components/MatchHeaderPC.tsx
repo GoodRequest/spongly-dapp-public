@@ -3,15 +3,18 @@ import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'next-export-i18n'
 import { useNetwork } from 'wagmi'
 import { useRouter } from 'next/router'
+
 import * as SC from '../MatchesListStyles'
 import { BET_OPTIONS, MATCHES, PAGES } from '@/utils/enums'
 import OddButton from '@/components/oddButton/OddButton'
 import OddValue from '@/components/oddButton/OddValue'
 import { BetType } from '@/utils/tags'
-import { getOddByBetType } from '@/utils/helpers'
+import { getOddByBetType, isWindowReady } from '@/utils/helpers'
 import * as SCS from '@/styles/GlobalStyles'
 import { roundToTwoDecimals } from '@/utils/formatters/number'
-import { NETWORK_IDS, TOTAL_WINNER_TAGS } from '@/utils/constants'
+import { NETWORK_IDS, OddsType, TOTAL_WINNER_TAGS } from '@/utils/constants'
+import { formatQuote } from '@/utils/formatters/quote'
+
 // icons
 import PauseIcon from '@/assets/icons/pause.svg'
 import ClockIcon from '@/assets/icons/clock.svg'
@@ -42,6 +45,7 @@ const MatchHeaderPC = ({
 	const { winnerTypeMatch, doubleChanceTypeMatches, spreadTypeMatch, totalTypeMatch } = match
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(winnerTypeMatch?.tags[0] as any)
 	const isOnlyWinner = winnerTypeMatch && doubleChanceTypeMatches?.length === 0 && !spreadTypeMatch && !totalTypeMatch
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) || OddsType.DECIMAL : OddsType.DECIMAL
 	const router = useRouter()
 	const getSpanNumber = (betType: BetType) => {
 		if (isOnlyWinner) return 15
@@ -57,7 +61,7 @@ const MatchHeaderPC = ({
 		<SC.PCContentWrapper>
 			{type === MATCHES.OPEN && (
 				<SC.MatchItemRow type={type} key={`${match.maturityDate}-${MATCHES.OPEN}`}>
-					<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCHES}/?id=${match.gameId}`)} $alignItems={'flex-start'} span={8}>
+					<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCH_DETAIL}/?id=${match.gameId}`)} $alignItems={'flex-start'} span={8}>
 						{getContestedTeams}
 					</SC.MatchItemCol>
 					{includes(getBaseBetTypes(), BetType.WINNER) && (
@@ -99,10 +103,11 @@ const MatchHeaderPC = ({
 						!(chain?.id === NETWORK_IDS.OPTIMISM_GOERLI) && (
 							<SC.MatchItemCol span={getSpanNumber(BetType.DOUBLE_CHANCE)}>
 								<SC.Header>{t('Double chance')}</SC.Header>
-								{getOddByBetType(match as any, false, BET_OPTIONS.DOUBLE_CHANCE_HOME).formattedOdd === '0' &&
-									getOddByBetType(match as any, false, BET_OPTIONS.WINNER_HOME).formattedOdd !== '0' && (
-										<SC.WarningText>{t('Coming soon')}</SC.WarningText>
-									)}
+								{formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, false, actualOddType, BET_OPTIONS.DOUBLE_CHANCE_HOME).rawOdd) ===
+									'0' &&
+									formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, false, actualOddType, BET_OPTIONS.WINNER_AWAY).rawOdd) !==
+										'0' && <SC.WarningText>{t('Coming soon')}</SC.WarningText>}
+
 								<SC.RowItemContent>
 									<SC.RadioGroup>
 										<OddButton
@@ -186,7 +191,7 @@ const MatchHeaderPC = ({
 			)}
 			{type === MATCHES.ONGOING && (
 				<SC.MatchItemRow gutter={16} type={MATCHES.ONGOING} key={`${match.maturityDate}-${MATCHES.ONGOING}`}>
-					<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCHES}/?id=${match.gameId}`)} $alignItems={'flex-start'} span={18}>
+					<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCH_DETAIL}/?id=${match.gameId}`)} $alignItems={'flex-start'} span={18}>
 						{getContestedTeams}
 					</SC.MatchItemCol>
 					<SC.MatchItemCol span={6}>
@@ -200,7 +205,7 @@ const MatchHeaderPC = ({
 			)}
 			{type === MATCHES.FINISHED && (
 				<SC.MatchItemRow gutter={16} type={MATCHES.FINISHED} key={`${match.maturityDate}-${MATCHES.FINISHED}`}>
-					<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCHES}/?id=${match.gameId}`)} $alignItems={'flex-start'} span={18}>
+					<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCH_DETAIL}/?id=${match.gameId}`)} $alignItems={'flex-start'} span={18}>
 						{getContestedTeams}
 					</SC.MatchItemCol>
 					<SC.MatchItemCol span={6}>
@@ -211,7 +216,7 @@ const MatchHeaderPC = ({
 			)}
 			{type === MATCHES.PAUSED && (
 				<SC.MatchItemRow gutter={16} type={MATCHES.PAUSED} key={`${match.maturityDate}-${MATCHES.PAUSED}`}>
-					<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCHES}/?id=${match.gameId}`)} $alignItems={'flex-start'} span={18}>
+					<SC.MatchItemCol onClick={() => router.push(`/${PAGES.MATCH_DETAIL}/?id=${match.gameId}`)} $alignItems={'flex-start'} span={18}>
 						{getContestedTeams}
 					</SC.MatchItemCol>
 					<SC.MatchItemCol span={6}>

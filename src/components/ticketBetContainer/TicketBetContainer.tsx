@@ -46,6 +46,7 @@ import {
 	getStablecoinDecimals,
 	isBellowOrEqualResolution,
 	isCombined,
+	isWindowReady,
 	updateUnsubmittedTicketMatches
 } from '@/utils/helpers'
 import { getSportsAMMQuoteMethod } from '@/utils/amm'
@@ -91,6 +92,7 @@ const TicketBetContainer = () => {
 	const size = useMedia()
 	const [deleteModal, setDeleteModal] = useState({ visible: false, id: 0 })
 	const isProcessing = useSelector((state: RootState) => state.betTickets.isProcessing)
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) || OddsType.DECIMAL : OddsType.DECIMAL
 
 	const [availablePerPosition, setAvailablePerPosition] = useState<any>({
 		[PositionNumber.HOME]: {
@@ -330,14 +332,15 @@ const TicketBetContainer = () => {
 
 				const calculatedBonusPercentageDec =
 					(activeTicketValues?.matches || []).reduce((accumulator, currentItem) => {
-						const bonusDecimal = getOddByBetType(currentItem as any, false).rawBonus / 100 + 1
+						const bonusDecimal = getOddByBetType(currentItem as any, false, actualOddType).rawBonus / 100 + 1
 						return accumulator * bonusDecimal
 					}, 1) - 1
 
 				const totalBonus = calculatedBonusPercentageDec ? round(calculatedBonusPercentageDec * 100, 2).toFixed(2) : null
 				return {
 					...activeTicketValues,
-					totalQuote: formatQuote(OddsType.DECIMAL, totalQuote),
+					totalQuote: formatQuote(actualOddType, totalQuote),
+					rawQuote: totalQuote,
 					totalBonus,
 					payout,
 					skew,
@@ -370,7 +373,7 @@ const TicketBetContainer = () => {
 				const amountOfTokens =
 					fetchAmountOfTokensForXsUSDAmount(
 						Number(activeTicketValues?.buyIn),
-						getOddByBetType(activeTicketValues?.matches?.[0] as any, activeTicketValues.copied || false).rawOdd as any,
+						getOddByBetType(activeTicketValues?.matches?.[0] as any, activeTicketValues.copied || false, actualOddType).rawOdd as any,
 						singlesAmmMaximumUSDAmountQuote / divider,
 						availablePerPosition[getBetOptionFromMatchBetOption(activeTicketValues?.matches?.[0].betOption as any)].available || 0,
 						bigNumberFormatter(ammBalanceForSelectedPosition)
@@ -384,8 +387,8 @@ const TicketBetContainer = () => {
 				const potentionalProfit = Number(maxAvailableTokenAmount) - Number(activeTicketValues.buyIn)
 				const skew = 0
 				// TODO: calculate number from bonus?
-				const totalBonus = getOddByBetType(activeTicketValues?.matches?.[0] as any, false).rawBonus
-					? round(Number(getOddByBetType(activeTicketValues?.matches?.[0] as any, false).rawBonus), 2).toFixed(2)
+				const totalBonus = getOddByBetType(activeTicketValues?.matches?.[0] as any, false, actualOddType).rawBonus
+					? round(Number(getOddByBetType(activeTicketValues?.matches?.[0] as any, false, actualOddType).rawBonus), 2).toFixed(2)
 					: null
 				const getOdds = () => {
 					const selectedMatch = getMatchByBetOption(
@@ -395,15 +398,15 @@ const TicketBetContainer = () => {
 
 					if (selectedMatch) {
 						if (selectedMatch?.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW) {
-							return formatQuote(OddsType.DECIMAL, selectedMatch.homeOdds)
+							return formatQuote(actualOddType, selectedMatch.homeOdds)
 						}
 						return formatQuote(
-							OddsType.DECIMAL,
+							actualOddType,
 							selectedMatch?.[getOddsPropertyFromBetOption(activeTicketValues?.matches?.[0]?.betOption as BET_OPTIONS.WINNER_HOME)]
 						)
 					}
 					return formatQuote(
-						OddsType.DECIMAL,
+						actualOddType,
 						Number(activeTicketValues?.matches?.[0]?.[getOddsPropertyFromBetOption(activeTicketValues?.matches?.[0]?.betOption)])
 					)
 				}
@@ -414,6 +417,7 @@ const TicketBetContainer = () => {
 					...activeTicketValues,
 					totalQuote,
 					totalBonus,
+					rawQuote: Number(activeTicketValues?.matches?.[0]?.[getOddsPropertyFromBetOption(activeTicketValues?.matches?.[0]?.betOption)]),
 					payout,
 					skew,
 					potentionalProfit: potentionalProfit > 0 ? round(potentionalProfit, 2).toFixed(2) : 0

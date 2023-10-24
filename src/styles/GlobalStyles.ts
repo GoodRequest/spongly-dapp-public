@@ -2,6 +2,7 @@ import styled, { createGlobalStyle, css } from 'styled-components'
 import { Row, Typography, Empty as AntdEmpty } from 'antd'
 import { HeadingXSMedium, TextMDMedium, TextMDRegular, TextSMMedium, TextSorter } from '@/styles/typography'
 import worldFlag from '@/assets/icons/world-flag.png'
+import CheckIcon from '@/assets/icons/checked-select-icon.svg'
 import { decodeSorter } from '@/utils/helpers'
 import { TextLGMedium } from './typography'
 import { breakpoints } from '@/styles/theme'
@@ -25,6 +26,38 @@ export const GlobalStyle = createGlobalStyle`
     	-moz-appearance:textfield; /* Firefox */
 	}
 
+	.ant-select-dropdown {
+		padding: 16px;
+		background-color: ${({ theme }) => theme['color-base-surface-quaternary']}; !important;
+		.ant-select-item-option {
+			margin-bottom: 4px;
+			padding: 12px;
+			${TextMDRegular};
+			:hover {
+				background-color: ${({ theme }) => theme['color-base-surface-secondary']} !important;
+			}
+		}
+		// With checkbox icon
+		&.checkbox-dropdown {
+			.ant-select-item-option-selected {
+				&::before {
+					content: "";
+					display: inline-block;
+					width: 24px;
+					height: 24px;
+						background: url(${CheckIcon});
+					background-size: cover;
+					margin-right: 8px;
+				}
+			}
+		}
+		.ant-select-item-option-selected {
+			background-color: ${({ theme }) => theme['color-base-surface-secondary']} !important;
+			box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+			color: ${({ theme }) => theme['color-base-content-top']} !important;
+		}
+	}
+
 	#nprogress {
 		.bar {
 			background: #FFFF33 !important
@@ -46,47 +79,70 @@ export const GlobalStyle = createGlobalStyle`
 	}
 	// Antd Notifications
 	.ant-notification {
-		.ant-notification-notice {
-			height: 80px;
-			border-radius: 12px;
-			background: ${({ theme }) => theme['color-base-surface-tertiary']};
-			.ant-notification-notice-description {
-				color: white
+		.ant-notification-notice-wrapper {
+			border-radius: 14px;
+			.ant-notification-notice {
+				height: 80px;
+				border-radius: 12px;
+				padding: 16px;
+				background: ${({ theme }) => theme['color-base-surface-tertiary']};
+				.ant-notification-notice-description {
+					color: ${({ theme }) => theme['color-base-content-top']};
+					margin-inline-start: 46px
+				}
 			}
-		}
-		.ant-notification-notice::after {
-			content: "";
-			position: absolute;
-			bottom: 0;
-			left: 50%;
-			width: 90%;
-			height: 4px;
-			margin-left: -45%;
-			margin-right: -45%;
-		}
-		.ant-notification-notice-error {
-			box-shadow: 0px 15px 30px -6px rgba(225, 29, 72, 0.04), 0px 25px 50px -12px rgba(225, 29, 72, 0.25);
-		}
-		.ant-notification-notice-error::after {
-			background-color: ${({ theme }) => theme['color-base-action-destructive-default']};
-		}
-		.ant-notification-notice-warning {
-			box-shadow: 0px 15px 30px -6px rgba(255, 136, 51, 0.04), 0px 25px 50px -12px rgba(255, 136, 51, 0.25);
-		}
-		.ant-notification-notice-warning::after {
-			background-color: ${({ theme }) => theme['color-base-state-warning-fg']};
-		}
-		.ant-notification-notice-info {
-			box-shadow: 0px 15px 30px -6px rgba(102, 116, 255, 0.04), 0px 25px 50px -12px rgba(102, 116, 255, 0.25);
-		}
-		.ant-notification-notice-info::after {
-			background-color: ${({ theme }) => theme['color-base-action-primary-default']};
-		}
-		.ant-notification-notice-success {
-			box-shadow: 0px 15px 30px -6px rgba(168, 229, 138, 0.04), 0px 25px 50px -12px rgba(168, 229, 138, 0.25);
-		}
-		.ant-notification-notice-success::after {
-			background-color: ${({ theme }) => theme['color-base-state-success-fg']};
+			.ant-notification-notice::after {
+				content: "";
+				position: absolute;
+				border-radius: 4px;
+				bottom: 0;
+				left: 50%;
+				width: 90%;
+				height: 4px;
+				margin-left: -45%;
+				margin-right: -45%;
+			}
+			.ant-notification-notice-icon {
+				padding: 8px;
+				border-radius: 8px;
+				top: 20px;
+			}
+			.ant-notification-notice-error {
+				box-shadow: 0px 15px 30px -6px rgba(225, 29, 72, 0.04), 0px 25px 50px -12px rgba(225, 29, 72, 0.25);
+				.ant-notification-notice-icon {
+					background: ${({ theme }) => theme['color-base-action-destructive-bg10']};
+				}
+			}
+			.ant-notification-notice-error::after {
+				background-color: ${({ theme }) => theme['color-base-action-destructive-default']};
+			}
+			.ant-notification-notice-warning {
+				box-shadow: 0px 15px 30px -6px rgba(255, 136, 51, 0.04), 0px 25px 50px -12px rgba(255, 136, 51, 0.25);
+				.ant-notification-notice-icon {
+					background: ${({ theme }) => theme['color-base-state-warning-bg']};
+				}
+			}
+			.ant-notification-notice-warning::after {
+				background-color: ${({ theme }) => theme['color-base-state-warning-fg']};
+			}
+			.ant-notification-notice-info {
+				box-shadow: 0px 15px 30px -6px rgba(102, 116, 255, 0.04), 0px 25px 50px -12px rgba(102, 116, 255, 0.25);
+				.ant-notification-notice-icon {
+					background: ${({ theme }) => theme['color-base-action-primary-bg10']};
+				}
+			}
+			.ant-notification-notice-info::after {
+				background-color: ${({ theme }) => theme['color-base-action-primary-default']};
+			}
+			.ant-notification-notice-success {
+				box-shadow: 0px 15px 30px -6px rgba(168, 229, 138, 0.04), 0px 25px 50px -12px rgba(168, 229, 138, 0.25);
+				.ant-notification-notice-icon {
+					background: ${({ theme }) => theme['color-base-state-success-bg']};
+				}
+			}
+			.ant-notification-notice-success::after {
+				background-color: ${({ theme }) => theme['color-base-state-success-fg']};
+			}
 		}
 
 	}
@@ -182,17 +238,8 @@ export const HorizontalSorters = styled(Row)<{ $horizontalSpacing?: number }>`
 export const SelectSorters = styled.div`
 	display: none;
 	@media (max-width: ${breakpoints.md}px) {
-		width: 100%;
+		width: 100% !important;
 		display: flex;
-	}
-`
-export const SelectSorterTitle = styled.div`
-	display: flex;
-	align-items: center;
-	img {
-		margin-right: 8px;
-		width: 16px;
-		height: 16px;
 	}
 `
 
