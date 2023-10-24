@@ -72,7 +72,7 @@ const MobileHeader: FC<IMobileHeader> = ({ tickets = [], addTicket, setActiveTic
 			</SC.ShiftedCol>
 			<SC.ShiftedCol xs={4} sm={6} md={6}>
 				<SC.HeaderLabel>{t('Quote')}</SC.HeaderLabel>
-				<SC.HeaderValue>{activeTicket?.totalQuote || '0'}</SC.HeaderValue>
+				<SC.HeaderValue>{activeTicket?.matches?.length === 0 ? 0 : activeTicket?.totalQuote || '0'}</SC.HeaderValue>
 			</SC.ShiftedCol>
 			<SC.DropButtonColWrapper xs={3} sm={2} md={2}>
 				<SC.DropButton rolledUp={rolledUp} onClick={() => setRolledUp((current) => !current)}>
