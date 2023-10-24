@@ -12,6 +12,27 @@ export const PositionsListWrapper = styled.div`
 	}
 `
 
+export const BlackBox = styled.div<{ withMobilePadding: boolean }>`
+	border-radius: 12px;
+	width: 100%;
+	height: 100%;
+	background: ${({ theme }) => theme['color-base-surface-primary']};
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding-left: 16px;
+	padding-right: 16px;
+
+	@media (max-width: ${breakpoints.md}px) {
+		padding-bottom: ${({ withMobilePadding }) => (withMobilePadding ? '16px' : 'unset')};
+	}
+
+	@media (min-width: ${breakpoints.md}px) {
+		margin-left: ${({ withMobilePadding }) => (withMobilePadding ? '16px' : 'unset')};
+	}
+`
+
 export const PositionListItem = styled(Row)`
 	width: 100%;
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
@@ -88,20 +109,6 @@ export const VSSpan = styled.span<{ status: MATCH_STATUS }>`
 	}
 `
 
-export const BlackBox = styled.div`
-	margin: 16px;
-	border-radius: 12px;
-	width: 100%;
-	height: 100%;
-	background: ${({ theme }) => theme['color-base-surface-primary']};
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	padding-left: 16px;
-	padding-right: 16px;
-`
-
 export const OddsWrapper = styled.div`
 	width: 100%;
 	display: flex;
@@ -116,12 +123,12 @@ export const ButtonWrapper = styled.div`
 	align-items: center;
 	width: 100%;
 	padding-left: 32px;
-	padding-right: 32px;
+	padding-right: 16px;
 	${TextMDMedium};
 
-	@media (min-width: ${breakpoints.semixxl}px) {
+	@media (max-width: ${breakpoints.md}px) {
+		padding-bottom: 16px;
 		padding-left: 16px;
-		padding-right: 16px;
 	}
 `
 

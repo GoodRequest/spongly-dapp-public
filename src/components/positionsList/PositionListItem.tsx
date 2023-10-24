@@ -101,7 +101,7 @@ const PositionListItem = ({ position, quote, copyButtonTicket, isMyWallet }: Pro
 				</Row>
 			</SC.ColCenteredVertically>
 			<SC.ColCenteredVertically lg={{ span: 6 }} md={{ span: 12 }} sm={{ span: 24 }} xs={{ span: 24 }}>
-				<SC.BlackBox>
+				<SC.BlackBox withMobilePadding={false}>
 					<SC.OddsWrapper>
 						<SC.BetOption>{betOption}</SC.BetOption>
 						<SC.MediumSpanGrey>{quote}</SC.MediumSpanGrey>
@@ -115,9 +115,9 @@ const PositionListItem = ({ position, quote, copyButtonTicket, isMyWallet }: Pro
 						<CopyTicketButton ticket={copyButtonTicket} isPosition={true} />
 					</SC.ButtonWrapper>
 				) : (
-					<SC.BlackBox>
+					<SC.BlackBox withMobilePadding={true}>
 						<SC.SmallSpan style={{ marginBottom: '12px' }}>{positionState?.date}</SC.SmallSpan>
-						<PSC.TicketStatus style={{ marginTop: '12px' }} matchStatus={positionState.status}>
+						<PSC.TicketStatus matchStatus={positionState.status}>
 							<span>{positionState?.text === 'Playing now' ? positionState?.text : positionState?.status}</span>
 						</PSC.TicketStatus>
 					</SC.BlackBox>
