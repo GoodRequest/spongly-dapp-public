@@ -2,6 +2,8 @@ import styled from 'styled-components'
 import { TextLGBold, TextSMMedium } from '@/styles/typography'
 
 export const SBoxWrapper = styled.div`
+	position: relative;
+	overflow: hidden;
 	display: flex;
 	padding-left: 20px;
 	padding-right: 20px;
@@ -23,10 +25,6 @@ export const SBoxTitle = styled.div`
 export const SBoxValue = styled.div`
 	${TextLGBold};
 `
-export const SBoxIcon = styled.img`
-	height: 90px;
-`
-
 export const SBoxExtraContent = styled.div`
 	pointer-events: none;
 	button {
