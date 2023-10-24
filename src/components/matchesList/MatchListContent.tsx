@@ -30,7 +30,7 @@ const MatchListContent: FC<IMatchListContent> = ({ match, setVisibleParlayValida
 	const { winnerTypeMatch, doubleChanceTypeMatches, spreadTypeMatch, totalTypeMatch, combinedTypeMatch } = match
 	const isTotalWinner = TOTAL_WINNER_TAGS.includes(winnerTypeMatch?.tags[0] as any)
 	const isPlayingNow = !match.isResolved && !match.homeOdds && !match.awayOdds
-	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) || OddsType.DECIMAL : OddsType.DECIMAL
 
 	return (
 		<SC.PanelContent>

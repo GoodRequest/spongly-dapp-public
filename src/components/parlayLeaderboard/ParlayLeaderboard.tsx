@@ -20,7 +20,7 @@ import { PAGES } from '@/utils/enums'
 const ParlayLeaderboard = () => {
 	const { t } = useTranslation()
 	const router = useRouter()
-	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) || OddsType.DECIMAL : OddsType.DECIMAL
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const [parlayLeaderboardData, setParlayLeaderboardData] = useState<ParlayLeaderboardItem[] | undefined>(undefined)
 
