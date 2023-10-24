@@ -65,7 +65,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 	const { address } = useAccount()
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
-	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) || OddsType.DECIMAL : OddsType.DECIMAL
 
 	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
 	const multipleCollateralBalance = useMultipleCollateralBalanceQuery(address || '', chain?.id || NETWORK_IDS.OPTIMISM)?.data

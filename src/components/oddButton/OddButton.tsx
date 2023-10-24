@@ -35,7 +35,7 @@ const OddButton = (props: Props) => {
 	const isSubmitting = useSelector((state: RootState) => state.betTickets.isSubmitting)
 	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
 	const isMatchInActiveTicket = activeTicketValues?.matches?.find((m) => m.gameId === match.gameId)
-	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) || OddsType.DECIMAL : OddsType.DECIMAL
 
 	// TODO: refactore TicketPosition type and use Imatch type and remove as any
 	return formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, !!activeTicketValues.copied, actualOddType, betOption).rawOdd) > MIN_ODD_TRESHOLD ? (

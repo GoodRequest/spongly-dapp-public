@@ -58,7 +58,7 @@ const MobileMenu = ({ selected }: Props) => {
 			</SC.MenuWrapper>
 			<SC.OverlayDiv isOpen={isOpen}>
 				<SC.Wrapper isOpen={isOpen}>
-					<div>
+					<SC.MenuItems>
 						<SC.Menu mode={'vertical'} onClick={(e) => handleSelect(e)} selectedKeys={[selected]}>
 							<SC.MenuItem key={PAGES.DASHBOARD}>{t('Dashboard')}</SC.MenuItem>
 							<SC.MenuItem key={PAGES.TICKETS}>{t('Tickets')}</SC.MenuItem>
@@ -76,7 +76,7 @@ const MobileMenu = ({ selected }: Props) => {
 								<img src={DiscordIcon} alt='discord' />
 							</SC.SocialMediaButton>
 						</SC.ButtonWrapper>
-					</div>
+					</SC.MenuItems>
 					<div>
 						<Row gutter={[16, 16]}>
 							<Col span={12}>

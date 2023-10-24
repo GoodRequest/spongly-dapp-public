@@ -33,7 +33,7 @@ const useFetchTickets = () => {
 	const [fetchTicketsData0] = useLazyQuery(GET_TICKETS)
 	const [fetchTicketsData1] = useLazyQuery(GET_TICKETS)
 	const [fetchTicketsData2] = useLazyQuery(GET_TICKETS)
-	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) || OddsType.DECIMAL : OddsType.DECIMAL
 	const fetchSuccessRateData = async (): Promise<ISuccessRateData> => {
 		try {
 			const response = await fetch(ENDPOINTS.GET_SUCCESS_RATE())
