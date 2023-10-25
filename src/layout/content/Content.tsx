@@ -1,5 +1,5 @@
 import React, { FC, ReactNode } from 'react'
-import { Col, Row } from 'antd'
+import { Row } from 'antd'
 import { useRouter } from 'next-translate-routes'
 import { includes } from 'lodash'
 import { useNetwork } from 'wagmi'
@@ -24,22 +24,24 @@ const Content: FC<ILayout> = ({ children }) => {
 
 	return (
 		<SC.MainContainer>
+			{/* // Dashboard's stats */}
 			{chain?.id && isMounted && <Stats />}
-			<Row gutter={[30, 30]} style={{ display: 'flex', justifyContent: 'space-between' }}>
-				{includes(fullWidthPages, router.pathname) && !id ? (
-					<Col style={{ width: '100%' }} lg={24} xl={24}>
-						{children}
-					</Col>
-				) : (
-					<>
-						<SC.MainContentContainer>{children}</SC.MainContentContainer>
-						<SC.MobileHiddenCol span={8}>
-							{router.pathname === `/${PAGES.DASHBOARD}` && <ParlayLeaderboard />}
-							<TicketBetContainer />
-						</SC.MobileHiddenCol>
-					</>
-				)}
-			</Row>
+			{/* // Full width pages (lists) */}
+			{includes(fullWidthPages, router.pathname) && !id ? (
+				<SC.FullWidthContentCol lg={24} xl={24}>
+					{children}
+				</SC.FullWidthContentCol>
+			) : (
+				// Pages with BetContainer
+				<Row gutter={[30, 30]} style={{ display: 'flex', justifyContent: 'space-between' }}>
+					<SC.MainContentContainer>{children}</SC.MainContentContainer>
+					{/* // Dashboard's Parlay Leaderboard */}
+					<SC.MobileHiddenCol span={8}>
+						{router.pathname === `/${PAGES.DASHBOARD}` && <ParlayLeaderboard />}
+						<TicketBetContainer />
+					</SC.MobileHiddenCol>
+				</Row>
+			)}
 		</SC.MainContainer>
 	)
 }

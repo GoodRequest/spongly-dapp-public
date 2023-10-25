@@ -261,7 +261,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 			activeKey={isExpanded ? [ticket.id] : []}
 			isExpanded={isExpanded}
 		>
-			<SC.CollapsePanel header={ticketHeader} key={ticket.id}>
+			<SC.CollapsePanel isExpanded={isExpanded} header={ticketHeader} key={ticket.id}>
 				<Row gutter={[16, 16]}>
 					{map(positionsWithMergedCombinedPositions, (item, index) => (
 						<Col key={item?.id} span={24} lg={12}>

@@ -54,11 +54,12 @@ export const UserCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 	border: ${({ theme, isExpanded }) => (isExpanded ? `2px solid ${theme['color-base-surface-quintarny']}` : '2px solid transparent')};
 `
 
-export const CollapsePanel = styled(Panel)`
+export const CollapsePanel = styled(Panel)<{ isExpanded: boolean }>`
 	.ant-collapse-content {
 		background: ${({ theme }) => theme['color-base-surface-secondary']};
 		border-top: none;
 	}
+
 	.ant-collapse-content-box {
 		background: ${({ theme }) => theme['color-base-surface-secondary']};
 		border-radius: 12px;
@@ -66,6 +67,10 @@ export const CollapsePanel = styled(Panel)`
 
 	.ant-collapse-header {
 		display: block !important;
+		border-bottom: 1px solid ${({ theme, isExpanded }) => (isExpanded ? theme['color-base-surface-quaternary'] : 'none')} !important;
+		@media (max-width: ${breakpoints.md}px) {
+			border-bottom: none !important;
+		}
 	}
 `
 export const ButtonIcon = styled.img`
