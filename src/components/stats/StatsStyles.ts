@@ -1,9 +1,11 @@
-import styled from 'styled-components'
+import styled, { DefaultTheme } from 'styled-components'
 import { Row, Skeleton } from 'antd'
 import { breakpoints } from '@/styles/theme'
+import theme from '@/styles/lightTokens'
 
-export const StatsWrapper = styled.div`
+export const StatsWrapper = styled.div<{ hide?: boolean }>`
 	width: 100%;
+	display: ${({ hide }) => (hide ? 'none' : 'block')};
 	overflow: hidden;
 	margin-bottom: 40px;
 	@media (max-width: ${breakpoints.md}px) {
@@ -52,4 +54,13 @@ export const RowSkeleton = styled(Skeleton)`
 				background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(0, 0, 0, 0.2) 37%, rgba(255, 255, 255, 0.05) 63%) !important;
 			}
 		}
+`
+export const Glow = styled.div<{ $color: string }>`
+	position: absolute;
+	width: 112px;
+	height: 110px;
+	right: 0;
+	top: -55px;
+	background-color: ${({ $color }) => $color};
+	filter: blur(40px);
 `

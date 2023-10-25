@@ -8,7 +8,6 @@ import { LoadingOutlined } from '@ant-design/icons'
 // components, assets, atoms
 import Sorter from '@/components/Sorter'
 import Select from '@/atoms/select/Select'
-import SortIcon from '@/assets/icons/sort-icon.svg'
 import ArrowIcon from '@/assets/icons/arrow-down.svg'
 import MyWalletContent from '@/content/walletContent/WalletContent'
 

@@ -47,7 +47,10 @@ const OddButton = (props: Props) => {
 				disabled ||
 				isSubmitting ||
 				match.status === MATCH_STATUS.PAUSED ||
+				match.isPaused ||
+				!match.isOpen ||
 				match.status === MATCH_STATUS.CANCELED ||
+				match.isCanceled ||
 				match.status === MATCH_STATUS.ONGOING ||
 				match.status === MATCH_STATUS.SUCCESS
 			}

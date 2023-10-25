@@ -91,13 +91,15 @@ const Header = () => {
 							{menuItems}
 						</SC.Menu>
 					</Col>
-					<Col flex={'240px'}>
-						<ConnectButton />
-					</Col>
-					<Col flex={'52px'}>
-						<SC.SettingButton onClick={() => setVisibleSettingModal(true)}>
-							<img src={SettingsIcon} alt='settings' />
-						</SC.SettingButton>
+					<Col flex={'292px'}>
+						<SC.WalletDiv>
+							<div style={{ width: '240px' }}>
+								<ConnectButton />
+							</div>
+							<SC.SettingButton onClick={() => setVisibleSettingModal(true)}>
+								<img src={SettingsIcon} alt='settings' />
+							</SC.SettingButton>
+						</SC.WalletDiv>
 					</Col>
 				</SC.HeadRow>
 			</SC.XXLWrapper>
