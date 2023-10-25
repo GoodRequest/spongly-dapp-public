@@ -95,69 +95,67 @@ const MatchDetail = () => {
 	}, [router.isReady])
 
 	return (
-		<Row gutter={30}>
-			<SC.MatchDetailWrapper>
-				{!matchDetailData && loading ? (
-					<SC.RowSkeleton active loading paragraph={{ rows: 10 }} />
-				) : matchDetailData ? (
-					<>
-						<SC.MatchDetailHeader>
-							<Row justify={'center'}>
-								<SC.HeaderCol result={getMatchResult(matchDetailData)} team={TEAM_TYPE.HOME_TEAM} span={isTotalWinner ? 12 : 8}>
+		<SC.MatchDetailWrapper>
+			{!matchDetailData && loading ? (
+				<SC.RowSkeleton active loading paragraph={{ rows: 10 }} />
+			) : matchDetailData ? (
+				<>
+					<SC.MatchDetailHeader>
+						<Row justify={'center'}>
+							<SC.HeaderCol result={getMatchResult(matchDetailData)} team={TEAM_TYPE.HOME_TEAM} span={isTotalWinner ? 12 : 8}>
+								<SC.MatchIcon>
+									<img
+										src={getTeamImageSource(matchDetailData?.homeTeam || '', toNumber(matchDetailData?.tags?.[0]))}
+										onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
+											e.target.src = NO_TEAM_IMAGE_FALLBACK
+										}}
+									/>
+								</SC.MatchIcon>
+								<SC.HeaderTeam>{matchDetailData?.homeTeam}</SC.HeaderTeam>
+							</SC.HeaderCol>
+							<SC.HeaderCol span={isTotalWinner ? 12 : 8}>
+								<SCS.LeagueIcon className={matchDetailData.league.logoClass} />
+								<SC.HeaderResultText>{getMatchDetailScoreText(matchDetailData, t, isTotalWinner)}</SC.HeaderResultText>
+								{isAboveOrEqualResolution(size, RESOLUTIONS.LG) && (
+									<SC.HeaderStatus matchStatus={getMatchStatus(matchDetailData, t).status}>
+										<span>{getMatchStatus(matchDetailData, t).text}</span>
+									</SC.HeaderStatus>
+								)}
+							</SC.HeaderCol>
+							{!isTotalWinner && (
+								<SC.HeaderCol result={getMatchResult(matchDetailData)} team={TEAM_TYPE.AWAY_TEAM} span={8}>
 									<SC.MatchIcon>
 										<img
-											src={getTeamImageSource(matchDetailData?.homeTeam || '', toNumber(matchDetailData?.tags?.[0]))}
+											src={getTeamImageSource(matchDetailData?.awayTeam || '', toNumber(matchDetailData?.tags?.[0]))}
 											onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
 												e.target.src = NO_TEAM_IMAGE_FALLBACK
 											}}
 										/>
 									</SC.MatchIcon>
-									<SC.HeaderTeam>{matchDetailData?.homeTeam}</SC.HeaderTeam>
+									<SC.HeaderTeam>{matchDetailData?.awayTeam}</SC.HeaderTeam>
 								</SC.HeaderCol>
-								<SC.HeaderCol span={isTotalWinner ? 12 : 8}>
-									<SCS.LeagueIcon className={matchDetailData.league.logoClass} />
-									<SC.HeaderResultText>{getMatchDetailScoreText(matchDetailData, t, isTotalWinner)}</SC.HeaderResultText>
-									{isAboveOrEqualResolution(size, RESOLUTIONS.LG) && (
-										<SC.HeaderStatus matchStatus={getMatchStatus(matchDetailData, t).status}>
-											<span>{getMatchStatus(matchDetailData, t).text}</span>
-										</SC.HeaderStatus>
-									)}
-								</SC.HeaderCol>
-								{!isTotalWinner && (
-									<SC.HeaderCol result={getMatchResult(matchDetailData)} team={TEAM_TYPE.AWAY_TEAM} span={8}>
-										<SC.MatchIcon>
-											<img
-												src={getTeamImageSource(matchDetailData?.awayTeam || '', toNumber(matchDetailData?.tags?.[0]))}
-												onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
-													e.target.src = NO_TEAM_IMAGE_FALLBACK
-												}}
-											/>
-										</SC.MatchIcon>
-										<SC.HeaderTeam>{matchDetailData?.awayTeam}</SC.HeaderTeam>
-									</SC.HeaderCol>
-								)}
-								{isBellowOrEqualResolution(size, RESOLUTIONS.MD) && (
-									<Col span={24} md={6}>
-										<SC.HeaderStatus matchStatus={getMatchStatus(matchDetailData, t).status}>
-											<span>{getMatchStatus(matchDetailData, t).text}</span>
-										</SC.HeaderStatus>
-									</Col>
-								)}
-								<Col span={24} md={0}>
-									<SC.Separator />
+							)}
+							{isBellowOrEqualResolution(size, RESOLUTIONS.MD) && (
+								<Col span={24} md={6}>
+									<SC.HeaderStatus matchStatus={getMatchStatus(matchDetailData, t).status}>
+										<span>{getMatchStatus(matchDetailData, t).text}</span>
+									</SC.HeaderStatus>
 								</Col>
-							</Row>
-						</SC.MatchDetailHeader>
-						<SwitchButton option1={t('Positions')} option2={t('Stats')} onClick={onChangeSwitch} />
-						{SWITCH_BUTTON_OPTIONS.OPTION_1 === tab && matchDetailData && <MatchListContent match={matchDetailData} />}
-						{/* // TODO: stats */}
-						{/* {SWITCH_BUTTON_OPTIONS.OPTION_2 === tab && <h1>{'Stats'}</h1>} */}
-					</>
-				) : (
-					<Custom404 />
-				)}
-			</SC.MatchDetailWrapper>
-		</Row>
+							)}
+							<Col span={24} md={0}>
+								<SC.Separator />
+							</Col>
+						</Row>
+					</SC.MatchDetailHeader>
+					<SwitchButton option1={t('Positions')} option2={t('Stats')} onClick={onChangeSwitch} />
+					{SWITCH_BUTTON_OPTIONS.OPTION_1 === tab && matchDetailData && <MatchListContent match={matchDetailData} />}
+					{/* // TODO: stats */}
+					{/* {SWITCH_BUTTON_OPTIONS.OPTION_2 === tab && <h1>{'Stats'}</h1>} */}
+				</>
+			) : (
+				<Custom404 />
+			)}
+		</SC.MatchDetailWrapper>
 	)
 }
 

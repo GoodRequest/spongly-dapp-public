@@ -37,7 +37,7 @@ export const HeaderResultText = styled.div`
 	text-align: center;
 	@media (max-width: ${breakpoints.md}px) {
 		${TextXLMedium};
-		margin-bottom: 0;
+		margin: 0;
 	}
 `
 const flicker = keyframes`
@@ -183,8 +183,8 @@ export const RowSkeleton = styled(Skeleton)`
 	}
 `
 export const Separator = styled.div`
-	width: calc(100% + 48px);
-	margin-left: -24px;
+	width: calc(100% + 32px);
+	margin-left: -16px;
 	border-bottom: 1.5px solid ${({ theme }) => theme['color-base-surface-quintarny']};
 	margin-top: 24px;
 	height: 1px;
