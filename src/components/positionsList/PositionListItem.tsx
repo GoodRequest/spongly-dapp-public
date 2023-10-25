@@ -70,7 +70,7 @@ const PositionListItem = ({ position, quote, copyButtonTicket, isMyWallet }: Pro
 		<SC.PositionListItem gutter={[0, 16]}>
 			<SC.ColCenteredVertically lg={{ span: 12 }} md={{ span: 24 }} sm={{ span: 24 }} xs={{ span: 24 }}>
 				<Row style={{ width: '100%' }}>
-					<SC.TeamCol span={10}>
+					<SC.TeamCol span={!isTotalWinner ? 10 : 12}>
 						<SC.Img
 							src={imgSrcHome}
 							alt={position.market?.homeTeam}
@@ -80,9 +80,9 @@ const PositionListItem = ({ position, quote, copyButtonTicket, isMyWallet }: Pro
 						/>
 						<SC.MediumSpan> {position.market?.homeTeam}</SC.MediumSpan>
 					</SC.TeamCol>
-					<SC.TeamCol span={4} style={{ height: '100%' }}>
+					<SC.TeamCol span={!isTotalWinner ? 4 : 12} style={{ height: '100%' }}>
 						<SCS.LeagueIcon className={league?.logoClass} />
-						<SC.VSSpan status={positionState.status}>{positionState?.result ? positionState?.result : 'VS'}</SC.VSSpan>
+						{!isTotalWinner && <SC.VSSpan status={positionState.status}>{positionState?.result ? positionState?.result : 'VS'}</SC.VSSpan>}
 					</SC.TeamCol>
 					<SC.TeamCol span={10}>
 						{!isTotalWinner && (
