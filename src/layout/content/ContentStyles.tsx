@@ -31,7 +31,25 @@ export const SmallMainContainer = styled.div`
 	margin-left: auto;
 	margin-right: auto;
 `
+export const FullWidthContentCol = styled(Col)`
+	width: 100%;
+	color: ${({ theme }) => theme['color-base-content-top']};
+	padding-left: 16%;
+	padding-right: 16%;
 
+	@media (max-width: ${breakpoints.xl}px) {
+		padding-left: 12%;
+		padding-right: 12%;
+	}
+	@media (max-width: ${breakpoints.lg}px) {
+		padding-left: 6%;
+		padding-right: 6%;
+	}
+	@media (max-width: ${breakpoints.md}px) {
+		padding-left: 0;
+		padding-right: 0;
+	}
+`
 export const MinWidthContainer = styled.div`
 	min-height: calc(100vh - 470px);
 	@media (max-width: ${breakpoints.xxl}px) {
