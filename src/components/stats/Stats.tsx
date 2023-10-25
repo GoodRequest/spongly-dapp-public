@@ -5,6 +5,7 @@ import { useTranslation } from 'next-export-i18n'
 import { includes } from 'lodash'
 import { useRouter } from 'next-translate-routes'
 import { Col } from 'antd'
+import { useTheme } from 'styled-components'
 
 import { formatTicketPositionsForStatistics, getUserTicketType } from '@/utils/helpers'
 import { USER_TICKET_TYPE } from '@/utils/constants'
@@ -35,11 +36,11 @@ const Stats = () => {
 	const [statistics, setStatistics] = useState<IStatistics>()
 	const [isLoading, setIsLoading] = useState(false)
 	const isMounted = useIsMounted()
+	const theme = useTheme()
 
 	const { data } = useBalance({
 		address
 	})
-
 	const fetchStats = async () => {
 		try {
 			setIsLoading(true)
@@ -98,24 +99,48 @@ const Stats = () => {
 								<SBox
 									title={t('Account balance')}
 									value={`${Number(data?.formatted).toFixed(4)} ${data?.symbol}`}
-									extraContent={<img src={BalanceIcon} alt={'stat'} />}
+									extraContent={
+										<div>
+											<SC.Glow $color={theme['color-base-action-primary-default']} />
+											<img src={BalanceIcon} alt={'stat'} />
+										</div>
+									}
 								/>
 							</Col>
 							<Col span={12} xs={6} md={12} xl={6}>
-								<SBox title={t('Profits')} value={`${roundPrice(statistics?.pnl)} $`} extraContent={<img src={ProfitsIcon} alt={'stat'} />} />
+								<SBox
+									title={t('Profits')}
+									value={`${roundPrice(statistics?.pnl)} $`}
+									extraContent={
+										<div>
+											<SC.Glow $color={theme['color-base-state-success-fg']} />
+											<img src={ProfitsIcon} alt={'stat'} />
+										</div>
+									}
+								/>
 							</Col>
 							<Col span={12} xs={6} md={12} xl={6}>
 								<SBox
 									title={t('Success rate')}
 									value={statistics.successRate ? `${statistics.successRate} %` : '-'}
-									extraContent={<img src={SuccessIcon} alt={'stat'} />}
+									extraContent={
+										<div>
+											<SC.Glow $color={theme['color-inverse-state-warning-fg']} />
+											<img src={SuccessIcon} alt={'stat'} />
+										</div>
+									}
 								/>
 							</Col>
 							<Col span={12} xs={6} md={12} xl={6}>
 								<SBox
 									title={t('My tickets')}
 									value={statistics.trades || 0}
-									extraContent={<Button btnStyle={'primary'} onClick={() => router.push(`/${PAGES.MY_WALLET}`)} content={t('Show all')} />}
+									extraContent={
+										<div>
+											<SC.Glow $color={theme['color-base-action-primary-default']} />
+											<Button btnStyle={'primary'} onClick={() => router.push(`/${PAGES.MY_WALLET}`)} content={t('Show all')} />
+										</div>
+									}
 								/>
 							</Col>
 						</SC.StatsOverlayWrapper>
