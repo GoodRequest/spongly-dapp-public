@@ -226,6 +226,7 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 				disabledPopoverText={activeMatches?.length === 1 ? t('Match is no longer open to copy') : t('Matches are no longer open to copy')}
 				disabled={activeMatches?.length === 0} // If ticket with active matches is empty disable button
 				btnStyle={'primary'}
+				// style={isPosition ? { height: '36px' } : undefined}
 				// TODO: opravit text podla toho aky druh je vybraty
 				content={isPosition ? t('Copy position') : t('Copy ticket')}
 				loading={isLoading}
