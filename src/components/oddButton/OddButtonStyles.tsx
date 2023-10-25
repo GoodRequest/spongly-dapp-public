@@ -21,10 +21,11 @@ export const OddButton = styled(Button)<{ active?: boolean; isMobilePanel?: bool
 			return theme['color-base-surface-quaternary']
 		}
 		if (isMobilePanel && !active) {
-			return theme['color-base-surface-secondary'] // Inactive, Mobile Panel
+			return theme['color-base-surface-quaternary'] // Inactive, Mobile Panel
 		}
 		if (!isMobilePanel && !isHeader) {
-			return theme['color-base-surface-secondary']
+			// Detail match
+			return theme['color-base-surface-quaternary']
 		}
 		if (active) {
 			if (isHeader) {

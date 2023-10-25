@@ -74,7 +74,7 @@ const Stats = () => {
 	}, [chain?.id, isMounted])
 
 	return (
-		<SC.StatsWrapper>
+		<SC.StatsWrapper hide={!includes(userStatistics, router.pathname)}>
 			{includes(userStatistics, router.pathname) ? (
 				isLoading ? (
 					<SC.StatsOverlayWrapper>

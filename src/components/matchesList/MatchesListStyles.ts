@@ -12,6 +12,9 @@ export const MatchListWrapper = styled.div`
 	border-radius: 12px;
 	padding-top: 24px;
 	${TextSMMedium}
+	&:first-child {
+		padding-top: 0;
+	}
 `
 
 export const MatchCollapse = styled(Collapse)<{ isExpanded: boolean }>`
@@ -132,6 +135,7 @@ export const FlagWrapper = styled.div`
 `
 
 export const ExtendedMatchContentWrapper = styled.div`
+	margin-top: 24px;
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 15px;
@@ -143,7 +147,7 @@ export const ExtendedMatchContentWrapper = styled.div`
 
 export const SmallMatchContentWrapper = styled.div`
 	display: none;
-
+	margin-top: 16px;
 	@media (max-width: ${breakpoints.md}px) {
 		display: block;
 	}
@@ -151,20 +155,22 @@ export const SmallMatchContentWrapper = styled.div`
 
 export const ExtendedMatchContentItemCol = styled.div`
 	display: flex;
+	position: relative;
+	z-index: 2;
 	flex-direction: column;
 	justify-content: center;
 	gap: 8px;
 	align-items: center;
 	padding: 16px 24px;
-	background: ${({ theme }) => theme['color-base-surface-quaternary']};
-	border-radius: 15px;
+	background: ${({ theme }) => theme['color-base-surface-top']};
+	border-radius: 12px;
 `
 export const WarningText = styled.div`
 	height: 42px;
 	color: ${({ theme }) => theme['color-base-state-warning-fg']};
 `
 export const ExtendedMatchContentItemHeader = styled.div`
-	${TextMDMedium}
+	${TextXSMedium}
 `
 
 export const ModalDescriptionText = styled.div`
@@ -394,20 +400,12 @@ export const MobileWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	border-radius: 12px;
-	background: ${({ theme }) => theme['color-base-surface-quaternary']};
+	background: ${({ theme }) => theme['color-base-surface-top']};
 	padding: 12px 12px 12px 12px;
 	margin-bottom: 16px;
 	&:last-child {
 		margin-bottom: 0;
 	}
-`
-
-export const AllPositionsHeader = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin-bottom: 12px;
-	${TextMDMedium}
 `
 
 export const NoWrapCenterRow = styled(Row)`

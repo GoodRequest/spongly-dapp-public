@@ -338,12 +338,18 @@ export const getParlayItemStatus = (position: Position, isPlayedNow: boolean, t:
 }
 
 export const getMatchStatus = (match: any, t: any) => {
-	const date = dayjs(toNumber(match?.maturityDate) * 1000).format('| MMM DD')
+	const date = dayjs(toNumber(match?.maturityDate) * 1000)
+		.format('| MMM DD')
+		.toUpperCase()
 	if (match.isOpen && !match.isPaused && !match.homeOdds && !match.awayOdds) return { status: MATCH_STATUS.ONGOING, text: t('Playing now') }
 	if (match?.isCanceled) return { status: MATCH_STATUS.CANCELED, text: t('Canceled {{ date }}', { date }) }
 	if (match?.isPaused) return { status: MATCH_STATUS.PAUSED, text: t('Paused {{ date }}', { date }) }
-	if (match.isResolved) return { status: MATCH_STATUS.SUCCESS, text: `Match end | ${match.homeScore || '?'} : ${match.awayScore || '?'}` }
-	return { status: MATCH_STATUS.OPEN, text: dayjs(toNumber(match?.maturityDate) * 1000).format('MMM DD | HH:mm') }
+	return {
+		status: MATCH_STATUS.OPEN,
+		text: dayjs(toNumber(match?.maturityDate) * 1000)
+			.format('MMM DD | HH:mm')
+			.toUpperCase()
+	}
 }
 
 export const getOddsBySide = (ticket: ITicket) => {
@@ -432,6 +438,29 @@ export const getMatchResult = (match: SportMarket) => {
 	if (match.finalResult === '3') return MATCH_RESULT.DRAW
 	return undefined
 }
+
+export const getMatchDetailScoreText = (match: SportMarket, t: any, isTotalWinner?: boolean) => {
+	if (isTotalWinner) {
+		if (match.isCanceled || match.isPaused || match.isOpen) {
+			return ''
+		}
+		if (match.isResolved && getMatchResult(match) === MATCH_RESULT.HOME) {
+			return t('Won')
+		}
+		if (match.isResolved && getMatchResult(match) === MATCH_RESULT.AWAY) {
+			return t('Did not win')
+		}
+	} else {
+		if (match.isResolved && !match.isCanceled && !match.isPaused) {
+			return `${match.homeScore || '?'} : ${match.awayScore || '?'}`
+		}
+		if (match.isCanceled || match.isPaused) {
+			return 'VS'
+		}
+	}
+	return 'VS'
+}
+
 export const getTicketType = (market: ParlayMarket | PositionBalance): TICKET_TYPE | undefined => {
 	if (isTicketOpen(market)) return TICKET_TYPE.OPEN_TICKET
 	if (isTicketClosed(market)) return TICKET_TYPE.CLOSED_TICKET

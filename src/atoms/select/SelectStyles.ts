@@ -11,6 +11,7 @@ export const SelectWrapper = styled.div`
 export const Select = styled(AntdSelect)`
 	// The reason for this is that Ant Design applies its own default styles to its components, which may have higher specificity or be applied later in the cascade than your custom styles. In order to override these default styles, you need to use the !important flag to ensure that your styles take precedence.
 	width: 100%;
+	height: 100% !important;
 	.ant-select-suffix {
 		color: ${({ theme }) => theme['color-base-content-top']} !important;
 	}

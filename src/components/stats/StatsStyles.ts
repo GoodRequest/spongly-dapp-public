@@ -3,8 +3,9 @@ import { Row, Skeleton } from 'antd'
 import { breakpoints } from '@/styles/theme'
 import theme from '@/styles/lightTokens'
 
-export const StatsWrapper = styled.div`
+export const StatsWrapper = styled.div<{ hide?: boolean }>`
 	width: 100%;
+	display: ${({ hide }) => (hide ? 'none' : 'block')};
 	overflow: hidden;
 	margin-bottom: 40px;
 	@media (max-width: ${breakpoints.md}px) {
