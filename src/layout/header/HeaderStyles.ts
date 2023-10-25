@@ -78,7 +78,7 @@ export const MenuXLRow = styled(Row)`
 export const WalletDiv = styled.div`
 	display: flex;
 	flex-direction: row;
-	gap: 16px;
+	gap: 6px;
 `
 
 export const XXLWrapper = styled.div`

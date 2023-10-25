@@ -57,7 +57,7 @@ export const WalletRow = styled(Row)`
 `
 
 export const WalletCol = styled(Col)`
-	margin-right: 18px;
+	margin-right: 6px;
 `
 
 export const Wallet = styled(FlexCenterDiv)`
