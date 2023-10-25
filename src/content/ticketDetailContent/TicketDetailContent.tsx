@@ -122,7 +122,7 @@ const TicketDetailContent = () => {
 
 	return (
 		<>
-			{(positionsData || ticketData || isLoading) && (
+			{((positionsData && ticketData) || isLoading) && (
 				<Row gutter={[0, 16]}>
 					<Col span={24}>
 						<TicketStatisticRow
@@ -141,7 +141,7 @@ const TicketDetailContent = () => {
 			)}
 			<Row style={{ marginTop: '40px' }}>
 				<PSC.MainContentContainer withPadding={true}>
-					{positionsData || ticketData || isLoading ? (
+					{(positionsData && ticketData) || isLoading ? (
 						<PositionsList
 							isMyWallet={isMyWallet}
 							ticketData={ticketData}

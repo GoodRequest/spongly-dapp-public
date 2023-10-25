@@ -50,7 +50,7 @@ const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, 
 						/>
 					</Col>
 					<Col lg={4} md={12} sm={12} xs={12}>
-						<StatisticCard showMobileInColumn={true} isLoading={isLoading} value={buyIn} title={t('Buy in')} addMobileBackground={true} />
+						<StatisticCard showMobileInColumn={true} isLoading={isLoading} value={buyIn} title={t('Buy-in')} addMobileBackground={true} />
 					</Col>
 					<Col lg={4} md={12} sm={12} xs={12}>
 						<StatisticCard isLoading={isLoading} showMobileInColumn={true} value={quote} title={t('Quote')} addMobileBackground={true} />

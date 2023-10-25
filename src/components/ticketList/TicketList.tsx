@@ -171,7 +171,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 											<Sorter title={t('Success rate')} name={TICKET_SORTING.SUCCESS_RATE} />
 										</Col>
 										<Col span={3}>
-											<Sorter title={t('Buy in')} name={TICKET_SORTING.BUY_IN} />
+											<Sorter title={t('Buy-in')} name={TICKET_SORTING.BUY_IN} />
 										</Col>
 										<Col span={3}>
 											<Sorter title={t('Quote')} name={TICKET_SORTING.TOTAL_TICKET_QUOTE} />

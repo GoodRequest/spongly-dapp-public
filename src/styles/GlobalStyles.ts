@@ -253,15 +253,6 @@ export const FlagWorld = styled.div`
 	background-position: center;
 `
 
-export const FlagWorldBig = styled.div`
-	height: 68px;
-	width: 68px;
-	background: url(${worldFlag});
-	background-size: contain;
-	background-repeat: no-repeat;
-	background-position: center;
-`
-
 export const LoadMore = styled.div`
 	height: 60px;
 	display: flex;
