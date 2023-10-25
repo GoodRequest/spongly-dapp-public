@@ -17,6 +17,7 @@ import { useFetchAllMatches } from '@/redux/matches/matchesHooks'
 import * as SC from './LayoutStyles'
 import * as PSC from '../content/ContentStyles'
 import { PAGES, WALLET_TICKETS } from '@/utils/enums'
+import FrontendDevWall from '@/components/frontendDevWall/frontendDevWall'
 
 interface ILayout {
 	children: ReactNode
@@ -39,28 +40,30 @@ const Layout: FC<ILayout> = ({ children }) => {
 
 	return (
 		<SC.LayoutWrapper id={'modal-container'}>
-			<PSC.Status visible={!includes(pagesWithoutStatusOverlay, router.pathname)} status={router.query.status as WALLET_TICKETS} />
-			<PSC.MainContainer>
-				<Header />
-			</PSC.MainContainer>
-			<PSC.MinWidthContainer>
-				<Content>{children}</Content>
-			</PSC.MinWidthContainer>
-			<SC.MobileTicketBetWrapper>
-				<TicketBetContainer />
-			</SC.MobileTicketBetWrapper>
-			<Footer />
-			{initialization && (
-				<SC.OverlayLoading>
-					<SC.Logo src={LogoImg} alt={'Spongly'} />
-					<SC.LoadingWrapper>
-						<SC.SpinnerWrapper>
-							<Spin spinning={true} size={'large'} indicator={<LoadingOutlined spin />} />
-						</SC.SpinnerWrapper>
-						{`${t('Loading')}...`}
-					</SC.LoadingWrapper>
-				</SC.OverlayLoading>
-			)}
+			<FrontendDevWall>
+				<PSC.Status visible={!includes(pagesWithoutStatusOverlay, router.pathname)} status={router.query.status as WALLET_TICKETS} />
+				<PSC.MainContainer>
+					<Header />
+				</PSC.MainContainer>
+				<PSC.MinWidthContainer>
+					<Content>{children}</Content>
+				</PSC.MinWidthContainer>
+				<SC.MobileTicketBetWrapper>
+					<TicketBetContainer />
+				</SC.MobileTicketBetWrapper>
+				<Footer />
+				{initialization && (
+					<SC.OverlayLoading>
+						<SC.Logo src={LogoImg} alt={'Spongly'} />
+						<SC.LoadingWrapper>
+							<SC.SpinnerWrapper>
+								<Spin spinning={true} size={'large'} indicator={<LoadingOutlined spin />} />
+							</SC.SpinnerWrapper>
+							{`${t('Loading')}...`}
+						</SC.LoadingWrapper>
+					</SC.OverlayLoading>
+				)}
+			</FrontendDevWall>
 		</SC.LayoutWrapper>
 	)
 }
