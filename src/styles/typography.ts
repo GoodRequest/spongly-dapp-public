@@ -93,9 +93,9 @@ export const TextLGRegular = css`
 `
 // important to override antd select font
 export const TextLGMedium = css`
-	font-family: ${SPACE_GROTESK_FONT_VARIABLE} !important;
-	font-weight: 500 !important;
-	font-size: 1.125rem !important;
+	font-family: ${SPACE_GROTESK_FONT_VARIABLE};
+	font-weight: 500;
+	font-size: 1.125rem;
 	color: ${({ theme }) => theme['color-base-content-top']};
 `
 

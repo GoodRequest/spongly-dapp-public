@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { TextSMMedium, TextXLSemibold } from '@/styles/typography'
+import { HeadingXSMedium, TextLGMedium, TextSMMedium, TextXLMedium, TextXLSemibold } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
 export const Image = styled.img<{ filled: boolean }>`
@@ -26,12 +26,16 @@ export const StatisticCard = styled.div<{ filled: boolean; showMobileInColumn: b
 	box-shadow: ${({ theme, filled }) => (filled ? theme['drop-shadow-xs'] : 'none')};
 
 	@media (max-width: ${breakpoints.lg}px) {
+		justify-content: ${({ showMobileInColumn }) => (showMobileInColumn ? 'center' : 'flex-start')};
 		background: ${({ filled }) =>
 			filled ? 'radial-gradient(farthest-corner at bottom right, rgba(108, 120, 237, 0.5), transparent 1000px)' : 'transparent'};
+		align-items: ${({ showMobileInColumn }) => (showMobileInColumn ? 'flex-start' : 'center')};
 		flex-direction: ${({ showMobileInColumn }) => (showMobileInColumn ? 'column' : 'row')};
 	}
 
 	@media (max-width: ${breakpoints.md}px) {
+		justify-content: ${({ showMobileInColumn }) => (showMobileInColumn ? 'center' : 'flex-start')};
+		align-items: ${({ showMobileInColumn }) => (showMobileInColumn ? 'flex-start' : 'center')};
 		background: ${({ filled }) =>
 			filled ? 'radial-gradient(farthest-corner at bottom right, rgba(108, 120, 237, 0.5), transparent 500px)' : 'transparent'};
 	}
@@ -49,9 +53,13 @@ export const Title = styled.span`
 `
 
 export const Value = styled.span<{ filled: boolean }>`
-	${TextXLSemibold};
+	${HeadingXSMedium};
 	white-space: nowrap;
-	font-size: ${({ filled }) => (filled ? '1.125rem' : '1.3rem')};
+	// TODO: co je toto za podmienka?
+	// font-size: ${({ filled }) => (filled ? '1.125rem' : '1.3rem')};
+	@media (max-width: ${breakpoints.lg}px) {
+		${TextLGMedium};
+	}
 `
 
 export const StatisticWrapper = styled.div<{ isAddress: boolean }>`
@@ -59,6 +67,9 @@ export const StatisticWrapper = styled.div<{ isAddress: boolean }>`
 	flex-direction: column;
 	margin-left: 16px;
 	max-width: ${({ isAddress }) => (isAddress ? 'calc(100% - 68px - 16px)' : '')};
+	@media (max-width: ${breakpoints.lg}px) {
+		margin-left: 0;
+	}
 `
 
 export const AddressContainer = styled.div`

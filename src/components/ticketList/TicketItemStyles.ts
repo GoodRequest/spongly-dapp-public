@@ -13,6 +13,7 @@ export const TicketItemWrapper = styled.div`
 	&:hover {
 		cursor: pointer;
 		outline: 1px solid ${({ theme }) => theme['color-base-action-primary-default']};
+		box-shadow: 0px 0px 4px 0px #6674ff, 0px 0px 16px 0px rgba(102, 116, 255, 0.85);
 	}
 	&:last-of-type {
 		margin-right: 0; /* Remove right margin for the last item */

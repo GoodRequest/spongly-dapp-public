@@ -11,8 +11,9 @@ import { roundPrice } from '@/utils/formatters/currency'
 
 import * as SC from './TicketsStatisticRowStyles'
 
-import SuccessIcon from '@/assets/icons/success-rate-statistics-icon.png'
-import ProfitsTicketsIcon from '@/assets/icons/profits-tickets-statistics-icon.png'
+import SuccessRateIcon from '@/assets/icons/stat-successrate-icon.svg'
+import ProfitsTicketsIcon from '@/assets/icons/stat-profits-icon.svg'
+import TicketsIcon from '@/assets/icons/stat-balance-icon.svg'
 
 type Props = {
 	isLoading: boolean
@@ -43,7 +44,7 @@ const TicketsStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 						<StatisticCard
 							showMobileInColumn={true}
 							isLoading={isLoading}
-							img={SuccessIcon}
+							img={SuccessRateIcon}
 							value={isMounted ? `${user?.successRate ? user.successRate : 0} %` : ''}
 							title={t('Success rate')}
 						/>
@@ -61,7 +62,7 @@ const TicketsStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 						<StatisticCard
 							isLoading={isLoading}
 							showMobileInColumn={true}
-							img={ProfitsTicketsIcon}
+							img={TicketsIcon}
 							value={isMounted ? (user?.trades ? user.trades : 0) : 0}
 							title={t('Tickets')}
 						/>

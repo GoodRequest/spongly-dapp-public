@@ -28,6 +28,7 @@ const Layout: FC<ILayout> = ({ children }) => {
 	const [initialization, setInitialization] = useState(true)
 	const router = useRouter()
 	const pagesWithoutStatusOverlay = [`/${PAGES.PARLAY_SUPERSTARS}`, `/${PAGES.LEADERBOARD}`]
+	const [footerHeight, setFooterHeight] = useState(0)
 
 	useFetchTickets()
 	useFetchAllMatches()
@@ -38,6 +39,27 @@ const Layout: FC<ILayout> = ({ children }) => {
 		}, 1000)
 	}, [])
 
+	useEffect(() => {
+		function updateFooterHeight() {
+			const footerContent = document.getElementById('footer-content')
+			if (footerContent) {
+				const height = footerContent.clientHeight
+				setFooterHeight(height)
+			}
+		}
+
+		// Update on mount
+		updateFooterHeight()
+
+		// Update when the screen is resized
+		window.addEventListener('resize', updateFooterHeight)
+
+		return () => {
+			// Remove the event listener when the component unmounts
+			window.removeEventListener('resize', updateFooterHeight)
+		}
+	}, [])
+
 	return (
 		<SC.LayoutWrapper id={'modal-container'}>
 			<FrontendDevWall>
@@ -45,7 +67,7 @@ const Layout: FC<ILayout> = ({ children }) => {
 				<PSC.MainContainer>
 					<Header />
 				</PSC.MainContainer>
-				<PSC.MinWidthContainer>
+				<PSC.MinWidthContainer footerHeight={footerHeight}>
 					<Content>{children}</Content>
 				</PSC.MinWidthContainer>
 				<SC.MobileTicketBetWrapper>

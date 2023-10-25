@@ -178,10 +178,13 @@ export const AddressText = styled.p`
 	overflow: hidden;
 	text-overflow: ellipsis;
 	max-width: 100%;
+	@media (max-width: ${breakpoints.md}px) {
+		max-width: 50%;
+	}
 `
 
 export const TicketTypeTag = styled.div<{ ticketType: USER_TICKET_TYPE }>`
-	border-radius: 6px;
+	border-radius: 10px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -212,6 +215,10 @@ export const TicketTypeTag = styled.div<{ ticketType: USER_TICKET_TYPE }>`
 		}
 		return theme['color-base-content-top']
 	}};
+	@media (max-width: ${breakpoints.md}px) {
+		border-radius: 6px;
+		height: 32px;
+	}
 `
 
 export const TicketDivider = styled(Divider)<{ showClaimed: boolean }>`

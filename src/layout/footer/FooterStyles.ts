@@ -16,11 +16,11 @@ export const Footer = styled.footer`
 	height: fit-content;
 
 	@media (max-width: ${breakpoints.xl}px) {
-		padding: 22px 60px 96px 60px;
+		padding: 22px 24px 96px 24px;
 	}
 
 	@media (max-width: ${breakpoints.md}px) {
-		padding: 22px 22px 96px 22px;
+		padding: 22px 16px 96px 16px;
 	}
 `
 
