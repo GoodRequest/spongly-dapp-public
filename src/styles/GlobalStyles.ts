@@ -305,9 +305,9 @@ export const Empty = styled(AntdEmpty)`
 	}
 `
 export const LeagueIcon = styled.i`
-	color: white;
-	font-size: 100px;
-	line-height: normal;
+	color: ${({ theme }) => theme['color-base-content-top']};
+	line-height: normal !important;
+	font-size: 90px;
 	font-style: normal;
 	@media (max-width: ${breakpoints.md}px) {
 		font-size: 70px;

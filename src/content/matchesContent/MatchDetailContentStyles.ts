@@ -1,7 +1,7 @@
 import styled, { css, keyframes } from 'styled-components'
 import { Col, Skeleton } from 'antd'
 import { breakpoints } from '@/styles/theme'
-import { HeadingXSMedium, TextMDSemibold, TextXSMedium } from '@/styles/typography'
+import { HeadingXSMedium, TextMDSemibold, TextXLMedium, TextXSMedium } from '@/styles/typography'
 import { MATCH_STATUS } from '@/utils/constants'
 import { MATCH_RESULT, TEAM_TYPE } from '@/utils/enums'
 
@@ -11,6 +11,9 @@ export const MatchDetailWrapper = styled.div`
 	position: relative;
 	border-radius: 12px;
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
+	@media (max-width: ${breakpoints.md}px) {
+		padding: 16px;
+	}
 `
 export const MatchDetailHeader = styled.div`
 	margin-bottom: 24px;
@@ -23,16 +26,18 @@ export const HeaderTeam = styled.div`
 	text-align: center;
 	height: 84px;
 	@media (max-width: ${breakpoints.md}px) {
-		${TextMDSemibold};
+		${TextXSMedium};
 		margin-top: 8px;
 		height: auto;
 	}
 `
 export const HeaderResultText = styled.div`
+	margin: 16px 0;
 	${HeadingXSMedium};
 	text-align: center;
 	@media (max-width: ${breakpoints.md}px) {
-		${TextMDSemibold};
+		${TextXLMedium};
+		margin-bottom: 0;
 	}
 `
 const flicker = keyframes`
@@ -45,7 +50,6 @@ const flicker = keyframes`
 `
 export const HeaderStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 	${TextXSMedium};
-	margin-top: 16px;
 	padding: 12px;
 	text-align: center;
 	position: relative;
@@ -84,6 +88,9 @@ export const HeaderStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 		css`
 			color: ${({ theme }) => theme['color-base-state-warning-fg']};
 		`};
+	@media (max-width: ${breakpoints.md}px) {
+		margin-top: 16px;
+	}
 `
 
 export const MatchIcon = styled.div`
