@@ -86,7 +86,7 @@ export const TicketStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 	align-items: center;
 	padding-top: 6px;
 	padding-bottom: 6px;
-	height: 48px;
+	height: 32px;
 	width: 100%;
 	text-transform: uppercase;
 	border-radius: 6px;

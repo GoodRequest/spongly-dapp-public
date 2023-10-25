@@ -453,7 +453,7 @@ export const getMatchDetailScoreText = (match: SportMarket, t: any, isTotalWinne
 			return t('Won')
 		}
 		if (match.isResolved && getMatchResult(match) === MATCH_RESULT.AWAY) {
-			return t('Did not win')
+			return t('Lost')
 		}
 	} else {
 		if (match.isResolved && !match.isCanceled && !match.isPaused) {

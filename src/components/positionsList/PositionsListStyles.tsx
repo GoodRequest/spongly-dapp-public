@@ -24,8 +24,9 @@ export const BlackBox = styled.div<{ withMobilePadding: boolean }>`
 	padding-left: 16px;
 	padding-right: 16px;
 
-	@media (max-width: ${breakpoints.md}px) {
+	@media (max-width: ${breakpoints.lg}px) {
 		padding-bottom: ${({ withMobilePadding }) => (withMobilePadding ? '16px' : 'unset')};
+		padding-top: ${({ withMobilePadding }) => (withMobilePadding ? '16px' : 'unset')};
 	}
 
 	@media (min-width: ${breakpoints.md}px) {
@@ -106,6 +107,12 @@ export const VSSpan = styled.span<{ status: MATCH_STATUS }>`
 
 	@media (max-width: ${breakpoints.md}px) {
 		${TextMDMedium};
+		color: ${({ theme, status }) =>
+			status === MATCH_STATUS.SUCCESS
+				? theme['color-base-state-success-fg']
+				: status === MATCH_STATUS.MISS
+				? theme['color-base-state-error-fg']
+				: theme['color-base-content-quaternary']};
 	}
 `
 

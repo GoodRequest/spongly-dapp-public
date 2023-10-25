@@ -6,7 +6,7 @@ import { toNumber } from 'lodash'
 // utils
 import { getTeamImageSource } from '@/utils/images'
 import { MATCH_STATUS, NO_TEAM_IMAGE_FALLBACK, TOTAL_WINNER_TAGS } from '@/utils/constants'
-import { getParlayItemStatus } from '@/utils/helpers'
+import { getMatchDetailScoreText, getParlayItemStatus } from '@/utils/helpers'
 import networkConnector from '@/utils/networkConnector'
 import { convertPositionNameToPosition, getMatchOddsContract, getSymbolText } from '@/utils/markets'
 import { TAGS_LIST } from '@/utils/tags'
@@ -70,7 +70,7 @@ const PositionListItem = ({ position, quote, copyButtonTicket, isMyWallet }: Pro
 		<SC.PositionListItem gutter={[0, 16]}>
 			<SC.ColCenteredVertically lg={{ span: 12 }} md={{ span: 24 }} sm={{ span: 24 }} xs={{ span: 24 }}>
 				<Row style={{ width: '100%' }}>
-					<SC.TeamCol span={!isTotalWinner ? 10 : 12}>
+					<SC.TeamCol span={10}>
 						<SC.Img
 							src={imgSrcHome}
 							alt={position.market?.homeTeam}
@@ -80,12 +80,24 @@ const PositionListItem = ({ position, quote, copyButtonTicket, isMyWallet }: Pro
 						/>
 						<SC.MediumSpan> {position.market?.homeTeam}</SC.MediumSpan>
 					</SC.TeamCol>
-					<SC.TeamCol span={!isTotalWinner ? 4 : 12} style={{ height: '100%' }}>
-						<SCS.LeagueIcon className={league?.logoClass} />
-						{!isTotalWinner && <SC.VSSpan status={positionState.status}>{positionState?.result ? positionState?.result : 'VS'}</SC.VSSpan>}
-					</SC.TeamCol>
-					<SC.TeamCol span={10}>
-						{!isTotalWinner && (
+					{isTotalWinner && (
+						<>
+							<SC.TeamCol span={4}>
+								<SC.VSSpan status={positionState.status}>{getMatchDetailScoreText(position?.market, t, isTotalWinner || false)}</SC.VSSpan>
+							</SC.TeamCol>
+							<SC.TeamCol span={10} style={{ height: '100%' }}>
+								<SCS.LeagueIcon className={league?.logoClass} />
+							</SC.TeamCol>
+						</>
+					)}
+					{!isTotalWinner && (
+						<SC.TeamCol span={4} style={{ height: '100%' }}>
+							<SCS.LeagueIcon className={league?.logoClass} />
+							<SC.VSSpan status={positionState.status}>{getMatchDetailScoreText(position?.market, t, isTotalWinner || false)}</SC.VSSpan>
+						</SC.TeamCol>
+					)}
+					{!isTotalWinner && (
+						<SC.TeamCol span={10}>
 							<>
 								<SC.Img
 									src={imgSrcAway}
@@ -96,12 +108,12 @@ const PositionListItem = ({ position, quote, copyButtonTicket, isMyWallet }: Pro
 								/>
 								<SC.MediumSpan> {position.market?.awayTeam}</SC.MediumSpan>
 							</>
-						)}
-					</SC.TeamCol>
+						</SC.TeamCol>
+					)}
 				</Row>
 			</SC.ColCenteredVertically>
 			<SC.ColCenteredVertically lg={{ span: 6 }} md={{ span: 12 }} sm={{ span: 24 }} xs={{ span: 24 }}>
-				<SC.BlackBox withMobilePadding={false}>
+				<SC.BlackBox withMobilePadding={true}>
 					<SC.OddsWrapper>
 						<SC.BetOption>{betOption}</SC.BetOption>
 						<SC.MediumSpanGrey>{quote}</SC.MediumSpanGrey>
