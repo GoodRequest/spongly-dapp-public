@@ -2,13 +2,6 @@ export const presentationSliderData = [
 	{
 		text: '',
 		textColor: '#ffffff',
-		image: '/banners/Barcelona_banner.webp',
-		mobileImage: '/banners/Barcelona_banner_mobile.webp',
-		button: null
-	},
-	{
-		text: '',
-		textColor: '#ffffff',
 		image: '/banners/Join-discord.webp',
 		mobileImage: '/banners/Join-discord_mobile.webp',
 		button: {
