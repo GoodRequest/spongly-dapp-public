@@ -12,7 +12,7 @@ interface ILayout {
 }
 
 const FrontendDevWall: FC<ILayout> = ({ children }) => {
-	const [showOverlay, setShowOverlay] = useState(process.env.NODE_ENV === 'development')
+	const [showOverlay, setShowOverlay] = useState(process.env.PASSWORD_VALIDATION === 'true')
 	const [password, setPassword] = useState('')
 	const { t } = useTranslation()
 

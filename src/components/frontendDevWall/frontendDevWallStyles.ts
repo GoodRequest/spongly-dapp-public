@@ -19,7 +19,7 @@ export const LoaginOverlay = styled.div<{ show: boolean }>`
 	color: white;
 `
 
-export const StyledInput = styled.div<{ error: boolean }>`
+export const StyledInput = styled.div`
 	span {
 		span {
 			height: ${FIELD_HEIGHT.small};
