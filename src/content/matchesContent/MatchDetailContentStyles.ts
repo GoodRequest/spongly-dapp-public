@@ -4,7 +4,7 @@ import { breakpoints } from '@/styles/theme'
 import { HeadingXSMedium, TextXLMedium, TextXSMedium } from '@/styles/typography'
 import { MATCH_STATUS } from '@/utils/constants'
 import { MATCH_RESULT, TEAM_TYPE } from '@/utils/enums'
-import { flicker } from '@/styles/GlobalStyles'
+import { BasicBoxShadow, flicker } from '@/styles/GlobalStyles'
 
 export const MatchDetailWrapper = styled.div`
 	width: 100%;
@@ -138,8 +138,8 @@ export const HeaderCol = styled(Col)<{ result?: MATCH_RESULT; team?: TEAM_TYPE }
 		css`
 			border: 1px solid ${({ theme }) => theme['color-base-surface-quintarny']};
 			background: ${({ theme }) => theme['color-base-surface-quintarny']};
-			box-shadow: 0px 0px 4px 0px #6674ff, 0px 0px 16px 0px rgba(102, 116, 255, 0.85);
 			border-radius: 12px;
+			${BasicBoxShadow};
 		`};
 	// Away win
 	${(p) =>
@@ -148,7 +148,7 @@ export const HeaderCol = styled(Col)<{ result?: MATCH_RESULT; team?: TEAM_TYPE }
 		css`
 			border: 1px solid ${({ theme }) => theme['color-base-surface-quintarny']};
 			background: ${({ theme }) => theme['color-base-surface-quintarny']};
-			box-shadow: 0px 0px 4px 0px #6674ff, 0px 0px 16px 0px rgba(102, 116, 255, 0.85);
+			${BasicBoxShadow};
 			border-radius: 12px;
 		`};
 	// Draw
@@ -157,8 +157,8 @@ export const HeaderCol = styled(Col)<{ result?: MATCH_RESULT; team?: TEAM_TYPE }
 		css`
 			border: 1px solid ${({ theme }) => theme['color-base-surface-quintarny']};
 			background: ${({ theme }) => theme['color-base-surface-quintarny']};
-			box-shadow: 0px 0px 4px 0px #6674ff, 0px 0px 16px 0px rgba(102, 116, 255, 0.85);
 			border-radius: 12px;
+			${BasicBoxShadow};
 		`};
 `
 export const RowSkeleton = styled(Skeleton)`

@@ -68,8 +68,6 @@ export const Title = styled.span`
 export const Value = styled.span<{ filled: boolean }>`
 	${HeadingXSMedium};
 	white-space: nowrap;
-	// TODO: co je toto za podmienka?
-	// font-size: ${({ filled }) => (filled ? '1.125rem' : '1.3rem')};
 	color: ${({ color, theme }) =>
 		color === 'red' ? theme['color-base-state-error-fg'] : color === 'green' ? theme['color-base-state-success-fg'] : theme['color-base-content-top']};
 	@media (max-width: ${breakpoints.lg}px) {

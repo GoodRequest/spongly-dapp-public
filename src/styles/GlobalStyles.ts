@@ -322,3 +322,7 @@ export const LeagueIcon = styled.i<{ xlSize?: number; mdSize?: number }>`
 		font-size: ${({ mdSize }) => (mdSize ? `${mdSize}px` : '60px')};
 	}
 `
+
+export const BasicBoxShadow = css`
+	box-shadow: 0px 0px 4px 0px #6674ff, 0px 0px 16px 0px rgba(102, 116, 255, 0.85);
+`

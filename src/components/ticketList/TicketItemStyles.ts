@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components'
 import { Col } from 'antd'
 import { TextSMMedium, TextXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
-import { FlexItemCenter, flicker } from '@/styles/GlobalStyles'
+import { BasicBoxShadow, FlexItemCenter, flicker } from '@/styles/GlobalStyles'
 import { MATCH_STATUS } from '@/utils/constants'
 
 export const TicketItemWrapper = styled.div`
@@ -12,8 +12,7 @@ export const TicketItemWrapper = styled.div`
 	background: ${({ theme }) => theme['color-base-surface-quaternary']};
 	&:hover {
 		cursor: pointer;
-		outline: 1px solid ${({ theme }) => theme['color-base-action-primary-default']};
-		box-shadow: 0px 0px 4px 0px #6674ff, 0px 0px 16px 0px rgba(102, 116, 255, 0.85);
+		${BasicBoxShadow};
 	}
 	&:last-of-type {
 		margin-right: 0; /* Remove right margin for the last item */
