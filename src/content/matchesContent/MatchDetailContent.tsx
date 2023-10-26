@@ -30,6 +30,7 @@ const MatchDetail = () => {
 	const [matchDetailData, setMatchDetailData] = useState<any>(null)
 	const [loading, setLoading] = useState(false)
 	const size = useMedia()
+	const [error, setError] = useState(false)
 	const isTotalWinner = matchDetailData?.tags && TOTAL_WINNER_TAGS.includes(matchDetailData.tags?.[0])
 	const onChangeSwitch = (option: SWITCH_BUTTON_OPTIONS) => {
 		setTab(option)
@@ -37,7 +38,7 @@ const MatchDetail = () => {
 
 	const [fetchMatchDetail] = useLazyQuery(GET_MATCH_DETAIL)
 	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
-		enabled: !!chain?.id
+		enabled: true
 	})
 
 	const fetchData = useCallback(() => {
@@ -73,16 +74,16 @@ const MatchDetail = () => {
 							}) // NOTE: remove broken results.
 							.filter((item) => item.winnerTypeMatch)
 						setMatchDetailData({ ...matchesWithChildMarkets[0], league, status: getMatchStatus(matchesWithChildMarkets[0], t).status })
-						setLoading(false)
 					})
 				})
 				.catch((e) => {
 					// eslint-disable-next-line no-console
 					console.error(e)
+					setError(true)
 					setMatchDetailData(null)
-					setLoading(false)
 					showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while loading detail of match') }], NOTIFICATION_TYPE.NOTIFICATION)
 				})
+				.finally(() => setLoading(false))
 		}, 500)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [router.query.id, sgpFeesRaw.data, t])
@@ -94,11 +95,12 @@ const MatchDetail = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [router.isReady])
 
-	return (
-		<SC.MatchDetailWrapper>
-			{!matchDetailData && loading ? (
-				<SC.RowSkeleton active loading paragraph={{ rows: 10 }} />
-			) : matchDetailData && !loading ? (
+	const renderMatchDetail =
+		!matchDetailData && loading ? (
+			<SC.RowSkeleton active loading paragraph={{ rows: 10 }} />
+		) : (
+			matchDetailData &&
+			!loading && (
 				<>
 					<SC.MatchDetailHeader>
 						<Row justify={'center'}>
@@ -152,11 +154,9 @@ const MatchDetail = () => {
 					{/* // TODO: stats */}
 					{/* {SWITCH_BUTTON_OPTIONS.OPTION_2 === tab && <h1>{'Stats'}</h1>} */}
 				</>
-			) : (
-				<Custom404 />
-			)}
-		</SC.MatchDetailWrapper>
-	)
+			)
+		)
+	return <SC.MatchDetailWrapper>{error ? <Custom404 /> : renderMatchDetail}</SC.MatchDetailWrapper>
 }
 
 export default MatchDetail
