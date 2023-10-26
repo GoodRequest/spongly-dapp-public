@@ -31,27 +31,34 @@ export const SmallMainContainer = styled.div`
 	margin-left: auto;
 	margin-right: auto;
 `
-
-export const MinWidthContainer = styled.div`
-	min-height: calc(100vh - 470px);
-	@media (max-width: ${breakpoints.xxl}px) {
-		min-height: calc(100vh - 510px);
-	}
+export const FullWidthContentCol = styled(Col)`
+	width: 100%;
+	color: ${({ theme }) => theme['color-base-content-top']};
+	padding-left: 16%;
+	padding-right: 16%;
 
 	@media (max-width: ${breakpoints.xl}px) {
-		min-height: calc(100vh - 650px);
+		padding-left: 12%;
+		padding-right: 12%;
 	}
-
+	@media (max-width: ${breakpoints.lg}px) {
+		padding-left: 6%;
+		padding-right: 6%;
+	}
 	@media (max-width: ${breakpoints.md}px) {
-		min-height: calc(100vh - 700px);
+		padding-left: 0;
+		padding-right: 0;
 	}
-
-	@media (max-width: ${breakpoints.sm}px) {
-		min-height: calc(100vh - 740px);
+`
+export const MinWidthContainer = styled.div<{ footerHeight: number }>`
+	// Header (70px + 16px + 16px = 102px) + Footer (246px + 100px = 348px) = 450px
+	min-height: calc(100vh - (102px + ${({ footerHeight }) => footerHeight}px + 100px));
+	// // Header (165px + 16px = 181px ) + Footer + 100px
+	@media (max-width: ${breakpoints.semixxl}px) {
+		min-height: calc(100vh - (181px + ${({ footerHeight }) => footerHeight}px + 100px));
 	}
-
-	@media (max-width: ${breakpoints.xs}px) {
-		min-height: 300px;
+	@media (max-width: ${breakpoints.md}px) {
+		min-height: calc(100vh - (102px + ${({ footerHeight }) => footerHeight}px + 100px));
 	}
 `
 
@@ -62,11 +69,11 @@ export const MobileHiddenCol = styled(Col)`
 	}
 `
 
-export const MainContentContainer = styled(Col)<{ withPadding: boolean }>`
+export const MainContentContainer = styled(Col)`
 	width: 66%;
 
 	@media (min-width: ${breakpoints.semixxl}px) {
-		padding-right: ${({ withPadding }) => (withPadding ? '32px' : '0')};
+		padding-right: 32px;
 	}
 
 	@media (max-width: ${breakpoints.semixxl}px) {

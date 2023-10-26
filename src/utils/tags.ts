@@ -3,72 +3,465 @@ import { Tags, SportsMap, SportsTagsMap } from '@/typescript/types'
 import nbaIcon from '../../public/logos/leagueLogos/nba.svg'
 import ncaaIcon from '../../public/logos/leagueLogos/ncaa.webp'
 import nflIcon from '../../public/logos/leagueLogos/nfl.webp'
-import mblIcon from '../../public/logos/leagueLogos/mlb.svg'
+import mlbIcon from '../../public/logos/leagueLogos/mlb.svg'
 import nhlIcon from '../../public/logos/leagueLogos/nhl.svg'
 import ufcIcon from '../../public/logos/leagueLogos/ufc.webp'
-import mslIcon from '../../public/logos/leagueLogos/mls.webp'
-import elpIcon from '../../public/logos/leagueLogos/EPL.webp'
-import Ligue1 from '../../public/logos/leagueLogos/Ligue1.webp'
+import mlsIcon from '../../public/logos/leagueLogos/mls.webp'
+import eplIcon from '../../public/logos/leagueLogos/EPL.webp'
+import ligue1 from '../../public/logos/leagueLogos/Ligue1.webp'
 import bundesLigaIcon from '../../public/logos/leagueLogos/bundesliga.webp'
 import laLigaIcon from '../../public/logos/leagueLogos/LaLiga.webp'
 import seriea from '../../public/logos/leagueLogos/seriea.webp'
 import uclIcon from '../../public/logos/leagueLogos/ucl-white.webp'
-import f1Icon from '../../public/logos/leagueLogos/f1.webp'
-import motoGpIcon from '../../public/logos/leagueLogos/motogp.webp'
+// import f1Icon from '../../public/logos/leagueLogos/f1.webp'
+// import motoGpIcon from '../../public/logos/leagueLogos/motogp.webp'
 
 export const MLS_TAG = 9010
 
 export const TAGS_LIST: Tags = [
-	{ id: 9001, label: 'NCAA Football', logo: ncaaIcon, country: 'USA', logoClass: 'icon-league league--ncaa' },
-	{ id: 9002, label: 'NFL', logo: nflIcon, country: 'USA', logoClass: 'icon-league league--nfl' },
-	{ id: 9003, label: 'MLB', logo: mblIcon, country: 'USA', logoClass: 'icon-league league--mlb' },
-	{ id: 9004, label: 'NBA', logo: nbaIcon, country: 'USA', logoClass: 'icon-league league--nba' },
-	{ id: 9005, label: 'NCAA Basketball', country: 'USA', logoClass: 'icon-league league--ncaa' },
-	{ id: 9006, label: 'NHL', logo: nhlIcon, country: 'WORLD', logoClass: 'icon-league league--nhl' },
-	{ id: 9007, label: 'UFC', logo: ufcIcon, country: 'WORLD', logoClass: 'icon-league league--ufc' },
-	{ id: 9008, label: 'WNBA', country: 'USA', logoClass: 'icon-league league--wnba' },
-	{ id: 9010, label: 'MLS', logo: mslIcon, country: 'USA', logoClass: 'icon-league league--mls' },
-	{ id: 9011, label: 'EPL', logo: elpIcon, country: 'GB-ENG', logoClass: 'icon-league league--epl' },
-	{ id: 9012, label: 'Ligue 1', logo: Ligue1, country: 'FR', logoClass: 'icon-league league--ligue1' },
-	{ id: 9013, label: 'Bundesliga', logo: bundesLigaIcon, country: 'DE', logoClass: 'icon-league league--bundesliga' },
-	{ id: 9014, label: 'La Liga', logo: laLigaIcon, country: 'ES', logoClass: 'icon-league league--la-liga' },
-	{ id: 9015, label: 'Serie A', logo: seriea, country: 'IT', logoClass: 'icon-league league--serie-a' },
-	{ id: 9018, label: 'FIFA World Cup', country: 'WORLD', logoClass: 'icon-league league--fifa-world-cup' },
-	{ id: 9019, label: 'J1 League', country: 'JP', logoClass: 'icon-league league--j1' },
-	{ id: 9100, label: 'Formula 1', logo: f1Icon, country: 'WORLD', logoClass: 'icon-league league--f1' },
-	{ id: 9101, label: 'MotoGP', logo: motoGpIcon, country: 'WORLD', logoClass: 'icon-league league--motogp' },
-	{ id: 9153, label: 'Grand Slam', country: 'WORLD', logoClass: 'icon-league league--atp' },
-	{ id: 9156, label: 'ATP Events', country: 'WORLD', logoClass: 'icon-league league--atp' },
-	{ id: 18977, label: 'CS GO', country: 'WORLD', logoClass: 'icon-league league--csgo' },
-	{ id: 18983, label: 'DOTA 2', country: 'WORLD', logoClass: 'icon-league league--dota2' },
-	{ id: 19138, label: 'LOL', country: 'WORLD', logoClass: 'icon-league league--lol' },
-	{ id: 9020, label: 'Indian Premier League', country: 'IN', logoClass: 'icon-league league--ipl' },
-	{ id: 9399, label: 'Euroleague', country: 'WORLD', logoClass: 'icon-league league--euroleague' },
-	{ id: 9445, label: 'Formula 1', logo: f1Icon, country: 'WORLD', logoClass: 'icon-league league--f1' },
-	{ id: 9497, label: 'MotoGP', logo: motoGpIcon, country: 'WORLD', logoClass: 'icon-league league--motogp' },
-	{ id: 9153, label: 'Grand Slam', country: 'WORLD', logoClass: 'icon-league league--atp' },
-	{ id: 18196, label: 'Boxing', country: 'WORLD', logoClass: 'icon-league league--boxing' },
-	{ id: 9057, label: 'Eredivisie', country: 'NL', logoClass: 'icon-league league--eredivisie' },
-	{ id: 9061, label: 'Primeira Liga', country: 'PT', logoClass: 'icon-league league--portugal' },
-	{ id: 9045, label: 'Copa Libertadores', country: 'WORLD', logoClass: 'icon-league league--copa-libertadores' },
-	{ id: 9033, label: 'IIHF World Championship', country: 'WORLD', logoClass: 'icon-league league--iihf' },
-	{ id: 9021, label: 'T20 Blast', country: 'GB', logoClass: 'icon-league league--t20' },
-	{ id: 109021, label: 'Golf head-to-head', country: 'WORLD', logoClass: 'icon-league league--pga' },
-	{ id: 109121, label: 'Golf Tournament Winner', country: 'WORLD', logoClass: 'icon-league league--pga' },
-	{ id: 18821, label: 'CONCACAF Nations League', country: 'WORLD', logoClass: 'icon-league league--concacaf-nations' },
-	{ id: 18806, label: 'UEFA Nations League', country: 'WORLD', logoClass: 'icon-league league--uefa-nations' },
-	{ id: 9050, label: 'UEFA EURO Qualifications', country: 'WORLD', logoClass: 'icon-league league--uefa' },
-	{ id: 9016, label: 'UEFA Champions League', logo: uclIcon, country: 'WORLD', logoClass: 'icon-league league--ucl' },
-	{ id: 9073, label: 'UEFA Europa League', country: 'WORLD', logoClass: 'icon-league league--uel' },
-	{ id: 9076, label: 'FIFA World Cup Women', country: 'WORLD', logoClass: '' },
-	{ id: 9409, label: 'FIBA World Cup', logoClass: '', country: 'WORLD' },
-	{ id: 9536, label: 'Saudi Professional League', logoClass: '', country: 'SA' },
-	{ id: 9268, label: 'Serie A', logoClass: '', country: 'BR' }
-	// NOTE: old { id: 9042, label: 'UEFA Champions League Qualification', country: 'WORLD', logoClass: 'icon-league league--ucl' },
-	// NOTE: old { id: 9017, label: 'UEFA Europa League', country: 'WORLD', logoClass: 'icon-league league--uel' },
-	// NOTE: old { id: 19216, label: 'UEFA Conference League Qualification', country: 'WORLD', logoClass: '' },
-	// NOTE: old { id: 9288, label: 'UEFA EURO U21', country: 'WORLD', logoClass: '' },
-	// NOTE: old { id: 9296, label: 'FIFA World Cup U20', country: 'WORLD', logoClass: 'icon-league league--fifa-world-cup-u20' },
+	{
+		id: 9001,
+		country: 'USA',
+		label: 'NCAA Football',
+		logo: ncaaIcon,
+		logoClass: 'icon-league league--ncaa',
+		favourite: false,
+		hidden: false,
+		priority: 202
+	},
+	{
+		id: 9002,
+		country: 'USA',
+		label: 'NFL',
+		logo: nflIcon,
+		logoClass: 'icon-league league--nfl',
+		favourite: false,
+		hidden: false,
+		priority: 201
+	},
+	{
+		id: 9003,
+		country: 'USA',
+		label: 'MLB',
+		logo: mlbIcon,
+		logoClass: 'icon-league league--mlb',
+		favourite: false,
+		hidden: false,
+		priority: 401
+	},
+	{
+		id: 9004,
+		country: 'USA',
+		label: 'NBA',
+		logo: nbaIcon,
+		logoClass: 'icon-league league--nba',
+		favourite: false,
+		hidden: false,
+		priority: 301
+	},
+	{
+		id: 9005,
+		country: 'USA',
+		label: 'NCAA Basketball',
+		logo: ncaaIcon,
+		logoClass: 'icon-league league--ncaa',
+		favourite: false,
+		hidden: false,
+		priority: 302
+	},
+	{
+		id: 9006,
+		label: 'NHL',
+		country: 'USA',
+		logo: nhlIcon,
+		logoClass: 'icon-league league--nhl',
+		favourite: false,
+		hidden: false,
+		priority: 501
+	},
+	{
+		id: 9007,
+		label: 'UFC',
+		country: 'WORLD',
+		logo: ufcIcon,
+		logoClass: 'icon-league league--ufc',
+		favourite: false,
+		hidden: false,
+		priority: 601
+	},
+	{ id: 9008, label: 'WNBA', country: 'USA', logoClass: 'icon-league league--wnba', favourite: false, hidden: false, priority: 304 },
+	{
+		id: 9010,
+		label: 'MLS',
+		country: 'USA',
+		logo: mlsIcon,
+		logoClass: 'icon-league league--mls',
+		favourite: false,
+		hidden: false,
+		priority: 106
+	},
+	{
+		id: 9011,
+		country: 'GB-ENG',
+		label: 'EPL',
+		logo: eplIcon,
+		logoClass: 'icon-league league--epl',
+		favourite: false,
+		hidden: false,
+		priority: 101
+	},
+	{
+		id: 9012,
+		country: 'FR',
+		label: 'Ligue 1',
+		logo: ligue1,
+		logoClass: 'icon-league league--ligue1',
+		favourite: false,
+		hidden: false,
+		priority: 105
+	},
+	{
+		id: 9013,
+		country: 'DE',
+		label: 'Bundesliga',
+		logo: bundesLigaIcon,
+		logoClass: 'icon-league league--bundesliga',
+		favourite: false,
+		hidden: false,
+		priority: 104
+	},
+	{
+		id: 9014,
+		country: 'ES',
+		label: 'La Liga',
+		logo: laLigaIcon,
+		logoClass: 'icon-league league--la-liga',
+		favourite: false,
+		hidden: false,
+		priority: 102
+	},
+	{
+		id: 9015,
+		country: 'IT',
+		label: 'Serie A',
+		logo: seriea,
+		logoClass: 'icon-league league--serie-a',
+		favourite: false,
+		hidden: false,
+		priority: 103
+	},
+	{
+		id: 9016,
+		country: 'WORLD',
+		label: 'UEFA Champions League',
+		logo: uclIcon,
+		logoClass: 'icon-league league--ucl',
+		favourite: false,
+		hidden: false,
+		priority: 110
+	},
+	{
+		id: 9017,
+		country: 'WORLD',
+		label: 'UEFA Europa League',
+		logo: ``,
+		logoClass: 'icon-league league--uel',
+		favourite: false,
+		hidden: false,
+		priority: 111
+	},
+	{
+		id: 9018,
+		country: 'WORLD',
+		label: 'FIFA World Cup',
+		logo: ``,
+		logoClass: 'icon-league league--fifa-world-cup',
+		favourite: false,
+		hidden: true,
+		priority: 0
+	},
+	{
+		id: 9019,
+		country: 'JP',
+		label: 'J1 League',
+		logo: ``,
+		logoClass: 'icon-league league--j1',
+		favourite: false,
+		hidden: false,
+		priority: 109
+	},
+	// {
+	//     id: 9445,
+	//     label: 'Formula 1',
+	//     logo: '/logos/leagueLogos/f1.png',
+	//     logoClass: 'icon-league league--f1',
+	//     favourite: false,
+	//     hidden: false,
+	//     priority: 701,
+	// },
+	// {
+	//     id: 9497,
+	//     label: 'MotoGP',
+	//     logo: `/logos/leagueLogos/motogp.png`,
+	//     logoClass: 'icon-league league--motogp',
+	//     favourite: false,
+	//     hidden: false,
+	//     priority: 702,
+	// },
+	{
+		id: 9153,
+		country: 'WORLD',
+		label: 'Grand Slam',
+		logo: '',
+		logoClass: 'icon-league league--atp',
+		favourite: false,
+		hidden: false,
+		priority: 602
+	},
+	{
+		id: 9156,
+		country: 'WORLD',
+		label: 'ATP Events',
+		logo: ``,
+		logoClass: 'icon-league league--atp',
+		favourite: false,
+		hidden: false,
+		priority: 603
+	},
+	{
+		id: 18977,
+		country: 'WORLD',
+		label: 'CS GO',
+		logoClass: 'icon-league league--csgo',
+		favourite: false,
+		hidden: false,
+		priority: 801
+	},
+	{
+		id: 18983,
+		country: 'WORLD',
+		label: 'DOTA 2',
+		logoClass: 'icon-league league--dota2',
+		favourite: false,
+		hidden: false,
+		priority: 802
+	},
+	{
+		id: 19138,
+		country: 'WORLD',
+		label: 'LOL',
+		logoClass: 'icon-league league--lol',
+		favourite: false,
+		hidden: false,
+		priority: 803
+	},
+	{
+		id: 9020,
+		country: 'IN',
+		label: 'Indian Premier League',
+		logoClass: 'icon-league league--ipl',
+		favourite: false,
+		hidden: false,
+		priority: 901
+	},
+	{
+		id: 9399,
+		country: 'WORLD',
+		label: 'Euroleague',
+		logoClass: 'icon-league league--euroleague',
+		favourite: false,
+		hidden: false,
+		priority: 303
+	},
+	{
+		id: 18196,
+		country: 'WORLD',
+		label: 'Boxing',
+		logoClass: 'icon-league league--boxing',
+		favourite: false,
+		hidden: false,
+		priority: 602
+	},
+	{
+		id: 9057,
+		country: 'NL',
+		label: 'Eredivisie',
+		logoClass: 'icon-league league--eredivisie',
+		favourite: false,
+		hidden: false,
+		priority: 107
+	},
+	{
+		id: 9061,
+		country: 'PT',
+		label: 'Primeira Liga',
+		logoClass: 'icon-league league--portugal',
+		favourite: false,
+		hidden: false,
+		priority: 108
+	},
+	{
+		id: 9045,
+		country: 'WORLD',
+		label: 'Copa Libertadores',
+		logoClass: 'icon-league league--copa-libertadores',
+		favourite: false,
+		hidden: false,
+		priority: 112
+	},
+	{
+		id: 9033,
+		country: 'WORLD',
+		label: 'IIHF World Championship',
+		logoClass: 'icon-league league--iihf',
+		favourite: false,
+		hidden: false,
+		priority: 502
+	},
+	{
+		id: 9296,
+		country: 'WORLD',
+		label: 'FIFA World Cup U20',
+		logoClass: 'icon-league league--fifa-world-cup-u20',
+		favourite: false,
+		hidden: false,
+		priority: 121
+	},
+	{
+		id: 9021,
+		country: 'WORLD',
+		label: 'T20 Blast',
+		logoClass: 'icon-league league--t20',
+		favourite: false,
+		hidden: false,
+		priority: 902
+	},
+	{
+		id: 9050,
+		country: 'WORLD',
+		label: 'UEFA EURO Qualifications',
+		logoClass: 'icon-league league--uefa',
+		favourite: false,
+		hidden: false,
+		priority: 113
+	},
+	{
+		id: 109021,
+		country: 'WORLD',
+		label: 'Golf head-to-head',
+		logoClass: 'icon-league league--pga',
+		favourite: false,
+		hidden: false,
+		priority: 1001
+	},
+	{
+		id: 109121,
+		country: 'WORLD',
+		label: 'Golf Tournament Winner',
+		logoClass: 'icon-league league--pga',
+		favourite: false,
+		hidden: false,
+		priority: 1002
+	},
+	{
+		id: 18806,
+		country: 'WORLD',
+		label: 'UEFA Nations League',
+		logoClass: 'icon-league league--uefa-nations',
+		favourite: false,
+		hidden: false,
+		priority: 114
+	},
+	{
+		id: 18821,
+		country: 'WORLD',
+		label: 'CONCACAF Nations League',
+		logoClass: 'icon-league league--concacaf-nations',
+		favourite: false,
+		hidden: false,
+		priority: 115
+	},
+	{
+		id: 9288,
+		country: 'WORLD',
+		label: 'UEFA EURO U21',
+		logoClass: '',
+		favourite: false,
+		hidden: false,
+		priority: 120
+	},
+	{
+		id: 9042,
+		country: 'WORLD',
+		label: 'UEFA Champions League Qualification',
+		logoClass: 'icon-league league--ucl',
+		favourite: false,
+		hidden: false,
+		priority: 111
+	},
+	{
+		id: 19216,
+		country: 'WORLD',
+		label: 'UEFA Conference League',
+		logoClass: '',
+		favourite: false,
+		hidden: false,
+		priority: 118
+	},
+	{
+		id: 9076,
+		country: 'WORLD',
+		label: 'FIFA World Cup Women',
+		logoClass: '',
+		favourite: false,
+		hidden: false,
+		priority: 119
+	},
+	{
+		id: 9073,
+		country: 'WORLD',
+		label: 'UEFA Europa League',
+		logoClass: 'icon-league league--uel',
+		favourite: false,
+		hidden: true,
+		priority: 117
+	},
+	{
+		id: 9409,
+		country: 'WORLD',
+		label: 'FIBA World Cup',
+		logoClass: '',
+		favourite: false,
+		hidden: false,
+		priority: 303
+	},
+	{
+		id: 9536,
+		country: 'SA',
+		label: 'Saudi Professional League',
+		logoClass: '',
+		favourite: false,
+		hidden: false,
+		priority: 109
+	},
+	{
+		id: 9268,
+		country: 'BR',
+		label: 'Serie A',
+		logoClass: '',
+		favourite: false,
+		hidden: false,
+		priority: 109
+	},
+	{
+		id: 19199,
+		country: 'WORLD',
+		label: 'CONMEBOL WC Qualification',
+		logoClass: '',
+		favourite: false,
+		hidden: false,
+		priority: 110
+	}
 ]
 
 export enum BetType {
@@ -160,7 +553,8 @@ export const SPORTS_TAGS_MAP: SportsTagsMap = {
 	Basketball: [9004, 9005, 9008, 9399, 9409],
 	Hockey: [9006, 9033],
 	Soccer: [
-		9010, 9011, 9012, 9013, 9014, 9015, 9016, 9018, 9019, 9057, 9061, 9045, 9050, 18806, 18821, 9076, 9073, 9536, 9268 /* , 9296, 9017, 9288, 9042, 19216 */
+		9010, 9011, 9012, 9013, 9014, 9015, 9016, 9018, 9019, 9057, 9061, 9045, 9050, 18806, 18821, 9076, 9073, 9536, 9268,
+		19216 /* , 9296, 9017, 9288, 9042, 19216 */
 	],
 	MMA: [9007, 18196],
 	Motosport: [9445, 9497],

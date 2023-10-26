@@ -1482,8 +1482,8 @@ export const getUserTicketClaimValue = (ticket: UserTicket | undefined, userTick
 	if (!ticket || !userTicketType) return '0 $'
 
 	if (userTicketType === USER_TICKET_TYPE.MISS) return `0 $`
-	if (userTicketType === USER_TICKET_TYPE.SUCCESS) return `+ ${roundPrice(ticket?.amount, true)}`
-	if (userTicketType === USER_TICKET_TYPE.CANCELED) return ` + ${getCanceledClaimAmount(ticket)}`
+	if (userTicketType === USER_TICKET_TYPE.SUCCESS) return `+${roundPrice(ticket?.amount, true)}`
+	if (userTicketType === USER_TICKET_TYPE.CANCELED) return ` +${getCanceledClaimAmount(ticket)}`
 	return roundPrice(ticket?.amount, true)
 }
 

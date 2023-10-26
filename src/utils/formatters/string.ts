@@ -1,6 +1,5 @@
 import dayjs from 'dayjs'
 import { toNumber } from 'lodash'
-import { MATCHES } from '../enums'
 
 export const truncateAddress = (address: string, first = 5, last = 5) =>
 	address ? `${address.slice(0, first)}...${address.slice(-last, address.length)}` : null
@@ -32,10 +31,8 @@ export const fixOneSideMarketCompetitorName = (team: string) => {
 	return team.endsWith('YES') ? (team !== null ? team.slice(0, team.length - 4).trim() : '') : team
 }
 
-export const getFormatDate = (type: string, date: any, t: any) => {
-	if (type === MATCHES.ONGOING) return t('Playing right now')
-	if (type === MATCHES.PAUSED) return `${t('Paused until')} ${dayjs(toNumber(date) * 1000).format('MMM DD | HH:mm')}`
-	return dayjs(toNumber(date) * 1000).format('MMM DD | HH:mm')
+export const getFormatDate = (type: string, date: any) => {
+	return dayjs(toNumber(date) * 1000).format('MMM DD, YYYY | HH:mm')
 }
 
 export const formatAddress = (address: string | undefined) => {

@@ -112,7 +112,7 @@ const MobileMenu = ({ selected }: Props) => {
 											return (
 												<Button
 													btnStyle={'primary'}
-													style={{ marginBottom: '16px' }}
+													style={{ marginBottom: '16px', height: '48px' }}
 													onClick={() => openConnectModal()}
 													content={t('Connect Wallet')}
 												/>

@@ -174,7 +174,7 @@ const LeaderboardContent = () => {
 	return router.query.id ? (
 		<MyWalletContent />
 	) : (
-		<SC.LeaderboardContentWrapper>
+		<>
 			<h1>{t('Leaderboard')}</h1>
 			<SCS.SorterRow>
 				<SCS.HorizontalSorters>
@@ -248,7 +248,7 @@ const LeaderboardContent = () => {
 				{t('Show more')}
 				<SCS.Icon icon={ArrowIcon} />
 			</SCS.LoadMore>
-		</SC.LeaderboardContentWrapper>
+		</>
 	)
 }
 

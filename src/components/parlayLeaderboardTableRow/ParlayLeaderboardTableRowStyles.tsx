@@ -8,6 +8,11 @@ export const ParlayLeaderboardTableRow = styled(Row)`
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	padding: 16px;
 	margin-bottom: 16px;
+	@media (max-width: ${breakpoints.md}px) {
+		// disabled gap -4px in mobile view
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+	}
 `
 
 export const RankBadge = styled.div`
@@ -34,8 +39,8 @@ export const ParlayLeaderboardTableText = styled.span`
 `
 export const ParlayLeaderboardTableRankText = styled.span`
 	${TextMDMedium};
-	width: 12px;
-	margin-left: 8px;
+	width: 100%;
+	text-align: center;
 `
 export const AddressText = styled(Typography.Text)`
 	${TextMDMedium}
@@ -69,5 +74,6 @@ export const ColumnNameText = styled.span`
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
 	@media (max-width: ${breakpoints.md}px) {
 		display: block;
+		margin-bottom: 4px;
 	}
 `

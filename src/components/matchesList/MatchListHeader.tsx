@@ -97,7 +97,7 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 		() =>
 			type === MATCHES.OPEN ? (
 				<>
-					<SC.Header>{getFormatDate(type, match.maturityDate, t)}</SC.Header>
+					<SC.Header>{getFormatDate(type, match.maturityDate)}</SC.Header>
 					{size === RESOLUTIONS.XXL && (
 						<SC.XXLWrapper>
 							<SC.NoWrapCenterRow gutter={16}>
@@ -127,7 +127,7 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 			) : (
 				// ONGOING, PAUSED, FINISHED
 				<>
-					<SC.Header>{getFormatDate(type, match.maturityDate, t)}</SC.Header>
+					<SC.Header>{getFormatDate(type, match.maturityDate)}</SC.Header>
 					{includes([RESOLUTIONS.SEMIXXL, RESOLUTIONS.XL, RESOLUTIONS.LG, RESOLUTIONS.XXL], size) ? (
 						<SC.NoWrapCenterRow style={{ width: '100%' }} gutter={16}>
 							<Col span={6}>

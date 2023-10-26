@@ -14,7 +14,7 @@ export const MenuWrapper = styled.div`
 	align-items: center;
 	justify-content: center;
 	float: right;
-	margin-top: -83px;
+	margin-top: -76px;
 `
 
 export const MenuLogo = styled.img`
@@ -26,7 +26,7 @@ export const OverlayDiv = styled.div<{ isOpen?: boolean }>`
 	z-index: 25;
 	position: absolute;
 	background: ${({ theme }) => theme['color-base-surface-top']};
-	margin-top: 40px;
+	margin-top: 50px;
 	width: 100%;
 	height: ${({ isOpen }) => (isOpen ? '100%' : '0px')};
 	background: ${({ theme }) => theme['color-base-surface-top']};
@@ -41,7 +41,7 @@ export const Wrapper = styled.div<{ isOpen?: boolean }>`
 	display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
 	flex-direction: column;
 	justify-content: space-between;
-	height: calc(100% - 60px);
+	height: calc(100% - 80px);
 `
 
 export const CenterDiv = styled.div`
@@ -62,8 +62,8 @@ export const MenuItems = styled.div`
 export const MenuItem = styled(AntdMenu.Item)`
 	padding-inline: 0 !important;
 	height: auto !important;
-	margin-bottom: 16px !important;
-	padding: 8px 16px !important;
+	margin-bottom: 0 !important;
+	padding: 8px 0 !important;
 	${HeadingXSMedium};
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
 	&.ant-menu-item-selected {

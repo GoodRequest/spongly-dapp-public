@@ -279,7 +279,7 @@ const ParlayLeaderboardContent = () => {
 	}
 
 	return (
-		<SC.ContentWrapper>
+		<>
 			<Row>
 				<SC.ParlayLeaderboardTextCol span={24}>
 					<SC.ParlayLeaderboardTitle>{t('Parlay incentives superstars')}</SC.ParlayLeaderboardTitle>
@@ -377,7 +377,7 @@ const ParlayLeaderboardContent = () => {
 					<SCS.Icon icon={ArrowIcon} />
 				</SCS.LoadMore>
 			)}
-		</SC.ContentWrapper>
+		</>
 	)
 }
 

@@ -133,7 +133,9 @@ const Header = () => {
 					</Col>
 					<Col>
 						<SC.WalletDiv>
-							<ConnectButton />
+							<div style={{ width: '80px' }}>
+								<ConnectButton />
+							</div>
 						</SC.WalletDiv>
 					</Col>
 				</SC.HeadRow>

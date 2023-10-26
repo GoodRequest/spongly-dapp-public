@@ -17,7 +17,6 @@ import CopyTicketButton from '@/components/copyTicketButton/CopyTicketButton'
 // utils
 import { showNotifications } from '@/utils/tsxHelpers'
 import {
-	getEtherScanTxHash,
 	getPositionsWithMergedCombinedPositions,
 	getTicketTotalQuote,
 	getUserTicketClaimValue,
@@ -182,14 +181,14 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 
 	const ticketHeader = (
 		<SC.UserTicketTableRow show={ticket.isClaimable} align={'middle'} gutter={[16, 16]}>
-			<SC.TxCol md={{ span: 3, order: 1 }} xs={{ span: 24, order: 2 }}>
+			<SC.TxCol md={{ span: 4, order: 1 }} xs={{ span: 24, order: 2 }}>
 				<SC.TxHeader onClick={() => handleTxHashRedirect(t, ticket.txHash, chain?.id)}>
 					<SC.TxIcon src={DocumentIcon} alt='hash' />
 					<SC.AddressText>{ticket?.txHash}</SC.AddressText>
 				</SC.TxHeader>
-				<SC.ColumnNameText>{t('Tx hash')}</SC.ColumnNameText>
+				<SC.ColumnNameText>{t('Txn hash')}</SC.ColumnNameText>
 			</SC.TxCol>
-			<SC.TagColContent md={{ span: 4, order: 2 }} xs={{ span: 24, order: 1 }}>
+			<SC.TagColContent md={{ span: 3, order: 2 }} xs={{ span: 24, order: 1 }}>
 				<SC.TicketTypeTag ticketType={userTicketType}>{getUserTicketTypeName(userTicketType, t)}</SC.TicketTypeTag>
 			</SC.TagColContent>
 
@@ -243,7 +242,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 			activeKey={isExpanded ? [ticket.id] : []}
 			isExpanded={isExpanded}
 		>
-			<SC.CollapsePanel header={ticketHeader} key={ticket.id}>
+			<SC.CollapsePanel isExpanded={isExpanded} header={ticketHeader} key={ticket.id}>
 				<Row gutter={[16, 16]}>
 					{map(positionsWithMergedCombinedPositions, (item, index) => (
 						<Col key={item?.id} span={24} lg={12}>

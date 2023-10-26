@@ -1,10 +1,11 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Col, Collapse, Divider, Radio, Row, Skeleton } from 'antd'
 import Ticket from '@/assets/images/empty_state_ticket.png'
 import { HeadingXSMedium, HeadingXXSMedium, TextMDMedium, TextMDRegular, TextSMMedium, TextSMRegular, TextXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 import { MATCHES } from '@/utils/enums'
-import { FlagWorld } from '@/styles/GlobalStyles'
+import { FlagWorld, FlexItemCenter, flicker } from '@/styles/GlobalStyles'
+import { MATCH_STATUS } from '@/utils/constants'
 
 const { Panel } = Collapse
 
@@ -383,17 +384,8 @@ export const RadioMobileHeader = styled.div`
 	${TextXSMedium}
 `
 
-export const MobileStatusWrapper = styled.div<{ type: MATCHES }>`
-	width: 100%;
-	height: 32px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	border-radius: 6px;
+export const MobileStatusWrapper = styled.div`
 	margin-top: 16px;
-	${TextXSMedium};
-	background: ${({ theme, type }) => (type === MATCHES.ONGOING ? theme['color-base-state-warning-bg'] : theme['color-base-surface-quaternary'])};
-	color: ${({ theme, type }) => (type === MATCHES.ONGOING ? theme['color-base-state-warning-fg'] : theme['color-base-content-top'])};
 `
 
 export const MobileWrapper = styled.div`
@@ -482,4 +474,40 @@ export const NotAvailableText = styled.div`
 	${TextMDMedium};
 	text-align: center;
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
+`
+export const HeaderStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
+	${TextXSMedium};
+	${FlexItemCenter};
+	width: 100%;
+	padding: 12px;
+	height: 48px;
+	text-align: center;
+	position: relative;
+	background: ${({ theme }) => theme['color-base-surface-quaternary']};
+	border-radius: 10px;
+	${(p) =>
+		p.matchStatus === MATCH_STATUS.ONGOING &&
+		css`
+			position: relative;
+			background: ${({ theme }) => theme['color-base-state-warning-bg']};
+			color: ${({ theme }) => theme['color-base-state-warning-fg']};
+			& > span {
+				position: relative;
+				&::before {
+					content: '';
+					position: absolute;
+					left: -10px;
+					top: 50%;
+					transform: translate(-50%, -50%);
+					width: 8px;
+					height: 8px;
+					border-radius: 50%;
+					background: ${({ theme }) => theme['color-base-state-warning-fg']};
+					animation: ${flicker} 1s infinite;
+				}
+			}
+		`};
+	@media (max-width: ${breakpoints.md}px) {
+		height: 32px;
+	}
 `

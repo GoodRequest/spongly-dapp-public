@@ -6,8 +6,8 @@ import { TextLGMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
 export const HeadRow = styled(Row)`
-	margin-top: 16px;
-	margin-bottom: 16px;
+	padding-top: 16px;
+	padding-bottom: 16px;
 	background: ${({ theme }) => theme['color-base-surface-top']};
 
 	@media (max-width: ${breakpoints.md}px) {
@@ -65,7 +65,7 @@ export const MenuItem = styled(AntdMenu.Item)`
 	}
 `
 export const Divider = styled(AntdDivider)`
-	margin-top: 8px 0;
+	margin: 8px 0;
 	border-top: ${({ theme }) => `1px solid ${theme['color-base-action-secondary-default']}`};
 `
 

@@ -3,24 +3,6 @@ import styled from 'styled-components'
 import { TextSMMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
-export const LeaderboardContentWrapper = styled.div`
-	color: ${({ theme }) => theme['color-base-content-top']};
-	padding-left: 16%;
-	padding-right: 16%;
-
-	@media (max-width: ${breakpoints.xl}px) {
-		padding-left: 12%;
-		padding-right: 12%;
-	}
-	@media (max-width: ${breakpoints.lg}px) {
-		padding-left: 6%;
-		padding-right: 6%;
-	}
-	@media (max-width: ${breakpoints.md}px) {
-		padding-left: 16px;
-		padding-right: 16px;
-	}
-`
 export const LeaderboardContentRow = styled(Row)`
 	padding: 24px;
 	border-radius: 12px;
@@ -46,6 +28,9 @@ export const Wallet = styled.div`
 export const Description = styled.span`
 	${TextSMMedium};
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
+	@media (max-width: ${breakpoints.md}px) {
+		margin-bottom: 4px;
+	}
 `
 
 export const Value = styled.span`
@@ -87,16 +72,4 @@ export const LeaderboardDivider = styled(Divider)`
 		border-top: ${({ theme }) => `1px solid ${theme['color-base-action-secondary-default']}`};
 		z-index: 10;
 	}
-`
-export const ButtonContent = styled.div`
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-`
-
-export const ButtonIcon = styled.img`
-	margin-left: 8px;
-	width: 16px;
-	height: 16px;
 `

@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { TextMDMedium, TextXLMedium, TextXSRegular } from '@/styles/typography'
 import { MATCH_STATUS } from '@/utils/constants'
 import { breakpoints } from '@/styles/theme'
+import { BasicBoxShadow } from '@/styles/GlobalStyles'
 
 export const PositionsListWrapper = styled.div`
 	${TextMDMedium};
@@ -44,8 +45,7 @@ export const PositionListItem = styled(Row)`
 	@media (min-width: ${breakpoints.md + 1}px) {
 		&:hover {
 			cursor: pointer;
-			outline: ${({ theme }) => `1px solid ${theme['color-base-action-primary-default']}`};
-			box-shadow: 0px 0px 4px 0px #6674ff, 0px 0px 16px 0px rgba(102, 116, 255, 0.85);
+			${BasicBoxShadow};
 		}
 	}
 	@media (max-width: ${breakpoints.md}px) {

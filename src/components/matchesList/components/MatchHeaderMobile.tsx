@@ -1,5 +1,5 @@
 import { includes } from 'lodash'
-import { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'next-export-i18n'
 import { useRouter } from 'next/router'
 import * as SC from '../MatchesListStyles'
@@ -11,6 +11,7 @@ import { TOTAL_WINNER_TAGS } from '@/utils/constants'
 
 // redux
 import { TicketPosition } from '@/redux/betTickets/betTicketTypes'
+import { getMatchStatus } from '@/utils/helpers'
 
 interface IMatchListItem {
 	match: TicketPosition
@@ -76,10 +77,22 @@ const MatchHeaderMobile = ({
 					</SC.OddsWrapper>
 				</>
 			)}
-			{type === MATCHES.ONGOING && <SC.MobileStatusWrapper type={MATCHES.ONGOING}>{t('ONGOING')}</SC.MobileStatusWrapper>}
-			{type === MATCHES.FINISHED && <SC.MobileStatusWrapper type={MATCHES.FINISHED}>{formatFinishedResults()}</SC.MobileStatusWrapper>}
+			{type === MATCHES.ONGOING && (
+				<SC.MobileStatusWrapper>
+					<SC.HeaderStatus matchStatus={getMatchStatus(match, t).status}>
+						<span>{getMatchStatus(match, t).text}</span>
+					</SC.HeaderStatus>
+				</SC.MobileStatusWrapper>
+			)}
+			{type === MATCHES.FINISHED && (
+				<SC.MobileStatusWrapper>
+					<SC.HeaderStatus matchStatus={getMatchStatus(match, t).status}>{formatFinishedResults()}</SC.HeaderStatus>
+				</SC.MobileStatusWrapper>
+			)}
 			{type === MATCHES.PAUSED && (
-				<SC.MobileStatusWrapper type={MATCHES.FINISHED}> {match.isPaused ? t('PAUSED') : t('CANCELED')}</SC.MobileStatusWrapper>
+				<SC.MobileStatusWrapper>
+					<SC.HeaderStatus matchStatus={getMatchStatus(match, t).status}>{match?.isPaused ? t('Paused') : t('Canceled')}</SC.HeaderStatus>
+				</SC.MobileStatusWrapper>
 			)}
 		</SC.MobileContentWrapper>
 	)

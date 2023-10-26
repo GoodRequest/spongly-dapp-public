@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle, css } from 'styled-components'
+import styled, { createGlobalStyle, css, keyframes } from 'styled-components'
 import { Row, Typography, Empty as AntdEmpty } from 'antd'
 import { HeadingXSMedium, TextMDMedium, TextMDRegular, TextSMMedium, TextSorter } from '@/styles/typography'
 import worldFlag from '@/assets/icons/world-flag.png'
@@ -176,6 +176,15 @@ export const GlobalStyle = createGlobalStyle`
 	}
 	}
 `
+export const flicker = keyframes`
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+`
+
 export const FlexItemCenter = css`
 	display: flex;
 	align-items: center;
@@ -312,4 +321,8 @@ export const LeagueIcon = styled.i<{ xlSize?: number; mdSize?: number }>`
 	@media (max-width: ${breakpoints.md}px) {
 		font-size: ${({ mdSize }) => (mdSize ? `${mdSize}px` : '60px')};
 	}
+`
+
+export const BasicBoxShadow = css`
+	box-shadow: 0px 0px 4px 0px #6674ff, 0px 0px 16px 0px rgba(102, 116, 255, 0.85);
 `

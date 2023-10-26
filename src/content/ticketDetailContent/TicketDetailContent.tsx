@@ -3,6 +3,7 @@ import { useRouter } from 'next-translate-routes'
 import { useLazyQuery } from '@apollo/client'
 import { useAccount, useNetwork } from 'wagmi'
 import { Col, Row } from 'antd'
+import { useTranslation } from 'next-export-i18n'
 
 // utils
 import { GET_PARLAY_DETAIL, GET_POSITION_BALANCE_DETAIL, GET_POSITION_BALANCE_TRANSACTION } from '@/utils/queries'
@@ -19,7 +20,7 @@ import {
 } from '@/utils/helpers'
 import networkConnector from '@/utils/networkConnector'
 import { roundPrice } from '@/utils/formatters/currency'
-import { Network, NETWORK_IDS, OddsType, USER_TICKET_TYPE } from '@/utils/constants'
+import { MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE, OddsType, USER_TICKET_TYPE } from '@/utils/constants'
 
 // hooks
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
@@ -29,18 +30,16 @@ import { SGPItem, UserTicket } from '@/typescript/types'
 
 // components
 import TicketStatisticRow from '@/components/statisticRow/TicketStatisticRow'
-import TicketBetContainer from '@/components/ticketBetContainer/TicketBetContainer'
 import PositionsList from '@/components/positionsList/PositionsList'
 import Custom404 from '@/pages/404'
-
-// styles
-import * as PSC from '@/layout/content/ContentStyles'
+import { showNotifications } from '@/utils/tsxHelpers'
 
 const TicketDetailContent = () => {
 	const { chain } = useNetwork()
 	const router = useRouter()
 	const { address } = useAccount()
 	const { signer } = networkConnector
+	const { t } = useTranslation()
 
 	const [fetchParlayDetail] = useLazyQuery(GET_PARLAY_DETAIL)
 	const [fetchPositionDetail] = useLazyQuery(GET_POSITION_BALANCE_DETAIL)
@@ -104,7 +103,8 @@ const TicketDetailContent = () => {
 				setPositionsData(positionsWithMergedCombinedPositions)
 			})
 		} catch (e) {
-			// TODO: throw notif
+			showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while loading detail of ticket') }], NOTIFICATION_TYPE.NOTIFICATION)
+			// eslint-disable-next-line no-console
 			console.error(e)
 		} finally {
 			setIsLoading(false)
@@ -119,7 +119,6 @@ const TicketDetailContent = () => {
 	}, [router.isReady])
 
 	const isMyWallet = ticketData?.account?.toLocaleLowerCase() === address?.toLocaleLowerCase()
-
 	return (
 		<>
 			{((positionsData && ticketData) || isLoading) && (
@@ -140,7 +139,7 @@ const TicketDetailContent = () => {
 				</Row>
 			)}
 			<Row style={{ marginTop: '32px' }}>
-				<PSC.MainContentContainer withPadding={true}>
+				<Col span={24}>
 					{(positionsData && ticketData) || isLoading ? (
 						<PositionsList
 							isMyWallet={isMyWallet}
@@ -153,10 +152,7 @@ const TicketDetailContent = () => {
 							<Custom404 />
 						</div>
 					)}
-				</PSC.MainContentContainer>
-				<PSC.MobileHiddenCol span={8}>
-					<TicketBetContainer />
-				</PSC.MobileHiddenCol>
+				</Col>
 			</Row>
 		</>
 	)

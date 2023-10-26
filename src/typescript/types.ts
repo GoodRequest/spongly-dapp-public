@@ -10,8 +10,11 @@ export type TagInfo = {
 	id: number
 	label: string
 	logo?: string
-	country: string
 	logoClass?: string
+	favourite?: boolean
+	hidden?: boolean
+	priority?: number
+	country: string
 }
 
 export type Tags = TagInfo[]

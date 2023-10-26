@@ -97,13 +97,13 @@ const PositionListItem = ({ position, quote, copyButtonTicket, isMyWallet }: Pro
 								<SC.VSSpan status={positionState.status}>{getMatchDetailScoreText(position?.market, t, isTotalWinner || false)}</SC.VSSpan>
 							</SC.TeamCol>
 							<SC.TeamCol span={10} style={{ height: '100%' }}>
-								<SCS.LeagueIcon xlSize={68} className={league?.logoClass} />
+								<SCS.LeagueIcon xlSize={68} mdSize={38} className={league?.logoClass} />
 							</SC.TeamCol>
 						</>
 					)}
 					{!isTotalWinner && (
 						<SC.TeamCol span={4} style={{ height: '100%' }}>
-							<SCS.LeagueIcon xlSize={68} className={league?.logoClass} />
+							<SCS.LeagueIcon xlSize={68} mdSize={38} className={league?.logoClass} />
 							<SC.VSSpan status={positionState.status}>{getMatchDetailScoreText(position?.market, t, isTotalWinner || false)}</SC.VSSpan>
 						</SC.TeamCol>
 					)}
