@@ -1,8 +1,9 @@
 import { Col, Divider, Row, Collapse } from 'antd'
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import { HeadingSMMedium, HeadingXSMedium, TextLGMedium, TextMDMedium, TextSMMedium, TextXSMedium } from '@/styles/typography'
 import { USER_TICKET_TYPE } from '@/utils/constants'
 import { breakpoints } from '@/styles/theme'
+import { flicker } from '@/styles/GlobalStyles'
 
 const { Panel } = Collapse
 
@@ -276,14 +277,6 @@ export const ModalDescription = styled(Col)`
 	text-align: center;
 	margin-bottom: 32px;
 	color: ${({ theme }) => theme['color-base-content-tertiary']};
-`
-const flicker = keyframes`
-    0%, 100% {
-        opacity: 0;
-    }
-    50% {
-        opacity: 1;
-    }
 `
 
 export const ModalDescriptionWarning = styled(Col)`

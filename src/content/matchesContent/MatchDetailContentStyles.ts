@@ -1,9 +1,10 @@
-import styled, { css, keyframes } from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Col, Skeleton } from 'antd'
 import { breakpoints } from '@/styles/theme'
 import { HeadingXSMedium, TextXLMedium, TextXSMedium } from '@/styles/typography'
 import { MATCH_STATUS } from '@/utils/constants'
 import { MATCH_RESULT, TEAM_TYPE } from '@/utils/enums'
+import { flicker } from '@/styles/GlobalStyles'
 
 export const MatchDetailWrapper = styled.div`
 	width: 100%;
@@ -40,14 +41,7 @@ export const HeaderResultText = styled.div`
 		margin: 0;
 	}
 `
-const flicker = keyframes`
-    0%, 100% {
-        opacity: 0;
-    }
-    50% {
-        opacity: 1;
-    }
-`
+
 export const HeaderStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 	${TextXSMedium};
 	padding: 12px;

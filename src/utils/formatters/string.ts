@@ -33,9 +33,7 @@ export const fixOneSideMarketCompetitorName = (team: string) => {
 }
 
 export const getFormatDate = (type: string, date: any, t: any) => {
-	if (type === MATCHES.ONGOING) return t('Playing right now')
-	if (type === MATCHES.PAUSED) return `${t('Paused until')} ${dayjs(toNumber(date) * 1000).format('MMM DD | HH:mm')}`
-	return dayjs(toNumber(date) * 1000).format('MMM DD | HH:mm')
+	return dayjs(toNumber(date) * 1000).format('MMM DD, YYYY | HH:mm')
 }
 
 export const formatAddress = (address: string | undefined) => {

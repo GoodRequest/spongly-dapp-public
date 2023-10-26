@@ -1,21 +1,14 @@
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import { Col } from 'antd'
 import { HeadingSMMedium, HeadingXSMedium, TextMDMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
+import { flicker } from '@/styles/GlobalStyles'
 
 export const ModalDescription = styled(Col)`
 	${TextMDMedium};
 	text-align: center;
 	margin-bottom: 32px;
 	color: ${({ theme }) => theme['color-base-content-tertiary']};
-`
-const flicker = keyframes`
-    0%, 100% {
-        opacity: 0;
-    }
-    50% {
-        opacity: 1;
-    }
 `
 
 export const ModalDescriptionWarning = styled(Col)`

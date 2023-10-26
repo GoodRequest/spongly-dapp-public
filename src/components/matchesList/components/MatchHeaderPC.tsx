@@ -1,5 +1,5 @@
 import { includes } from 'lodash'
-import { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'next-export-i18n'
 import { useNetwork } from 'wagmi'
 import { useRouter } from 'next/router'
@@ -9,16 +9,10 @@ import { BET_OPTIONS, MATCHES, PAGES } from '@/utils/enums'
 import OddButton from '@/components/oddButton/OddButton'
 import OddValue from '@/components/oddButton/OddValue'
 import { BetType } from '@/utils/tags'
-import { getOddByBetType, isWindowReady } from '@/utils/helpers'
-import * as SCS from '@/styles/GlobalStyles'
+import { getMatchStatus, getOddByBetType, isWindowReady } from '@/utils/helpers'
 import { roundToTwoDecimals } from '@/utils/formatters/number'
 import { NETWORK_IDS, OddsType, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { formatQuote } from '@/utils/formatters/quote'
-
-// icons
-import PauseIcon from '@/assets/icons/pause.svg'
-import ClockIcon from '@/assets/icons/clock.svg'
-import CanceledIcon from '@/assets/icons/canceled-icon.svg'
 
 // redux
 import { TicketPosition } from '@/redux/betTickets/betTicketTypes'
@@ -196,11 +190,9 @@ const MatchHeaderPC = ({
 						{getContestedTeams}
 					</SC.MatchItemCol>
 					<SC.MatchItemCol span={6}>
-						<SC.Header>{t('Status')}</SC.Header>
-						<SC.StatusWrapper>
-							<SCS.Icon icon={ClockIcon} />
-							{t('Ongoing')}
-						</SC.StatusWrapper>
+						<SC.HeaderStatus matchStatus={getMatchStatus(match, t).status}>
+							<span>{getMatchStatus(match, t).text}</span>
+						</SC.HeaderStatus>
 					</SC.MatchItemCol>
 				</SC.MatchItemRow>
 			)}
@@ -210,8 +202,7 @@ const MatchHeaderPC = ({
 						{getContestedTeams}
 					</SC.MatchItemCol>
 					<SC.MatchItemCol span={6}>
-						<SC.Header>{t('Results')}</SC.Header>
-						<SC.StatusWrapper>{formatFinishedResults()}</SC.StatusWrapper>
+						<SC.HeaderStatus matchStatus={getMatchStatus(match, t).status}>{formatFinishedResults()}</SC.HeaderStatus>
 					</SC.MatchItemCol>
 				</SC.MatchItemRow>
 			)}
@@ -221,18 +212,7 @@ const MatchHeaderPC = ({
 						{getContestedTeams}
 					</SC.MatchItemCol>
 					<SC.MatchItemCol span={6}>
-						<SC.Header>{t('Status')}</SC.Header>
-						{match?.isPaused ? (
-							<SC.StatusWrapper>
-								<SCS.Icon icon={PauseIcon} />
-								{t('Paused')}
-							</SC.StatusWrapper>
-						) : (
-							<SC.StatusWrapper>
-								<SCS.Icon icon={CanceledIcon} />
-								{t('Canceled')}
-							</SC.StatusWrapper>
-						)}
+						<SC.HeaderStatus matchStatus={getMatchStatus(match, t).status}>{match?.isPaused ? t('Paused') : t('Canceled')}</SC.HeaderStatus>
 					</SC.MatchItemCol>
 				</SC.MatchItemRow>
 			)}
