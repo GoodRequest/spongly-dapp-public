@@ -139,7 +139,7 @@ const TicketDetailContent = () => {
 					</Col>
 				</Row>
 			)}
-			<Row style={{ marginTop: '40px' }}>
+			<Row style={{ marginTop: '32px' }}>
 				<PSC.MainContentContainer withPadding={true}>
 					{(positionsData && ticketData) || isLoading ? (
 						<PositionsList

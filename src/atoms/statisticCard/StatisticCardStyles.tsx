@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { TextSMMedium, TextXLSemibold } from '@/styles/typography'
+import { TextLGMedium, TextSMMedium, TextXLSemibold } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
 export const Image = styled.img<{ filled: boolean }>`
@@ -17,7 +17,7 @@ export const StatisticCard = styled.div<{ filled: boolean; showMobileInColumn: b
 	width: 100%;
 	border-radius: 12px;
 	padding: 8px;
-	height: 100px;
+	height: 68px;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -114,6 +114,7 @@ export const TxWrapper = styled.div`
 `
 
 export const TxEllipsis = styled.div`
+	${TextLGMedium};
 	max-width: calc(100% - 24px);
 	white-space: nowrap;
 	overflow: hidden;

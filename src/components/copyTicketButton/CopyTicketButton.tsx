@@ -154,7 +154,8 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 	const modals = (
 		<Modal
 			open={copyModal.visible}
-			onCancel={() => {
+			onCancel={(e) => {
+				e.stopPropagation()
 				setCopyModal({ visible: false, onlyCopy: false })
 			}}
 			centered
@@ -230,7 +231,8 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 				// TODO: opravit text podla toho aky druh je vybraty
 				content={isPosition ? t('Copy position') : t('Copy ticket')}
 				loading={isLoading}
-				onClick={async () => {
+				onClick={async (e) => {
+					e.stopPropagation()
 					// NOTE: if ticket has matches open modal which ask if you want to replace ticket or create new one
 					if (!isEmpty(betTicket?.matches)) {
 						handleSetTempMatches(false)

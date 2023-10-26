@@ -40,7 +40,14 @@ export const PositionListItem = styled(Row)`
 	border-radius: 12px;
 	padding: 24px;
 	margin-bottom: 16px;
-
+	// NOTE: for every resolution expect for smalled than md
+	@media (min-width: ${breakpoints.md + 1}px) {
+		&:hover {
+			cursor: pointer;
+			outline: ${({ theme }) => `1px solid ${theme['color-base-action-primary-default']}`};
+			box-shadow: 0px 0px 4px 0px #6674ff, 0px 0px 16px 0px rgba(102, 116, 255, 0.85);
+		}
+	}
 	@media (max-width: ${breakpoints.md}px) {
 		padding: 12px;
 	}
@@ -134,8 +141,8 @@ export const ButtonWrapper = styled.div`
 	${TextMDMedium};
 
 	@media (max-width: ${breakpoints.md}px) {
-		padding-bottom: 16px;
-		padding-left: 16px;
+		padding-left: 0;
+		padding-right: 0;
 	}
 `
 
