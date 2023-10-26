@@ -98,7 +98,7 @@ const MatchDetail = () => {
 		<SC.MatchDetailWrapper>
 			{!matchDetailData && loading ? (
 				<SC.RowSkeleton active loading paragraph={{ rows: 10 }} />
-			) : matchDetailData ? (
+			) : matchDetailData && !loading ? (
 				<>
 					<SC.MatchDetailHeader>
 						<Row justify={'center'}>
