@@ -25,7 +25,7 @@ interface ILayout {
 const Content: FC<ILayout> = ({ children }) => {
 	const router = useRouter()
 	const { id } = router.query
-	const fullWidthPages = [`/${PAGES.PARLAY_SUPERSTARS}`, `/${PAGES.LEADERBOARD}`, `/${PAGES.TICKET_DETAIL}`]
+	const fullWidthPages = [`/${PAGES.PARLAY_SUPERSTARS}`, `/${PAGES.LEADERBOARD}`]
 	const { chain } = useNetwork()
 	const isMounted = useIsMounted()
 
@@ -41,7 +41,7 @@ const Content: FC<ILayout> = ({ children }) => {
 			) : (
 				// Pages with BetContainer
 				<Row gutter={[30, 30]} style={{ display: 'flex', justifyContent: 'space-between' }}>
-					<SC.MainContentContainer withPadding={false}>{children}</SC.MainContentContainer>
+					<SC.MainContentContainer>{children}</SC.MainContentContainer>
 					{/* // Dashboard's Parlay Leaderboard */}
 					<SC.MobileHiddenCol span={8}>
 						{router.pathname === `/${PAGES.DASHBOARD}` && <ParlayLeaderboard />}

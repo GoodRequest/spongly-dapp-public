@@ -1,11 +1,14 @@
 import { Col, Row } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import { useNetwork } from 'wagmi'
+import { useRouter } from 'next-translate-routes'
+
 import StatisticCard from '@/atoms/statisticCard/StatisticCard'
 import { getWalletImage } from '@/utils/images'
 import { useIsMounted } from '@/hooks/useIsMounted'
 import { USER_TICKET_TYPE } from '@/utils/constants'
 import { handleTxHashRedirect } from '@/utils/helpers'
+import { PAGES } from '@/utils/enums'
 
 type Props = {
 	isLoading: boolean
@@ -23,7 +26,7 @@ const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, 
 	const { t } = useTranslation()
 	const isMounted = useIsMounted()
 	const { chain } = useNetwork()
-
+	const router = useRouter()
 	return (
 		<Row gutter={[8, 12]}>
 			{isMounted && (
@@ -33,6 +36,7 @@ const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, 
 							img={getWalletImage(tipsterAddress as string)}
 							filled={true}
 							isAddress={true}
+							onClick={() => router.push(`/${PAGES.LEADERBOARD}/?id=${tipsterAddress}`)}
 							value={tipsterAddress}
 							title={isMyWallet ? t('My wallet') : t('Wallet')}
 							isMyWallet={isMyWallet}

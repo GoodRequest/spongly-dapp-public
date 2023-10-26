@@ -360,6 +360,6 @@ const form = reduxForm<IUnsubmittedBetTicket, IComponentProps>({
 	destroyOnUnmount: false,
 	touchOnChange: true,
 	onChange: debounce(handleOnchangeForm, 300)
-})(TicketBetContainerForm as any)
+})(TicketBetContainerForm)
 
 export default form

@@ -29,12 +29,8 @@ import { SGPItem, UserTicket } from '@/typescript/types'
 
 // components
 import TicketStatisticRow from '@/components/statisticRow/TicketStatisticRow'
-import TicketBetContainer from '@/components/ticketBetContainer/TicketBetContainer'
 import PositionsList from '@/components/positionsList/PositionsList'
 import Custom404 from '@/pages/404'
-
-// styles
-import * as PSC from '@/layout/content/ContentStyles'
 
 const TicketDetailContent = () => {
 	const { chain } = useNetwork()
@@ -119,7 +115,6 @@ const TicketDetailContent = () => {
 	}, [router.isReady])
 
 	const isMyWallet = ticketData?.account?.toLocaleLowerCase() === address?.toLocaleLowerCase()
-
 	return (
 		<>
 			{((positionsData && ticketData) || isLoading) && (
@@ -140,7 +135,7 @@ const TicketDetailContent = () => {
 				</Row>
 			)}
 			<Row style={{ marginTop: '32px' }}>
-				<PSC.MainContentContainer withPadding={true}>
+				<Col span={24}>
 					{(positionsData && ticketData) || isLoading ? (
 						<PositionsList
 							isMyWallet={isMyWallet}
@@ -153,10 +148,7 @@ const TicketDetailContent = () => {
 							<Custom404 />
 						</div>
 					)}
-				</PSC.MainContentContainer>
-				<PSC.MobileHiddenCol span={8}>
-					<TicketBetContainer />
-				</PSC.MobileHiddenCol>
+				</Col>
 			</Row>
 		</>
 	)
