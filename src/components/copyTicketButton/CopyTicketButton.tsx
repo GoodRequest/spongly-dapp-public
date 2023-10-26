@@ -26,9 +26,10 @@ import { useMatchesWithChildMarkets } from '@/hooks/useMatchesWithChildMarkets'
 
 type Props = {
 	ticket: any
+	isPosition?: boolean
 }
 
-const CopyTicketButton = ({ ticket }: Props) => {
+const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 	const { t } = useTranslation()
 	const { chain } = useNetwork()
 	const dispatch = useDispatch()
@@ -153,7 +154,8 @@ const CopyTicketButton = ({ ticket }: Props) => {
 	const modals = (
 		<Modal
 			open={copyModal.visible}
-			onCancel={() => {
+			onCancel={(e) => {
+				e.stopPropagation()
 				setCopyModal({ visible: false, onlyCopy: false })
 			}}
 			centered
@@ -225,10 +227,12 @@ const CopyTicketButton = ({ ticket }: Props) => {
 				disabledPopoverText={activeMatches?.length === 1 ? t('Match is no longer open to copy') : t('Matches are no longer open to copy')}
 				disabled={activeMatches?.length === 0} // If ticket with active matches is empty disable button
 				btnStyle={'primary'}
+				// style={isPosition ? { height: '36px' } : undefined}
 				// TODO: opravit text podla toho aky druh je vybraty
-				content={t('Copy ticket')}
+				content={isPosition ? t('Copy position') : t('Copy ticket')}
 				loading={isLoading}
-				onClick={async () => {
+				onClick={async (e) => {
+					e.stopPropagation()
 					// NOTE: if ticket has matches open modal which ask if you want to replace ticket or create new one
 					if (!isEmpty(betTicket?.matches)) {
 						handleSetTempMatches(false)

@@ -7,6 +7,7 @@ import { map } from 'lodash'
 import { Col, Row } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { change, getFormValues } from 'redux-form'
+import { useRouter } from 'next-translate-routes'
 
 // components
 import Button from '@/atoms/button/Button'
@@ -16,12 +17,13 @@ import CopyTicketButton from '@/components/copyTicketButton/CopyTicketButton'
 // utils
 import { showNotifications } from '@/utils/tsxHelpers'
 import {
-	getCanceledClaimAmount,
 	getEtherScanTxHash,
 	getPositionsWithMergedCombinedPositions,
 	getTicketTotalQuote,
+	getUserTicketClaimValue,
 	getUserTicketType,
 	getUserTicketTypeName,
+	handleTxHashRedirect,
 	isClaimableUntil,
 	isWindowReady,
 	orderPositionsAsSportMarkets
@@ -29,7 +31,7 @@ import {
 import { GAS_ESTIMATION_BUFFER, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE, OddsType, STABLE_COIN, USER_TICKET_TYPE } from '@/utils/constants'
 import networkConnector from '@/utils/networkConnector'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
-import { FORM } from '@/utils/enums'
+import { FORM, PAGES } from '@/utils/enums'
 import { roundPrice } from '@/utils/formatters/currency'
 
 // types
@@ -55,6 +57,7 @@ type Props = {
 const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 	const { t } = useTranslation()
 	const { chain } = useNetwork()
+	const router = useRouter()
 	const [expiryDate, setExpiryDate] = useState(0)
 	const [isExpanded, setIsExpanded] = useState(false)
 	const [isClaiming, setIsClaiming] = useState(false)
@@ -104,20 +107,6 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 	const dateDiff = dayjs(expiryDate * 1000).diff(now, 'm')
 	const claimableUntil = !!(ticket.isClaimable && isMyWallet) && isClaimableUntil(dateDiff)
 
-	const handleTxHashRedirect = (txHash: string) => {
-		const link = document.createElement('a')
-		const newHref = getEtherScanTxHash(chain?.id || NETWORK_IDS.OPTIMISM, txHash)
-		if (!newHref) {
-			showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to redirect') }], NOTIFICATION_TYPE.NOTIFICATION)
-		} else {
-			link.href = newHref
-			link.setAttribute('target', '_blank')
-			document.body.appendChild(link)
-			link.click()
-			document.body.removeChild(link)
-		}
-	}
-
 	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions as any, ticket, sgpFees)
 	const hasOpenPositions = positionsWithMergedCombinedPositions?.some(
 		// TODO: ongoing is not good because it is isOpen and isResolved at the same time
@@ -126,13 +115,6 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 	const userTicketType = getUserTicketType(ticket)
 
 	const isParlay = ticket?.positions?.length > 1
-
-	const getClaimValue = () => {
-		if (userTicketType === USER_TICKET_TYPE.MISS) return `0 $`
-		if (userTicketType === USER_TICKET_TYPE.SUCCESS) return `+ ${roundPrice(ticket?.amount, true)}`
-		if (userTicketType === USER_TICKET_TYPE.CANCELED) return ` + ${getCanceledClaimAmount(ticket)}`
-		return roundPrice(ticket?.amount, true)
-	}
 
 	const handleClaim = async () => {
 		const { parlayMarketsAMMContract, signer } = networkConnector
@@ -201,7 +183,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 	const ticketHeader = (
 		<SC.UserTicketTableRow show={ticket.isClaimable} align={'middle'} gutter={[16, 16]}>
 			<SC.TxCol md={{ span: 4, order: 1 }} xs={{ span: 24, order: 2 }}>
-				<SC.TxHeader onClick={() => handleTxHashRedirect(ticket.txHash)}>
+				<SC.TxHeader onClick={() => handleTxHashRedirect(t, ticket.txHash, chain?.id)}>
 					<SC.TxIcon src={DocumentIcon} alt='hash' />
 					<SC.AddressText>{ticket?.txHash}</SC.AddressText>
 				</SC.TxHeader>
@@ -226,7 +208,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 				</>
 			</SC.CenterRowContent>
 			<SC.CenterRowContent md={{ span: 5, order: 4 }} xs={{ span: 8, order: 4 }}>
-				<SC.ClaimValueText userTicketType={userTicketType}>{getClaimValue()}</SC.ClaimValueText>
+				<SC.ClaimValueText userTicketType={userTicketType}>{getUserTicketClaimValue(ticket, userTicketType)}</SC.ClaimValueText>
 				<SC.ColumnNameText>{t('Claim')}</SC.ColumnNameText>
 			</SC.CenterRowContent>
 			<SC.ClaimColContent show={!!(isMyWallet && userTicketType === USER_TICKET_TYPE.SUCCESS)} md={{ span: 4, order: 5 }} xs={{ span: 24, order: 5 }}>
@@ -278,15 +260,13 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 					))}
 				</Row>
 				<SC.StylesRow gutter={[16, 16]}>
-					{/* <Col span={12}> */}
-					{/*	<Button */}
-					{/*		btnStyle={'secondary'} */}
-					{/*		content={t('Show ticket detail')} */}
-					{/*		onClick={() => { */}
-					{/*			// TODO: redirect to detail */}
-					{/*		}} */}
-					{/*	/> */}
-					{/* </Col> */}
+					<Col span={12}>
+						<Button
+							btnStyle={'secondary'}
+							content={t('Show ticket detail')}
+							onClick={() => router.push(`/${PAGES.TICKET_DETAIL}/?ticketId=${ticket.id}`)}
+						/>
+					</Col>
 					{!!(ticket.isClaimable && isMyWallet) && (
 						<Col span={12} xs={24}>
 							<Button
