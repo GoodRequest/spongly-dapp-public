@@ -31,7 +31,7 @@ const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, 
 		<Row gutter={[8, 12]}>
 			{isMounted && (
 				<>
-					<Col lg={4} md={24} sm={24} xs={24}>
+					<Col lg={6} md={24} sm={24} xs={24}>
 						<StatisticCard
 							img={getWalletImage(tipsterAddress as string)}
 							filled={true}
@@ -56,10 +56,10 @@ const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, 
 					<Col lg={4} md={12} sm={12} xs={12}>
 						<StatisticCard showMobileInColumn={true} isLoading={isLoading} value={buyIn} title={t('Buy-in')} addMobileBackground={true} />
 					</Col>
-					<Col lg={4} md={12} sm={12} xs={12}>
+					<Col lg={3} md={12} sm={12} xs={12}>
 						<StatisticCard isLoading={isLoading} showMobileInColumn={true} value={quote} title={t('Quote')} addMobileBackground={true} />
 					</Col>
-					<Col lg={4} md={12} sm={12} xs={12}>
+					<Col lg={3} md={12} sm={12} xs={12}>
 						<StatisticCard isLoading={isLoading} showMobileInColumn={true} value={matches} title={t('Matches')} addMobileBackground={true} />
 					</Col>
 					<Col lg={4} md={12} sm={12} xs={12}>

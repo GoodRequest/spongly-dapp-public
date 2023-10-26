@@ -26,6 +26,7 @@ export const StatisticCard = styled.div<{ filled: boolean; showMobileInColumn: b
 	background: ${({ filled }) => (filled ? 'radial-gradient(farthest-corner at bottom right, rgba(108, 120, 237, 0.5), transparent 200px)' : 'transparent')};
 	box-shadow: ${({ theme, filled }) => (filled ? theme['drop-shadow-xs'] : 'none')};
 	@media (max-width: ${breakpoints.lg}px) {
+		padding: 16px 12px;
 		justify-content: ${({ showMobileInColumn }) => (showMobileInColumn ? 'center' : 'flex-start')};
 		align-items: ${({ showMobileInColumn }) => (showMobileInColumn ? 'flex-start' : 'center')};
 		flex-direction: ${({ showMobileInColumn }) => (showMobileInColumn ? 'column' : 'row')};
