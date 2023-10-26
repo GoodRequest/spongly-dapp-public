@@ -114,7 +114,7 @@ const MatchDetail = () => {
 								<SC.HeaderTeam>{matchDetailData?.homeTeam}</SC.HeaderTeam>
 							</SC.HeaderCol>
 							<SC.HeaderCol span={isTotalWinner ? 12 : 8}>
-								<SCS.LeagueIcon className={matchDetailData.league.logoClass} />
+								<SCS.LeagueIcon className={matchDetailData?.league?.logoClass} />
 								<SC.HeaderResultText>{getMatchDetailScoreText(matchDetailData, t, isTotalWinner)}</SC.HeaderResultText>
 								{isAboveOrEqualResolution(size, RESOLUTIONS.LG) && (
 									<SC.HeaderStatus matchStatus={getMatchStatus(matchDetailData, t).status}>

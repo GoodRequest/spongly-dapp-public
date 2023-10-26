@@ -4,12 +4,19 @@ import { useRouter } from 'next-translate-routes'
 import { includes } from 'lodash'
 import { useNetwork } from 'wagmi'
 
-import * as SC from './ContentStyles'
+// components
 import TicketBetContainer from '@/components/ticketBetContainer/TicketBetContainer'
 import ParlayLeaderboard from '@/components/parlayLeaderboard/ParlayLeaderboard'
-import { PAGES } from '@/utils/enums'
-import { useIsMounted } from '@/hooks/useIsMounted'
 import Stats from '@/components/stats/Stats'
+
+// utils
+import { PAGES } from '@/utils/enums'
+
+// hooks
+import { useIsMounted } from '@/hooks/useIsMounted'
+
+// styles
+import * as SC from './ContentStyles'
 
 interface ILayout {
 	children: ReactNode
@@ -18,7 +25,7 @@ interface ILayout {
 const Content: FC<ILayout> = ({ children }) => {
 	const router = useRouter()
 	const { id } = router.query
-	const fullWidthPages = [`/${PAGES.PARLAY_SUPERSTARS}`, `/${PAGES.LEADERBOARD}`]
+	const fullWidthPages = [`/${PAGES.PARLAY_SUPERSTARS}`, `/${PAGES.LEADERBOARD}`, `/${PAGES.TICKET_DETAIL}`]
 	const { chain } = useNetwork()
 	const isMounted = useIsMounted()
 
@@ -32,7 +39,7 @@ const Content: FC<ILayout> = ({ children }) => {
 					</Col>
 				) : (
 					<>
-						<SC.MainContentContainer>{children}</SC.MainContentContainer>
+						<SC.MainContentContainer withPadding={false}>{children}</SC.MainContentContainer>
 						<SC.MobileHiddenCol span={8}>
 							{router.pathname === `/${PAGES.DASHBOARD}` && <ParlayLeaderboard />}
 							<TicketBetContainer />
