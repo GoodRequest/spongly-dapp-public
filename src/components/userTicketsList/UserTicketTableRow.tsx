@@ -17,7 +17,6 @@ import CopyTicketButton from '@/components/copyTicketButton/CopyTicketButton'
 // utils
 import { showNotifications } from '@/utils/tsxHelpers'
 import {
-	getEtherScanTxHash,
 	getPositionsWithMergedCombinedPositions,
 	getTicketTotalQuote,
 	getUserTicketClaimValue,

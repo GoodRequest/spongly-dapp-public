@@ -1,7 +1,6 @@
-import styled, { DefaultTheme } from 'styled-components'
+import styled from 'styled-components'
 import { Row, Skeleton } from 'antd'
 import { breakpoints } from '@/styles/theme'
-import theme from '@/styles/lightTokens'
 
 export const StatsWrapper = styled.div<{ hide?: boolean }>`
 	width: 100%;

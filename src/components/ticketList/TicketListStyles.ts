@@ -1,16 +1,6 @@
-import styled, { css, keyframes } from 'styled-components'
-import { Row, Col, Skeleton, Collapse } from 'antd'
-import {
-	HeadingSMMedium,
-	HeadingXSMedium,
-	HeadingXXSMedium,
-	TextLGMedium,
-	TextLGRegular,
-	TextMDMedium,
-	TextMDRegular,
-	TextSMMedium,
-	TextXSMedium
-} from '@/styles/typography'
+import styled, { css } from 'styled-components'
+import { Collapse, Row, Skeleton } from 'antd'
+import { HeadingSMMedium, HeadingXXSMedium, TextLGMedium, TextLGRegular, TextMDMedium, TextMDRegular, TextSMMedium, TextXSMedium } from '@/styles/typography'
 import Ticket from '@/assets/images/empty_state_ticket.png'
 import { CLOSED_TICKET_TYPE, TICKET_TYPE } from '@/utils/constants'
 import { breakpoints } from '@/styles/theme'

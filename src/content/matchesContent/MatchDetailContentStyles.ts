@@ -1,7 +1,7 @@
 import styled, { css, keyframes } from 'styled-components'
 import { Col, Skeleton } from 'antd'
 import { breakpoints } from '@/styles/theme'
-import { HeadingXSMedium, TextMDSemibold, TextXLMedium, TextXSMedium } from '@/styles/typography'
+import { HeadingXSMedium, TextXLMedium, TextXSMedium } from '@/styles/typography'
 import { MATCH_STATUS } from '@/utils/constants'
 import { MATCH_RESULT, TEAM_TYPE } from '@/utils/enums'
 
