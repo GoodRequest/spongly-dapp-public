@@ -259,7 +259,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 					))}
 				</Row>
 				<SC.StylesRow gutter={[16, 16]}>
-					<Col span={12}>
+					<Col span={24} md={12}>
 						<Button
 							btnStyle={'secondary'}
 							content={t('Show ticket detail')}
@@ -267,7 +267,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 						/>
 					</Col>
 					{!!(ticket.isClaimable && isMyWallet) && (
-						<Col span={12} xs={24}>
+						<Col span={24} md={12}>
 							<Button
 								btnStyle={'primary'}
 								disabled={!ticket.isClaimable}
@@ -283,7 +283,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 						</Col>
 					)}
 					{hasOpenPositions && !isMyWallet && (
-						<Col md={12} span={24}>
+						<Col span={24} md={12}>
 							<CopyTicketButton ticket={ticket} />
 						</Col>
 					)}

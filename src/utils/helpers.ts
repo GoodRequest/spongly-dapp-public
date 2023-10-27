@@ -319,7 +319,7 @@ export const getReward = (index: number | undefined, chainId: number | undefined
 }
 
 export const getParlayItemStatus = (position: Position, isPlayedNow: boolean, t: any) => {
-	const date = dayjs(toNumber(position.market.maturityDate) * 1000).format('MMM DD, YYYY | HH:mm')
+	const date = dayjs(toNumber(position.market.maturityDate) * 1000).format('MMM DD | HH:mm')
 	if (isPlayedNow) {
 		return { status: MATCH_STATUS.ONGOING, text: t('Playing now'), date }
 	}
