@@ -162,7 +162,6 @@ export const HeaderCol = styled(Col)<{ result?: MATCH_RESULT; team?: TEAM_TYPE }
 		`};
 `
 export const RowSkeleton = styled(Skeleton)`
-	margin-top: 40px;
 	.ant-skeleton-content {
 		padding: 24px;
 		background: ${({ theme }) => theme['color-base-surface-secondary']};

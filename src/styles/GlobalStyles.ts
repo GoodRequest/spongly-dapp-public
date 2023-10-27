@@ -297,7 +297,6 @@ export const EllipsisText = styled(Paragraph)`
 `
 export const Empty = styled(AntdEmpty)`
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
-	margin: 16px 0px 16px 0px;
 	border-radius: 12px;
 	padding: 52px;
 	.ant-empty-description {
