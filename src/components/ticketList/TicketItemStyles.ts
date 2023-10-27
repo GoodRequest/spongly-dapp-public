@@ -77,9 +77,7 @@ export const TicketStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	padding-top: 6px;
-	padding-bottom: 6px;
-	height: 32px;
+	height: 48px;
 	width: 100%;
 	text-transform: uppercase;
 	border-radius: 10px;
@@ -125,7 +123,10 @@ export const TicketStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 		css`
 			background: ${({ theme }) => theme['color-base-state-error-bg']};
 			color: ${({ theme }) => theme['color-base-state-error-fg']};
-		`}
+		`};
+	@media (max-width: ${breakpoints.md}px) {
+		height: 32px;
+	}
 `
 
 export const SportLogo = styled.div`

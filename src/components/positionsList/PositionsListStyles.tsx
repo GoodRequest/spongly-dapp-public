@@ -44,7 +44,6 @@ export const PositionListItem = styled(Row)`
 	// NOTE: for every resolution expect for smalled than md
 	@media (min-width: ${breakpoints.md + 1}px) {
 		&:hover {
-			cursor: pointer;
 			${BasicBoxShadow};
 		}
 	}
@@ -57,6 +56,7 @@ export const ColCenteredVertically = styled(Col)`
 	display: flex;
 	align-items: center;
 	flex-direction: row;
+	cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
 `
 
 export const TeamCol = styled(Col)`

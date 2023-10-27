@@ -814,7 +814,7 @@ export const getSelectedCoinIndex = (selectedCoin?: string): number => {
 	}
 }
 
-export const getOddByBetType = (market: IMatch, copied: boolean, oddType: OddsType, customBetOption?: BET_OPTIONS) => {
+export const getOddByBetType = (market: IMatch, oddType: OddsType, customBetOption?: BET_OPTIONS) => {
 	// customBetOption is used for override match betOption (using in MatchListContent where we need to return odds based on type of odds in dropdown)
 	// TODO: add logic for bonuses or create new function for bonuses
 	const betOption = customBetOption || market.betOption
@@ -844,141 +844,88 @@ export const getOddByBetType = (market: IMatch, copied: boolean, oddType: OddsTy
 			}
 		// H1, H2
 		case BET_OPTIONS.HANDICAP_HOME:
-			return copied
-				? {
-						formattedOdd: formatQuote(oddType, market.homeOdds),
-						rawOdd: market.homeOdds,
-						formattedBonus: getFormattedBonus(market.homeBonus),
-						rawBonus: (market.homeBonus || 0) > 0 ? market.homeBonus || 0 : 0
-				  }
-				: {
-						formattedOdd: formatQuote(oddType, market.spreadTypeMatch?.homeOdds),
-						rawOdd: market.spreadTypeMatch?.homeOdds,
-						formattedBonus: getFormattedBonus(market.spreadTypeMatch?.homeBonus),
-						rawBonus: (market.spreadTypeMatch?.homeBonus || 0) > 0 ? market.spreadTypeMatch?.homeBonus || 0 : 0
-				  }
+			return {
+				formattedOdd: formatQuote(oddType, market.spreadTypeMatch?.homeOdds),
+				rawOdd: market.spreadTypeMatch?.homeOdds,
+				formattedBonus: getFormattedBonus(market.spreadTypeMatch?.homeBonus),
+				rawBonus: (market.spreadTypeMatch?.homeBonus || 0) > 0 ? market.spreadTypeMatch?.homeBonus || 0 : 0
+			}
 		case BET_OPTIONS.HANDICAP_AWAY:
-			return copied
-				? {
-						formattedOdd: formatQuote(oddType, market.awayOdds),
-						rawOdd: market.awayOdds,
-						formattedBonus: getFormattedBonus(market.awayBonus),
-						rawBonus: (market.awayBonus || 0) > 0 ? market.awayBonus || 0 : 0
-				  }
-				: {
-						formattedOdd: formatQuote(oddType, market.spreadTypeMatch?.awayOdds),
-						rawOdd: market.spreadTypeMatch?.awayOdds,
-						formattedBonus: getFormattedBonus(market.spreadTypeMatch?.awayBonus),
-						rawBonus: (market.spreadTypeMatch?.awayBonus || 0) > 0 ? market.spreadTypeMatch?.awayBonus || 0 : 0
-				  }
+			return {
+				formattedOdd: formatQuote(oddType, market.spreadTypeMatch?.awayOdds),
+				rawOdd: market.spreadTypeMatch?.awayOdds,
+				formattedBonus: getFormattedBonus(market.spreadTypeMatch?.awayBonus),
+				rawBonus: (market.spreadTypeMatch?.awayBonus || 0) > 0 ? market.spreadTypeMatch?.awayBonus || 0 : 0
+			}
 		// O, U
 		case BET_OPTIONS.TOTAL_OVER:
-			return copied
-				? {
-						formattedOdd: formatQuote(oddType, market.homeOdds),
-						rawOdd: market.homeOdds,
-						formattedBonus: getFormattedBonus(market.homeBonus),
-						rawBonus: (market.homeBonus || 0) > 0 ? market.homeBonus || 0 : 0
-				  }
-				: {
-						formattedOdd: formatQuote(oddType, market.totalTypeMatch?.homeOdds),
-						rawOdd: market.totalTypeMatch?.homeOdds,
-						formattedBonus: getFormattedBonus(market.totalTypeMatch?.homeBonus),
-						rawBonus: (market.totalTypeMatch?.homeBonus || 0) > 0 ? market.totalTypeMatch?.homeBonus || 0 : 0
-				  }
+			return {
+				formattedOdd: formatQuote(oddType, market.totalTypeMatch?.homeOdds),
+				rawOdd: market.totalTypeMatch?.homeOdds,
+				formattedBonus: getFormattedBonus(market.totalTypeMatch?.homeBonus),
+				rawBonus: (market.totalTypeMatch?.homeBonus || 0) > 0 ? market.totalTypeMatch?.homeBonus || 0 : 0
+			}
 		case BET_OPTIONS.TOTAL_UNDER:
-			return copied
-				? {
-						formattedOdd: formatQuote(oddType, market.awayOdds),
-						rawOdd: market.awayOdds,
-						formattedBonus: getFormattedBonus(market.awayBonus),
-						rawBonus: (market.awayBonus || 0) > 0 ? market.awayBonus || 0 : 0
-				  }
-				: {
-						formattedOdd: formatQuote(oddType, market.totalTypeMatch?.awayOdds),
-						rawOdd: market.totalTypeMatch?.awayOdds,
-						formattedBonus: getFormattedBonus(market.totalTypeMatch?.awayBonus),
-						rawBonus: (market.totalTypeMatch?.awayBonus || 0) > 0 ? market.totalTypeMatch?.awayBonus || 0 : 0
-				  }
+			return {
+				formattedOdd: formatQuote(oddType, market.totalTypeMatch?.awayOdds),
+				rawOdd: market.totalTypeMatch?.awayOdds,
+				formattedBonus: getFormattedBonus(market.totalTypeMatch?.awayBonus),
+				rawBonus: (market.totalTypeMatch?.awayBonus || 0) > 0 ? market.totalTypeMatch?.awayBonus || 0 : 0
+			}
 		// X1, X2, 12
 		case BET_OPTIONS.DOUBLE_CHANCE_HOME:
-			return copied
-				? {
-						formattedOdd: formatQuote(oddType, market.homeOdds),
-						rawOdd: market.homeOdds,
-						formattedBonus: getFormattedBonus(market.homeBonus),
-						rawBonus: (market.homeBonus || 0) > 0 ? market.homeBonus || 0 : 0
-				  }
-				: {
-						formattedOdd: formatQuote(
-							oddType,
-							market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)
-								?.homeOdds
-						),
-						rawOdd: market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)
-							?.homeOdds,
-						rawBonus:
-							(market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)
-								?.homeBonus || 0) > 0
-								? market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)
-										?.homeBonus || 0
-								: 0,
-						formattedBonus: getFormattedBonus(
-							market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)
+			return {
+				formattedOdd: formatQuote(
+					oddType,
+					market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)?.homeOdds
+				),
+				rawOdd: market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)
+					?.homeOdds,
+				rawBonus:
+					(market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)
+						?.homeBonus || 0) > 0
+						? market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)
 								?.homeBonus || 0
-						)
-				  }
+						: 0,
+				formattedBonus: getFormattedBonus(
+					market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)?.homeBonus ||
+						0
+				)
+			}
 		case BET_OPTIONS.DOUBLE_CHANCE_AWAY:
-			return copied
-				? {
-						formattedOdd: formatQuote(oddType, market.awayOdds),
-						rawOdd: market.awayOdds,
-						formattedBonus: getFormattedBonus(market.awayBonus),
-						rawBonus: (market.awayBonus || 0) > 0 ? market.awayBonus || 0 : 0
-				  }
-				: {
-						formattedOdd: formatQuote(
-							oddType,
-							market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)
-								?.homeOdds
-						),
-						rawOdd: market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)
-							?.homeOdds,
-						rawBonus:
-							(market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)
-								?.homeBonus || 0) > 0
-								? market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)
-										?.homeBonus || 0
-								: 0,
-						formattedBonus: getFormattedBonus(
-							market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)
+			return {
+				formattedOdd: formatQuote(
+					oddType,
+					market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)?.homeOdds
+				),
+				rawOdd: market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)
+					?.homeOdds,
+				rawBonus:
+					(market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)
+						?.homeBonus || 0) > 0
+						? market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)
 								?.homeBonus || 0
-						)
-				  }
+						: 0,
+				formattedBonus: getFormattedBonus(
+					market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)?.homeBonus ||
+						0
+				)
+			}
 		case BET_OPTIONS.DOUBLE_CHANCE_DRAW:
-			return copied
-				? {
-						formattedOdd: formatQuote(oddType, market.drawOdds),
-						rawOdd: market.drawOdds,
-						formattedBonus: getFormattedBonus(market.drawBonus),
-						rawBonus: (market.drawBonus || 0) > 0 ? market.drawBonus || 0 : 0
-				  }
-				: {
-						formattedOdd: formatQuote(
-							oddType,
-							market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeOdds
-						),
-						rawOdd: market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeOdds,
-						rawBonus:
-							(market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeBonus || 0) >
-							0
-								? market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeBonus ||
-								  0
-								: 0,
-						formattedBonus: getFormattedBonus(
-							market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeBonus || 0
-						)
-				  }
+			return {
+				formattedOdd: formatQuote(
+					oddType,
+					market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeOdds
+				),
+				rawOdd: market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeOdds,
+				rawBonus:
+					(market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeBonus || 0) > 0
+						? market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeBonus || 0
+						: 0,
+				formattedBonus: getFormattedBonus(
+					market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeBonus || 0
+				)
+			}
 		// 1&O, 1&U, 2&O, 2&U
 		case BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER:
 		case BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER:

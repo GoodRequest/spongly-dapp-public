@@ -13,8 +13,10 @@ export const useMatchesWithChildMarkets = (matches: SportMarket[], sgpFees: SGPI
 
 			const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
 			const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
-			const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD)
-			const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL)
+			// NOTE: filter paused spread and total bet types (bet types with isPaused = true add 0 odds).
+			// TODO: maybe we show those options in future (need refactor find to filter and remove && !market.isPaused)
+			const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD && !market.isPaused)
+			const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL && !market.isPaused)
 			const combinedTypeMatch = sgpFees?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
 			return {
 				...(winnerTypeMatch ?? matches.find((item) => item.gameId === match?.gameId)),
