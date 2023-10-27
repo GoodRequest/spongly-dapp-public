@@ -70,19 +70,19 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 								</Col>
 							))}
 						</SC.StylesRow>
-						<SC.StylesRow gutter={[16, 0]}>
+						<SC.StylesRow gutter={[16, 16]}>
+							<Col md={type === TICKET_TYPE.CLOSED_TICKET ? 24 : 12} span={24}>
+								<Button
+									btnStyle={'secondary'}
+									content={t('Open detail')}
+									onClick={() => router.push(`/${PAGES.TICKET_DETAIL}/?ticketId=${ticket.id}`)}
+								/>
+							</Col>
 							{(type === TICKET_TYPE.ONGOING_TICKET || type === TICKET_TYPE.OPEN_TICKET || type === TICKET_TYPE.HOT_TICKET) && (
 								<Col md={12} span={24}>
 									<CopyTicketButton ticket={ticket} />
 								</Col>
 							)}
-							<Col md={type === TICKET_TYPE.CLOSED_TICKET ? 24 : 12} span={24}>
-								<Button
-									btnStyle={'secondary'}
-									content={t('Show ticket detail')}
-									onClick={() => router.push(`/${PAGES.TICKET_DETAIL}/?ticketId=${ticket.id}`)}
-								/>
-							</Col>
 						</SC.StylesRow>
 					</SC.PanelContent>
 				)}

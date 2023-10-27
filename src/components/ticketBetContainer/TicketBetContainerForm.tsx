@@ -321,7 +321,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 								<SummaryCol
 									isProfit
 									title={t('Profit')}
-									value={`+ ${formValues.potentionalProfit} ${formValues?.selectedStablecoin}`}
+									value={`+${formValues.potentionalProfit} ${formValues?.selectedStablecoin}`}
 									align={'right'}
 								/>
 							</Row>

@@ -217,7 +217,6 @@ export const TicketTypeTag = styled.div<{ ticketType: USER_TICKET_TYPE }>`
 		return theme['color-base-content-top']
 	}};
 	@media (max-width: ${breakpoints.md}px) {
-		border-radius: 6px;
 		height: 32px;
 	}
 `

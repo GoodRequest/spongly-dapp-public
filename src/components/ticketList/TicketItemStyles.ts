@@ -82,7 +82,7 @@ export const TicketStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 	height: 32px;
 	width: 100%;
 	text-transform: uppercase;
-	border-radius: 6px;
+	border-radius: 10px;
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	color: ${({ theme }) => theme['color-base-content-tertiary']};
 

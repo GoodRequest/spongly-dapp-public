@@ -24,6 +24,7 @@ export const PrimaryButton = styled(AntdButton)`
 		background: ${({ theme }) => theme['color-base-action-primary-hover']} !important;
 	}
 	@media (max-width: ${breakpoints.md}px) {
+		border-radius: 8px;
 		height: ${FIELD_HEIGHT.small} !important;
 	}
 	:disabled {
@@ -51,7 +52,7 @@ export const PrimaryButton = styled(AntdButton)`
 export const SecondaryButton = styled(AntdButton)`
 	height: ${FIELD_HEIGHT.middle};
 	background: ${({ theme }) => theme['color-base-action-secondary-default']} !important;
-	border-radius: 8px;
+	border-radius: 10px;
 	border: none;
 	width: 100%;
 	box-shadow: none;
@@ -71,6 +72,10 @@ export const SecondaryButton = styled(AntdButton)`
 	:disabled {
 		background: ${({ theme }) => theme['color-base-action-secondary-disable']} !important;
 		color: ${({ theme }) => theme['color-base-content-quaternary']} !important;
+	}
+	@media (max-width: ${breakpoints.md}px) {
+		border-radius: 8px;
+		height: ${FIELD_HEIGHT.small} !important;
 	}
 `
 export const TertiaryButton = styled(AntdButton)`

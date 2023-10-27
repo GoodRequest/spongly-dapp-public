@@ -52,7 +52,7 @@ const UserStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 						isLoading={isLoading}
 						showMobileInColumn={true}
 						img={ProfitsTicketsIcon}
-						value={isMounted ? `${user?.pnl && user?.pnl > 0 ? '+ ' : ''} ${roundPrice(user?.pnl)} $` : ''}
+						value={isMounted ? `${user?.pnl && user?.pnl > 0 ? '+' : ''}${roundPrice(user?.pnl)} $` : ''}
 						title={t('Profits')}
 					/>
 				</Col>
