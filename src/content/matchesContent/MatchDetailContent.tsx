@@ -35,57 +35,54 @@ const MatchDetail = () => {
 	const onChangeSwitch = (option: SWITCH_BUTTON_OPTIONS) => {
 		setTab(option)
 	}
-
 	const [fetchMatchDetail] = useLazyQuery(GET_MATCH_DETAIL)
 	const sgpFeesRaw = useSGPFeesQuery(chain?.id as Network, {
 		enabled: true
 	})
 
-	const fetchData = useCallback(() => {
+	const fetchData = useCallback(async () => {
 		setLoading(true)
-		setTimeout(() => {
-			fetchMatchDetail({
+		try {
+			// eslint-disable-next-line no-promise-executor-return
+			await new Promise((resolve) => setTimeout(resolve, 500)) // Simulate a delay
+			const res = await fetchMatchDetail({
 				variables: {
 					gameId: router.query.id
 				}
 			})
-				.then(async (res) => {
-					const league = TAGS_LIST.find((item) => item.id === Number(res.data.sportMarkets[0].tags[0]))
-					getMarketOddsFromContract(res?.data?.sportMarkets).then((matches) => {
-						const matchesWithChildMarkets = toPairs(groupBy(matches, 'gameId'))
-							.map(([, markets]) => {
-								const [match] = markets
-								const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
-								const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
-								// NOTE: filter paused spread and total bet types (bet types with isPaused = true adn 0 odds).
-								// TODO: maybe we show those options in future (need refactor find to filter and remove && !market.isPaused)
-								const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD && !market.isPaused)
-								const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL && !market.isPaused)
+			const league = TAGS_LIST.find((item) => item.id === Number(res.data.sportMarkets[0].tags[0]))
+			const matches = await getMarketOddsFromContract(res?.data?.sportMarkets)
+			const matchesWithChildMarkets = toPairs(groupBy(matches, 'gameId'))
+				.map(([, markets]) => {
+					const [match] = markets
+					const winnerTypeMatch = markets.find((market) => Number(market.betType) === BetType.WINNER)
+					const doubleChanceTypeMatches = markets.filter((market) => Number(market.betType) === BetType.DOUBLE_CHANCE)
+					// NOTE: filter paused spread and total bet types (bet types with isPaused = true adn 0 odds).
+					// TODO: maybe we show those options in future (need refactor find to filter and remove && !market.isPaused)
+					const spreadTypeMatch = markets.find((market) => Number(market.betType) === BetType.SPREAD && !market.isPaused)
+					const totalTypeMatch = markets.find((market) => Number(market.betType) === BetType.TOTAL && !market.isPaused)
 
-								const combinedTypeMatch = sgpFeesRaw.data?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
-								return {
-									...(winnerTypeMatch ?? matches.find((item: any) => item.gameId === match?.gameId)),
-									winnerTypeMatch,
-									doubleChanceTypeMatches,
-									spreadTypeMatch,
-									totalTypeMatch,
-									combinedTypeMatch
-								}
-							}) // NOTE: remove broken results.
-							.filter((item) => item.winnerTypeMatch)
-						setMatchDetailData({ ...matchesWithChildMarkets[0], league, status: getMatchStatus(matchesWithChildMarkets[0], t).status })
-					})
-				})
-				.catch((e) => {
-					// eslint-disable-next-line no-console
-					console.error(e)
-					setError(true)
-					setMatchDetailData(null)
-					showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while loading detail of match') }], NOTIFICATION_TYPE.NOTIFICATION)
-				})
-				.finally(() => setLoading(false))
-		}, 500)
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+					const combinedTypeMatch = sgpFeesRaw.data?.find((item) => item.tags.includes(Number(match?.tags?.[0])))
+					return {
+						...(winnerTypeMatch ?? matches.find((item: any) => item.gameId === match?.gameId)),
+						winnerTypeMatch,
+						doubleChanceTypeMatches,
+						spreadTypeMatch,
+						totalTypeMatch,
+						combinedTypeMatch
+					}
+				}) // NOTE: remove broken results.
+				.filter((item) => item.winnerTypeMatch)
+			setMatchDetailData({ ...matchesWithChildMarkets[0], league, status: getMatchStatus(matchesWithChildMarkets[0], t).status })
+		} catch (e) {
+			// eslint-disable-next-line no-console
+			console.error(e)
+			setError(true)
+			setMatchDetailData(null)
+			showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while loading detail of match') }], NOTIFICATION_TYPE.NOTIFICATION)
+		} finally {
+			setLoading(false)
+		}
 	}, [router.query.id, sgpFeesRaw.data, t])
 
 	useEffect(() => {
@@ -96,7 +93,7 @@ const MatchDetail = () => {
 	}, [router.isReady])
 
 	const renderMatchDetail =
-		!matchDetailData && loading ? (
+		!matchDetailData || loading ? (
 			<SC.RowSkeleton active loading paragraph={{ rows: 10 }} />
 		) : (
 			matchDetailData &&

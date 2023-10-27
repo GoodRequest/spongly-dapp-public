@@ -66,20 +66,24 @@ const PositionListItem = ({ position, quote, copyButtonTicket, isMyWallet }: Pro
 	}, [])
 
 	const positionState = getParlayItemStatus(position as Position, isPlayedNow, t)
+
 	const canBeCopied = positionState.status === MATCH_STATUS.OPEN
 
 	const league = TAGS_LIST.find((item) => item.id === Number(position?.market?.tags?.[0]))
 
 	return (
-		<SC.PositionListItem
-			gutter={[0, 16]}
-			onClick={() => {
-				if (isAboveOrEqualResolution(size, RESOLUTIONS.LG)) {
-					router.push(`/${PAGES.MATCH_DETAIL}/?id=${position.market.gameId}`)
-				}
-			}}
-		>
-			<SC.ColCenteredVertically lg={{ span: 12 }} md={{ span: 24 }} sm={{ span: 24 }} xs={{ span: 24 }}>
+		<SC.PositionListItem gutter={[0, 16]}>
+			<SC.ColCenteredVertically
+				onClick={() => {
+					if (isAboveOrEqualResolution(size, RESOLUTIONS.LG)) {
+						router.push(`/${PAGES.MATCH_DETAIL}/?id=${position.market.gameId}`)
+					}
+				}}
+				lg={{ span: 12 }}
+				md={{ span: 24 }}
+				sm={{ span: 24 }}
+				xs={{ span: 24 }}
+			>
 				<Row style={{ width: '100%' }}>
 					<SC.TeamCol span={10}>
 						<SC.Img
