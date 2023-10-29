@@ -90,8 +90,6 @@ export const CollapsePanel = styled(Panel)`
 `
 
 export const PanelContent = styled.div`
-	background: ${({ theme }) => theme['color-base-surface-secondary']};
-	border-radius: 12px;
 	${TextXSMedium}
 `
 

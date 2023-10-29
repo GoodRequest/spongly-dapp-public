@@ -100,10 +100,6 @@ export const MatchIcons = styled.div`
 	width: 90px;
 `
 
-export const ShiftedRow = styled(Row)`
-	margin-bottom: 24px;
-`
-
 export const MatchNames = styled.div`
 	height: 48px;
 	width: calc(100% - 90px);
