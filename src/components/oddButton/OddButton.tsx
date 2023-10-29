@@ -38,7 +38,7 @@ const OddButton = (props: Props) => {
 	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) || OddsType.DECIMAL : OddsType.DECIMAL
 
 	// TODO: refactore TicketPosition type and use Imatch type and remove as any
-	return formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, !!activeTicketValues.copied, actualOddType, betOption).rawOdd) > MIN_ODD_TRESHOLD ? (
+	return formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, actualOddType, betOption).rawOdd) > MIN_ODD_TRESHOLD ? (
 		<SC.MatchContentOddButton
 			isHeader={isHeader}
 			isMobilePanel={isMobilePanel}

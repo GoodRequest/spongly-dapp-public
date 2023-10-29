@@ -36,6 +36,7 @@ const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, 
 							img={getWalletImage(tipsterAddress as string)}
 							filled={true}
 							isAddress={true}
+							isLoading={isLoading}
 							onClick={() => router.push(`/${PAGES.LEADERBOARD}/?id=${tipsterAddress}`)}
 							value={tipsterAddress}
 							title={isMyWallet ? t('My wallet') : t('Wallet')}

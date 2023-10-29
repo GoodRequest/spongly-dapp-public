@@ -332,7 +332,7 @@ const TicketBetContainer = () => {
 
 				const calculatedBonusPercentageDec =
 					(activeTicketValues?.matches || []).reduce((accumulator, currentItem) => {
-						const bonusDecimal = getOddByBetType(currentItem as any, false, actualOddType).rawBonus / 100 + 1
+						const bonusDecimal = getOddByBetType(currentItem as any, actualOddType).rawBonus / 100 + 1
 						return accumulator * bonusDecimal
 					}, 1) - 1
 
@@ -373,7 +373,7 @@ const TicketBetContainer = () => {
 				const amountOfTokens =
 					fetchAmountOfTokensForXsUSDAmount(
 						Number(activeTicketValues?.buyIn),
-						getOddByBetType(activeTicketValues?.matches?.[0] as any, activeTicketValues.copied || false, actualOddType).rawOdd as any,
+						getOddByBetType(activeTicketValues?.matches?.[0] as any, actualOddType).rawOdd as any,
 						singlesAmmMaximumUSDAmountQuote / divider,
 						availablePerPosition[getBetOptionFromMatchBetOption(activeTicketValues?.matches?.[0].betOption as any)].available || 0,
 						bigNumberFormatter(ammBalanceForSelectedPosition)
@@ -387,8 +387,8 @@ const TicketBetContainer = () => {
 				const potentionalProfit = Number(maxAvailableTokenAmount) - Number(activeTicketValues.buyIn)
 				const skew = 0
 				// TODO: calculate number from bonus?
-				const totalBonus = getOddByBetType(activeTicketValues?.matches?.[0] as any, false, actualOddType).rawBonus
-					? round(Number(getOddByBetType(activeTicketValues?.matches?.[0] as any, false, actualOddType).rawBonus), 2).toFixed(2)
+				const totalBonus = getOddByBetType(activeTicketValues?.matches?.[0] as any, actualOddType).rawBonus
+					? round(Number(getOddByBetType(activeTicketValues?.matches?.[0] as any, actualOddType).rawBonus), 2).toFixed(2)
 					: null
 				const getOdds = () => {
 					const selectedMatch = getMatchByBetOption(

@@ -33,6 +33,7 @@ import TicketStatisticRow from '@/components/statisticRow/TicketStatisticRow'
 import PositionsList from '@/components/positionsList/PositionsList'
 import Custom404 from '@/pages/404'
 import { showNotifications } from '@/utils/tsxHelpers'
+import * as SC from '@/content/matchesContent/MatchDetailContentStyles'
 
 const TicketDetailContent = () => {
 	const { chain } = useNetwork()
@@ -50,6 +51,7 @@ const TicketDetailContent = () => {
 	const [userTicketType, setUserTicketType] = useState<USER_TICKET_TYPE | undefined>(undefined)
 	const [isLoading, setIsLoading] = useState(true)
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
+	const [error, setError] = useState(false)
 
 	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 
@@ -65,6 +67,8 @@ const TicketDetailContent = () => {
 
 	const fetchData = async () => {
 		try {
+			// eslint-disable-next-line no-promise-executor-return
+			await new Promise((resolve) => setTimeout(resolve, 500)) // Simulate a delay
 			setIsLoading(true)
 			let isParlay = true
 			if (router.query.ticketId?.includes('-')) {
@@ -103,6 +107,7 @@ const TicketDetailContent = () => {
 				setPositionsData(positionsWithMergedCombinedPositions)
 			})
 		} catch (e) {
+			setError(true)
 			showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while loading detail of ticket') }], NOTIFICATION_TYPE.NOTIFICATION)
 			// eslint-disable-next-line no-console
 			console.error(e)
@@ -119,43 +124,61 @@ const TicketDetailContent = () => {
 	}, [router.isReady])
 
 	const isMyWallet = ticketData?.account?.toLocaleLowerCase() === address?.toLocaleLowerCase()
-	return (
-		<>
-			{((positionsData && ticketData) || isLoading) && (
-				<Row gutter={[0, 16]}>
-					<Col span={24}>
-						<TicketStatisticRow
-							isLoading={isLoading}
-							tipsterAddress={ticketData?.account || ''}
-							buyIn={roundPrice(ticketData?.sUSDPaid, true)}
-							userTicketType={userTicketType}
-							claim={getUserTicketClaimValue(ticketData, userTicketType)}
-							quote={getTicketHistoricQuote(positionsData, actualOddType, ticketData?.marketQuotes)}
-							matches={positionsData?.length}
-							txHash={ticketData?.txHash}
-							isMyWallet={isMyWallet}
-						/>
-					</Col>
-				</Row>
-			)}
-			<Row style={{ marginTop: '32px' }}>
+
+	const renderTicketDetail =
+		!(positionsData && ticketData) || isLoading ? (
+			<Row gutter={[0, 16]}>
 				<Col span={24}>
-					{(positionsData && ticketData) || isLoading ? (
-						<PositionsList
-							isMyWallet={isMyWallet}
-							ticketData={ticketData}
-							positionsWithCombinedAttrs={positionsData}
-							marketQuotes={ticketData?.marketQuotes}
-						/>
-					) : (
-						<div style={{ marginTop: '-16px' }}>
-							<Custom404 />
-						</div>
-					)}
+					<SC.RowSkeleton active loading paragraph={{ rows: 1 }} />
+				</Col>
+				<Col span={24}>
+					<SC.RowSkeleton active loading paragraph={{ rows: 3 }} />
+				</Col>
+				<Col span={24}>
+					<SC.RowSkeleton active loading paragraph={{ rows: 3 }} />
+				</Col>
+				<Col span={24}>
+					<SC.RowSkeleton active loading paragraph={{ rows: 3 }} />
+				</Col>
+				<Col span={24}>
+					<SC.RowSkeleton active loading paragraph={{ rows: 3 }} />
 				</Col>
 			</Row>
-		</>
-	)
+		) : (
+			positionsData &&
+			ticketData &&
+			!isLoading && (
+				<>
+					<Row gutter={[0, 16]}>
+						<Col span={24}>
+							<TicketStatisticRow
+								isLoading={isLoading}
+								tipsterAddress={ticketData?.account || ''}
+								buyIn={roundPrice(ticketData?.sUSDPaid, true)}
+								userTicketType={userTicketType}
+								claim={getUserTicketClaimValue(ticketData, userTicketType)}
+								quote={getTicketHistoricQuote(positionsData, actualOddType, ticketData?.marketQuotes)}
+								matches={positionsData?.length}
+								txHash={ticketData?.txHash}
+								isMyWallet={isMyWallet}
+							/>
+						</Col>
+					</Row>
+					<Row style={{ marginTop: '32px' }}>
+						<Col span={24}>
+							<PositionsList
+								isMyWallet={isMyWallet}
+								ticketData={ticketData}
+								positionsWithCombinedAttrs={positionsData}
+								marketQuotes={ticketData?.marketQuotes}
+							/>
+						</Col>
+					</Row>
+				</>
+			)
+		)
+
+	return error ? <Custom404 /> : renderTicketDetail
 }
 
 export default TicketDetailContent

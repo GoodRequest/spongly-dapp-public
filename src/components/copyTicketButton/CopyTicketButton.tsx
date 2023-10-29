@@ -76,7 +76,6 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 	useEffect(() => {
 		const filterOngoingMatches = async () => {
 			const matches = await formatMatchesToTicket()
-
 			const filterOngoingMatches = matches.filter((match) => !(match.awayOdds === 0 && match.homeOdds === 0 && match.awayOdds === 0))
 			setActiveMatches(filterOngoingMatches)
 		}
@@ -128,15 +127,14 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 				try {
 					const marketOddsFromContract = await getMarketOddsFromContract([...values.data.sportMarkets])
 
-					setTempMatches(
-						marketOddsFromContract.map((marketOdds) => {
-							return {
-								...marketOdds,
-								// NOTE: every bet is different game.
-								betOption: activeMatches?.find((activeMatch) => activeMatch.gameId === marketOdds.gameId)?.betOption
-							}
-						})
-					)
+					const formattedMarketOddsFromContract = marketOddsFromContract.map((marketOdds) => {
+						return {
+							...marketOdds,
+							// NOTE: every bet is different game.
+							betOption: activeMatches?.find((activeMatch) => activeMatch.gameId === marketOdds.gameId)?.betOption
+						}
+					})
+					setTempMatches(formattedMarketOddsFromContract)
 				} catch (err) {
 					setTempMatches(activeMatches)
 				} finally {
@@ -154,8 +152,7 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 	const modals = (
 		<Modal
 			open={copyModal.visible}
-			onCancel={(e) => {
-				e.stopPropagation()
+			onCancel={() => {
 				setCopyModal({ visible: false, onlyCopy: false })
 			}}
 			centered
@@ -174,7 +171,7 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 			<Row>
 				<SC.MatchContainerRow span={24}>
 					{matchesWithChildMarkets?.map((match: any, key: any) => (
-						<MatchRow readOnly copied key={`matchRow-${key}`} match={match} />
+						<MatchRow readOnly key={`matchRow-${key}`} match={match} />
 					))}
 				</SC.MatchContainerRow>
 			</Row>
@@ -231,8 +228,7 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 				// TODO: opravit text podla toho aky druh je vybraty
 				content={isPosition ? t('Copy position') : t('Copy ticket')}
 				loading={isLoading}
-				onClick={async (e) => {
-					e.stopPropagation()
+				onClick={async () => {
 					// NOTE: if ticket has matches open modal which ask if you want to replace ticket or create new one
 					if (!isEmpty(betTicket?.matches)) {
 						handleSetTempMatches(false)

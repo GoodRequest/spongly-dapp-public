@@ -102,7 +102,7 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 				<SC.SportLogo>
 					<Icon style={{ marginRight: 0, color: 'white' }} className={`icon icon--${SPORTS_MAP[Number(match?.market.tags?.[0])]?.toLowerCase()}`} />
 				</SC.SportLogo>
-				<SC.TicketStatus matchStatus={getParlayItemStatus(match, isPlayedNow(), t).status}>
+				<SC.TicketStatus style={{ height: 32 }} matchStatus={getParlayItemStatus(match, isPlayedNow(), t).status}>
 					<span>{getParlayItemStatus(match, isPlayedNow(), t).text}</span>
 				</SC.TicketStatus>
 			</SC.TicketHeader>
