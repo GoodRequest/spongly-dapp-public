@@ -45,8 +45,8 @@ export const MatchIcon = styled.div`
 	}
 	img {
 		padding: 4px;
-		max-width: 28px;
-		max-height: 28px;
+		width: 28px;
+		height: 28px;
 	}
 `
 

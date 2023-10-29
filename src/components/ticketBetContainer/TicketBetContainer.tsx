@@ -24,7 +24,9 @@ import {
 	GAS_ESTIMATION_BUFFER,
 	MAX_ALLOWANCE,
 	MAX_BUY_IN,
-	MIN_BUY_IN,
+	MIN_BUY_IN_DEFAULT,
+	MIN_BUY_IN_PARLAY,
+	MIN_BUY_IN_SINGLE,
 	MSG_TYPE,
 	NETWORK_IDS,
 	NOTIFICATION_TYPE,
@@ -112,6 +114,7 @@ const TicketBetContainer = () => {
 	const [activeTicketID, setActiveTicketID] = useState<number>(1)
 	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
 	const activeTicketMatchesCount = activeTicketValues?.matches?.length || 0
+	const minBuyIn = activeTicketMatchesCount === 1 ? MIN_BUY_IN_SINGLE : MIN_BUY_IN_PARLAY
 	const unsubmittedTickets = useSelector((state: RootState) => state.betTickets.unsubmittedBetTickets.data)
 	const parlayAmmDataQuery = useParlayAmmDataQuery(chain?.id || NETWORK_IDS.OPTIMISM)
 	const available = multipleCollateralBalance?.[(activeTicketValues?.selectedStablecoin as keyof typeof multipleCollateralBalance) ?? STABLE_COIN.S_USD] ?? 0
@@ -190,10 +193,10 @@ const TicketBetContainer = () => {
 				totalQuote: 0,
 				maxTotalQuote: parlayAmmData?.maxSupportedOdds,
 				maxBuyIn: parlayAmmData?.maxSupportedAmount || MAX_BUY_IN,
-				minBuyIn: parlayAmmData?.minUsdAmount || MIN_BUY_IN,
+				minBuyIn: MIN_BUY_IN_DEFAULT,
 				totalBonus: 0,
 				payout: 0,
-				buyIn: newActiveTicket?.buyIn || parlayAmmData?.minUsdAmount || MIN_BUY_IN,
+				buyIn: MIN_BUY_IN_DEFAULT,
 				potentionalProfit: 0,
 				fees: {
 					parlay: parlayAmmData?.parlayAmmFee ? parlayAmmData.parlayAmmFee * 100 : '-',
@@ -305,7 +308,7 @@ const TicketBetContainer = () => {
 	}
 
 	const fetchParleyTicketData = async () => {
-		if (!activeTicketValues?.buyIn || Number(activeTicketValues?.buyIn) < MIN_BUY_IN)
+		if (!activeTicketValues?.buyIn || Number(activeTicketValues?.buyIn) < minBuyIn)
 			return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0, totalBonus: 0 }
 
 		try {
@@ -320,15 +323,6 @@ const TicketBetContainer = () => {
 						? formatCurrency(totalBuyAmount - toNumber(activeTicketValues.buyIn), 2)
 						: null
 				const skew = bigNumberFormatter(parlayAmmQuote?.skewImpact || 0)
-				// TODO: Do we need this logic? Remove this logic if testing bonuses will be correct
-				// const totalBonus = '0'
-				// Calculates total bonus percentage
-				// if (!parlayAmmMinimumUSDAmountQuote.error) {
-				// 	const baseQuote = bigNumberFormatter(parlayAmmMinimumUSDAmountQuote?.totalQuote ?? 0)
-				// 	const calculatedReducedTotalBonus =
-				// 		(calculatedBonusPercentageDec * Number(formatQuote(OddsType.DECIMAL, totalQuote))) / Number(formatQuote(OddsType.DECIMAL, baseQuote))
-				// 	totalBonus = calculatedReducedTotalBonus > 0 ? formatPercentage(calculatedReducedTotalBonus) : formatPercentage(0)
-				// }
 
 				const calculatedBonusPercentageDec =
 					(activeTicketValues?.matches || []).reduce((accumulator, currentItem) => {
@@ -358,7 +352,7 @@ const TicketBetContainer = () => {
 		try {
 			const { signer, sportsAMMContract } = networkConnector
 			const divider = Number(`1e${getStablecoinDecimals(chain?.id || NETWORK_IDS.OPTIMISM, getSelectedCoinIndex(activeTicketValues.selectedStablecoin))}`)
-			if (!activeTicketValues?.buyIn || Number(activeTicketValues.buyIn) < MIN_BUY_IN || activeTicketValues?.matches?.length === 0 || !signer)
+			if (!activeTicketValues?.buyIn || Number(activeTicketValues.buyIn) < minBuyIn || activeTicketValues?.matches?.length === 0 || !signer)
 				return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0, totalBonus: 0 }
 			const currentAddress = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses[0]
 			const contract = new ethers.Contract(currentAddress || '', sportsMarketContract.abi, signer)
