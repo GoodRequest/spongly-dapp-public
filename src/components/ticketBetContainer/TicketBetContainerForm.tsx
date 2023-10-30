@@ -20,7 +20,7 @@ import MatchRow from './components/matchRow/MatchRow'
 import SummaryCol from './components/summaryCol/SummaryCol'
 
 // utils
-import { MAX_BUY_IN, MAX_SELECTED_ALLOWANCE, MAX_TICKET_MATCHES, MAX_TOTAL_QUOTE, MIN_BUY_IN, STABLE_COIN } from '@/utils/constants'
+import { MAX_BUY_IN, MAX_SELECTED_ALLOWANCE, MAX_TICKET_MATCHES, MAX_TOTAL_QUOTE, MIN_BUY_IN_PARLAY, MIN_BUY_IN_SINGLE, STABLE_COIN } from '@/utils/constants'
 import { FORM } from '@/utils/enums'
 import handleOnchangeForm from './helpers/changeBetContainer'
 
@@ -69,6 +69,8 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	const allowance = Number(round(Number(formValues?.allowance), 2).toFixed(2))
 	const buyIn = Number(round(Number(formValues?.buyIn), 2).toFixed(2))
 	const availableBalance = Number(round(Number(available), 2).toFixed(2))
+	// minBuyIn for parlay is 3, for single is 1
+	const minBuyIn = matches.length === 1 ? MIN_BUY_IN_SINGLE : MIN_BUY_IN_PARLAY
 
 	const payWithOptions = [
 		{
@@ -116,12 +118,12 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 			setError(() => <>{t('Please connect your wallet')}</>)
 			return
 		}
-		if (buyIn < MIN_BUY_IN) {
+		if (buyIn < minBuyIn) {
 			setError(() => (
 				<>
 					{t('Minimum buy-in is')}{' '}
 					<SC.Highlight>
-						{MIN_BUY_IN.toFixed(2)} {formValues?.selectedStablecoin}
+						{minBuyIn.toFixed(2)} {formValues?.selectedStablecoin}
 					</SC.Highlight>
 				</>
 			))
@@ -299,7 +301,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 								name={'buyIn'}
 								required
 								max={MAX_BUY_IN}
-								min={MIN_BUY_IN}
+								min={minBuyIn}
 								placeholder={
 									formValues?.minBuyIn
 										? t('Enter Amount - Min. {{amount}} {{currency}}', {
@@ -321,7 +323,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 								<SummaryCol
 									isProfit
 									title={t('Profit')}
-									value={`+ ${formValues.potentionalProfit} ${formValues?.selectedStablecoin}`}
+									value={`+${formValues.potentionalProfit} ${formValues?.selectedStablecoin}`}
 									align={'right'}
 								/>
 							</Row>
@@ -360,6 +362,6 @@ const form = reduxForm<IUnsubmittedBetTicket, IComponentProps>({
 	destroyOnUnmount: false,
 	touchOnChange: true,
 	onChange: debounce(handleOnchangeForm, 300)
-})(TicketBetContainerForm as any)
+})(TicketBetContainerForm)
 
 export default form

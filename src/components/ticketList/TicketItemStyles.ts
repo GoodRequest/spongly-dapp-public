@@ -1,8 +1,8 @@
-import styled, { css, keyframes } from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Col } from 'antd'
 import { TextSMMedium, TextXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
-import { FlexItemCenter } from '@/styles/GlobalStyles'
+import { BasicBoxShadow, FlexItemCenter, flicker } from '@/styles/GlobalStyles'
 import { MATCH_STATUS } from '@/utils/constants'
 
 export const TicketItemWrapper = styled.div`
@@ -12,7 +12,7 @@ export const TicketItemWrapper = styled.div`
 	background: ${({ theme }) => theme['color-base-surface-quaternary']};
 	&:hover {
 		cursor: pointer;
-		outline: 1px solid ${({ theme }) => theme['color-base-action-primary-default']};
+		${BasicBoxShadow};
 	}
 	&:last-of-type {
 		margin-right: 0; /* Remove right margin for the last item */
@@ -43,8 +43,8 @@ export const MatchIcon = styled.div`
 	}
 	img {
 		padding: 4px;
-		max-width: 28px;
-		max-height: 28px;
+		width: 28px;
+		height: 28px;
 	}
 `
 export const ResultsWrapper = styled(Col)`
@@ -71,25 +71,16 @@ export const TicketHeader = styled.div`
 	align-items: center;
 	margin-bottom: 12px;
 `
-const flicker = keyframes`
-    0%, 100% {
-        opacity: 0;
-    }
-    50% {
-        opacity: 1;
-    }
-`
+
 export const TicketStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 	${TextSMMedium};
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	padding-top: 6px;
-	padding-bottom: 6px;
-	height: 32px;
+	height: 48px;
 	width: 100%;
 	text-transform: uppercase;
-	border-radius: 6px;
+	border-radius: 10px;
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	color: ${({ theme }) => theme['color-base-content-tertiary']};
 
@@ -132,7 +123,10 @@ export const TicketStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 		css`
 			background: ${({ theme }) => theme['color-base-state-error-bg']};
 			color: ${({ theme }) => theme['color-base-state-error-fg']};
-		`}
+		`};
+	@media (max-width: ${breakpoints.md}px) {
+		height: 32px;
+	}
 `
 
 export const SportLogo = styled.div`

@@ -6,10 +6,10 @@ import { useRouter } from 'next-translate-routes'
 import { LoadingOutlined } from '@ant-design/icons'
 
 // components, assets, atoms
-import * as SC from './LeaderboardContentStyles'
 import Sorter from '@/components/Sorter'
 import Select from '@/atoms/select/Select'
-import SortIcon from '@/assets/icons/sort-icon.svg'
+import ArrowIcon from '@/assets/icons/arrow-down.svg'
+import MyWalletContent from '@/content/walletContent/WalletContent'
 
 // utils
 import { GET_TIPSTERS } from '@/utils/queries'
@@ -18,15 +18,14 @@ import { decodeSorter, markedValue, setSort } from '@/utils/helpers'
 import { roundPrice } from '@/utils/formatters/currency'
 import { formatAccount } from '@/utils/formatters/string'
 import { getWalletImage } from '@/utils/images'
+import { PAGES } from '@/utils/enums'
 
 // styles
 import * as SCS from '@/styles/GlobalStyles'
+import * as SC from './LeaderboardContentStyles'
 
 // types
 import { LeaderboardUser } from '@/typescript/types'
-import { PAGES } from '@/utils/enums'
-import ArrowIcon from '@/assets/icons/arrow-down.svg'
-import MyWalletContent from '@/content/walletContent/WalletContent'
 
 const limit = 20
 
@@ -175,7 +174,7 @@ const LeaderboardContent = () => {
 	return router.query.id ? (
 		<MyWalletContent />
 	) : (
-		<SC.LeaderboardContentWrapper>
+		<>
 			<h1>{t('Leaderboard')}</h1>
 			<SCS.SorterRow>
 				<SCS.HorizontalSorters>
@@ -249,7 +248,7 @@ const LeaderboardContent = () => {
 				{t('Show more')}
 				<SCS.Icon icon={ArrowIcon} />
 			</SCS.LoadMore>
-		</SC.LeaderboardContentWrapper>
+		</>
 	)
 }
 

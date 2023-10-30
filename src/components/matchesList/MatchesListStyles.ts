@@ -1,10 +1,11 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Col, Collapse, Divider, Radio, Row, Skeleton } from 'antd'
 import Ticket from '@/assets/images/empty_state_ticket.png'
 import { HeadingXSMedium, HeadingXXSMedium, TextMDMedium, TextMDRegular, TextSMMedium, TextSMRegular, TextXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 import { MATCHES } from '@/utils/enums'
-import { FlagWorld } from '@/styles/GlobalStyles'
+import { FlagWorld, FlexItemCenter, flicker } from '@/styles/GlobalStyles'
+import { MATCH_STATUS } from '@/utils/constants'
 
 const { Panel } = Collapse
 
@@ -12,6 +13,9 @@ export const MatchListWrapper = styled.div`
 	border-radius: 12px;
 	padding-top: 24px;
 	${TextSMMedium}
+	&:first-child {
+		padding-top: 0;
+	}
 `
 
 export const MatchCollapse = styled(Collapse)<{ isExpanded: boolean }>`
@@ -86,8 +90,6 @@ export const CollapsePanel = styled(Panel)`
 `
 
 export const PanelContent = styled.div`
-	background: ${({ theme }) => theme['color-base-surface-secondary']};
-	border-radius: 12px;
 	${TextXSMedium}
 `
 
@@ -132,6 +134,7 @@ export const FlagWrapper = styled.div`
 `
 
 export const ExtendedMatchContentWrapper = styled.div`
+	margin-top: 24px;
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 15px;
@@ -143,7 +146,7 @@ export const ExtendedMatchContentWrapper = styled.div`
 
 export const SmallMatchContentWrapper = styled.div`
 	display: none;
-
+	margin-top: 16px;
 	@media (max-width: ${breakpoints.md}px) {
 		display: block;
 	}
@@ -151,20 +154,22 @@ export const SmallMatchContentWrapper = styled.div`
 
 export const ExtendedMatchContentItemCol = styled.div`
 	display: flex;
+	position: relative;
+	z-index: 2;
 	flex-direction: column;
 	justify-content: center;
 	gap: 8px;
 	align-items: center;
 	padding: 16px 24px;
-	background: ${({ theme }) => theme['color-base-surface-quaternary']};
-	border-radius: 15px;
+	background: ${({ theme }) => theme['color-base-surface-top']};
+	border-radius: 12px;
 `
 export const WarningText = styled.div`
 	height: 42px;
 	color: ${({ theme }) => theme['color-base-state-warning-fg']};
 `
 export const ExtendedMatchContentItemHeader = styled.div`
-	${TextMDMedium}
+	${TextXSMedium}
 `
 
 export const ModalDescriptionText = styled.div`
@@ -377,37 +382,20 @@ export const RadioMobileHeader = styled.div`
 	${TextXSMedium}
 `
 
-export const MobileStatusWrapper = styled.div<{ type: MATCHES }>`
-	width: 100%;
-	height: 32px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	border-radius: 6px;
+export const MobileStatusWrapper = styled.div`
 	margin-top: 16px;
-	${TextXSMedium};
-	background: ${({ theme, type }) => (type === MATCHES.ONGOING ? theme['color-base-state-warning-bg'] : theme['color-base-surface-quaternary'])};
-	color: ${({ theme, type }) => (type === MATCHES.ONGOING ? theme['color-base-state-warning-fg'] : theme['color-base-content-top'])};
 `
 
 export const MobileWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	border-radius: 12px;
-	background: ${({ theme }) => theme['color-base-surface-quaternary']};
+	background: ${({ theme }) => theme['color-base-surface-top']};
 	padding: 12px 12px 12px 12px;
 	margin-bottom: 16px;
 	&:last-child {
 		margin-bottom: 0;
 	}
-`
-
-export const AllPositionsHeader = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin-bottom: 12px;
-	${TextMDMedium}
 `
 
 export const NoWrapCenterRow = styled(Row)`
@@ -484,4 +472,40 @@ export const NotAvailableText = styled.div`
 	${TextMDMedium};
 	text-align: center;
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
+`
+export const HeaderStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
+	${TextXSMedium};
+	${FlexItemCenter};
+	width: 100%;
+	padding: 12px;
+	height: 48px;
+	text-align: center;
+	position: relative;
+	background: ${({ theme }) => theme['color-base-surface-quaternary']};
+	border-radius: 10px;
+	${(p) =>
+		p.matchStatus === MATCH_STATUS.ONGOING &&
+		css`
+			position: relative;
+			background: ${({ theme }) => theme['color-base-state-warning-bg']};
+			color: ${({ theme }) => theme['color-base-state-warning-fg']};
+			& > span {
+				position: relative;
+				&::before {
+					content: '';
+					position: absolute;
+					left: -10px;
+					top: 50%;
+					transform: translate(-50%, -50%);
+					width: 8px;
+					height: 8px;
+					border-radius: 50%;
+					background: ${({ theme }) => theme['color-base-state-warning-fg']};
+					animation: ${flicker} 1s infinite;
+				}
+			}
+		`};
+	@media (max-width: ${breakpoints.md}px) {
+		height: 32px;
+	}
 `

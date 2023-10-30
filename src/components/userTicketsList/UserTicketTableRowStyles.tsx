@@ -1,8 +1,9 @@
 import { Col, Divider, Row, Collapse } from 'antd'
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import { HeadingSMMedium, HeadingXSMedium, TextLGMedium, TextMDMedium, TextSMMedium, TextXSMedium } from '@/styles/typography'
 import { USER_TICKET_TYPE } from '@/utils/constants'
 import { breakpoints } from '@/styles/theme'
+import { flicker } from '@/styles/GlobalStyles'
 
 const { Panel } = Collapse
 
@@ -54,11 +55,12 @@ export const UserCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 	border: ${({ theme, isExpanded }) => (isExpanded ? `2px solid ${theme['color-base-surface-quintarny']}` : '2px solid transparent')};
 `
 
-export const CollapsePanel = styled(Panel)`
+export const CollapsePanel = styled(Panel)<{ isExpanded: boolean }>`
 	.ant-collapse-content {
 		background: ${({ theme }) => theme['color-base-surface-secondary']};
 		border-top: none;
 	}
+
 	.ant-collapse-content-box {
 		background: ${({ theme }) => theme['color-base-surface-secondary']};
 		border-radius: 12px;
@@ -66,6 +68,10 @@ export const CollapsePanel = styled(Panel)`
 
 	.ant-collapse-header {
 		display: block !important;
+		border-bottom: 1px solid ${({ theme, isExpanded }) => (isExpanded ? theme['color-base-surface-quaternary'] : 'none')} !important;
+		@media (max-width: ${breakpoints.md}px) {
+			border-bottom: none !important;
+		}
 	}
 `
 export const ButtonIcon = styled.img`
@@ -173,10 +179,13 @@ export const AddressText = styled.p`
 	overflow: hidden;
 	text-overflow: ellipsis;
 	max-width: 100%;
+	@media (max-width: ${breakpoints.md}px) {
+		max-width: 50%;
+	}
 `
 
 export const TicketTypeTag = styled.div<{ ticketType: USER_TICKET_TYPE }>`
-	border-radius: 6px;
+	border-radius: 10px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -207,6 +216,9 @@ export const TicketTypeTag = styled.div<{ ticketType: USER_TICKET_TYPE }>`
 		}
 		return theme['color-base-content-top']
 	}};
+	@media (max-width: ${breakpoints.md}px) {
+		height: 32px;
+	}
 `
 
 export const TicketDivider = styled(Divider)<{ showClaimed: boolean }>`
@@ -264,14 +276,6 @@ export const ModalDescription = styled(Col)`
 	text-align: center;
 	margin-bottom: 32px;
 	color: ${({ theme }) => theme['color-base-content-tertiary']};
-`
-const flicker = keyframes`
-    0%, 100% {
-        opacity: 0;
-    }
-    50% {
-        opacity: 1;
-    }
 `
 
 export const ModalDescriptionWarning = styled(Col)`

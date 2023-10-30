@@ -4,7 +4,6 @@ import { Col, Spin } from 'antd'
 import infoIconPurple from '@/assets/icons/info-circle.svg'
 import { TextMDMedium, TextXSMedium, TextSMMedium, HeadingSMMedium, HeadingXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
-import { AllPositionsHeader } from '../matchesList/MatchesListStyles'
 import { SCROLL_DIRECTION } from '@/utils/enums'
 
 export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
@@ -127,10 +126,6 @@ export const MatchBetOptionsWrapper = styled.div`
 	div:first-of-type {
 		margin-right: 0px !important;
 		margin-left: 0px !important;
-	}
-
-	${AllPositionsHeader} {
-		display: none;
 	}
 `
 

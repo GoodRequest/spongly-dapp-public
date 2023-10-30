@@ -10,8 +10,11 @@ export type TagInfo = {
 	id: number
 	label: string
 	logo?: string
-	country: string
 	logoClass?: string
+	favourite?: boolean
+	hidden?: boolean
+	priority?: number
+	country: string
 }
 
 export type Tags = TagInfo[]
@@ -170,14 +173,16 @@ export type UserTicket = {
 	txHash: string
 	quote: string | undefined | null
 	amount: number
-	maturityDate: string
+	maturityDate: number
 	marketQuotes?: string[]
 	sportMarketsFromContract?: string[]
 	ticketType: WALLET_TICKETS
 	isClaimable: boolean
-	timestamp: string
+	timestamp: string | number
+	account?: string
 	positions: [
 		{
+			id: number | string
 			side: string
 			claimable: boolean
 			awayOdds: number | string
@@ -187,10 +192,10 @@ export type UserTicket = {
 			homeTeam: string
 			isCanceled: boolean
 			isOpen: boolean
-			isPaused: false
+			isPaused: boolean
 			isResolved: boolean
 			marketAddress: string
-			maturityDate: string
+			maturityDate: number
 			tags?: [] | undefined
 			market: SportMarket
 		}

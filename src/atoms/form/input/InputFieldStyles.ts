@@ -3,6 +3,10 @@ import { TextSMRegular } from '@/styles/typography'
 import { FIELD_HEIGHT } from '@/utils/constants'
 
 export const StyledInput = styled.div<{ error: boolean }>`
+	span {
+		background: ${({ theme }) => theme['color-base-surface-quaternary']};
+		border: none;
+	}
 	input {
 		height: ${FIELD_HEIGHT.middle};
 		box-shadow: none;

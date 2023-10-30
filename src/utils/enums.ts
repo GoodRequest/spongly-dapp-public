@@ -6,7 +6,8 @@ export enum PAGES {
 	MATCH_DETAIL = 'match-detail',
 	MY_WALLET = 'my-wallet',
 	LEADERBOARD = 'leaderboard',
-	PARLAY_SUPERSTARS = 'parlay-superstars'
+	PARLAY_SUPERSTARS = 'parlay-superstars',
+	TICKET_DETAIL = 'ticket-detail'
 }
 
 export enum MATCHES {

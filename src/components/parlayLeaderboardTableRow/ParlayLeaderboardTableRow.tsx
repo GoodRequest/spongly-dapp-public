@@ -30,7 +30,11 @@ const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, 
 					{isLoading ? (
 						skeletonPreset(120)
 					) : (
-						<div style={{ minWidth: '80px', cursor: 'pointer' }} onClick={() => router.push(`/${PAGES.LEADERBOARD}/?id=${address}`)}>
+						<div
+							role={'button'}
+							style={{ minWidth: '80px', cursor: 'pointer' }}
+							onClick={() => router.push(`/${PAGES.LEADERBOARD}/?id=${address}`)}
+						>
 							<SC.ColumnNameText>{t('Wallet')}</SC.ColumnNameText>
 							<SC.AddressText>{formatAddress(address)}</SC.AddressText>
 						</div>

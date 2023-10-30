@@ -26,9 +26,10 @@ import { useMatchesWithChildMarkets } from '@/hooks/useMatchesWithChildMarkets'
 
 type Props = {
 	ticket: any
+	isPosition?: boolean
 }
 
-const CopyTicketButton = ({ ticket }: Props) => {
+const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 	const { t } = useTranslation()
 	const { chain } = useNetwork()
 	const dispatch = useDispatch()
@@ -75,7 +76,6 @@ const CopyTicketButton = ({ ticket }: Props) => {
 	useEffect(() => {
 		const filterOngoingMatches = async () => {
 			const matches = await formatMatchesToTicket()
-
 			const filterOngoingMatches = matches.filter((match) => !(match.awayOdds === 0 && match.homeOdds === 0 && match.awayOdds === 0))
 			setActiveMatches(filterOngoingMatches)
 		}
@@ -127,15 +127,14 @@ const CopyTicketButton = ({ ticket }: Props) => {
 				try {
 					const marketOddsFromContract = await getMarketOddsFromContract([...values.data.sportMarkets])
 
-					setTempMatches(
-						marketOddsFromContract.map((marketOdds) => {
-							return {
-								...marketOdds,
-								// NOTE: every bet is different game.
-								betOption: activeMatches?.find((activeMatch) => activeMatch.gameId === marketOdds.gameId)?.betOption
-							}
-						})
-					)
+					const formattedMarketOddsFromContract = marketOddsFromContract.map((marketOdds) => {
+						return {
+							...marketOdds,
+							// NOTE: every bet is different game.
+							betOption: activeMatches?.find((activeMatch) => activeMatch.gameId === marketOdds.gameId)?.betOption
+						}
+					})
+					setTempMatches(formattedMarketOddsFromContract)
 				} catch (err) {
 					setTempMatches(activeMatches)
 				} finally {
@@ -172,7 +171,7 @@ const CopyTicketButton = ({ ticket }: Props) => {
 			<Row>
 				<SC.MatchContainerRow span={24}>
 					{matchesWithChildMarkets?.map((match: any, key: any) => (
-						<MatchRow readOnly copied key={`matchRow-${key}`} match={match} />
+						<MatchRow readOnly key={`matchRow-${key}`} match={match} />
 					))}
 				</SC.MatchContainerRow>
 			</Row>
@@ -225,8 +224,9 @@ const CopyTicketButton = ({ ticket }: Props) => {
 				disabledPopoverText={activeMatches?.length === 1 ? t('Match is no longer open to copy') : t('Matches are no longer open to copy')}
 				disabled={activeMatches?.length === 0} // If ticket with active matches is empty disable button
 				btnStyle={'primary'}
+				// style={isPosition ? { height: '36px' } : undefined}
 				// TODO: opravit text podla toho aky druh je vybraty
-				content={t('Copy ticket')}
+				content={isPosition ? t('Copy position') : t('Copy ticket')}
 				loading={isLoading}
 				onClick={async () => {
 					// NOTE: if ticket has matches open modal which ask if you want to replace ticket or create new one

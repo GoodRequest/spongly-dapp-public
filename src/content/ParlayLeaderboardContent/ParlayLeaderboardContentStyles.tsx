@@ -9,24 +9,6 @@ export const ParlayLeaderboardTextCol = styled(Col)`
 	flex-direction: column;
 `
 
-export const ContentWrapper = styled.div`
-	padding-left: 16%;
-	padding-right: 16%;
-
-	@media (max-width: ${breakpoints.xl}px) {
-		padding-left: 12%;
-		padding-right: 12%;
-	}
-	@media (max-width: ${breakpoints.lg}px) {
-		padding-left: 6%;
-		padding-right: 6%;
-	}
-	@media (max-width: ${breakpoints.md}px) {
-		padding-left: 16px;
-		padding-right: 16px;
-	}
-`
-
 export const FilterWrapper = styled.div`
 	max-width: 375px;
 	&.search {

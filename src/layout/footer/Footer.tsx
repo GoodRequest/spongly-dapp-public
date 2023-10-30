@@ -34,7 +34,7 @@ const Footer = () => {
 	}
 
 	return (
-		<SC.Footer>
+		<SC.Footer id={'footer-content'}>
 			<SC.FooterHead>
 				<img src={LogoImg} alt={'Spongly logo'} />
 				<SC.CopyrightDesktop>

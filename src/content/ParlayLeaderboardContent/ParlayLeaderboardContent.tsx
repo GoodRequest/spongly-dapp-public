@@ -17,7 +17,6 @@ import { Option, ParlayLeaderboardTableItem } from '@/typescript/types'
 
 import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
 import WarningIcon from '@/assets/icons/warning-icon.svg'
-import SortIcon from '@/assets/icons/sort-icon.svg'
 
 import * as SC from './ParlayLeaderboardContentStyles'
 import * as SCS from '@/styles/GlobalStyles'
@@ -280,7 +279,7 @@ const ParlayLeaderboardContent = () => {
 	}
 
 	return (
-		<SC.ContentWrapper>
+		<>
 			<Row>
 				<SC.ParlayLeaderboardTextCol span={24}>
 					<SC.ParlayLeaderboardTitle>{t('Parlay incentives superstars')}</SC.ParlayLeaderboardTitle>
@@ -378,7 +377,7 @@ const ParlayLeaderboardContent = () => {
 					<SCS.Icon icon={ArrowIcon} />
 				</SCS.LoadMore>
 			)}
-		</SC.ContentWrapper>
+		</>
 	)
 }
 

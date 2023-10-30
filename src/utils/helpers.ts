@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import Router from 'next/router'
 import { floor, groupBy, max, toNumber, toPairs } from 'lodash'
 import { AnyAction, Dispatch } from 'redux'
+import { ethers } from 'ethers'
 import { IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 
 import {
@@ -14,6 +15,7 @@ import {
 	MSG_TYPE,
 	Network,
 	NETWORK_IDS,
+	NOTIFICATION_TYPE,
 	OddsType,
 	OPTIMISM_DIVISOR,
 	ORDER_DIRECTION,
@@ -63,8 +65,11 @@ import { BetType } from '@/utils/tags'
 import OptimismIcon from '@/assets/icons/optimism-icon.svg'
 import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
 
-import { formatParlayQuote, formatQuote, formattedCombinedTypeMatch } from './formatters/quote'
+import { formatParlayQuote, formatPositionOdds, formatQuote, formattedCombinedTypeMatch } from './formatters/quote'
 import { roundToTwoDecimals } from './formatters/number'
+import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
+import { roundPrice } from './formatters/currency'
+import { showNotifications } from './tsxHelpers'
 
 export const getCurrentBiweeklyPeriod = () => {
 	const startOfPeriod = dayjs(START_OF_BIWEEKLY_PERIOD)
@@ -314,12 +319,12 @@ export const getReward = (index: number | undefined, chainId: number | undefined
 }
 
 export const getParlayItemStatus = (position: Position, isPlayedNow: boolean, t: any) => {
-	const date = dayjs(toNumber(position.market.maturityDate) * 1000).format('| MMM DD')
+	const date = dayjs(toNumber(position.market.maturityDate) * 1000).format('MMM DD | HH:mm')
 	if (isPlayedNow) {
-		return { status: MATCH_STATUS.ONGOING, text: t('Playing now') }
+		return { status: MATCH_STATUS.ONGOING, text: t('Playing now'), date }
 	}
-	if (position.market.isCanceled) return { status: MATCH_STATUS.CANCELED, text: t('Canceled {{ date }}', { date }) }
-	if (position.market.isPaused) return { status: MATCH_STATUS.PAUSED, text: t('Paused {{ date }}', { date }) }
+	if (position.market.isCanceled) return { status: MATCH_STATUS.CANCELED, text: t('Canceled {{ date }}', { date }), date }
+	if (position.market.isPaused) return { status: MATCH_STATUS.PAUSED, text: t('Paused {{ date }}', { date }), date }
 	if (position.market.isResolved) {
 		let result = ''
 		if (position.market?.tags && position.market?.tags && TOTAL_WINNER_TAGS.includes(position.market.tags?.[0])) {
@@ -331,19 +336,25 @@ export const getParlayItemStatus = (position: Position, isPlayedNow: boolean, t:
 		} else {
 			result = `${position.market.homeScore || '?'} : ${position.market.awayScore || '?'}`
 		}
-		if (position.claimable) return { status: MATCH_STATUS.SUCCESS, text: t('Success {{ date }} ({{ result }})', { date, result }) }
-		return { status: MATCH_STATUS.MISS, text: t('Miss {{ date }} ({{ result }})', { date, result }) }
+		if (position.claimable) return { status: MATCH_STATUS.SUCCESS, text: t('Success {{ date }} ({{ result }})', { date, result }), date, result }
+		return { status: MATCH_STATUS.MISS, text: t('Miss {{ date }} ({{ result }})', { date, result }), date, result }
 	}
-	return { status: MATCH_STATUS.OPEN, text: dayjs(toNumber(position.market.maturityDate) * 1000).format('MMM DD | HH:mm') }
+	return { status: MATCH_STATUS.OPEN, text: dayjs(toNumber(position.market.maturityDate) * 1000).format('MMM DD | HH:mm'), date }
 }
 
 export const getMatchStatus = (match: any, t: any) => {
-	const date = dayjs(toNumber(match?.maturityDate) * 1000).format('| MMM DD')
+	const date = dayjs(toNumber(match?.maturityDate) * 1000)
+		.format('| MMM DD')
+		.toUpperCase()
 	if (match.isOpen && !match.isPaused && !match.homeOdds && !match.awayOdds) return { status: MATCH_STATUS.ONGOING, text: t('Playing now') }
 	if (match?.isCanceled) return { status: MATCH_STATUS.CANCELED, text: t('Canceled {{ date }}', { date }) }
 	if (match?.isPaused) return { status: MATCH_STATUS.PAUSED, text: t('Paused {{ date }}', { date }) }
-	if (match.isResolved) return { status: MATCH_STATUS.SUCCESS, text: `Match end | ${match.homeScore || '?'} : ${match.awayScore || '?'}` }
-	return { status: MATCH_STATUS.OPEN, text: dayjs(toNumber(match?.maturityDate) * 1000).format('MMM DD | HH:mm') }
+	return {
+		status: MATCH_STATUS.OPEN,
+		text: dayjs(toNumber(match?.maturityDate) * 1000)
+			.format('MMM DD | HH:mm')
+			.toUpperCase()
+	}
 }
 
 export const getOddsBySide = (ticket: ITicket) => {
@@ -432,6 +443,29 @@ export const getMatchResult = (match: SportMarket) => {
 	if (match.finalResult === '3') return MATCH_RESULT.DRAW
 	return undefined
 }
+
+export const getMatchDetailScoreText = (match: SportMarket, t: any, isTotalWinner?: boolean) => {
+	if (isTotalWinner) {
+		if (match.isCanceled || match.isPaused || match.isOpen) {
+			return ''
+		}
+		if (match.isResolved && getMatchResult(match) === MATCH_RESULT.HOME) {
+			return t('Won')
+		}
+		if (match.isResolved && getMatchResult(match) === MATCH_RESULT.AWAY) {
+			return t('Lost')
+		}
+	} else {
+		if (match.isResolved && !match.isCanceled && !match.isPaused) {
+			return `${match.homeScore || '?'} : ${match.awayScore || '?'}`
+		}
+		if (match.isCanceled || match.isPaused) {
+			return 'VS'
+		}
+	}
+	return 'VS'
+}
+
 export const getTicketType = (market: ParlayMarket | PositionBalance): TICKET_TYPE | undefined => {
 	if (isTicketOpen(market)) return TICKET_TYPE.OPEN_TICKET
 	if (isTicketClosed(market)) return TICKET_TYPE.CLOSED_TICKET
@@ -780,7 +814,7 @@ export const getSelectedCoinIndex = (selectedCoin?: string): number => {
 	}
 }
 
-export const getOddByBetType = (market: IMatch, copied: boolean, oddType: OddsType, customBetOption?: BET_OPTIONS) => {
+export const getOddByBetType = (market: IMatch, oddType: OddsType, customBetOption?: BET_OPTIONS) => {
 	// customBetOption is used for override match betOption (using in MatchListContent where we need to return odds based on type of odds in dropdown)
 	// TODO: add logic for bonuses or create new function for bonuses
 	const betOption = customBetOption || market.betOption
@@ -810,141 +844,88 @@ export const getOddByBetType = (market: IMatch, copied: boolean, oddType: OddsTy
 			}
 		// H1, H2
 		case BET_OPTIONS.HANDICAP_HOME:
-			return copied
-				? {
-						formattedOdd: formatQuote(oddType, market.homeOdds),
-						rawOdd: market.homeOdds,
-						formattedBonus: getFormattedBonus(market.homeBonus),
-						rawBonus: (market.homeBonus || 0) > 0 ? market.homeBonus || 0 : 0
-				  }
-				: {
-						formattedOdd: formatQuote(oddType, market.spreadTypeMatch?.homeOdds),
-						rawOdd: market.spreadTypeMatch?.homeOdds,
-						formattedBonus: getFormattedBonus(market.spreadTypeMatch?.homeBonus),
-						rawBonus: (market.spreadTypeMatch?.homeBonus || 0) > 0 ? market.spreadTypeMatch?.homeBonus || 0 : 0
-				  }
+			return {
+				formattedOdd: formatQuote(oddType, market.spreadTypeMatch?.homeOdds),
+				rawOdd: market.spreadTypeMatch?.homeOdds,
+				formattedBonus: getFormattedBonus(market.spreadTypeMatch?.homeBonus),
+				rawBonus: (market.spreadTypeMatch?.homeBonus || 0) > 0 ? market.spreadTypeMatch?.homeBonus || 0 : 0
+			}
 		case BET_OPTIONS.HANDICAP_AWAY:
-			return copied
-				? {
-						formattedOdd: formatQuote(oddType, market.awayOdds),
-						rawOdd: market.awayOdds,
-						formattedBonus: getFormattedBonus(market.awayBonus),
-						rawBonus: (market.awayBonus || 0) > 0 ? market.awayBonus || 0 : 0
-				  }
-				: {
-						formattedOdd: formatQuote(oddType, market.spreadTypeMatch?.awayOdds),
-						rawOdd: market.spreadTypeMatch?.awayOdds,
-						formattedBonus: getFormattedBonus(market.spreadTypeMatch?.awayBonus),
-						rawBonus: (market.spreadTypeMatch?.awayBonus || 0) > 0 ? market.spreadTypeMatch?.awayBonus || 0 : 0
-				  }
+			return {
+				formattedOdd: formatQuote(oddType, market.spreadTypeMatch?.awayOdds),
+				rawOdd: market.spreadTypeMatch?.awayOdds,
+				formattedBonus: getFormattedBonus(market.spreadTypeMatch?.awayBonus),
+				rawBonus: (market.spreadTypeMatch?.awayBonus || 0) > 0 ? market.spreadTypeMatch?.awayBonus || 0 : 0
+			}
 		// O, U
 		case BET_OPTIONS.TOTAL_OVER:
-			return copied
-				? {
-						formattedOdd: formatQuote(oddType, market.homeOdds),
-						rawOdd: market.homeOdds,
-						formattedBonus: getFormattedBonus(market.homeBonus),
-						rawBonus: (market.homeBonus || 0) > 0 ? market.homeBonus || 0 : 0
-				  }
-				: {
-						formattedOdd: formatQuote(oddType, market.totalTypeMatch?.homeOdds),
-						rawOdd: market.totalTypeMatch?.homeOdds,
-						formattedBonus: getFormattedBonus(market.totalTypeMatch?.homeBonus),
-						rawBonus: (market.totalTypeMatch?.homeBonus || 0) > 0 ? market.totalTypeMatch?.homeBonus || 0 : 0
-				  }
+			return {
+				formattedOdd: formatQuote(oddType, market.totalTypeMatch?.homeOdds),
+				rawOdd: market.totalTypeMatch?.homeOdds,
+				formattedBonus: getFormattedBonus(market.totalTypeMatch?.homeBonus),
+				rawBonus: (market.totalTypeMatch?.homeBonus || 0) > 0 ? market.totalTypeMatch?.homeBonus || 0 : 0
+			}
 		case BET_OPTIONS.TOTAL_UNDER:
-			return copied
-				? {
-						formattedOdd: formatQuote(oddType, market.awayOdds),
-						rawOdd: market.awayOdds,
-						formattedBonus: getFormattedBonus(market.awayBonus),
-						rawBonus: (market.awayBonus || 0) > 0 ? market.awayBonus || 0 : 0
-				  }
-				: {
-						formattedOdd: formatQuote(oddType, market.totalTypeMatch?.awayOdds),
-						rawOdd: market.totalTypeMatch?.awayOdds,
-						formattedBonus: getFormattedBonus(market.totalTypeMatch?.awayBonus),
-						rawBonus: (market.totalTypeMatch?.awayBonus || 0) > 0 ? market.totalTypeMatch?.awayBonus || 0 : 0
-				  }
+			return {
+				formattedOdd: formatQuote(oddType, market.totalTypeMatch?.awayOdds),
+				rawOdd: market.totalTypeMatch?.awayOdds,
+				formattedBonus: getFormattedBonus(market.totalTypeMatch?.awayBonus),
+				rawBonus: (market.totalTypeMatch?.awayBonus || 0) > 0 ? market.totalTypeMatch?.awayBonus || 0 : 0
+			}
 		// X1, X2, 12
 		case BET_OPTIONS.DOUBLE_CHANCE_HOME:
-			return copied
-				? {
-						formattedOdd: formatQuote(oddType, market.homeOdds),
-						rawOdd: market.homeOdds,
-						formattedBonus: getFormattedBonus(market.homeBonus),
-						rawBonus: (market.homeBonus || 0) > 0 ? market.homeBonus || 0 : 0
-				  }
-				: {
-						formattedOdd: formatQuote(
-							oddType,
-							market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)
-								?.homeOdds
-						),
-						rawOdd: market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)
-							?.homeOdds,
-						rawBonus:
-							(market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)
-								?.homeBonus || 0) > 0
-								? market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)
-										?.homeBonus || 0
-								: 0,
-						formattedBonus: getFormattedBonus(
-							market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)
+			return {
+				formattedOdd: formatQuote(
+					oddType,
+					market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)?.homeOdds
+				),
+				rawOdd: market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)
+					?.homeOdds,
+				rawBonus:
+					(market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)
+						?.homeBonus || 0) > 0
+						? market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)
 								?.homeBonus || 0
-						)
-				  }
+						: 0,
+				formattedBonus: getFormattedBonus(
+					market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.HOME_TEAM_NOT_TO_LOSE)?.homeBonus ||
+						0
+				)
+			}
 		case BET_OPTIONS.DOUBLE_CHANCE_AWAY:
-			return copied
-				? {
-						formattedOdd: formatQuote(oddType, market.awayOdds),
-						rawOdd: market.awayOdds,
-						formattedBonus: getFormattedBonus(market.awayBonus),
-						rawBonus: (market.awayBonus || 0) > 0 ? market.awayBonus || 0 : 0
-				  }
-				: {
-						formattedOdd: formatQuote(
-							oddType,
-							market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)
-								?.homeOdds
-						),
-						rawOdd: market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)
-							?.homeOdds,
-						rawBonus:
-							(market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)
-								?.homeBonus || 0) > 0
-								? market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)
-										?.homeBonus || 0
-								: 0,
-						formattedBonus: getFormattedBonus(
-							market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)
+			return {
+				formattedOdd: formatQuote(
+					oddType,
+					market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)?.homeOdds
+				),
+				rawOdd: market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)
+					?.homeOdds,
+				rawBonus:
+					(market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)
+						?.homeBonus || 0) > 0
+						? market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)
 								?.homeBonus || 0
-						)
-				  }
+						: 0,
+				formattedBonus: getFormattedBonus(
+					market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.AWAY_TEAM_NOT_TO_LOSE)?.homeBonus ||
+						0
+				)
+			}
 		case BET_OPTIONS.DOUBLE_CHANCE_DRAW:
-			return copied
-				? {
-						formattedOdd: formatQuote(oddType, market.drawOdds),
-						rawOdd: market.drawOdds,
-						formattedBonus: getFormattedBonus(market.drawBonus),
-						rawBonus: (market.drawBonus || 0) > 0 ? market.drawBonus || 0 : 0
-				  }
-				: {
-						formattedOdd: formatQuote(
-							oddType,
-							market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeOdds
-						),
-						rawOdd: market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeOdds,
-						rawBonus:
-							(market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeBonus || 0) >
-							0
-								? market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeBonus ||
-								  0
-								: 0,
-						formattedBonus: getFormattedBonus(
-							market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeBonus || 0
-						)
-				  }
+			return {
+				formattedOdd: formatQuote(
+					oddType,
+					market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeOdds
+				),
+				rawOdd: market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeOdds,
+				rawBonus:
+					(market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeBonus || 0) > 0
+						? market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeBonus || 0
+						: 0,
+				formattedBonus: getFormattedBonus(
+					market.doubleChanceTypeMatches?.find((match) => match.doubleChanceMarketType === DoubleChanceMarketType.NO_DRAW)?.homeBonus || 0
+				)
+			}
 		// 1&O, 1&U, 2&O, 2&U
 		case BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_OVER:
 		case BET_OPTIONS.COMBINED_WINNER_AND_TOTAL_HOME_UNDER:
@@ -1116,7 +1097,7 @@ export const getCombinedPositionsOdds = (positions: PositionWithIndex[], ticket:
 	const combinedOdds = firstPositionOdds * secondPositionOdds
 
 	if (!sgpFees) {
-		return combinedOdds
+		return floor(combinedOdds, 2).toFixed(2)
 	}
 
 	let sgpItem: undefined | SGPItem
@@ -1130,7 +1111,7 @@ export const getCombinedPositionsOdds = (positions: PositionWithIndex[], ticket:
 	})
 
 	if (!sgpItem) {
-		return combinedOdds
+		return floor(combinedOdds, 2).toFixed(2)
 	}
 
 	// TODO: totalquote wont match this quote. Same on Overtime
@@ -1201,6 +1182,160 @@ export const removeDuplicatesByGameId = (positions: Position[]): number => {
 	}, new Set<string>())
 
 	return uniqueGameIds.size
+}
+
+export const parsePositionBalanceToUserTicket = (ticket: PositionBalance): UserTicket => {
+	const newTicket = {
+		id: ticket?.id,
+		won: undefined,
+		claimed: ticket?.claimed,
+		sUSDPaid: Number(ticket?.sUSDPaid),
+		txHash: ticket?.firstTxHash,
+		amount: Number(ticket?.amount),
+		ticketType: WALLET_TICKETS.ALL,
+		maturityDate: Number(ticket?.position?.market?.maturityDate),
+		isClaimable: false,
+		timestamp: 0,
+		account: ticket?.account,
+		positions: [
+			{
+				// some are moved up so its easier to work with them
+				id: ticket?.id,
+				side: ticket?.position?.side,
+				claimable: ticket?.position?.claimable,
+				isCanceled: ticket?.position?.market?.isCanceled,
+				isOpen: ticket?.position?.market?.isOpen,
+				isPaused: ticket?.position?.market?.isPaused,
+				isResolved: ticket?.position?.market?.isResolved,
+				marketAddress: ticket?.position?.market?.address,
+				maturityDate: Number(ticket?.position?.market?.maturityDate),
+				market: {
+					...ticket.position.market,
+					homeTeam: removeDuplicateSubstring(ticket?.position?.market?.homeTeam),
+					awayTeam: removeDuplicateSubstring(ticket?.position?.market?.awayTeam)
+				}
+			}
+		]
+	}
+
+	return newTicket as UserTicket
+}
+
+export const parseParlayToUserTicket = (ticket: ParlayMarket): UserTicket => {
+	const newTicket = {
+		id: ticket?.id,
+		won: ticket?.won,
+		claimed: ticket?.claimed,
+		sUSDPaid: Number(ticket?.sUSDPaid),
+		txHash: ticket?.txHash,
+		quote: ticket?.totalQuote,
+		amount: Number(ticket?.totalAmount),
+		marketQuotes: ticket?.marketQuotes,
+		maturityDate: 0,
+		ticketType: WALLET_TICKETS.ALL,
+		timestamp: ticket.timestamp,
+		sportMarketsFromContract: ticket.sportMarketsFromContract,
+		isClaimable: false,
+		account: ticket?.account,
+		positions: ticket?.positions?.map((positionItem) => {
+			return {
+				// some are moved up so its easier to work with them
+				id: positionItem.id,
+				side: positionItem.side,
+				claimable: positionItem?.claimable,
+				isCanceled: positionItem?.market?.isCanceled,
+				isOpen: positionItem?.market?.isOpen,
+				isPaused: positionItem?.market?.isPaused,
+				isResolved: positionItem?.market?.isResolved,
+				maturityDate: Number(positionItem?.market?.maturityDate),
+				marketAddress: positionItem?.market?.address,
+				market: {
+					...positionItem.market,
+					homeTeam: removeDuplicateSubstring(positionItem?.market?.homeTeam),
+					awayTeam: removeDuplicateSubstring(positionItem?.market?.awayTeam)
+				}
+			}
+		}),
+		sportMarkets: ticket?.sportMarkets?.map((item) => ({
+			gameId: item.gameId,
+			address: item.address,
+			isCanceled: item.isCanceled
+		}))
+	}
+
+	const lastMaturityDate: number = max(newTicket?.positions?.map((item) => Number(item?.maturityDate))) || 0
+	newTicket.maturityDate = lastMaturityDate
+
+	return newTicket as UserTicket
+}
+
+export const assignOtherAttrsToUserTicket = async (
+	ticket: UserTicket[],
+	marketTransactions: { timestamp: string; id: string }[] | undefined,
+	chainId: number | undefined,
+	signer: ethers.Signer | undefined
+) => {
+	const promises = ticket.map(async (item) => {
+		const userTicketType = getUserTicketType(item as any)
+
+		let timestamp = item?.timestamp
+		if (!timestamp) {
+			timestamp = marketTransactions?.find((transaction) => transaction?.id === item?.id)?.timestamp || ''
+		}
+		if (!(userTicketType === USER_TICKET_TYPE.SUCCESS || userTicketType === USER_TICKET_TYPE.CANCELED) || item.claimed) {
+			return {
+				...item,
+				isClaimable: false,
+				ticketType: ticketTypeToWalletType(userTicketType),
+				timestamp
+			}
+		}
+
+		const maturityDates = item.positions?.map((position) => {
+			return { maturityDate: position?.maturityDate, id: position.marketAddress }
+		})
+
+		const lastMaturityDate = maturityDates.sort((a, b) => (a.maturityDate < b.maturityDate ? 1 : -1))[0]
+		if (chainId) {
+			const contract = new ethers.Contract(lastMaturityDate.id, sportsMarketContract.abi, signer)
+
+			const contractData = await contract.times()
+			const expiryDate = contractData?.expiry?.toString()
+			const now = dayjs()
+			return {
+				...item,
+				isClaimable: !now.isAfter(expiryDate * 1000),
+				ticketType: ticketTypeToWalletType(userTicketType),
+				timestamp
+			}
+		}
+		return {
+			...item,
+			isClaimable: false,
+			ticketType: ticketTypeToWalletType(userTicketType),
+			timestamp
+		}
+	})
+
+	return Promise.all(promises)
+}
+
+export const getTicketHistoricQuote = (positionsWithMergedCombinedPositions: PositionWithCombinedAttrs[], actualOddType: OddsType, marketQuotes?: string[]) => {
+	const isParlay = positionsWithMergedCombinedPositions?.length > 1
+	let quote: undefined | number
+	positionsWithMergedCombinedPositions?.forEach((item, index) => {
+		if (isParlay) {
+			if (!quote) {
+				quote = item?.isCombined ? Number(item?.odds) : Number(formatParlayQuote(Number(marketQuotes?.[index])))
+			} else {
+				quote *= item?.isCombined ? Number(item?.odds) : Number(formatParlayQuote(Number(marketQuotes?.[index])))
+			}
+		} else {
+			quote = item?.isCombined ? Number(item?.odds) : Number(formatPositionOdds(item, actualOddType))
+		}
+	})
+
+	return quote?.toFixed(2)
 }
 
 export const formatTicketPositionsForStatistics = (data: { parlayMarkets: ParlayMarket[]; positionBalances: PositionBalance[] }) => {
@@ -1287,5 +1422,33 @@ export const formatTicketPositionsForStatistics = (data: { parlayMarkets: Parlay
 	return {
 		parlayTickets,
 		positionTickets
+	}
+}
+
+export const getUserTicketClaimValue = (ticket: UserTicket | undefined, userTicketType: USER_TICKET_TYPE | undefined) => {
+	if (!ticket || !userTicketType) return '0 $'
+
+	if (userTicketType === USER_TICKET_TYPE.MISS) return `0 $`
+	if (userTicketType === USER_TICKET_TYPE.SUCCESS) return `+${roundPrice(ticket?.amount, true)}`
+	if (userTicketType === USER_TICKET_TYPE.CANCELED) return ` +${getCanceledClaimAmount(ticket)}`
+	return roundPrice(ticket?.amount, true)
+}
+
+export const handleTxHashRedirect = (t: any, txHash?: string, chainId?: number) => {
+	if (!txHash) {
+		showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to redirect') }], NOTIFICATION_TYPE.NOTIFICATION)
+	}
+
+	const link = document.createElement('a')
+	const newHref = getEtherScanTxHash(chainId || NETWORK_IDS.OPTIMISM, txHash || '')
+	if (!newHref) {
+		showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to redirect') }], NOTIFICATION_TYPE.NOTIFICATION)
+		document.body.removeChild(link)
+	} else {
+		link.href = newHref
+		link.setAttribute('target', '_blank')
+		document.body.appendChild(link)
+		link.click()
+		document.body.removeChild(link)
 	}
 }

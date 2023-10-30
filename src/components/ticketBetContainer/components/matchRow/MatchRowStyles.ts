@@ -45,8 +45,8 @@ export const MatchIcon = styled.div`
 	}
 	img {
 		padding: 4px;
-		max-width: 28px;
-		max-height: 28px;
+		width: 28px;
+		height: 28px;
 	}
 `
 
@@ -98,10 +98,6 @@ export const RemoveButtonWrapper = styled.div`
 export const MatchIcons = styled.div`
 	height: 48px;
 	width: 90px;
-`
-
-export const ShiftedRow = styled(Row)`
-	margin-bottom: 24px;
 `
 
 export const MatchNames = styled.div`
