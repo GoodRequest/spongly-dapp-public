@@ -1,4 +1,4 @@
-import { Col, Tooltip } from 'antd'
+import { Col, Row, Tooltip } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import { FC, useMemo, useState } from 'react'
 import { toNumber } from 'lodash'
@@ -109,7 +109,7 @@ const MatchRow: FC<IMatchRow> = ({ match, deleteHandler, readOnly }) => {
 				width={800}
 				centered
 			>
-				<SC.ShiftedRow>
+				<Row>
 					<SC.MatchIcons>
 						<SC.MatchIcon>
 							<img
@@ -134,12 +134,10 @@ const MatchRow: FC<IMatchRow> = ({ match, deleteHandler, readOnly }) => {
 						<SC.TeamName>{match.homeTeam}</SC.TeamName>
 						<SC.TeamName>{match.awayTeam}</SC.TeamName>
 					</SC.MatchNames>
-				</SC.ShiftedRow>
-				<SC.ShiftedRow>
-					<SCS.MatchBetOptionsWrapper>
-						<MatchListContent match={match as any} />
-					</SCS.MatchBetOptionsWrapper>
-				</SC.ShiftedRow>
+				</Row>
+				<SCS.MatchBetOptionsWrapper>
+					<MatchListContent match={match as any} />
+				</SCS.MatchBetOptionsWrapper>
 			</Modal>
 		</>
 	)

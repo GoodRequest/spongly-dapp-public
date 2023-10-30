@@ -79,10 +79,8 @@ const PositionListItem = ({ position, quote, copyButtonTicket, isMyWallet }: Pro
 						router.push(`/${PAGES.MATCH_DETAIL}/?id=${position.market.gameId}`)
 					}
 				}}
-				lg={{ span: 12 }}
-				md={{ span: 24 }}
-				sm={{ span: 24 }}
 				xs={{ span: 24 }}
+				lg={{ span: 12 }}
 			>
 				<Row style={{ width: '100%' }}>
 					<SC.TeamCol span={10}>

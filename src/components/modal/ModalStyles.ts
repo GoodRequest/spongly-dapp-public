@@ -15,12 +15,12 @@ export const NewModal = styled(Modal)<{ title?: any }>`
 
     .ant-modal-close {
       position: absolute;
-      top: 12px !important;
-      right: 12px !important;
+      top: 24px !important;
+      right: 24px !important;
       border-radius: 50%;
       background: ${({ theme }) => theme['color-base-surface-quaternary']};
-      width: 48px;
-      height: 48px;
+      width: 40px;
+      height: 40px;
 
       .ant-modal-close-x {
         display: flex;

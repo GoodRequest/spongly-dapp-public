@@ -89,7 +89,9 @@ export const NETWORK_IDS = {
 }
 export const MAX_TOTAL_QUOTE = 100
 
-export const MIN_BUY_IN = 5
+export const MIN_BUY_IN_PARLAY = 3
+export const MIN_BUY_IN_SINGLE = 1
+export const MIN_BUY_IN_DEFAULT = 5
 
 export const MAX_BUY_IN = 1000
 
