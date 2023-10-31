@@ -7,9 +7,7 @@ import { useEffect, useState } from 'react'
 // utils
 import { MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE } from '@/utils/constants'
 import { getWalletImage } from '@/utils/images'
-import {
-	hasEthereumInjected, NETWORK_SWITCHER_SUPPORTED_NETWORKS, SUPPORTED_NETWORKS_DESCRIPTIONS
-} from '@/utils/network'
+import { hasEthereumInjected, NETWORK_SWITCHER_SUPPORTED_NETWORKS, SUPPORTED_NETWORKS_DESCRIPTIONS } from '@/utils/network'
 import networkConnector, { NetworkId } from '@/utils/networkConnector'
 import { showNotifications } from '@/utils/tsxHelpers'
 import { formatAddress } from '@/utils/formatters/string'
