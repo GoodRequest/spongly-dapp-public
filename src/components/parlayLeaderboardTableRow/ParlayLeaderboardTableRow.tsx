@@ -33,7 +33,7 @@ const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, 
 						<div
 							role={'button'}
 							style={{ minWidth: '80px', cursor: 'pointer' }}
-							onClick={() => router.push(`/${PAGES.LEADERBOARD}/?id=${address}`)}
+							onClick={() => router.push(`/${PAGES.TIPSTER_DETAIL}/?id=${address}`)}
 						>
 							<SC.ColumnNameText>{t('Wallet')}</SC.ColumnNameText>
 							<SC.AddressText>{formatAddress(address)}</SC.AddressText>
