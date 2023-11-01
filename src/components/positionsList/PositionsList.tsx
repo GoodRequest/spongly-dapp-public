@@ -32,7 +32,7 @@ const PositionsList = ({ positionsWithCombinedAttrs, marketQuotes, ticketData, i
 		}
 
 		if (isParlay) {
-			return formatParlayQuote(Number(marketQuotes?.[index]))
+			return formatParlayQuote(Number(marketQuotes?.[index]), actualOddType)
 		}
 
 		return formatPositionOdds(item, actualOddType)

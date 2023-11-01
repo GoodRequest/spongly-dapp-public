@@ -1337,9 +1337,9 @@ export const getTicketHistoricQuote = (positionsWithMergedCombinedPositions: Pos
 	positionsWithMergedCombinedPositions?.forEach((item, index) => {
 		if (isParlay) {
 			if (!quote) {
-				quote = item?.isCombined ? Number(item?.odds) : Number(formatParlayQuote(Number(marketQuotes?.[index])))
+				quote = item?.isCombined ? Number(item?.odds) : Number(formatParlayQuote(Number(marketQuotes?.[index]), actualOddType))
 			} else {
-				quote *= item?.isCombined ? Number(item?.odds) : Number(formatParlayQuote(Number(marketQuotes?.[index])))
+				quote *= item?.isCombined ? Number(item?.odds) : Number(formatParlayQuote(Number(marketQuotes?.[index]), actualOddType))
 			}
 		} else {
 			quote = item?.isCombined ? Number(item?.odds) : Number(formatPositionOdds(item, actualOddType))
