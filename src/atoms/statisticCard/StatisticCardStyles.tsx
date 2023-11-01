@@ -1,11 +1,21 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { HeadingXSMedium, TextLGMedium, TextSMMedium, TextXLSemibold } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
-export const Image = styled.img<{ filled: boolean }>`
-	width: ${({ filled }) => (filled ? '46px' : '40px')};
-	height: ${({ filled }) => (filled ? '46px' : '71px')};
+export const Image = styled.img<{ filled: boolean; isAddress?: boolean }>`
+	width: ${({ filled }) => (filled ? '68px' : '40px')};
+	height: ${({ filled }) => (filled ? '68px' : '71px')};
+	${({ isAddress }) =>
+		isAddress &&
+		css`
+			padding: 8px;
+			border-radius: 999px;
+			background: ${({ theme }) => theme['color-base-surface-quintarny']};
+		`}
+	@media (max-width: ${breakpoints.lg}px) {
+		margin-right: 8px;
+	}
 `
 export const ColorWrapper = styled.div<{ filled: boolean }>`
 	background: ${({ theme, filled }) => (filled ? theme['color-base-surface-secondary'] : 'transparent')};
@@ -18,7 +28,7 @@ export const StatisticCard = styled.div<{ filled: boolean; showMobileInColumn: b
 	width: 100%;
 	border-radius: 12px;
 	padding: 8px;
-	height: 68px;
+	height: 108px;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -27,6 +37,7 @@ export const StatisticCard = styled.div<{ filled: boolean; showMobileInColumn: b
 	box-shadow: ${({ theme, filled }) => (filled ? theme['drop-shadow-xs'] : 'none')};
 	@media (max-width: ${breakpoints.lg}px) {
 		padding: 16px 12px;
+		height: 68px;
 		justify-content: ${({ showMobileInColumn }) => (showMobileInColumn ? 'center' : 'flex-start')};
 		align-items: ${({ showMobileInColumn }) => (showMobileInColumn ? 'flex-start' : 'center')};
 		flex-direction: ${({ showMobileInColumn }) => (showMobileInColumn ? 'column' : 'row')};

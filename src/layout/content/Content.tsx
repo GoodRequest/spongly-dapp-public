@@ -1,5 +1,4 @@
 import React, { FC, ReactNode } from 'react'
-import { Row } from 'antd'
 import { useRouter } from 'next-translate-routes'
 import { includes } from 'lodash'
 import { useNetwork } from 'wagmi'
@@ -17,6 +16,7 @@ import { useIsMounted } from '@/hooks/useIsMounted'
 
 // styles
 import * as SC from './ContentStyles'
+import UserStatisticRow from '@/components/statisticRow/UserStatisticRow'
 
 interface ILayout {
 	children: ReactNode
@@ -32,7 +32,12 @@ const Content: FC<ILayout> = ({ children }) => {
 	return (
 		<SC.MainContainer>
 			{/* // Dashboard's stats */}
-			{chain?.id && isMounted && <Stats />}
+			{isMounted && (
+				<>
+					<UserStatisticRow />
+					<Stats />
+				</>
+			)}
 			{/* // Full width pages (lists) */}
 			{includes(fullWidthPages, router.pathname) && !id ? (
 				<SC.FullWidthContentCol lg={24} xl={24}>
@@ -40,14 +45,14 @@ const Content: FC<ILayout> = ({ children }) => {
 				</SC.FullWidthContentCol>
 			) : (
 				// Pages with BetContainer
-				<Row gutter={[30, 30]} style={{ display: 'flex', justifyContent: 'space-between' }}>
+				<SC.ContentWithBetContainerRow gutter={[30, 30]}>
 					<SC.MainContentContainer>{children}</SC.MainContentContainer>
 					{/* // Dashboard's Parlay Leaderboard */}
 					<SC.MobileHiddenCol span={8}>
 						{router.pathname === `/${PAGES.DASHBOARD}` && <ParlayLeaderboard />}
 						<TicketBetContainer />
 					</SC.MobileHiddenCol>
-				</Row>
+				</SC.ContentWithBetContainerRow>
 			)}
 		</SC.MainContainer>
 	)

@@ -2,7 +2,7 @@ import { GetStaticProps } from 'next'
 import { useEffect } from 'react'
 import { useRouter } from 'next-translate-routes'
 import Layout from '@/layout/layout/Layout'
-import SEOHelmet from '@/atoms/SEOHelmet'
+import SEOHelmet from '@/components/SEOHelmet'
 import { IPage } from '@/typescript/types'
 import { PAGES } from '@/utils/enums'
 

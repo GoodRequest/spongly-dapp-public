@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { Col } from 'antd'
+import { Col, Row } from 'antd'
 import { breakpoints } from '@/styles/theme'
 import { WALLET_TICKETS } from '@/utils/enums'
 
@@ -36,7 +36,7 @@ export const FullWidthContentCol = styled(Col)`
 	color: ${({ theme }) => theme['color-base-content-top']};
 	padding-left: 16%;
 	padding-right: 16%;
-
+	margin-top: 40px;
 	@media (max-width: ${breakpoints.xl}px) {
 		padding-left: 12%;
 		padding-right: 12%;
@@ -44,12 +44,24 @@ export const FullWidthContentCol = styled(Col)`
 	@media (max-width: ${breakpoints.lg}px) {
 		padding-left: 6%;
 		padding-right: 6%;
+		margin-top: 24px;
 	}
 	@media (max-width: ${breakpoints.md}px) {
 		padding-left: 0;
 		padding-right: 0;
+		margin-top: 24px;
 	}
 `
+
+export const ContentWithBetContainerRow = styled(Row)`
+	display: flex;
+	justify-content: space-between;
+	margin-top: 40px;
+	@media (max-width: ${breakpoints.lg}px) {
+		margin-top: 24px;
+	}
+`
+
 export const MinWidthContainer = styled.div<{ footerHeight: number }>`
 	// Header (70px + 16px + 16px = 102px) + Footer (246px + 100px = 348px) = 450px
 	min-height: calc(100vh - (102px + ${({ footerHeight }) => footerHeight}px + 100px));

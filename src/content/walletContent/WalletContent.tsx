@@ -7,7 +7,6 @@ import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit'
 import { Col, Row } from 'antd'
 
 // components
-import UserStatisticRow from '@/components/statisticRow/UserStatisticRow'
 import Button from '@/atoms/button/Button'
 import UserTicketsList from '@/components/userTicketsList/UserTicketsList'
 import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
@@ -37,7 +36,6 @@ const MyWalletContent = () => {
 	const isMyWallet = !router.query.id
 	const [fetchUserStatistic] = useLazyQuery(GET_USERS_STATISTICS)
 	const { signer } = networkConnector
-	const isMounted = useIsMounted()
 	const [fetchUserMarketTransactions] = useLazyQuery(GET_USERS_TRANSACTIONS)
 
 	const [userStatistic, setUserStatistic] = useState<undefined | UserStatistic>(undefined)
@@ -131,9 +129,6 @@ const MyWalletContent = () => {
 						}
 						return (
 							<Row gutter={[0, 16]}>
-								<Col span={24}>
-									{isMounted && <UserStatisticRow isMyWallet={isMyWallet} isLoading={isLoading} user={userStatistic?.user} />}
-								</Col>
 								<Col span={24}>
 									<UserTicketsList refetch={refetch} isMyWallet={isMyWallet} isLoading={isLoading} tickets={userStatistic?.tickets} />
 								</Col>
