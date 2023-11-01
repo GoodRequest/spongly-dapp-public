@@ -231,7 +231,8 @@ export enum SportFilterEnum {
 	Tennis = 'Tennis',
 	eSports = 'eSports',
 	Cricket = 'Cricket',
-	Motosport = 'Motosport',
+	// NOTE: Motosport is currently not available
+	// Motosport = 'Motosport',
 	Golf = 'Golf'
 }
 

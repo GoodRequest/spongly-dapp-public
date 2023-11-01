@@ -9,7 +9,6 @@ import { LoadingOutlined } from '@ant-design/icons'
 import Sorter from '@/components/Sorter'
 import Select from '@/atoms/select/Select'
 import ArrowIcon from '@/assets/icons/arrow-down.svg'
-import MyWalletContent from '@/content/walletContent/WalletContent'
 
 // utils
 import { GET_TIPSTERS } from '@/utils/queries'
@@ -171,9 +170,7 @@ const LeaderboardContent = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [direction, property, router.query.id])
 
-	return router.query.id ? (
-		<MyWalletContent />
-	) : (
+	return (
 		<>
 			<h1>{t('Leaderboard')}</h1>
 			<SCS.SorterRow>
@@ -207,7 +204,7 @@ const LeaderboardContent = () => {
 						return (
 							<SC.LeaderboardContentRow align={'middle'} gutter={[0, 16]}>
 								<Col span={12} md={6}>
-									<SC.Wallet onClick={() => router.push(`/${PAGES.LEADERBOARD}/?id=${item.id}`)}>
+									<SC.Wallet onClick={() => router.push(`/${PAGES.TIPSTER_DETAIL}/?id=${item.id}`)}>
 										<SC.WalletIcon imageSrc={getWalletImage(item.id)} />
 										<SC.Title>
 											<SC.Value>{formatAccount(item.id)}</SC.Value>
@@ -237,7 +234,7 @@ const LeaderboardContent = () => {
 									</SC.Title>
 								</Col>
 								<Col span={24} md={5}>
-									<SCS.LoadMore onClick={() => router.push(`/${PAGES.LEADERBOARD}/?id=${item.id}`)}>{t('Show detail')}</SCS.LoadMore>
+									<SCS.LoadMore onClick={() => router.push(`/${PAGES.TIPSTER_DETAIL}/?id=${item.id}`)}>{t('Show detail')}</SCS.LoadMore>
 								</Col>
 							</SC.LeaderboardContentRow>
 						)
