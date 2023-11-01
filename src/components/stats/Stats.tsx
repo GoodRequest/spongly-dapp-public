@@ -19,6 +19,7 @@ import ProfitsIcon from '@/assets/icons/stat-profits-icon.svg'
 import BalanceIcon from '@/assets/icons/stat-balance-icon.svg'
 import { roundPrice } from '@/utils/formatters/currency'
 import Button from '@/atoms/button/Button'
+import { StatImage } from './StatsStyles'
 
 interface IStatistics {
 	successRate: number
@@ -102,7 +103,7 @@ const Stats = () => {
 									extraContent={
 										<div>
 											<SC.Glow $color={theme['color-base-action-primary-default']} />
-											<img src={BalanceIcon} alt={'stat'} />
+											<SC.StatImage src={BalanceIcon} alt={'stat'} />
 										</div>
 									}
 								/>
@@ -114,7 +115,7 @@ const Stats = () => {
 									extraContent={
 										<div>
 											<SC.Glow $color={theme['color-base-state-success-fg']} />
-											<img src={ProfitsIcon} alt={'stat'} />
+											<SC.StatImage src={ProfitsIcon} alt={'stat'} />
 										</div>
 									}
 								/>
@@ -126,7 +127,7 @@ const Stats = () => {
 									extraContent={
 										<div>
 											<SC.Glow $color={theme['color-inverse-state-warning-fg']} />
-											<img src={SuccessIcon} alt={'stat'} />
+											<SC.StatImage src={SuccessIcon} alt={'stat'} />
 										</div>
 									}
 								/>
