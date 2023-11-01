@@ -37,7 +37,7 @@ const TicketStatisticRow = ({ isLoading, tipsterAddress, buyIn, quote, matches, 
 							filled={true}
 							isAddress={true}
 							isLoading={isLoading}
-							onClick={() => router.push(`/${PAGES.LEADERBOARD}/?id=${tipsterAddress}`)}
+							onClick={() => router.push(`/${PAGES.TIPSTER_DETAIL}/?id=${tipsterAddress}`)}
 							value={tipsterAddress}
 							title={isMyWallet ? t('My wallet') : t('Wallet')}
 							isMyWallet={isMyWallet}
