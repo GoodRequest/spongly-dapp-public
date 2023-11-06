@@ -39,7 +39,7 @@ const UserStatisticRow = (props: Props) => {
 	const router = useRouter()
 	const [fetchUserStatistic] = useLazyQuery(GET_USERS_STATISTICS)
 	// TODO: dorobit stats aj pre detail tipstera = wallet a detail ticketu
-	const userStatistics = [`/${PAGES.MY_WALLET}`]
+	const userStatistics = [`/${PAGES.MY_WALLET}`, `/${PAGES.TIPSTER_DETAIL}`]
 	const isMyWallet = !router.query.id
 	const [statistics, setStatistics] = useState<IStatistics>()
 	const [isLoading, setIsLoading] = useState(false)
@@ -69,11 +69,11 @@ const UserStatisticRow = (props: Props) => {
 	}
 
 	useEffect(() => {
-		if (chain?.id && isMounted) {
+		if (router.isReady && isMounted) {
 			fetchStats()
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [chain?.id, isMounted])
+	}, [router.isReady, isMounted])
 
 	return (
 		<Row gutter={[0, 32]}>
