@@ -21,32 +21,6 @@ export const TicketItemWrapper = styled.div`
 		width: 100%;
 	}
 `
-
-export const MatchIcon = styled.div`
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
-	height: 48px;
-	width: 48px;
-	border-radius: 50%;
-	background: ${({ theme }) => theme['color-base-surface-primary']};
-	border: 2px solid ${({ theme }) => theme['color-base-surface-quaternary']};
-	@media (max-width: ${breakpoints.md}px) {
-		height: 40px;
-		width: 40px;
-	}
-	&:last-of-type {
-		margin-left: -14px;
-	}
-	&:first-of-type {
-		margin-left: 0;
-	}
-	img {
-		padding: 4px;
-		width: 28px;
-		height: 28px;
-	}
-`
 export const ResultsWrapper = styled(Col)`
 	display: flex;
 	margin-left: -16px;
@@ -83,7 +57,10 @@ export const TicketStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 	border-radius: 10px;
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	color: ${({ theme }) => theme['color-base-content-tertiary']};
-
+	@media (max-width: ${breakpoints.md}px) {
+		font-size: 0.8125rem;
+		height: 32px;
+	}
 	${(p) =>
 		p.matchStatus === MATCH_STATUS.ONGOING &&
 		css`
@@ -124,9 +101,6 @@ export const TicketStatus = styled.div<{ matchStatus: MATCH_STATUS }>`
 			background: ${({ theme }) => theme['color-base-state-error-bg']};
 			color: ${({ theme }) => theme['color-base-state-error-fg']};
 		`};
-	@media (max-width: ${breakpoints.md}px) {
-		height: 32px;
-	}
 `
 
 export const SportLogo = styled.div`
@@ -138,9 +112,17 @@ export const SportLogo = styled.div`
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 `
 
-export const TeamText = styled.div`
-	margin-right: 8px;
-	${TextSMMedium}
+export const BetTypeText = styled.div`
+	${FlexItemCenter};
+	margin-right: 16px;
+	border-radius: 6px;
+	min-width: 52px;
+	padding-left: 4px;
+	padding-right: 4px;
+	height: 32px;
+	border: 2px solid ${({ theme }) => theme['color-base-action-primary-default']};
+	background: ${({ theme }) => theme['color-base-state-info-bg']};
+	${TextXSMedium}
 `
 
 export const BonusText = styled.div`
@@ -150,8 +132,7 @@ export const BonusText = styled.div`
 
 export const OddText = styled.div`
 	margin-right: 4px;
-	${TextSMMedium};
-	color: ${({ theme }) => theme['color-base-content-quaternary']};
+	${TextXSMedium};
 `
 export const BonusLabel = styled.span`
 	${TextXSMedium};
