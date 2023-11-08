@@ -84,8 +84,8 @@ const MyWalletContent = () => {
 					})
 				})
 				.catch((e) => {
-					// eslint-disable-next-line no-console
 					setError(true)
+					// eslint-disable-next-line no-console
 					console.error(e)
 					showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while loading user statistics') }], NOTIFICATION_TYPE.NOTIFICATION)
 				})

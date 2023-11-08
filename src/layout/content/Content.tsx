@@ -1,7 +1,6 @@
 import React, { FC, ReactNode } from 'react'
 import { useRouter } from 'next-translate-routes'
 import { includes } from 'lodash'
-import { useNetwork } from 'wagmi'
 
 // components
 import TicketBetContainer from '@/components/ticketBetContainer/TicketBetContainer'
@@ -17,6 +16,7 @@ import { useIsMounted } from '@/hooks/useIsMounted'
 // styles
 import * as SC from './ContentStyles'
 import UserStatisticRow from '@/components/statisticRow/UserStatisticRow'
+import TicketStatisticRow from '@/components/statisticRow/TicketStatisticRow'
 
 interface ILayout {
 	children: ReactNode
@@ -26,16 +26,16 @@ const Content: FC<ILayout> = ({ children }) => {
 	const router = useRouter()
 	const { id } = router.query
 	const fullWidthPages = [`/${PAGES.PARLAY_SUPERSTARS}`, `/${PAGES.LEADERBOARD}`]
-	const { chain } = useNetwork()
 	const isMounted = useIsMounted()
 
 	return (
 		<SC.MainContainer>
-			{/* // Dashboard's stats */}
+			{/* // Dashboard's and detail's stats */}
 			{isMounted && (
 				<>
 					<UserStatisticRow />
 					<Stats />
+					<TicketStatisticRow />
 				</>
 			)}
 			{/* // Full width pages (lists) */}

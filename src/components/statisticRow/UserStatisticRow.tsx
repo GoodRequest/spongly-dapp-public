@@ -8,7 +8,6 @@ import { useLazyQuery } from '@apollo/client'
 import { includes } from 'lodash'
 import StatisticCard from '@/atoms/statisticCard/StatisticCard'
 import { useIsMounted } from '@/hooks/useIsMounted'
-import { User } from '@/typescript/types'
 import { getWalletImage } from '@/utils/images'
 import { roundPrice } from '@/utils/formatters/currency'
 
@@ -20,33 +19,29 @@ import { formatTicketPositionsForStatistics, getUserTicketType } from '@/utils/h
 import { USER_TICKET_TYPE } from '@/utils/constants'
 import { GET_USERS_STATISTICS } from '@/utils/queries'
 
-type Props = {
-	// isLoading: boolean
-	// user: User | undefined
-	// isMyWallet?: boolean
-}
 interface IStatistics {
 	successRate: number
 	trades: number
 	pnl: number
 }
 
-const UserStatisticRow = (props: Props) => {
+const UserStatisticRow = () => {
 	const { t } = useTranslation()
 	const { chain } = useNetwork()
 	const { address } = useAccount()
 	const isMounted = useIsMounted()
 	const router = useRouter()
 	const [fetchUserStatistic] = useLazyQuery(GET_USERS_STATISTICS)
-	// TODO: dorobit stats aj pre detail tipstera = wallet a detail ticketu
 	const userStatistics = [`/${PAGES.MY_WALLET}`, `/${PAGES.TIPSTER_DETAIL}`]
 	const isMyWallet = !router.query.id
 	const [statistics, setStatistics] = useState<IStatistics>()
 	const [isLoading, setIsLoading] = useState(false)
+	const id = isMyWallet ? address?.toLocaleLowerCase() : String(router.query.id).toLowerCase()
+
 	const fetchStats = async () => {
 		try {
 			setIsLoading(true)
-			const { data } = await fetchUserStatistic({ variables: { id: address?.toLocaleLowerCase() }, context: { chainId: chain?.id } })
+			const { data } = await fetchUserStatistic({ variables: { id }, context: { chainId: chain?.id } })
 			const formattedTicketData = formatTicketPositionsForStatistics({ parlayMarkets: data.parlayMarkets, positionBalances: data.positionBalances })
 			const wonTickets = [...formattedTicketData.parlayTickets, ...formattedTicketData.positionTickets]?.filter(
 				(item) => getUserTicketType(item) === USER_TICKET_TYPE.SUCCESS
@@ -67,17 +62,23 @@ const UserStatisticRow = (props: Props) => {
 			console.error(e)
 		}
 	}
+	const showUserStatistics = () => {
+		if (chain?.id) return true
+		if (!chain?.id && isMyWallet) return false
+		if (!chain?.id && !isMyWallet) return true
+		return false
+	}
 
 	useEffect(() => {
-		if (router.isReady && isMounted) {
+		if (router.isReady && isMounted && showUserStatistics()) {
 			fetchStats()
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [router.isReady, isMounted])
+	}, [router.isReady, isMounted, chain?.id, id])
 
 	return (
 		<Row gutter={[0, 32]}>
-			{includes(userStatistics, router.pathname) ? (
+			{includes(userStatistics, router.pathname) && showUserStatistics() ? (
 				<>
 					<Col lg={6} md={24} sm={24} xs={24}>
 						<StatisticCard
@@ -118,7 +119,6 @@ const UserStatisticRow = (props: Props) => {
 					</Col>
 				</>
 			) : null}
-			{/* )} */}
 		</Row>
 	)
 }
