@@ -266,6 +266,7 @@ export const TicketType = styled.div<{ ticketType: TICKET_TYPE | CLOSED_TICKET_T
 		padding-top: 6px;
 		padding-bottom: 6px;
 		margin-bottom: 16px;
+		font-size: 0.8125rem;
 	}
 	${(props) =>
 		props.ticketType === TICKET_TYPE.ONGOING_TICKET &&

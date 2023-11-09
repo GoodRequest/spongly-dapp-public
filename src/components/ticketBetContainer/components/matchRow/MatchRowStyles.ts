@@ -31,25 +31,6 @@ export const TeamImages = styled.div`
 	align-items: center;
 `
 
-export const MatchIcon = styled.div`
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
-	height: 40px;
-	width: 40px;
-	border-radius: 50%;
-	background: ${({ theme }) => theme['color-base-surface-primary']};
-	border: 2px solid ${({ theme }) => theme['color-base-surface-quaternary']};
-	&:last-of-type {
-		margin-left: -14px;
-	}
-	img {
-		padding: 4px;
-		width: 28px;
-		height: 28px;
-	}
-`
-
 export const TeamNames = styled.div`
 	height: 48px;
 	width: calc(100% - 90px);

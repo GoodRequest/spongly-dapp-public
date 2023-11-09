@@ -15,12 +15,12 @@ import { Position } from '@/__generated__/resolvers-types'
 import { NO_TEAM_IMAGE_FALLBACK, OddsType, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { formatParlayQuote, formatPositionOdds } from '@/utils/formatters/quote'
 import { roundToTwoDecimals } from '@/utils/formatters/number'
+import { PAGES } from '@/utils/enums'
 
 // styles
 import * as SC from './TicketItemStyles'
 import { Icon } from '@/styles/Icons'
 import * as SCS from '@/styles/GlobalStyles'
-import { PAGES } from '@/utils/enums'
 
 type Props = {
 	match: Position
@@ -106,28 +106,28 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 					<span>{getParlayItemStatus(match, isPlayedNow(), t).text}</span>
 				</SC.TicketStatus>
 			</SC.TicketHeader>
-			<Row gutter={8}>
-				<Col xxl={6} xl={6} lg={6} md={4} sm={4} xs={6}>
-					<SC.MatchIcon>
+			<Row gutter={8} align={'middle'}>
+				<Col xxl={5} xl={5} lg={5} md={3} sm={4} xs={7}>
+					<SCS.MatchIcon>
 						<img
 							src={getTeamImageSource(match?.market.homeTeam || '', toNumber(match?.market.tags?.[0]))}
 							onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
 								e.target.src = NO_TEAM_IMAGE_FALLBACK
 							}}
 						/>
-					</SC.MatchIcon>
+					</SCS.MatchIcon>
 					{!isTotalWinner && (
-						<SC.MatchIcon>
+						<SCS.MatchIcon>
 							<img
 								src={getTeamImageSource(match?.market.awayTeam || '', toNumber(match?.market.tags?.[0]))}
 								onError={(e: React.SyntheticEvent<HTMLImageElement, Event> | any) => {
 									e.target.src = NO_TEAM_IMAGE_FALLBACK
 								}}
 							/>
-						</SC.MatchIcon>
+						</SCS.MatchIcon>
 					)}
 				</Col>
-				<Col xxl={11} xl={11} lg={10} md={16} sm={15} xs={18}>
+				<Col xxl={11} xl={11} lg={10} md={16} sm={14} xs={16}>
 					<SCS.EllipsisText
 						ellipsis={{
 							rows: 1
@@ -147,8 +147,8 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 						</SCS.EllipsisText>
 					)}
 				</Col>
-				<SC.OddsWrapper xxl={7} xl={7} lg={8} md={4} sm={5} xs={24}>
-					<SC.TeamText>{`${oddsSymbol} ${betInfoValues()}`}</SC.TeamText>
+				<SC.OddsWrapper xxl={8} xl={8} lg={9} md={5} sm={6} xs={24}>
+					<SC.BetTypeText>{`${oddsSymbol} ${betInfoValues()}`}</SC.BetTypeText>
 					{oddsDataFromContract ? (
 						<SCS.FlexColumn>
 							<SC.OddText>{getOdds()}</SC.OddText>
