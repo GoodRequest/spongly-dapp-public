@@ -7,7 +7,7 @@ import { useNetwork } from 'wagmi'
 import { useLazyQuery } from '@apollo/client'
 import { Col, Row } from 'antd'
 
-import { ACTIVE_BET_TICKET, IUnsubmittedBetTicket, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
+import { ACTIVE_TICKET_ID, IUnsubmittedBetTicket, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 import { RootState } from '@/redux/rootReducer'
 import { FORM } from '@/utils/enums'
 import Button from '@/atoms/button/Button'
@@ -49,6 +49,7 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 	const sgpFeesRaw = useSGPFeesQuery((chain?.id as Network) || NETWORK_IDS.OPTIMISM, {
 		enabled: true
 	})
+
 	const matchesWithChildMarkets = useMatchesWithChildMarkets(tempMatches, sgpFees, false)
 
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
@@ -100,15 +101,15 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 			? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			  [...unsubmittedTickets, { id: (largestId || 1) + 1, matches, copied: true }]
 			: [{ id: 1, matches, copied: true }]
-
 		await dispatch({
 			type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_UPDATE,
 			payload: {
 				data
 			}
 		})
-		// NOTE: set active state for new ticket item in HorizontalScroller id === data.length (actual state of tickets and set active ticket to last item)
-		await dispatch({ type: ACTIVE_BET_TICKET.ACTIVE_BET_TICKET_SET, payload: { data: { id: (largestId || 1) + 1 } } })
+		// set active created ticket ID (useEffect in TicketBetCointainter initialize data with this new ticket ID)
+		await dispatch({ type: ACTIVE_TICKET_ID.SET, payload: (largestId || 1) + 1 })
+		// TODO: scroll to end if this is 4th or 5th ticket and show arrow right
 	}
 	const handleCopyTicket = async () => {
 		copyTicketToUnsubmittedTickets(matchesWithChildMarkets as any, unsubmittedTickets, dispatch, activeTicketValues.id)
