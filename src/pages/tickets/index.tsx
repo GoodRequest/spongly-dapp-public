@@ -1,6 +1,6 @@
 import { GetStaticProps } from 'next'
 import Layout from '@/layout/layout/Layout'
-import SEOHelmet from '@/atoms/SEOHelmet'
+import SEOHelmet from '@/components/SEOHelmet'
 import { IPage } from '@/typescript/types'
 import TicketsContent from '@/content/ticketsContent/TicketsContent'
 

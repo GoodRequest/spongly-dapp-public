@@ -1,9 +1,9 @@
 import { GetStaticProps } from 'next'
 import React from 'react'
 import Layout from '@/layout/layout/Layout'
-import SEOHelmet from '@/atoms/SEOHelmet'
 import { IPage } from '@/typescript/types'
 import MyWalletContent from '@/content/walletContent/WalletContent'
+import SEOHelmet from '@/components/SEOHelmet'
 
 export const getStaticProps: GetStaticProps<{ page: IPage<{}> }> = async () => {
 	const page = {

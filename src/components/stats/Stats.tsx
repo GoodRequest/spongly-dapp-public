@@ -19,7 +19,6 @@ import ProfitsIcon from '@/assets/icons/stat-profits-icon.svg'
 import BalanceIcon from '@/assets/icons/stat-balance-icon.svg'
 import { roundPrice } from '@/utils/formatters/currency'
 import Button from '@/atoms/button/Button'
-import { StatImage } from './StatsStyles'
 
 interface IStatistics {
 	successRate: number
@@ -75,8 +74,8 @@ const Stats = () => {
 	}, [chain?.id, isMounted])
 
 	return (
-		<SC.StatsWrapper hide={!includes(userStatistics, router.pathname)}>
-			{includes(userStatistics, router.pathname) ? (
+		<SC.StatsWrapper hide={!includes(userStatistics, router.pathname) || !chain?.id}>
+			{includes(userStatistics, router.pathname) && chain?.id ? (
 				isLoading ? (
 					<SC.StatsOverlayWrapper>
 						<Col span={12} xs={6} md={12} xl={6}>
