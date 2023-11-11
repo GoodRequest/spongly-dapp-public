@@ -191,6 +191,12 @@ export const FlexItemCenter = css`
 	justify-content: center;
 `
 
+export const FlexItemCenterWrapper = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+`
+
 export const FlexColumn = styled.div`
 	display: flex;
 	flex-direction: column;

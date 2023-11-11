@@ -3,6 +3,7 @@ import { TextMDMedium } from '@/styles/typography'
 
 export const SummaryColTitle = styled.span`
 	${TextMDMedium};
+	margin-right: 4px;
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
 `
 export const SummaryColValue = styled.span<{ isProfit?: boolean }>`

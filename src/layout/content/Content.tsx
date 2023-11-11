@@ -35,7 +35,7 @@ const Content: FC<ILayout> = ({ children }) => {
 				<>
 					<UserStatisticRow />
 					<Stats />
-					<TicketStatisticRow />
+					{router.pathname === PAGES.TICKET_DETAIL && <TicketStatisticRow />}
 				</>
 			)}
 			{/* // Full width pages (lists) */}

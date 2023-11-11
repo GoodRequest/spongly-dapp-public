@@ -11,7 +11,7 @@ export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
 	top: 24px;
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	border-radius: 12px;
-	padding: 16px;
+	padding: 24px 24px 16px 24px;
 	@media (max-height: 930px) {
 		padding: 16px;
 	}
@@ -233,7 +233,8 @@ export const Fade = styled.div<{ show: boolean; direction: 'above' | 'under' }>`
 export const TicketMatchesFaded = styled.div`
 	position: relative;
 `
-export const FormWrapper = styled.form`
+export const FormWrapper = styled.form<{ $rolledUp?: boolean }>`
+	display: ${({ $rolledUp }) => ($rolledUp ? 'block' : 'none')};
 	overflow: auto;
 	margin-top: 16px;
 	max-height: calc(100vh - 216px);
@@ -266,4 +267,9 @@ export const MatchContainerRow = styled(Col)`
 	margin-bottom: 32px;
 	overflow: auto;
 	background: linear-gradient(360deg, #1d2046 0%, rgba(29, 32, 70, 0) 100%);
+`
+
+export const StableCoinIcon = styled.img`
+	width: 16px;
+	height: 16px;
 `
