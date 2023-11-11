@@ -15,12 +15,20 @@ import RadioButtons from '@/atoms/form/radioField/RadioField'
 import Button from '@/atoms/button/Button'
 
 // components
-import { IconWrapper } from '@/components/matchesList/MatchesListStyles'
 import MatchRow from './components/matchRow/MatchRow'
 import SummaryCol from './components/summaryCol/SummaryCol'
 
 // utils
-import { MAX_BUY_IN, MAX_SELECTED_ALLOWANCE, MAX_TICKET_MATCHES, MAX_TOTAL_QUOTE, MIN_BUY_IN_PARLAY, MIN_BUY_IN_SINGLE, STABLE_COIN } from '@/utils/constants'
+import {
+	CRYPTO_CURRENCY,
+	MAX_BUY_IN,
+	MAX_SELECTED_ALLOWANCE,
+	MAX_TICKET_MATCHES,
+	MAX_TOTAL_QUOTE,
+	MIN_BUY_IN_PARLAY,
+	MIN_BUY_IN_SINGLE,
+	STABLE_COIN
+} from '@/utils/constants'
 import { FORM } from '@/utils/enums'
 import handleOnchangeForm from './helpers/changeBetContainer'
 
@@ -72,47 +80,31 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	// minBuyIn for parlay is 3, for single is 1
 	const minBuyIn = matches.length === 1 ? MIN_BUY_IN_SINGLE : MIN_BUY_IN_PARLAY
 
-	const payWithOptions = [
-		{
-			label: (
-				<IconWrapper>
-					<SCS.Icon icon={SUSDIcon} style={{ margin: '-6px' }} />
-					{STABLE_COIN.S_USD}
-				</IconWrapper>
-			),
-			value: STABLE_COIN.S_USD
-		},
-		{
-			label: (
-				<IconWrapper>
-					<SCS.Icon icon={DAIIcon} style={{ margin: '-6px' }} />
-					{STABLE_COIN.DAI}
-				</IconWrapper>
-			),
-			disabled: true,
-			value: STABLE_COIN.DAI
-		},
-		{
-			label: (
-				<IconWrapper>
-					<SCS.Icon icon={USDCIcon} style={{ margin: '-6px' }} />
-					{STABLE_COIN.USDC}
-				</IconWrapper>
-			),
-			disabled: true,
-			value: STABLE_COIN.USDC
-		},
-		{
-			label: (
-				<IconWrapper>
-					<SCS.Icon icon={USDTIcon} style={{ margin: '-6px' }} />
-					{STABLE_COIN.USDT}
-				</IconWrapper>
-			),
-			disabled: true,
-			value: STABLE_COIN.USDT
+	const getActualStableCoinIcon = (actualStableCoin?: string) => {
+		switch (actualStableCoin || formValues?.selectedStablecoin) {
+			case STABLE_COIN.S_USD:
+				return SUSDIcon
+			case STABLE_COIN.DAI:
+				return DAIIcon
+			case STABLE_COIN.USDC:
+				return USDCIcon
+			case STABLE_COIN.USDT:
+				return USDTIcon
+			default:
+				return 'unknown'
 		}
-	]
+	}
+	const stableCoinsOptions = CRYPTO_CURRENCY.map((item) => ({
+		label: (
+			<SCS.FlexItemCenterWrapper>
+				<SC.StableCoinIcon size={24} style={{ marginRight: 6 }} src={getActualStableCoinIcon(item)} />
+				{item}
+			</SCS.FlexItemCenterWrapper>
+		),
+		value: item,
+		disabled: item === STABLE_COIN.DAI || item === STABLE_COIN.USDC || item === STABLE_COIN.USDT
+	}))
+
 	const getErrorContent = async () => {
 		if (!isWalletConnected) {
 			setError(() => <>{t('Please connect your wallet')}</>)
@@ -262,7 +254,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	}, [formValues?.matches?.length])
 
 	return (
-		<SC.FormWrapper onSubmit={handleSubmit} style={{ display: rolledUp ? 'block' : 'none' }}>
+		<SC.FormWrapper $rolledUp={rolledUp} onSubmit={handleSubmit}>
 			{hasAtLeastOneMatch ? (
 				<SC.TicketMatchesFaded>
 					<SC.TicketMatchesWrapper ref={listRef}>
@@ -281,13 +273,29 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 					<SC.BuyInTitle>{t('Buy-in')}</SC.BuyInTitle>
 				</Col>
 				<Col span={24} style={{ overflow: 'overlay' }}>
-					<Field name={'selectedStablecoin'} options={payWithOptions} component={RadioButtons} />
+					<Field name={'selectedStablecoin'} options={stableCoinsOptions} component={RadioButtons} />
 				</Col>
 				<Col span={24}>
 					<Row>
-						<SummaryCol title={t('Available')} value={`${availableBalance || 0} ${formValues?.selectedStablecoin}`} align={'left'} />
+						<SummaryCol
+							title={t('Available')}
+							value={
+								<SCS.FlexItemCenterWrapper>
+									{availableBalance} <SC.StableCoinIcon style={{ marginLeft: 4 }} src={getActualStableCoinIcon()} />
+								</SCS.FlexItemCenterWrapper>
+							}
+							align={'left'}
+						/>
 						{allowance < MAX_SELECTED_ALLOWANCE && (
-							<SummaryCol title={t('Allowance')} value={`${allowance || 0} ${formValues?.selectedStablecoin}`} align={'right'} />
+							<SummaryCol
+								title={t('Allowance')}
+								value={
+									<SCS.FlexItemCenterWrapper>
+										{allowance || 0} <SC.StableCoinIcon style={{ marginLeft: 4 }} src={getActualStableCoinIcon()} />
+									</SCS.FlexItemCenterWrapper>
+								}
+								align={'right'}
+							/>
 						)}
 					</Row>
 				</Col>
@@ -312,22 +320,35 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 								}
 							/>
 						</Col>
-						<Spin spinning={isProcessing} size='small' indicator={<LoadingOutlined spin />}>
-							<Row gutter={[0, 12]}>
-								<SummaryCol
-									title={t('Total Quote')}
-									value={`${formValues?.totalQuote || 0} ${Number(formValues?.totalQuote) === MAX_TOTAL_QUOTE ? '(MAX)' : ''}`}
-								/>
-								<SummaryCol title={t('Total Bonus')} value={formValues?.totalBonus ? `${formValues?.totalBonus}%` : '0.00%'} align={'right'} />
-								<SummaryCol title={t('Payout')} value={`${formValues.payout} ${formValues?.selectedStablecoin}`} />
-								<SummaryCol
-									isProfit
-									title={t('Profit')}
-									value={`+${formValues.potentionalProfit} ${formValues?.selectedStablecoin}`}
-									align={'right'}
-								/>
-							</Row>
-						</Spin>
+						<Col span={24}>
+							<Spin spinning={isProcessing} size='small' indicator={<LoadingOutlined spin />}>
+								<Row gutter={[0, 12]} justify={'space-between'}>
+									<SummaryCol
+										title={t('Quote')}
+										value={`${formValues?.totalQuote || 0} ${Number(formValues?.totalQuote) === MAX_TOTAL_QUOTE ? '(MAX)' : ''}`}
+									/>
+									<SummaryCol align={'right'} title={t('Bonus')} value={formValues?.totalBonus ? `${formValues?.totalBonus}%` : '0.00%'} />
+									<SummaryCol
+										title={t('Payout')}
+										value={
+											<SCS.FlexItemCenterWrapper>
+												{formValues.payout} <SC.StableCoinIcon style={{ marginLeft: 4 }} src={getActualStableCoinIcon()} />
+											</SCS.FlexItemCenterWrapper>
+										}
+									/>
+									<SummaryCol
+										isProfit
+										title={t('Profit')}
+										value={
+											<SCS.FlexItemCenterWrapper>
+												{formValues.potentionalProfit} <SC.StableCoinIcon style={{ marginLeft: 4 }} src={getActualStableCoinIcon()} />
+											</SCS.FlexItemCenterWrapper>
+										}
+										align={'right'}
+									/>
+								</Row>
+							</Spin>
+						</Col>
 						{error && (
 							<SC.InfoBox>
 								<SC.InfoBoxIcon />
