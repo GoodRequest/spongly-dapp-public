@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { Col, Spin } from 'antd'
 
 import infoIconPurple from '@/assets/icons/info-circle.svg'
-import { TextMDMedium, TextXSMedium, TextSMMedium, HeadingSMMedium, HeadingXSMedium } from '@/styles/typography'
+import { TextMDMedium, TextXSMedium, TextSMMedium, HeadingSMMedium, HeadingXSMedium, TextMDRegular, TextXSRegular, TextSMRegular } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 import { SCROLL_DIRECTION } from '@/utils/enums'
 
@@ -71,9 +71,9 @@ export const InfoBoxIcon = styled.div`
 `
 
 export const InfoBoxContent = styled.div`
-	${TextMDMedium};
+	${TextSMRegular};
 	width: calc(100% - 64px);
-	color: #ff6759;
+	color: ${({ theme }) => theme['color-base-state-error-fg']};
 `
 
 export const Highlight = styled.span`
@@ -150,12 +150,16 @@ export const TicketChips = styled.div<{ selected?: boolean; icon?: boolean; dire
 		background: ${({ selected, theme }) => (selected ? theme['color-base-action-primary-default'] : theme['color-base-surface-quintarny'])};
 	}
 	background: ${({ selected, theme }) => (selected ? theme['color-base-action-primary-default'] : theme['color-base-surface-quaternary'])};
-	${TextSMMedium};
-	font-weight: 700;
+	${({ selected }) => (selected ? `${TextMDMedium}` : `${TextMDRegular}`)}
 	cursor: pointer;
 	border-radius: 8px;
 	display: flex;
 	align-items: center;
+`
+
+export const TicketChipsCount = styled.div`
+	margin-left: 8px;
+	${TextXSRegular}
 `
 
 export const CloseIcon = styled.div<{ src: string }>`
@@ -269,7 +273,7 @@ export const MatchContainerRow = styled(Col)`
 	background: linear-gradient(360deg, #1d2046 0%, rgba(29, 32, 70, 0) 100%);
 `
 
-export const StableCoinIcon = styled.img`
-	width: 16px;
-	height: 16px;
+export const StableCoinIcon = styled.img<{ size?: number }>`
+	width: ${({ size }) => size || 16}px;
+	height: ${({ size }) => size || 16}px;
 `

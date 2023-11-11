@@ -128,7 +128,7 @@ export enum COLLATERALS_INDEX {
 	'USDT' = 3
 }
 
-const CRYPTO_CURRENCY = ['USDC', 'USDT', 'DAI', 'sUSD']
+export const CRYPTO_CURRENCY = [STABLE_COIN.S_USD, STABLE_COIN.DAI, STABLE_COIN.USDC, STABLE_COIN.USDT]
 
 export const FIELD_HEIGHT = {
 	small: '40px',

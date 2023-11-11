@@ -3,6 +3,7 @@ import { useTranslation } from 'next-export-i18n'
 import { find, map } from 'lodash'
 
 import * as SC from '../../TicketBetContainerStyles'
+import * as SCS from '@/styles/GlobalStyles'
 import arrowRightIcon from '@/assets/icons/arrow-right.svg'
 import addIcon from '@/assets/icons/add.svg'
 import { IUnsubmittedBetTicket } from '@/redux/betTickets/betTicketTypes'
@@ -48,9 +49,14 @@ const HorizontalScroller: FC<IHorizontalScroller> = ({ tickets, addTicket, activ
 			)}
 			{map(tickets, (item, key) => (
 				<SC.TicketChips selected={activeTicket?.id === item.id} onClick={() => setActiveTicket(item)} key={key}>
-					{activeTicket?.id === item.id
-						? `${t('TICKET')} ${key + 1} (${activeTicket?.matches?.length || 0}/${MAX_TICKET_MATCHES})`
-						: `${t('TICKET')} ${key + 1}`}
+					{activeTicket?.id === item.id ? (
+						<SCS.FlexItemCenterWrapper>
+							{t('Ticket {{ index }}', { index: key + 1 })}{' '}
+							<SC.TicketChipsCount>{`(${activeTicket?.matches?.length || 0}/${MAX_TICKET_MATCHES})`}</SC.TicketChipsCount>
+						</SCS.FlexItemCenterWrapper>
+					) : (
+						t('Ticket {{ index }}', { index: key + 1 })
+					)}
 					{tickets.length > 1 && (
 						<SC.CloseIcon
 							onClick={(e) => {

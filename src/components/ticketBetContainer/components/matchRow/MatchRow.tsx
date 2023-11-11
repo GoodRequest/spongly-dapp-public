@@ -43,7 +43,7 @@ const MatchRow: FC<IMatchRow> = ({ match, deleteHandler, readOnly }) => {
 	const images = useMemo(
 		() => (
 			<>
-				<SCS.MatchIcon style={{ marginLeft: '0px' }}>
+				<SCS.MatchIcon $imgSize={28} style={{ marginLeft: '0px' }}>
 					<img
 						src={teamImages.homeTeam}
 						alt={match.homeTeam}
@@ -53,7 +53,7 @@ const MatchRow: FC<IMatchRow> = ({ match, deleteHandler, readOnly }) => {
 					/>
 				</SCS.MatchIcon>
 				{!isTotalWinner && (
-					<SCS.MatchIcon>
+					<SCS.MatchIcon $imgSize={28}>
 						<img
 							src={teamImages.awayTeam}
 							alt={match.awayTeam}

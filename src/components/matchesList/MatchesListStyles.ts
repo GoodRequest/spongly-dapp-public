@@ -283,12 +283,6 @@ export const StatusWrapper = styled.div`
 	${TextXSMedium}
 `
 
-export const IconWrapper = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-`
-
 export const LoadMore = styled.div`
 	display: flex;
 	align-items: center;
