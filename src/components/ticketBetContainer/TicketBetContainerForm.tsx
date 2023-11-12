@@ -21,6 +21,7 @@ import SummaryCol from './components/summaryCol/SummaryCol'
 // utils
 import {
 	CRYPTO_CURRENCY,
+	FORM_ERROR_TYPE,
 	MAX_BUY_IN,
 	MAX_SELECTED_ALLOWANCE,
 	MAX_TICKET_MATCHES,
@@ -67,7 +68,10 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	const { t } = useTranslation()
 	const isProcessing = useSelector((state: RootState) => state.betTickets.isProcessing)
 	const formValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
-	const [error, setError] = useState<JSX.Element | null>()
+	const [error, setError] = useState<{ error: JSX.Element | null; type: FORM_ERROR_TYPE | null }>({
+		error: null,
+		type: null
+	})
 	const matches = formValues?.matches ?? []
 	const hasAtLeastOneMatch = matches.length > 0
 	const { openConnectModal } = useConnectModal()
@@ -104,82 +108,124 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 		value: item,
 		disabled: item === STABLE_COIN.DAI || item === STABLE_COIN.USDC || item === STABLE_COIN.USDT
 	}))
-
 	const getErrorContent = async () => {
 		if (!isWalletConnected) {
-			setError(() => <>{t('Please connect your wallet')}</>)
+			setError({
+				error: <>{t('Please connect your wallet')}</>,
+				type: FORM_ERROR_TYPE.ERROR
+			})
 			return
 		}
 		if (buyIn < minBuyIn) {
-			setError(() => (
-				<>
-					{t('Minimum buy-in is')}{' '}
-					<SC.Highlight>
-						{minBuyIn.toFixed(2)} {formValues?.selectedStablecoin}
-					</SC.Highlight>
-				</>
-			))
+			setError({
+				error: (
+					<>
+						{t('Minimum buy-in is')}{' '}
+						<SC.Highlight>
+							{minBuyIn.toFixed(2)} {formValues?.selectedStablecoin}
+						</SC.Highlight>
+					</>
+				),
+				type: FORM_ERROR_TYPE.ERROR
+			})
 			return
 		}
 		if (buyIn > MAX_BUY_IN) {
-			setError(() => (
-				<>
-					{t('Maximum buy-in is')}{' '}
-					<SC.Highlight>
-						{MAX_BUY_IN.toFixed(2)} {formValues?.selectedStablecoin}
-					</SC.Highlight>
-				</>
-			))
+			setError({
+				error: (
+					<>
+						{t('Maximum buy-in is')}{' '}
+						<SC.Highlight>
+							{MAX_BUY_IN.toFixed(2)} {formValues?.selectedStablecoin}
+						</SC.Highlight>
+					</>
+				),
+				type: FORM_ERROR_TYPE.ERROR
+			})
+
 			return
 		}
 		if (!allowance) {
-			setError(() => (
-				<>
-					{t('You need to approve allowance for')} <SC.Highlight>{formValues?.selectedStablecoin}</SC.Highlight> {t('to continue')}
-				</>
-			))
+			setError({
+				error: (
+					<>
+						{t('You need to approve allowance for')} <SC.Highlight>{formValues?.selectedStablecoin}</SC.Highlight> {t('to continue')}
+					</>
+				),
+				type: FORM_ERROR_TYPE.ERROR
+			})
+
 			return
 		}
 		if (allowance < buyIn) {
-			setError(() => (
-				<>
-					{t('You dont have enough allowance for')} <SC.Highlight>{formValues?.selectedStablecoin}</SC.Highlight> {t('to continue')}
-				</>
-			))
+			setError({
+				error: (
+					<>
+						{t('You dont have enough allowance for')} <SC.Highlight>{formValues?.selectedStablecoin}</SC.Highlight> {t('to continue')}
+					</>
+				),
+				type: FORM_ERROR_TYPE.ERROR
+			})
+
 			return
 		}
 
 		if (availableBalance < buyIn) {
-			setError(() => (
-				<>
-					{t('Available balance is')}{' '}
-					<SC.Highlight>
-						{availableBalance} {formValues?.selectedStablecoin}
-					</SC.Highlight>{' '}
-					{t('but you are trying to bet')}{' '}
-					<SC.Highlight>
-						{buyIn} {formValues?.selectedStablecoin}
-					</SC.Highlight>
-				</>
-			))
+			setError({
+				error: (
+					<>
+						{t('Available balance is')}{' '}
+						<SC.Highlight>
+							{availableBalance} {formValues?.selectedStablecoin}
+						</SC.Highlight>{' '}
+						{t('but you are trying to bet')}{' '}
+						<SC.Highlight>
+							{buyIn} {formValues?.selectedStablecoin}
+						</SC.Highlight>
+					</>
+				),
+				type: FORM_ERROR_TYPE.ERROR
+			})
+
 			return
 		}
 		if (Number(formValues?.maxBuyIn) < buyIn) {
-			setError(() => (
-				<>
-					{t('Maximum buy-in supported is')} <SC.Highlight>{formValues?.maxBuyIn}</SC.Highlight>
-				</>
-			))
+			setError({
+				error: (
+					<>
+						{t('Maximum buy-in supported is')} <SC.Highlight>{formValues?.maxBuyIn}</SC.Highlight>
+					</>
+				),
+				type: FORM_ERROR_TYPE.ERROR
+			})
 			return
 		}
 		if (matches.length > MAX_TICKET_MATCHES) {
-			setError(() => (
-				<>
-					{t('Maximum')} <SC.Highlight>{MAX_TICKET_MATCHES}</SC.Highlight> {t(' matches per ticket')}
-				</>
-			))
+			setError({
+				error: (
+					<>
+						{t('Maximum')} <SC.Highlight>{MAX_TICKET_MATCHES}</SC.Highlight> {t(' matches per ticket')}
+					</>
+				),
+				type: FORM_ERROR_TYPE.ERROR
+			})
 		}
-		setError(null)
+		// Warning on the end
+		if (Number(formValues?.totalQuote) === MAX_TOTAL_QUOTE) {
+			setError({
+				error: (
+					<>
+						{t('Maximum total qoute supporded is')} <SC.Highlight>{formValues?.totalQuote}</SC.Highlight>
+					</>
+				),
+				type: FORM_ERROR_TYPE.WARNING
+			})
+			return
+		}
+		setError({
+			error: null,
+			type: null
+		})
 	}
 
 	useEffect(
@@ -194,7 +240,8 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 			isWalletConnected,
 			formValues?.selectedStablecoin,
 			formValues?.available,
-			formValues?.allowance
+			formValues?.allowance,
+			formValues?.totalQuote
 		]
 	)
 
@@ -323,10 +370,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 						<Col span={24}>
 							<Spin spinning={isProcessing} size='small' indicator={<LoadingOutlined spin />}>
 								<Row gutter={[0, 12]} justify={'space-between'}>
-									<SummaryCol
-										title={t('Quote')}
-										value={`${formValues?.totalQuote || 0} ${Number(formValues?.totalQuote) === MAX_TOTAL_QUOTE ? '(MAX)' : ''}`}
-									/>
+									<SummaryCol title={t('Quote')} value={formValues?.totalQuote || 0} />
 									<SummaryCol align={'right'} title={t('Bonus')} value={formValues?.totalBonus ? `${formValues?.totalBonus}%` : '0.00%'} />
 									<SummaryCol
 										title={t('Payout')}
@@ -350,9 +394,9 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 							</Spin>
 						</Col>
 						{error && (
-							<SC.InfoBox>
-								<SC.InfoBoxIcon />
-								<SC.InfoBoxContent>{error}</SC.InfoBoxContent>
+							<SC.InfoBox type={error.type}>
+								<SC.InfoBoxIcon type={error.type} />
+								<SC.InfoBoxContent type={error.type}>{error.error}</SC.InfoBoxContent>
 							</SC.InfoBox>
 						)}
 						{!isWalletConnected ? (
@@ -361,7 +405,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 							<Button
 								size={'large'}
 								className={`make-bet-button ${isProcessing && 'isProcessing'}`}
-								disabled={allowance >= buyIn ? !!error : false}
+								disabled={allowance >= buyIn ? !!error && error.type === FORM_ERROR_TYPE.ERROR : false}
 								onClick={allowance >= buyIn ? handleSubmit : handleApprove}
 								content={allowance >= buyIn ? <span>{t('Submit')}</span> : <span>{t('Approve allowance')}</span>}
 							/>

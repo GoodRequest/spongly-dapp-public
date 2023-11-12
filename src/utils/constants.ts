@@ -19,6 +19,11 @@ export enum MSG_TYPE {
 	SUCCESS = 'SUCCESS'
 }
 
+export enum FORM_ERROR_TYPE {
+	ERROR = 'ERROR',
+	WARNING = 'WARNING'
+}
+
 export const REFERRER_WALLET = '0x4ae4669aa1e5171d7c012b2f2ca48f41f701744a'
 
 export enum NOTIFICATION_TYPE {

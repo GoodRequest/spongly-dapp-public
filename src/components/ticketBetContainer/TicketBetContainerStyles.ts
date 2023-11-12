@@ -2,9 +2,10 @@ import styled from 'styled-components'
 import { Col, Spin } from 'antd'
 
 import infoIconPurple from '@/assets/icons/info-circle.svg'
-import { TextMDMedium, TextXSMedium, TextSMMedium, HeadingSMMedium, HeadingXSMedium, TextMDRegular, TextXSRegular, TextSMRegular } from '@/styles/typography'
+import { TextMDMedium, TextXSMedium, HeadingSMMedium, HeadingXSMedium, TextMDRegular, TextXSRegular, TextSMRegular } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 import { SCROLL_DIRECTION } from '@/utils/enums'
+import { FORM_ERROR_TYPE } from '@/utils/constants'
 
 export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
 	position: sticky;
@@ -52,28 +53,32 @@ export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
 	${TextMDMedium}
 `
 
-export const InfoBox = styled.div`
+export const InfoBox = styled.div<{ type: FORM_ERROR_TYPE | null }>`
 	position: relative;
 	display: flex;
 	flex-direction: row;
-	background: ${({ theme }) => theme['color-base-state-error-bg']};
+	background: ${({ theme, type }) => (type === FORM_ERROR_TYPE.ERROR ? theme['color-base-state-error-bg'] : theme['color-base-state-info-bg'])};
 	width: 100%;
-	padding: 6px 12px;
+	padding: 8px 12px;
 	border-radius: 8px;
 	margin-bottom: 16px;
 `
 
-export const InfoBoxIcon = styled.div`
+export const InfoBoxIcon = styled.div<{ type: FORM_ERROR_TYPE | null }>`
 	width: 24px;
 	height: 24px;
+	filter: ${({ type }) =>
+		type === FORM_ERROR_TYPE.ERROR
+			? 'invert(54%) sepia(91%) saturate(2587%) hue-rotate(327deg) brightness(106%) contrast(103%)'
+			: 'invert(50%) sepia(93%) saturate(3485%) hue-rotate(217deg) brightness(100%) contrast(104%)'};
 	background-image: url('${infoIconPurple}');
-	margin-right: 12px;
+	margin-right: 8px;
 `
 
-export const InfoBoxContent = styled.div`
+export const InfoBoxContent = styled.div<{ type: FORM_ERROR_TYPE | null }>`
 	${TextSMRegular};
 	width: calc(100% - 64px);
-	color: ${({ theme }) => theme['color-base-state-error-fg']};
+	color: ${({ theme, type }) => (type === FORM_ERROR_TYPE.ERROR ? theme['color-base-state-error-fg'] : theme['color-base-content-top'])};
 `
 
 export const Highlight = styled.span`
