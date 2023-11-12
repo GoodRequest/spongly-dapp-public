@@ -361,6 +361,8 @@ export const MobileTeamsContent = styled.div`
 `
 
 export const MobileDivider = styled(Divider)`
+	margin-left: -20px;
+	width: calc(100% + 16px + 16px + 4px);
 	border-top: ${({ theme }) => `1px solid ${theme['color-base-action-secondary-default']}`};
 `
 
