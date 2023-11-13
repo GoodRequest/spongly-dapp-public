@@ -81,11 +81,10 @@ export enum ORDER_DIRECTION {
 export const ADDITIONAL_SLIPPAGE = '0.02'
 
 export const NETWORK_IDS = {
-	ETHEREUM_MAINNET: 1,
-	GOERLI: 5,
 	OPTIMISM: 10,
 	OPTIMISM_GOERLI: 420,
-	ARBITRUM: 42161
+	ARBITRUM: 42161,
+	BASE: 8453
 }
 export const MAX_TOTAL_QUOTE = 100
 
@@ -142,7 +141,8 @@ export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY)
 export enum Network {
 	OptimismMainnet = 10,
 	OptimismGoerli = 420,
-	ArbitrumOne = 42161
+	ArbitrumOne = 42161,
+	Base = 8453
 }
 
 export const COLLATERALS: Record<NetworkId, StablecoinKey[]> = {

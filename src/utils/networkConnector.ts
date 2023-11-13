@@ -57,13 +57,17 @@ const networkConnector: NetworkConnector = {
 }
 
 const initializeContract = (contract: any, networkSettings: NetworkSettings) => {
-	if (networkSettings.networkId === NETWORK_IDS.ETHEREUM_MAINNET) {
-		return undefined
-	}
-	if (contract.addresses[networkSettings.networkId || NETWORK_IDS.OPTIMISM] !== '') {
-		return new ethers.Contract(contract.addresses[networkSettings.networkId || NETWORK_IDS.OPTIMISM], contract.abi, networkConnector.provider)
-	}
-	return undefined
+	const contractAddress = contract.addresses[networkSettings.networkId || NETWORK_IDS.OPTIMISM];
+    return contractAddress !== ''
+        ? new ethers.Contract(contractAddress, contract.abi, networkConnector.provider)
+        : undefined;
+	// if (networkSettings.networkId === NETWORK_IDS.ETHEREUM_MAINNET) {
+	// 	return undefined
+	// }
+	// if (contract.addresses[networkSettings.networkId || NETWORK_IDS.OPTIMISM] !== '') {
+	// 	return new ethers.Contract(contract.addresses[networkSettings.networkId || NETWORK_IDS.OPTIMISM], contract.abi, networkConnector.provider)
+	// }
+	// return undefined
 }
 
 export default networkConnector
