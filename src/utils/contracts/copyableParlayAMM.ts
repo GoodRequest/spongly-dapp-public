@@ -1,4 +1,5 @@
 const copyableParlayAMM = {
+	// TODO: Miso posle adresy pre siete ked dorobi
 	addresses: {
 		5: '',
 		10: '',
