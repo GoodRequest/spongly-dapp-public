@@ -67,6 +67,9 @@ const Header = () => {
 			case `/${PAGES.LEADERBOARD}`:
 				setSelected(PAGES.LEADERBOARD)
 				break
+			case `/${PAGES.TIPSTER_DETAIL}`:
+				setSelected(PAGES.LEADERBOARD)
+				break
 			default:
 				setSelected(PAGES.DASHBOARD)
 				break

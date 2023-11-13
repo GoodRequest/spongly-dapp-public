@@ -70,6 +70,7 @@ import MobileHeader from './components/matchHeader/MobileHeader'
 import { RootState } from '@/redux/rootReducer'
 import {
 	ACTIVE_TICKET_APPROVING,
+	ACTIVE_TICKET_ID,
 	ACTIVE_TICKET_SUBMITTING,
 	IUnsubmittedBetTicket,
 	TicketPosition,
@@ -94,6 +95,7 @@ const TicketBetContainer = () => {
 	const size = useMedia()
 	const [deleteModal, setDeleteModal] = useState({ visible: false, id: 0 })
 	const isProcessing = useSelector((state: RootState) => state.betTickets.isProcessing)
+	const activeTicketID = useSelector((state: RootState) => state.betTickets.activeTicketID)
 	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) || OddsType.DECIMAL : OddsType.DECIMAL
 
 	const [availablePerPosition, setAvailablePerPosition] = useState<any>({
@@ -111,7 +113,6 @@ const TicketBetContainer = () => {
 	const isSubmitting = useSelector((state: RootState) => state.betTickets.isSubmitting)
 	const isApproving = useSelector((state: RootState) => state.betTickets.isApproving)
 
-	const [activeTicketID, setActiveTicketID] = useState<number>(1)
 	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
 	const activeTicketMatchesCount = activeTicketValues?.matches?.length || 0
 	const minBuyIn = activeTicketMatchesCount === 1 ? MIN_BUY_IN_SINGLE : MIN_BUY_IN_PARLAY
@@ -140,7 +141,7 @@ const TicketBetContainer = () => {
 
 	const handleSetActiveTicket = async (ticket: IUnsubmittedBetTicket) => {
 		dispatch({ type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_UPDATE, payload: { data: unsubmittedTickets } })
-		setActiveTicketID(ticket.id || 1)
+		dispatch({ type: ACTIVE_TICKET_ID.SET, payload: ticket.id || 1 })
 		setIsSwitchedTicket(true)
 	}
 
@@ -149,7 +150,7 @@ const TicketBetContainer = () => {
 		if (unsubmittedTickets && unsubmittedTickets.length === 1) {
 			dispatch({ type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_INIT, payload: { data: [{ id: 1, matches: [], copied: false }] } })
 			dispatch(change(FORM.BET_TICKET, 'matches', []))
-			setActiveTicketID(1)
+			dispatch({ type: ACTIVE_TICKET_ID.SET, payload: 1 })
 		} else {
 			// Otherwise we need to remove whole ticket from list
 			const data = unsubmittedTickets && unsubmittedTickets.filter((ticket) => Number(ticket.id) !== id)
@@ -159,7 +160,7 @@ const TicketBetContainer = () => {
 			})
 			if (activeTicketValues.id === id || data?.length === 1) {
 				// NOTE: If selected ticket will be removed, we need to set active ticket to first ticket in list
-				setActiveTicketID(data?.[0].id || 1)
+				dispatch({ type: ACTIVE_TICKET_ID.SET, payload: data?.[0].id || 1 })
 			}
 		}
 		// TODO: scroll to first item (if remove 10th ticket then select 1st ticket but need to be also scrolled left)
@@ -179,7 +180,6 @@ const TicketBetContainer = () => {
 
 	useEffect(() => {
 		const newActiveTicket = unsubmittedTickets?.find((item) => item.id === activeTicketID)
-
 		// Filters out matches that are not available
 		const availableMatches = newActiveTicket?.matches?.filter((match) => isMarketAvailable(match))
 		dispatch(
@@ -553,7 +553,7 @@ const TicketBetContainer = () => {
 					: [{ id: 1, matches: [], copied: false }]
 			}
 		})
-		setActiveTicketID((largestId || 1) + 1)
+		dispatch({ type: ACTIVE_TICKET_ID.SET, payload: (largestId || 1) + 1 })
 		setIsSwitchedTicket(true)
 		// TODO: scroll to last item
 	}

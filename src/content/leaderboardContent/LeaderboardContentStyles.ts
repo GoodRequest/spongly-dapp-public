@@ -8,6 +8,9 @@ export const LeaderboardContentRow = styled(Row)`
 	border-radius: 12px;
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	margin-bottom: 16px;
+	@media (max-width: ${breakpoints.md}px) {
+		padding: 16px;
+	}
 `
 
 export const WalletIcon = styled.div<{ imageSrc: number }>`

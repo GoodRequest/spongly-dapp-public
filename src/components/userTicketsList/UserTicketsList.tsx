@@ -94,7 +94,7 @@ const UserTicketsList = ({ tickets, isLoading, refetch, isMyWallet }: Props) => 
 		if (router.query.id) {
 			router.replace(
 				{
-					pathname: `/${PAGES.LEADERBOARD}`,
+					pathname: `/${PAGES.TIPSTER_DETAIL}`,
 					query: {
 						id: router.query.id,
 						page: pagination?.page,

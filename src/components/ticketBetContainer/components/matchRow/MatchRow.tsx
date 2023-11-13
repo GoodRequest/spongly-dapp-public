@@ -18,8 +18,8 @@ import { TicketPosition } from '@/redux/betTickets/betTicketTypes'
 
 // styles
 import * as SC from './MatchRowStyles'
-import * as SCS from '../../TicketBetContainerStyles'
-
+import * as PSC from '../../TicketBetContainerStyles'
+import * as SCS from '@/styles/GlobalStyles'
 // icons
 import TrashIcon from '@/assets/icons/close-circle.svg'
 
@@ -43,7 +43,7 @@ const MatchRow: FC<IMatchRow> = ({ match, deleteHandler, readOnly }) => {
 	const images = useMemo(
 		() => (
 			<>
-				<SC.MatchIcon style={{ marginLeft: '0px' }}>
+				<SCS.MatchIcon style={{ marginLeft: '0px' }}>
 					<img
 						src={teamImages.homeTeam}
 						alt={match.homeTeam}
@@ -51,9 +51,9 @@ const MatchRow: FC<IMatchRow> = ({ match, deleteHandler, readOnly }) => {
 							e.target.src = NO_TEAM_IMAGE_FALLBACK
 						}}
 					/>
-				</SC.MatchIcon>
+				</SCS.MatchIcon>
 				{!isTotalWinner && (
-					<SC.MatchIcon>
+					<SCS.MatchIcon>
 						<img
 							src={teamImages.awayTeam}
 							alt={match.awayTeam}
@@ -61,7 +61,7 @@ const MatchRow: FC<IMatchRow> = ({ match, deleteHandler, readOnly }) => {
 								e.target.src = NO_TEAM_IMAGE_FALLBACK
 							}}
 						/>
-					</SC.MatchIcon>
+					</SCS.MatchIcon>
 				)}
 			</>
 		),
@@ -96,7 +96,7 @@ const MatchRow: FC<IMatchRow> = ({ match, deleteHandler, readOnly }) => {
 				{deleteHandler && (
 					<SC.RemoveButtonWrapper>
 						<Tooltip title={t('Remove')} placement={'left'}>
-							<SCS.DeleteButton disabled={!deleteHandler} type={'button'} onClick={() => deleteHandler(match)} icon={TrashIcon} />
+							<PSC.DeleteButton disabled={!deleteHandler} type={'button'} onClick={() => deleteHandler(match)} icon={TrashIcon} />
 						</Tooltip>
 					</SC.RemoveButtonWrapper>
 				)}
@@ -111,7 +111,7 @@ const MatchRow: FC<IMatchRow> = ({ match, deleteHandler, readOnly }) => {
 			>
 				<Row>
 					<SC.MatchIcons>
-						<SC.MatchIcon>
+						<SCS.MatchIcon>
 							<img
 								src={teamImages.homeTeam}
 								alt={match.homeTeam}
@@ -119,8 +119,8 @@ const MatchRow: FC<IMatchRow> = ({ match, deleteHandler, readOnly }) => {
 									e.target.src = NO_TEAM_IMAGE_FALLBACK
 								}}
 							/>
-						</SC.MatchIcon>
-						<SC.MatchIcon>
+						</SCS.MatchIcon>
+						<SCS.MatchIcon>
 							<img
 								src={teamImages.awayTeam}
 								alt={match.awayTeam}
@@ -128,16 +128,16 @@ const MatchRow: FC<IMatchRow> = ({ match, deleteHandler, readOnly }) => {
 									e.target.src = NO_TEAM_IMAGE_FALLBACK
 								}}
 							/>
-						</SC.MatchIcon>
+						</SCS.MatchIcon>
 					</SC.MatchIcons>
 					<SC.MatchNames>
 						<SC.TeamName>{match.homeTeam}</SC.TeamName>
 						<SC.TeamName>{match.awayTeam}</SC.TeamName>
 					</SC.MatchNames>
 				</Row>
-				<SCS.MatchBetOptionsWrapper>
+				<PSC.MatchBetOptionsWrapper>
 					<MatchListContent match={match as any} />
-				</SCS.MatchBetOptionsWrapper>
+				</PSC.MatchBetOptionsWrapper>
 			</Modal>
 		</>
 	)
