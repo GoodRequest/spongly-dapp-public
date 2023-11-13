@@ -5,6 +5,7 @@ import { useAccount, useNetwork, useProvider, useSigner, useSwitchNetwork } from
 import { useEffect, useState } from 'react'
 
 // utils
+import { useRouter } from 'next-translate-routes'
 import { MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE } from '@/utils/constants'
 import { getWalletImage } from '@/utils/images'
 import { hasEthereumInjected, NETWORK_SWITCHER_SUPPORTED_NETWORKS } from '@/utils/network'
@@ -36,6 +37,7 @@ const ConnectButton = () => {
 	const { chain } = useNetwork()
 	const { data: signer } = useSigner()
 	const provider = useProvider({ chainId: chain?.id || NETWORK_IDS.OPTIMISM })
+	const router = useRouter()
 
 	const { switchNetwork } = useSwitchNetwork()
 
@@ -47,6 +49,9 @@ const ConnectButton = () => {
 			provider,
 			signer: signer || undefined
 		})
+		// NOTE: prevent for detail pages (if user is on detail and then change network detail is not the same for every network and throw error)
+		router.push('/')
+		// TODO: what else shoult we do after change network to prevent errors? (destroy form?!)
 	}, [signer, provider, chain?.id])
 
 	const handleSwitchNetwork = async (network: any) => {
@@ -81,7 +86,7 @@ const ConnectButton = () => {
 			console.error(e)
 		}
 	}
-
+	// TODO: delete this code
 	// const handleSwitchNetwork = async (network: any) => {
 	// 	console.log('network', network)
 	// 	if (chain?.id !== network.networkId) {
