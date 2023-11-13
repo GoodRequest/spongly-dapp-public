@@ -211,6 +211,7 @@ export const THALES_URL_SPORT_MARKETS_OPTIMISM = 'https://api.thegraph.com/subgr
 export const THALES_URL_OVERTIME_ARBITRUM = 'https://api.thegraph.com/subgraphs/name/thales-markets/overtime-arbitrum'
 export const THALES_URL_GOERLI = 'https://api.thegraph.com/subgraphs/name/thales-markets/sport-markets-goerli'
 export const THALES_URL_OPTIMISM_GOERLI = 'https://api.thegraph.com/subgraphs/name/thales-markets/sport-markets-optimism-goerli'
+export const THALES_URL_BASE = ' https://api.studio.thegraph.com/query/11948/overtime-base/version/latest'
 
 export const ENDPOINTS = {
 	GET_PARLAY_LEADERBOARD: (networkID: number, period: number) => `https://api.thalesmarket.io/parlay-leaderboard/${networkID}/${period}`,

@@ -1,8 +1,19 @@
 import { ApolloClient, ApolloLink, createHttpLink, DefaultOptions, InMemoryCache } from '@apollo/client'
-import { NETWORK_IDS, THALES_URL_GOERLI, THALES_URL_OPTIMISM_GOERLI, THALES_URL_OVERTIME_ARBITRUM, THALES_URL_SPORT_MARKETS_OPTIMISM } from './constants'
+import {
+	NETWORK_IDS,
+	THALES_URL_BASE,
+	THALES_URL_GOERLI,
+	THALES_URL_OPTIMISM_GOERLI,
+	THALES_URL_OVERTIME_ARBITRUM,
+	THALES_URL_SPORT_MARKETS_OPTIMISM
+} from './constants'
 
 const httpLinkOptimism = createHttpLink({
 	uri: THALES_URL_SPORT_MARKETS_OPTIMISM
+})
+
+const httpLinkBase = createHttpLink({
+	uri: THALES_URL_BASE
 })
 
 const httpLinkArbitrum = createHttpLink({
@@ -35,7 +46,11 @@ const client = new ApolloClient({
 		ApolloLink.split(
 			(operation) => operation.getContext()?.chainId === NETWORK_IDS.OPTIMISM_GOERLI,
 			httpLinkOptimismGoerli,
-			ApolloLink.split((operation) => operation.getContext()?.chainId === NETWORK_IDS.GOERLI, httpLinkGoerli, httpLinkOptimism)
+			ApolloLink.split(
+				(operation) => operation.getContext()?.chainId === NETWORK_IDS.GOERLI,
+				httpLinkGoerli,
+				ApolloLink.split((operation) => operation.getContext()?.chainId === NETWORK_IDS.BASE, httpLinkBase, httpLinkOptimism)
+			)
 		)
 	),
 	cache: new InMemoryCache({

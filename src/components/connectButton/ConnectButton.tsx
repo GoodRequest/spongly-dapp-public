@@ -24,6 +24,9 @@ import * as SCG from '@/styles/GlobalStyles'
 
 // assets
 import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
+import OptimismIcon from '@/assets/icons/optimism-icon.svg'
+import BaseIcon from '@/assets/icons/base-icon.svg'
+import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
 
 const ConnectButton = () => {
 	const { t } = useTranslation()
@@ -33,8 +36,15 @@ const ConnectButton = () => {
 	const { chain } = useNetwork()
 	const { data: signer } = useSigner()
 	const provider = useProvider({ chainId: chain?.id || NETWORK_IDS.OPTIMISM })
-	const { switchNetwork } = useSwitchNetwork()
 
+	const { switchNetwork } = useSwitchNetwork({
+		onSuccess(data) {
+			showNotifications(
+				[{ type: MSG_TYPE.SUCCESS, message: t('Successfully changed network to {{ networkName }}', { networkName: data.name }) }],
+				NOTIFICATION_TYPE.NOTIFICATION
+			)
+		}
+	})
 	const [isModalVisible, setIsModalVisible] = useState(false)
 
 	useEffect(() => {
@@ -45,7 +55,26 @@ const ConnectButton = () => {
 		})
 	}, [signer, provider, chain?.id])
 
+	// const handleSwitchNetwork = async (network: any) => {
+	// 	try {
+	// 		if (chain?.id !== network.chainId) {
+	// 			switchNetwork?.(network.chainId)
+	// 			setIsModalVisible(false)
+	// 		} else {
+	// 			showNotifications(
+	// 				[{ type: MSG_TYPE.WARNING, message: t('Already on {{ networkName }} network', { networkName: network.shortChainName }) }],
+	// 				NOTIFICATION_TYPE.NOTIFICATION
+	// 			)
+	// 		}
+	// 	} catch (error) {
+	// 		// eslint-disable-next-line no-console
+	// 		console.error(error)
+	// 		showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to switch network') }], NOTIFICATION_TYPE.NOTIFICATION)
+	// 	}
+	// }
+
 	const handleSwitchNetwork = async (network: any) => {
+		console.log('network', network)
 		if (chain?.id !== network.networkId) {
 			if (hasEthereumInjected()) {
 				try {
@@ -90,7 +119,18 @@ const ConnectButton = () => {
 			}
 		}
 	}
-
+	const getActualNetworkIcon = () => {
+		if (chain?.id === NETWORK_IDS.OPTIMISM) {
+			return OptimismIcon
+		}
+		if (chain?.id === NETWORK_IDS.BASE) {
+			return BaseIcon
+		}
+		if (chain?.id === NETWORK_IDS.ARBITRUM) {
+			return ArbitrumIcon
+		}
+		return OptimismIcon
+	}
 	return (
 		<>
 			<Modal open={isModalVisible} onCancel={() => setIsModalVisible(false)} centered>
@@ -143,7 +183,7 @@ const ConnectButton = () => {
 											<SC.WalletRow justify={'space-between'}>
 												{/* empty alt text for decorative img */}
 												<Col flex={'auto'} style={{ padding: '0px 0px 0px 8px' }}>
-													{chain?.hasIcon && <SC.Logo alt={''} src={chain?.iconUrl} />}
+													<SC.Logo alt={'optimism'} src={getActualNetworkIcon()} />
 												</Col>
 												<Col flex={'24px'}>
 													<SC.ArrowLogo src={ArrowDownIcon} />

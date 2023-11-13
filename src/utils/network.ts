@@ -2,6 +2,8 @@ import { Chain } from 'wagmi'
 import { NetworkId } from './networkConnector'
 import { NETWORK_IDS, Network, STABLE_DECIMALS } from '@/utils/constants'
 import OptimismIcon from '@/assets/icons/optimism-icon.svg'
+import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
+import BaseIcon from '@/assets/icons/base-icon.svg'
 
 type OptimismNetwork = {
 	chainId: string
@@ -31,7 +33,7 @@ export const NETWORK_SWITCHER_SUPPORTED_NETWORKS = [
 		chainName: 'Arbitrum One',
 		shortChainName: 'Arbitrum',
 		chainKey: 'arbitrum_mainnet',
-		icon: OptimismIcon
+		icon: ArbitrumIcon
 	},
 	{
 		chainId: NETWORK_IDS.BASE,
@@ -39,7 +41,7 @@ export const NETWORK_SWITCHER_SUPPORTED_NETWORKS = [
 		chainName: 'Base Mainnet',
 		shortChainName: 'Base',
 		chainKey: 'base_mainnet',
-		icon: OptimismIcon
+		icon: BaseIcon
 	}
 ]
 
@@ -60,6 +62,17 @@ export const SUPPORTED_NETWORKS_DESCRIPTIONS: Record<number, OptimismNetwork> = 
 		chainName: 'Optimism Goerli',
 		rpcUrls: ['https://goerli.optimism.io/'],
 		blockExplorerUrls: ['https://goerli-optimism.etherscan.io/'],
+		iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+		nativeCurrency: {
+			symbol: 'ETH',
+			decimals: 18
+		}
+	},
+	[Network.Base]: {
+		chainId: '0x2105',
+		chainName: 'Base',
+		rpcUrls: ['https://mainnet.base.org'],
+		blockExplorerUrls: ['https://basescan.org/'],
 		iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
 		nativeCurrency: {
 			symbol: 'ETH',
