@@ -27,6 +27,7 @@ import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
 import OptimismIcon from '@/assets/icons/optimism-icon.svg'
 import BaseIcon from '@/assets/icons/base-icon.svg'
 import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
+import { getDefaultDecimalsForNetwork } from '@/utils/collaterals'
 
 const ConnectButton = () => {
 	const { t } = useTranslation()
@@ -45,6 +46,7 @@ const ConnectButton = () => {
 			)
 		}
 	})
+
 	const [isModalVisible, setIsModalVisible] = useState(false)
 
 	useEffect(() => {
@@ -55,70 +57,80 @@ const ConnectButton = () => {
 		})
 	}, [signer, provider, chain?.id])
 
-	// const handleSwitchNetwork = async (network: any) => {
-	// 	try {
-	// 		if (chain?.id !== network.chainId) {
-	// 			switchNetwork?.(network.chainId)
-	// 			setIsModalVisible(false)
-	// 		} else {
-	// 			showNotifications(
-	// 				[{ type: MSG_TYPE.WARNING, message: t('Already on {{ networkName }} network', { networkName: network.shortChainName }) }],
-	// 				NOTIFICATION_TYPE.NOTIFICATION
-	// 			)
-	// 		}
-	// 	} catch (error) {
-	// 		// eslint-disable-next-line no-console
-	// 		console.error(error)
-	// 		showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to switch network') }], NOTIFICATION_TYPE.NOTIFICATION)
-	// 	}
-	// }
-
 	const handleSwitchNetwork = async (network: any) => {
-		console.log('network', network)
-		if (chain?.id !== network.networkId) {
-			if (hasEthereumInjected()) {
-				try {
+		try {
+			if (chain?.id !== network.chainId) {
+				if (hasEthereumInjected()) {
+					console.log('called')
 					await (window.ethereum as any).request({
 						method: 'wallet_switchEthereumChain',
 						params: [{ chainId: network.networkId }]
 					})
 					switchNetwork?.(network.networkId)
-					setIsModalVisible(false)
-				} catch (switchError: any) {
-					// NOTE: the requested chain hasn't been added
-					if (switchError.code === 4902) {
-						try {
-							await (window.ethereum as any).request({
-								method: 'wallet_addEthereumChain',
-								params: [SUPPORTED_NETWORKS_DESCRIPTIONS[+network.chainId]]
-							})
-							await (window.ethereum as any).request({
-								method: 'wallet_switchEthereumChain',
-								params: [{ chainId: network.networkId }]
-							})
-						} catch (addError) {
-							// eslint-disable-next-line no-console
-							console.log(addError)
-							showNotifications(
-								[{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to connect your wallet') }],
-								NOTIFICATION_TYPE.NOTIFICATION
-							)
-						}
-					} else {
-						// eslint-disable-next-line no-console
-						console.log(switchError)
-						showNotifications(
-							[{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to connect your wallet') }],
-							NOTIFICATION_TYPE.NOTIFICATION
-						)
-					}
+				} else {
+					switchNetwork?.(network.networkId)
 				}
-			} else {
-				switchNetwork?.(network.networkId)
+				// switchNetwork?.(network.chainId)
 				setIsModalVisible(false)
+			} else {
+				showNotifications(
+					[{ type: MSG_TYPE.WARNING, message: t('Already on {{ networkName }} network', { networkName: network.shortChainName }) }],
+					NOTIFICATION_TYPE.NOTIFICATION
+				)
 			}
+		} catch (error) {
+			// eslint-disable-next-line no-console
+			console.error(error)
+			showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to switch network') }], NOTIFICATION_TYPE.NOTIFICATION)
 		}
 	}
+
+	// const handleSwitchNetwork = async (network: any) => {
+	// 	console.log('network', network)
+	// 	if (chain?.id !== network.networkId) {
+	// 		if (hasEthereumInjected()) {
+	// 			try {
+	// 				await (window.ethereum as any).request({
+	// 					method: 'wallet_switchEthereumChain',
+	// 					params: [{ chainId: network.networkId }]
+	// 				})
+	// 				switchNetwork?.(network.networkId)
+	// 				setIsModalVisible(false)
+	// 			} catch (switchError: any) {
+	// 				// NOTE: the requested chain hasn't been added
+	// 				if (switchError.code === 4902) {
+	// 					try {
+	// 						await (window.ethereum as any).request({
+	// 							method: 'wallet_addEthereumChain',
+	// 							params: [SUPPORTED_NETWORKS_DESCRIPTIONS[+network.chainId]]
+	// 						})
+	// 						await (window.ethereum as any).request({
+	// 							method: 'wallet_switchEthereumChain',
+	// 							params: [{ chainId: network.networkId }]
+	// 						})
+	// 					} catch (addError) {
+	// 						// eslint-disable-next-line no-console
+	// 						console.log(addError)
+	// 						showNotifications(
+	// 							[{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to connect your wallet') }],
+	// 							NOTIFICATION_TYPE.NOTIFICATION
+	// 						)
+	// 					}
+	// 				} else {
+	// 					// eslint-disable-next-line no-console
+	// 					console.log(switchError)
+	// 					showNotifications(
+	// 						[{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to connect your wallet') }],
+	// 						NOTIFICATION_TYPE.NOTIFICATION
+	// 					)
+	// 				}
+	// 			}
+	// 		} else {
+	// 			switchNetwork?.(network.networkId)
+	// 			setIsModalVisible(false)
+	// 		}
+	// 	}
+	// }
 	const getActualNetworkIcon = () => {
 		if (chain?.id === NETWORK_IDS.OPTIMISM) {
 			return OptimismIcon

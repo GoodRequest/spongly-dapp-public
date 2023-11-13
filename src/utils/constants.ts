@@ -83,6 +83,7 @@ export const ADDITIONAL_SLIPPAGE = '0.02'
 export const NETWORK_IDS = {
 	OPTIMISM: 10,
 	OPTIMISM_GOERLI: 420,
+	GOERLI: 5,
 	ARBITRUM: 42161,
 	BASE: 8453
 }
@@ -99,20 +100,25 @@ export const NO_TEAM_IMAGE_FALLBACK = '/logos/defaultTeamLogo.webp'
 // PLACEHOLDER TO DO
 export const INFURA_ID = 'fcf608e4430142f38338b55efef2c7e5' // '6052c0bd83aa437b8cf98c47d3b12cc7'
 
+export type Coins = 'sUSD' | 'DAI' | 'USDCe' | 'USDC' | 'USDT' | 'OP' | 'WETH' | 'ETH' | 'ARB'
+
 export const REVALIDATE = {
 	MINUTE: 60,
 	FIVE_MINUTES: 300,
 	HALF_HOUR: 1800,
 	HOUR: 3600
 }
-
-export const STABLE_DECIMALS = {
+export const STABLE_DECIMALS: Record<Coins, number> = {
 	sUSD: 18,
 	DAI: 18,
+	USDCe: 6,
 	USDC: 6,
-	USDT: 6
+	USDT: 6,
+	OP: 18,
+	WETH: 18,
+	ETH: 18,
+	ARB: 18
 }
-
 export const STABLE_COIN = {
 	S_USD: 'sUSD',
 	DAI: 'DAI',
