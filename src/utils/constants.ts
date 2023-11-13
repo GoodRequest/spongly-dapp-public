@@ -1,6 +1,5 @@
 /* eslint-disable import/no-cycle */
 import { keyBy } from 'lodash'
-import { StablecoinKey } from './collaterals'
 import { NetworkId } from './networkConnector'
 import { ContractSGPOrder } from '@/utils/enums'
 import { BetType } from '@/utils/tags'
@@ -151,50 +150,25 @@ export enum Network {
 	Base = 8453
 }
 
-export const COLLATERALS: Record<NetworkId, StablecoinKey[]> = {
+export const COLLATERALS: Record<NetworkId, Coins[]> = {
 	[NETWORK_IDS.OPTIMISM]: [
-		CRYPTO_CURRENCY_MAP.sUSD as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.DAI as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.USDC as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.USDT as StablecoinKey
+		CRYPTO_CURRENCY_MAP.sUSD as Coins,
+		CRYPTO_CURRENCY_MAP.DAI as Coins,
+		CRYPTO_CURRENCY_MAP.USDC as Coins,
+		CRYPTO_CURRENCY_MAP.USDT as Coins
 	],
 	[NETWORK_IDS.OPTIMISM_GOERLI]: [
-		CRYPTO_CURRENCY_MAP.sUSD as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.DAI as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.USDC as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.USDT as StablecoinKey
+		CRYPTO_CURRENCY_MAP.sUSD as Coins,
+		CRYPTO_CURRENCY_MAP.DAI as Coins,
+		CRYPTO_CURRENCY_MAP.USDC as Coins,
+		CRYPTO_CURRENCY_MAP.USDT as Coins
 	],
-	[NETWORK_IDS.ARBITRUM]: [CRYPTO_CURRENCY_MAP.USDC as StablecoinKey],
-	5: [
-		CRYPTO_CURRENCY_MAP.sUSD as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.DAI as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.USDC as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.USDT as StablecoinKey
-	],
-	10: [
-		CRYPTO_CURRENCY_MAP.sUSD as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.DAI as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.USDC as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.USDT as StablecoinKey
-	],
-	420: [
-		CRYPTO_CURRENCY_MAP.sUSD as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.DAI as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.USDC as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.USDT as StablecoinKey
-	],
-	42161: [
-		CRYPTO_CURRENCY_MAP.sUSD as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.DAI as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.USDC as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.USDT as StablecoinKey
-	],
-	42: [
-		CRYPTO_CURRENCY_MAP.sUSD as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.DAI as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.USDC as StablecoinKey,
-		CRYPTO_CURRENCY_MAP.USDT as StablecoinKey
-	]
+	[NETWORK_IDS.ARBITRUM]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
+	5: [CRYPTO_CURRENCY_MAP.sUSD as Coins, CRYPTO_CURRENCY_MAP.DAI as Coins, CRYPTO_CURRENCY_MAP.USDC as Coins, CRYPTO_CURRENCY_MAP.USDT as Coins],
+	10: [CRYPTO_CURRENCY_MAP.sUSD as Coins, CRYPTO_CURRENCY_MAP.DAI as Coins, CRYPTO_CURRENCY_MAP.USDC as Coins, CRYPTO_CURRENCY_MAP.USDT as Coins],
+	420: [CRYPTO_CURRENCY_MAP.sUSD as Coins, CRYPTO_CURRENCY_MAP.DAI as Coins, CRYPTO_CURRENCY_MAP.USDC as Coins, CRYPTO_CURRENCY_MAP.USDT as Coins],
+	42161: [CRYPTO_CURRENCY_MAP.sUSD as Coins, CRYPTO_CURRENCY_MAP.DAI as Coins, CRYPTO_CURRENCY_MAP.USDC as Coins, CRYPTO_CURRENCY_MAP.USDT as Coins],
+	42: [CRYPTO_CURRENCY_MAP.sUSD as Coins, CRYPTO_CURRENCY_MAP.DAI as Coins, CRYPTO_CURRENCY_MAP.USDC as Coins, CRYPTO_CURRENCY_MAP.USDT as Coins]
 }
 export const SGPCombinationsFromContractOrderMapping: Record<ContractSGPOrder, BetType[]> = {
 	[ContractSGPOrder.MONEYLINETOTALS]: [0, 10002],

@@ -1,10 +1,10 @@
 import { BigNumber, ethers } from 'ethers'
 import { NetworkId } from './networkConnector'
-import { StablecoinKey /* , getCollateralAddress */ } from './collaterals'
+import { Coins } from '@/utils/constants'
 // import { isMultiCollateralSupportedForNetwork } from './network'
 
 export const getSportsAMMQuoteMethod: any = (
-	stableIndex: StablecoinKey,
+	stableIndex: Coins,
 	networkId: NetworkId,
 	sportsAMMContract: ethers.Contract,
 	marketAddress: string,

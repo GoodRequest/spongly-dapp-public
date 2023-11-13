@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 // utils
 import { MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE } from '@/utils/constants'
 import { getWalletImage } from '@/utils/images'
-import { hasEthereumInjected, NETWORK_SWITCHER_SUPPORTED_NETWORKS, SUPPORTED_NETWORKS_DESCRIPTIONS } from '@/utils/network'
+import { hasEthereumInjected, NETWORK_SWITCHER_SUPPORTED_NETWORKS } from '@/utils/network'
 import networkConnector, { NetworkId } from '@/utils/networkConnector'
 import { showNotifications } from '@/utils/tsxHelpers'
 import { formatAddress } from '@/utils/formatters/string'
@@ -27,7 +27,6 @@ import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
 import OptimismIcon from '@/assets/icons/optimism-icon.svg'
 import BaseIcon from '@/assets/icons/base-icon.svg'
 import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
-import { getDefaultDecimalsForNetwork } from '@/utils/collaterals'
 
 const ConnectButton = () => {
 	const { t } = useTranslation()
@@ -38,14 +37,7 @@ const ConnectButton = () => {
 	const { data: signer } = useSigner()
 	const provider = useProvider({ chainId: chain?.id || NETWORK_IDS.OPTIMISM })
 
-	const { switchNetwork } = useSwitchNetwork({
-		onSuccess(data) {
-			showNotifications(
-				[{ type: MSG_TYPE.SUCCESS, message: t('Successfully changed network to {{ networkName }}', { networkName: data.name }) }],
-				NOTIFICATION_TYPE.NOTIFICATION
-			)
-		}
-	})
+	const { switchNetwork } = useSwitchNetwork()
 
 	const [isModalVisible, setIsModalVisible] = useState(false)
 
@@ -61,8 +53,8 @@ const ConnectButton = () => {
 		try {
 			if (chain?.id !== network.chainId) {
 				if (hasEthereumInjected()) {
-					console.log('called')
 					await (window.ethereum as any).request({
+						// TODO: zisti preco nefunguje ak je zapnuty coinbase extension v Chrome
 						method: 'wallet_switchEthereumChain',
 						params: [{ chainId: network.networkId }]
 					})
@@ -70,18 +62,23 @@ const ConnectButton = () => {
 				} else {
 					switchNetwork?.(network.networkId)
 				}
-				// switchNetwork?.(network.chainId)
 				setIsModalVisible(false)
 			} else {
 				showNotifications(
-					[{ type: MSG_TYPE.WARNING, message: t('Already on {{ networkName }} network', { networkName: network.shortChainName }) }],
+					[{ type: MSG_TYPE.INFO, message: t('Already on {{ networkName }} network', { networkName: network.shortChainName }) }],
 					NOTIFICATION_TYPE.NOTIFICATION
 				)
 			}
-		} catch (error) {
+		} catch (e) {
+			const err: any = e
+			// NOTE: 4001 = rejected request
+			if (err?.code === 4001) {
+				showNotifications([{ type: MSG_TYPE.INFO, message: err?.message }], NOTIFICATION_TYPE.NOTIFICATION)
+			} else {
+				showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to switch network') }], NOTIFICATION_TYPE.NOTIFICATION)
+			}
 			// eslint-disable-next-line no-console
-			console.error(error)
-			showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to switch network') }], NOTIFICATION_TYPE.NOTIFICATION)
+			console.error(e)
 		}
 	}
 

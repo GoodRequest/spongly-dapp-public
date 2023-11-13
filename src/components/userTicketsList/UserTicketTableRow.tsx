@@ -194,6 +194,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 
 			<SC.CenterRowContent md={{ span: 3, order: 3 }} xs={{ span: 8, order: 3 }}>
 				<>
+					{/* // TODO: pozuva optimis divisor treba naformatovat na aktualnu siet */}
 					<SC.ColumnValueText>{roundPrice(ticket?.sUSDPaid, true)}</SC.ColumnValueText>
 					<SC.ColumnNameText>{t('Buy in')}</SC.ColumnNameText>
 				</>

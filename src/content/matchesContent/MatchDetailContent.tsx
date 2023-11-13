@@ -12,7 +12,7 @@ import * as SCS from '@/styles/GlobalStyles'
 import SwitchButton from '@/components/switchButton/SwitchButton'
 import { GET_MATCH_DETAIL } from '@/utils/queries'
 import { getTeamImageSource } from '@/utils/images'
-import { MSG_TYPE, Network, NO_TEAM_IMAGE_FALLBACK, NOTIFICATION_TYPE, TOTAL_WINNER_TAGS } from '@/utils/constants'
+import { MSG_TYPE, Network, NETWORK_IDS, NO_TEAM_IMAGE_FALLBACK, NOTIFICATION_TYPE, TOTAL_WINNER_TAGS } from '@/utils/constants'
 import { showNotifications } from '@/utils/tsxHelpers'
 import { getMatchResult, getMatchDetailScoreText, getMatchStatus, isAboveOrEqualResolution, isBellowOrEqualResolution } from '@/utils/helpers'
 import { BetType, TAGS_LIST } from '@/utils/tags'
@@ -48,10 +48,11 @@ const MatchDetail = () => {
 			const res = await fetchMatchDetail({
 				variables: {
 					gameId: router.query.id
-				}
+				},
+				context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM }
 			})
 			const league = TAGS_LIST.find((item) => item.id === Number(res.data.sportMarkets[0].tags[0]))
-			const matches = await getMarketOddsFromContract(res?.data?.sportMarkets)
+			const matches = await getMarketOddsFromContract(res?.data?.sportMarkets, chain?.id || NETWORK_IDS.OPTIMISM)
 			const matchesWithChildMarkets = toPairs(groupBy(matches, 'gameId'))
 				.map(([, markets]) => {
 					const [match] = markets

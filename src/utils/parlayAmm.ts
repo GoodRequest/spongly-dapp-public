@@ -1,11 +1,10 @@
 import { ethers, BigNumber } from 'ethers'
-import { PositionNumber /* , STABLE_COIN  */ } from './constants'
+import { Coins, PositionNumber /* , STABLE_COIN  */ } from './constants'
 import { NetworkId } from './networkConnector'
-import { StablecoinKey /* , getCollateralAddress */ } from './collaterals'
 // import { isMultiCollateralSupportedForNetwork } from './network'
 
 export const getParlayMarketsAMMQuoteMethod: any = (
-	stableCoin: StablecoinKey,
+	stableCoin: Coins,
 	networkId: NetworkId,
 	parlayMarketsAMMContract: ethers.Contract,
 	marketsAddresses: string[],

@@ -1,8 +1,8 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
-import { bigNumberFormmaterWithDecimals } from '@/utils/formatters/ethers'
+import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import networkConnector, { NetworkId } from '@/utils/networkConnector'
 import { ParlayAmmData } from '@/redux/betTickets/betTicketTypes'
-import { getDefaultDecimalsForNetwork } from '@/utils/collaterals'
+import { getDefaultDecimalsForNetwork } from '@/utils/network'
 
 const useParlayAmmDataQuery = (networkId: number, options?: UseQueryOptions<ParlayAmmData | undefined>) => {
 	return useQuery<ParlayAmmData | undefined>(
@@ -22,14 +22,11 @@ const useParlayAmmDataQuery = (networkId: number, options?: UseQueryOptions<Parl
 				if (parlayMarketDataContract) {
 					const parlayAMMParameters = await parlayMarketDataContract.getParlayAMMParameters()
 
-					parlayData.minUsdAmount = bigNumberFormmaterWithDecimals(
-						parlayAMMParameters.minUSDAmount,
-						getDefaultDecimalsForNetwork(networkId as NetworkId)
-					)
-					parlayData.maxSupportedAmount = bigNumberFormmaterWithDecimals(parlayAMMParameters.maxSupportedAmount)
-					parlayData.maxSupportedOdds = bigNumberFormmaterWithDecimals(parlayAMMParameters.maxSupportedOdds)
-					parlayData.parlayAmmFee = bigNumberFormmaterWithDecimals(parlayAMMParameters.parlayAmmFee)
-					parlayData.safeBoxImpact = bigNumberFormmaterWithDecimals(parlayAMMParameters.safeBoxImpact)
+					parlayData.minUsdAmount = bigNumberFormatter(parlayAMMParameters.minUSDAmount, getDefaultDecimalsForNetwork(networkId as NetworkId))
+					parlayData.maxSupportedAmount = bigNumberFormatter(parlayAMMParameters.maxSupportedAmount)
+					parlayData.maxSupportedOdds = bigNumberFormatter(parlayAMMParameters.maxSupportedOdds)
+					parlayData.parlayAmmFee = bigNumberFormatter(parlayAMMParameters.parlayAmmFee)
+					parlayData.safeBoxImpact = bigNumberFormatter(parlayAMMParameters.safeBoxImpact)
 					parlayData.parlaySize = Number(parlayAMMParameters.parlaySize)
 				}
 

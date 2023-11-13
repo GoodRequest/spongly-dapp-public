@@ -2,6 +2,7 @@ import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import { Network, STABLE_DECIMALS } from '@/utils/constants'
 import networkConnector from '../utils/networkConnector'
 import QUERY_KEYS from '@/utils/queryKeys'
+import { getDefaultDecimalsForNetwork } from '@/utils/network'
 
 const useSUSDWalletBalance = (walletAddress: string, networkId: Network, options?: UseQueryOptions<number | undefined>) => {
 	return useQuery<number | undefined>(
@@ -11,7 +12,7 @@ const useSUSDWalletBalance = (walletAddress: string, networkId: Network, options
 				const { sUSDContract } = networkConnector
 				if (sUSDContract && walletAddress) {
 					const balance = await sUSDContract?.balanceOf(walletAddress)
-					return parseInt(balance) / 10 ** STABLE_DECIMALS.sUSD
+					return parseInt(balance) / 10 ** getDefaultDecimalsForNetwork(networkId)
 				}
 				return 0
 			} catch (e) {

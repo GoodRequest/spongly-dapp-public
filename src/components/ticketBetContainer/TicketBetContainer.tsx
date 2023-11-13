@@ -351,7 +351,6 @@ const TicketBetContainer = () => {
 	const fetchSinglesTicketData = async () => {
 		try {
 			const { signer, sportsAMMContract } = networkConnector
-			// OPTIMISM_DIVISOR
 			const divider = Number(`1e${getStablecoinDecimals(chain?.id || NETWORK_IDS.OPTIMISM, getSelectedCoinIndex(activeTicketValues.selectedStablecoin))}`)
 			if (!activeTicketValues?.buyIn || Number(activeTicketValues.buyIn) < minBuyIn || activeTicketValues?.matches?.length === 0 || !signer)
 				return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0, totalBonus: 0 }

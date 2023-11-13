@@ -4,6 +4,7 @@ import { useLazyQuery } from '@apollo/client'
 import { Col, Spin } from 'antd'
 import { useRouter } from 'next-translate-routes'
 import { LoadingOutlined } from '@ant-design/icons'
+import { useNetwork } from 'wagmi'
 
 // components, assets, atoms
 import Sorter from '@/components/Sorter'
@@ -13,7 +14,7 @@ import MyWalletContent from '@/content/walletContent/WalletContent'
 
 // utils
 import { GET_TIPSTERS } from '@/utils/queries'
-import { LEADERBOARD_SORTING, ORDER_DIRECTION } from '@/utils/constants'
+import { LEADERBOARD_SORTING, NETWORK_IDS, ORDER_DIRECTION } from '@/utils/constants'
 import { decodeSorter, markedValue, setSort } from '@/utils/helpers'
 import { roundPrice } from '@/utils/formatters/currency'
 import { formatAccount } from '@/utils/formatters/string'
@@ -34,6 +35,7 @@ const LeaderboardContent = () => {
 	const [fetchTipsters, { loading }] = useLazyQuery<{ users: LeaderboardUser[] }>(GET_TIPSTERS)
 	const [tipstersData, setTipstersData] = useState<LeaderboardUser[]>([])
 	const router = useRouter()
+	const { chain } = useNetwork()
 	const { direction, property } = decodeSorter()
 	const sortOptions = [
 		{
@@ -100,9 +102,9 @@ const LeaderboardContent = () => {
 					skip: 0,
 					orderBy: property || LEADERBOARD_SORTING.PROFITS,
 					orderDirection: direction || ORDER_DIRECTION.DESCENDENT
-				}
+				},
+				context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM }
 			})
-
 			const formattedData = (data?.users || []).map((user) => {
 				// TODO: Need to add computing success rate to graphQL (asked Thales for this request)
 				// const successRate = successRateMap2.get(user.id)
@@ -140,7 +142,8 @@ const LeaderboardContent = () => {
 					skip: newSkip,
 					orderBy: property || LEADERBOARD_SORTING.PROFITS,
 					orderDirection: direction || ORDER_DIRECTION.DESCENDENT
-				}
+				},
+				context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM }
 			})
 			const formattedNewData = (data?.users || []).map((user: LeaderboardUser) => {
 				// const successRate = successRateMap.get(user.id)
@@ -169,7 +172,7 @@ const LeaderboardContent = () => {
 			fetchData()
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [direction, property, router.query.id])
+	}, [direction, property, router.query.id, router.isReady])
 
 	return router.query.id ? (
 		<MyWalletContent />

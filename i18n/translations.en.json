@@ -159,7 +159,6 @@
     "Success rate": "Success rate",
     "Success {{ date }} ({{ result }})": "Success {{ date }} ({{ result }})",
     "Successful": "Successful",
-    "Successfully changed network to {{ networkName }}": "Successfully changed network to {{ networkName }}",
     "Swap": "Swap",
     "Switch network": "Switch network",
     "TICKET": "TICKET",

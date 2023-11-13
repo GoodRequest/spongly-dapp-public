@@ -104,8 +104,8 @@ export const SUPPORTED_NETWORKS_DESCRIPTIONS: Record<number, OptimismNetwork> = 
 }
 
 export const getDefaultDecimalsForNetwork = (networkId: NetworkId) => {
-	if (networkId === NETWORK_IDS.ARBITRUM) return STABLE_DECIMALS.USDC
-	return STABLE_DECIMALS.sUSD
+	if ([Network.ArbitrumOne, Network.Base].includes(networkId)) return 6
+	return 18
 }
 
 export const hasEthereumInjected = () => !!window.ethereum
