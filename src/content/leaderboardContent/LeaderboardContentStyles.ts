@@ -66,8 +66,8 @@ export const RowSkeleton = styled(Skeleton)`
 
 export const LeaderboardDivider = styled(Divider)`
 	display: none;
-	margin-left: -24px;
-	width: calc(100% + 24px + 24px);
+	margin-left: -16px;
+	width: calc(100% + 16px + 16px);
 	margin-top: 0;
 	margin-bottom: 0;
 	@media (max-width: ${breakpoints.md}px) {

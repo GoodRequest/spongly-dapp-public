@@ -189,7 +189,7 @@ const LeaderboardContent = () => {
 					</Col>
 				</SCS.HorizontalSorters>
 				<SCS.SelectSorters>
-					<Select allowClear options={sortOptions} placeholder={t('Sort by')} onChange={handleSubmitSort} />
+					<Select options={sortOptions} placeholder={t('Sort by')} onChange={handleSubmitSort} />
 				</SCS.SelectSorters>
 			</SCS.SorterRow>
 			{loading && tipstersData.length === 0 ? (
