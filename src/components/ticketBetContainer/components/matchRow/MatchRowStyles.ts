@@ -1,7 +1,17 @@
 import styled from 'styled-components'
 import { Button, Row, Col } from 'antd'
-import { TextSMMedium, TextXSMedium } from '@/styles/typography'
+import { TextXSMedium, TextXSRegular } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
+
+export const RemoveButtonWrapper = styled.div`
+	position: absolute;
+	display: none;
+	top: 0;
+	right: 0;
+	@media (max-width: ${breakpoints.md}px) {
+		display: block;
+	}
+`
 
 export const MatchRow = styled(Row)<{ readOnly?: boolean }>`
 	pointer-events: ${({ readOnly }) => (readOnly ? 'none' : 'auto')};
@@ -15,6 +25,11 @@ export const MatchRow = styled(Row)<{ readOnly?: boolean }>`
 	align-items: center;
 	line-height: 1rem;
 	color: ${({ theme }) => theme['color-base-content-top']};
+	&:hover {
+		${RemoveButtonWrapper} {
+			display: block;
+		}
+	}
 `
 
 export const StartCenteredRow = styled(Row)`
@@ -40,13 +55,14 @@ export const TeamNames = styled.div`
 `
 
 export const TeamName = styled.div`
-	${TextSMMedium};
+	${TextXSRegular};
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 `
 
 export const BetOptionButton = styled(Button)`
+	${TextXSRegular};
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -63,17 +79,8 @@ export const BetOptionButton = styled(Button)`
 
 export const MatchOdd = styled.div`
 	width: 38px;
-	${TextSMMedium};
-`
-
-export const RemoveButtonWrapper = styled.div`
-	position: absolute;
-	top: 12px;
-	right: 0px;
-	@media (max-width: ${breakpoints.md}px) {
-		top: 0px;
-		right: 0px;
-	}
+	text-align: end;
+	${TextXSRegular};
 `
 
 export const MatchIcons = styled.div`
@@ -89,7 +96,7 @@ export const BonusText = styled.div<{ hide?: boolean }>`
 	${TextXSMedium};
 	width: ${({ hide }) => (hide ? '28px' : 'auto')};
 	margin-left: ${({ hide }) => (hide ? '0' : '4px')};
-	visibility: ${({ hide }) => (hide ? 'hidden' : 'visible')};
+	display: ${({ hide }) => (hide ? 'none' : 'block')};
 	color: ${({ theme }) => theme['color-base-state-success-fg']};
 `
 

@@ -52,7 +52,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 			isExpanded={isExpanded}
 			activeKey={activeKeysList}
 		>
-			<SC.ColapsePanel header={<TicketListItemHeader ticket={ticket} />} key={`${ticket.account}-${index}`}>
+			<SC.CollapsePanel isExpanded={isExpanded} header={<TicketListItemHeader ticket={ticket} />} key={`${ticket.account}-${index}`}>
 				{!loading && isExpanded && (
 					<SC.PanelContent>
 						<SC.StylesRow gutter={[16, 16]}>
@@ -86,7 +86,7 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 						</SC.StylesRow>
 					</SC.PanelContent>
 				)}
-			</SC.ColapsePanel>
+			</SC.CollapsePanel>
 		</SC.TicketCollapse>
 	)
 }

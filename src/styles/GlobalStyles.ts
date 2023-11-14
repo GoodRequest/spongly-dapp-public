@@ -191,6 +191,12 @@ export const FlexItemCenter = css`
 	justify-content: center;
 `
 
+export const FlexItemCenterWrapper = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+`
+
 export const FlexColumn = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -326,7 +332,7 @@ export const LeagueIcon = styled.i<{ xlSize?: number; mdSize?: number }>`
 	}
 `
 
-export const MatchIcon = styled.div`
+export const MatchIcon = styled.div<{ $imgSize?: number }>`
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
@@ -340,8 +346,8 @@ export const MatchIcon = styled.div`
 	}
 	img {
 		padding: 4px;
-		width: 36px;
-		height: 36px;
+		width: ${({ $imgSize }) => ($imgSize ? `${$imgSize}px` : '36px')};
+		height: ${({ $imgSize }) => ($imgSize ? `${$imgSize}px` : '36px')};
 	}
 `
 

@@ -18,6 +18,11 @@ export enum MSG_TYPE {
 	SUCCESS = 'SUCCESS'
 }
 
+export enum FORM_ERROR_TYPE {
+	ERROR = 'ERROR',
+	WARNING = 'WARNING'
+}
+
 export const REFERRER_WALLET = '0x4ae4669aa1e5171d7c012b2f2ca48f41f701744a'
 
 export enum NOTIFICATION_TYPE {
@@ -132,7 +137,7 @@ export enum COLLATERALS_INDEX {
 	'USDT' = 3
 }
 
-const CRYPTO_CURRENCY = ['USDC', 'USDT', 'DAI', 'sUSD']
+export const CRYPTO_CURRENCY = [STABLE_COIN.S_USD, STABLE_COIN.DAI, STABLE_COIN.USDC, STABLE_COIN.USDT]
 
 export const FIELD_HEIGHT = {
 	small: '40px',

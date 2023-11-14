@@ -365,7 +365,7 @@ const ParlayLeaderboardContent = () => {
 					</Col>
 				</SCS.HorizontalSorters>
 				<SCS.SelectSorters>
-					<Select allowClear options={sortOptions} placeholder={t('Sort by')} onChange={handleSubmitSort} />
+					<Select options={sortOptions} placeholder={t('Sort by')} onChange={handleSubmitSort} />
 				</SCS.SelectSorters>
 			</SCS.SorterRow>
 			<Row>

@@ -16,8 +16,9 @@ import ProfitsTicketsIcon from '@/assets/icons/stat-profits-icon.svg'
 import TicketsIcon from '@/assets/icons/stat-balance-icon.svg'
 import { PAGES } from '@/utils/enums'
 import { formatTicketPositionsForStatistics, getUserTicketType } from '@/utils/helpers'
-import { NETWORK_IDS, USER_TICKET_TYPE } from '@/utils/constants'
+import { MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE, USER_TICKET_TYPE } from '@/utils/constants'
 import { GET_USERS_STATISTICS } from '@/utils/queries'
+import { showNotifications } from '@/utils/tsxHelpers'
 
 interface IStatistics {
 	successRate: number
@@ -41,7 +42,7 @@ const UserStatisticRow = () => {
 	const fetchStats = async () => {
 		try {
 			setIsLoading(true)
-			const { data } = await fetchUserStatistic({ variables: { id }, context: { chainId: chain?.id } })
+			const { data } = await fetchUserStatistic({ variables: { id }, context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM } })
 			const formattedTicketData = formatTicketPositionsForStatistics({ parlayMarkets: data.parlayMarkets, positionBalances: data.positionBalances })
 			const wonTickets = [...formattedTicketData.parlayTickets, ...formattedTicketData.positionTickets]?.filter(
 				(item) => getUserTicketType(item) === USER_TICKET_TYPE.SUCCESS
@@ -57,6 +58,7 @@ const UserStatisticRow = () => {
 			setStatistics({ ...data.user, successRate })
 			setIsLoading(false)
 		} catch (e) {
+			showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while loading detail of tipster') }], NOTIFICATION_TYPE.NOTIFICATION)
 			setIsLoading(false)
 			// eslint-disable-next-line no-console
 			console.error(e)
