@@ -21,6 +21,7 @@ import { BET_OPTIONS, DoubleChanceMarketType, FORM, RESOLUTIONS } from '@/utils/
 import { sportsMarketContract } from '@/utils/contracts/sportsMarketContract'
 import {
 	ADDITIONAL_SLIPPAGE,
+	CRYPTO_CURRENCY_MAP,
 	GAS_ESTIMATION_BUFFER,
 	MAX_ALLOWANCE,
 	MAX_BUY_IN,
@@ -43,6 +44,7 @@ import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import {
 	getBetOptionAndAddressFromMatch,
 	getBetOptionFromMatchBetOption,
+	getDividerByNetworkId,
 	getOddByBetType,
 	getSelectedCoinIndex,
 	getStablecoinDecimals,
@@ -351,7 +353,10 @@ const TicketBetContainer = () => {
 	const fetchSinglesTicketData = async () => {
 		try {
 			const { signer, sportsAMMContract } = networkConnector
-			const divider = Number(`1e${getStablecoinDecimals(chain?.id || NETWORK_IDS.OPTIMISM, getSelectedCoinIndex(activeTicketValues.selectedStablecoin))}`)
+			// TODO: divier based on network not COIN
+			// const divider = Number(`1e${getStablecoinDecimals(chain?.id || NETWORK_IDS.OPTIMISM, getSelectedCoinIndex(activeTicketValues.selectedStablecoin))}`)
+			// const divider = 1000000
+			const divider = getDividerByNetworkId(chain?.id || NETWORK_IDS.OPTIMISM)
 			if (!activeTicketValues?.buyIn || Number(activeTicketValues.buyIn) < minBuyIn || activeTicketValues?.matches?.length === 0 || !signer)
 				return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0, totalBonus: 0 }
 			const currentAddress = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses[0]

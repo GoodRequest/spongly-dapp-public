@@ -6,6 +6,8 @@ import { ethers } from 'ethers'
 import { IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 
 import {
+	ARBITRUM_DIVISOR,
+	BASE_DIVISOR,
 	CLOSED_TICKET_TYPE,
 	COLLATERALS,
 	ETHERSCAN_TX_URL_ARBITRUM,
@@ -1040,6 +1042,24 @@ export const isBellowOrEqualResolution = (currentResolution: RESOLUTIONS, resolu
 			return true
 	}
 }
+
+export const getDividerByNetworkId = (networkId: Network) => {
+	switch (networkId) {
+		case NETWORK_IDS.OPTIMISM:
+			return OPTIMISM_DIVISOR
+		case NETWORK_IDS.OPTIMISM_GOERLI:
+			return OPTIMISM_DIVISOR
+		case NETWORK_IDS.ARBITRUM:
+			return ARBITRUM_DIVISOR
+		case NETWORK_IDS.BASE:
+			return BASE_DIVISOR
+		default:
+			// eslint-disable-next-line no-console
+			console.error('Error occured durring getDividerByNetworkId()')
+			return 0
+	}
+}
+
 export const getCollateral = (networkId: Network, index: number) => COLLATERALS[networkId][index]
 
 export const getStablecoinDecimals = (networkId: Network, stableIndex: number) => STABLE_DECIMALS[getCollateral(networkId, stableIndex)]
@@ -1436,13 +1456,13 @@ export const formatTicketPositionsForStatistics = (data: { parlayMarkets: Parlay
 	}
 }
 
-export const getUserTicketClaimValue = (ticket: UserTicket | undefined, userTicketType: USER_TICKET_TYPE | undefined) => {
+export const getUserTicketClaimValue = (ticket: UserTicket | undefined, userTicketType: USER_TICKET_TYPE | undefined, networkId: number) => {
 	if (!ticket || !userTicketType) return '0 $'
 
 	if (userTicketType === USER_TICKET_TYPE.MISS) return `0 $`
-	if (userTicketType === USER_TICKET_TYPE.SUCCESS) return `+${roundPrice(ticket?.amount, true)}`
+	if (userTicketType === USER_TICKET_TYPE.SUCCESS) return `+${roundPrice(ticket?.amount, true, networkId)}`
 	if (userTicketType === USER_TICKET_TYPE.CANCELED) return ` +${getCanceledClaimAmount(ticket)}`
-	return roundPrice(ticket?.amount, true)
+	return roundPrice(ticket?.amount, true, networkId)
 }
 
 export const handleTxHashRedirect = (t: any, txHash?: string, chainId?: number) => {

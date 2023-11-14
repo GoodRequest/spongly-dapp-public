@@ -44,7 +44,7 @@ const TicketStatisticRow = () => {
 	const [fetchPositionBalanceMarketTransactions] = useLazyQuery(GET_POSITION_BALANCE_TRANSACTION)
 	const [positionsData, setPositionsData] = useState<any>()
 	const [ticketData, setTicketData] = useState<UserTicket>()
-	const claim = getUserTicketClaimValue(ticketData, userTicketType)
+	const claim = getUserTicketClaimValue(ticketData, userTicketType, chain?.id || NETWORK_IDS.OPTIMISM)
 	const [error, setError] = useState(false)
 
 	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
@@ -151,7 +151,7 @@ const TicketStatisticRow = () => {
 						<StatisticCard
 							showMobileInColumn={true}
 							isLoading={isLoading}
-							value={roundPrice(ticketData?.sUSDPaid, true)}
+							value={roundPrice(ticketData?.sUSDPaid, true, chain?.id || NETWORK_IDS.OPTIMISM)}
 							title={t('Buy-in')}
 							addMobileBackground={true}
 						/>

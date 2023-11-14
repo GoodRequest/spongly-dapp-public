@@ -1,13 +1,13 @@
 import { round } from 'lodash'
 import numbro from 'numbro'
-import { OPTIMISM_DIVISOR } from '../constants'
+import { getDividerByNetworkId } from '@/utils/helpers'
 
-export const roundPrice = (price: number | undefined | null, includeDollarSign?: boolean) => {
+export const roundPrice = (price: number | undefined | null, includeDollarSign: boolean, networkId: number) => {
 	if (!price) {
 		return 0
 	}
-	// TODO: OPTIMISM_DIVISOR is only for Optimism add helper getStablecoinDecimals() task: CH-315
-	const roundedPrice = round(price / OPTIMISM_DIVISOR, 2).toFixed(2)
+	// TODO: dat 18 decimals ak je positional balances
+	const roundedPrice = round(price / getDividerByNetworkId(networkId), 2).toFixed(2)
 	if (!includeDollarSign) return roundedPrice
 	return `${roundedPrice} $`
 }

@@ -194,9 +194,8 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 
 			<SC.CenterRowContent md={{ span: 3, order: 3 }} xs={{ span: 8, order: 3 }}>
 				<>
-					{/* // TODO: pozuva optimis divisor treba naformatovat na aktualnu siet */}
-					<SC.ColumnValueText>{roundPrice(ticket?.sUSDPaid, true)}</SC.ColumnValueText>
-					<SC.ColumnNameText>{t('Buy in')}</SC.ColumnNameText>
+					<SC.ColumnValueText>{roundPrice(ticket?.sUSDPaid, true, chain?.id || NETWORK_IDS.OPTIMISM)}</SC.ColumnValueText>
+					<SC.ColumnNameText>{t('Buy-in')}</SC.ColumnNameText>
 				</>
 			</SC.CenterRowContent>
 			<SC.CenterRowContent md={{ span: 3, order: 3 }} xs={{ span: 8, order: 3 }}>
@@ -208,7 +207,9 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 				</>
 			</SC.CenterRowContent>
 			<SC.CenterRowContent md={{ span: 5, order: 4 }} xs={{ span: 8, order: 4 }}>
-				<SC.ClaimValueText userTicketType={userTicketType}>{getUserTicketClaimValue(ticket, userTicketType)}</SC.ClaimValueText>
+				<SC.ClaimValueText userTicketType={userTicketType}>
+					{getUserTicketClaimValue(ticket, userTicketType, chain?.id || NETWORK_IDS.OPTIMISM)}
+				</SC.ClaimValueText>
 				<SC.ColumnNameText>{t('Claim')}</SC.ColumnNameText>
 			</SC.CenterRowContent>
 			<SC.ClaimColContent show={!!(isMyWallet && userTicketType === USER_TICKET_TYPE.SUCCESS)} md={{ span: 4, order: 5 }} xs={{ span: 24, order: 5 }}>

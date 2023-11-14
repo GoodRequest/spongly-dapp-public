@@ -16,7 +16,7 @@ import ProfitsTicketsIcon from '@/assets/icons/stat-profits-icon.svg'
 import TicketsIcon from '@/assets/icons/stat-balance-icon.svg'
 import { PAGES } from '@/utils/enums'
 import { formatTicketPositionsForStatistics, getUserTicketType } from '@/utils/helpers'
-import { USER_TICKET_TYPE } from '@/utils/constants'
+import { NETWORK_IDS, USER_TICKET_TYPE } from '@/utils/constants'
 import { GET_USERS_STATISTICS } from '@/utils/queries'
 
 interface IStatistics {
@@ -104,7 +104,15 @@ const UserStatisticRow = () => {
 							isLoading={isLoading}
 							showMobileInColumn={true}
 							img={ProfitsTicketsIcon}
-							value={isMounted ? `${statistics?.pnl && statistics?.pnl > 0 ? '+' : ''}${roundPrice(statistics?.pnl)} $` : ''}
+							value={
+								isMounted
+									? `${statistics?.pnl && statistics?.pnl > 0 ? '+' : ''}${roundPrice(
+											statistics?.pnl,
+											false,
+											chain?.id || NETWORK_IDS.OPTIMISM
+									  )} $`
+									: ''
+							}
 							title={t('Profits')}
 						/>
 					</Col>

@@ -8,7 +8,7 @@ import { Col } from 'antd'
 import { useTheme } from 'styled-components'
 
 import { formatTicketPositionsForStatistics, getUserTicketType } from '@/utils/helpers'
-import { USER_TICKET_TYPE } from '@/utils/constants'
+import { NETWORK_IDS, USER_TICKET_TYPE } from '@/utils/constants'
 import { PAGES } from '@/utils/enums'
 import { GET_USERS_STATISTICS } from '@/utils/queries'
 import { useIsMounted } from '@/hooks/useIsMounted'
@@ -110,7 +110,7 @@ const Stats = () => {
 							<Col span={12} xs={6} md={12} xl={6}>
 								<SBox
 									title={t('Profits')}
-									value={`${roundPrice(statistics?.pnl)} $`}
+									value={roundPrice(statistics?.pnl, true, chain?.id || NETWORK_IDS.OPTIMISM)}
 									extraContent={
 										<div>
 											<SC.Glow $color={theme['color-base-state-success-fg']} />
