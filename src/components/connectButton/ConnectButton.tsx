@@ -3,15 +3,18 @@ import { Col, Row } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import { useAccount, useNetwork, useProvider, useSigner, useSwitchNetwork } from 'wagmi'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next-translate-routes'
+import { useDispatch } from 'react-redux'
+import { change, destroy, initialize } from 'redux-form'
 
 // utils
-import { useRouter } from 'next-translate-routes'
-import { MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE } from '@/utils/constants'
+import { MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE, STABLE_COIN } from '@/utils/constants'
 import { getWalletImage } from '@/utils/images'
 import { hasEthereumInjected, NETWORK_SWITCHER_SUPPORTED_NETWORKS } from '@/utils/network'
 import networkConnector, { NetworkId } from '@/utils/networkConnector'
 import { showNotifications } from '@/utils/tsxHelpers'
 import { formatAddress } from '@/utils/formatters/string'
+import { FORM, PAGES } from '@/utils/enums'
 
 // components
 import Modal from '@/components/modal/Modal'
@@ -28,6 +31,7 @@ import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
 import OptimismIcon from '@/assets/icons/optimism-icon.svg'
 import BaseIcon from '@/assets/icons/base-icon.svg'
 import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
+import { ACTIVE_TICKET_ID, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 
 const ConnectButton = () => {
 	const { t } = useTranslation()
@@ -38,6 +42,7 @@ const ConnectButton = () => {
 	const { data: signer } = useSigner()
 	const provider = useProvider({ chainId: chain?.id || NETWORK_IDS.OPTIMISM })
 	const router = useRouter()
+	const dispatch = useDispatch()
 
 	const { switchNetwork } = useSwitchNetwork()
 
@@ -49,9 +54,13 @@ const ConnectButton = () => {
 			provider,
 			signer: signer || undefined
 		})
+		// Reset bet container form
+		dispatch({ type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_INIT, payload: { data: [{ id: 1, matches: [], copied: false }] } })
+		dispatch(change(FORM.BET_TICKET, 'matches', []))
+		dispatch({ type: ACTIVE_TICKET_ID.SET, payload: 1 })
+		// dispatch(change(FORM.BET_TICKET, 'selectedStablecoin', chain?.id === NETWORK_IDS.OPTIMISM ? STABLE_COIN.S_USD : STABLE_COIN.USDC))
 		// NOTE: prevent for detail pages (if user is on detail and then change network detail is not the same for every network and throw error)
-		router.push('/')
-		// TODO: what else shoult we do after change network to prevent errors? (destroy form?!)
+		router.push(`/${PAGES.DASHBOARD}`)
 	}, [signer, provider, chain?.id])
 
 	const handleSwitchNetwork = async (network: any) => {

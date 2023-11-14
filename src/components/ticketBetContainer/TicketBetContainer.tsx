@@ -44,6 +44,7 @@ import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import {
 	getBetOptionAndAddressFromMatch,
 	getBetOptionFromMatchBetOption,
+	getCollateralAddress,
 	getDividerByNetworkId,
 	getOddByBetType,
 	getSelectedCoinIndex,
@@ -189,7 +190,7 @@ const TicketBetContainer = () => {
 				...newActiveTicket,
 				matches: availableMatches || [],
 				allowance: 0,
-				selectedStablecoin: newActiveTicket?.selectedStablecoin ?? STABLE_COIN.S_USD,
+				selectedStablecoin: newActiveTicket?.selectedStablecoin ?? chain?.id === NETWORK_IDS.OPTIMISM ? STABLE_COIN.S_USD : STABLE_COIN.USDC,
 				available:
 					multipleCollateralBalance?.[(newActiveTicket?.selectedStablecoin as keyof typeof multipleCollateralBalance) ?? STABLE_COIN.S_USD] ?? 0,
 				totalQuote: 0,
