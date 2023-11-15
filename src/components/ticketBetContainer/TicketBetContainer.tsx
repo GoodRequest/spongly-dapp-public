@@ -21,7 +21,6 @@ import { BET_OPTIONS, DoubleChanceMarketType, FORM, RESOLUTIONS } from '@/utils/
 import { sportsMarketContract } from '@/utils/contracts/sportsMarketContract'
 import {
 	ADDITIONAL_SLIPPAGE,
-	CRYPTO_CURRENCY_MAP,
 	GAS_ESTIMATION_BUFFER,
 	MAX_ALLOWANCE,
 	MAX_BUY_IN,
@@ -44,11 +43,9 @@ import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import {
 	getBetOptionAndAddressFromMatch,
 	getBetOptionFromMatchBetOption,
-	getCollateralAddress,
 	getDividerByNetworkId,
 	getOddByBetType,
 	getSelectedCoinIndex,
-	getStablecoinDecimals,
 	isBellowOrEqualResolution,
 	isCombined,
 	isWindowReady,

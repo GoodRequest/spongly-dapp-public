@@ -1460,9 +1460,9 @@ export const getUserTicketClaimValue = (ticket: UserTicket | undefined, userTick
 	if (!ticket || !userTicketType) return '0 $'
 
 	if (userTicketType === USER_TICKET_TYPE.MISS) return `0 $`
-	if (userTicketType === USER_TICKET_TYPE.SUCCESS) return `+${roundPrice(ticket?.amount, true, networkId)}`
+	if (userTicketType === USER_TICKET_TYPE.SUCCESS) return `+${roundPrice(ticket?.amount, true)}`
 	if (userTicketType === USER_TICKET_TYPE.CANCELED) return ` +${getCanceledClaimAmount(ticket)}`
-	return roundPrice(ticket?.amount, true, networkId)
+	return roundPrice(ticket?.amount, true)
 }
 
 export const handleTxHashRedirect = (t: any, txHash?: string, chainId?: number) => {

@@ -106,15 +106,7 @@ const UserStatisticRow = () => {
 							isLoading={isLoading}
 							showMobileInColumn={true}
 							img={ProfitsTicketsIcon}
-							value={
-								isMounted
-									? `${statistics?.pnl && statistics?.pnl > 0 ? '+' : ''}${roundPrice(
-											statistics?.pnl,
-											false,
-											chain?.id || NETWORK_IDS.OPTIMISM
-									  )} $`
-									: ''
-							}
+							value={isMounted ? `${statistics?.pnl && statistics?.pnl > 0 ? '+' : ''}${roundPrice(statistics?.pnl, false)} $` : ''}
 							title={t('Profits')}
 						/>
 					</Col>

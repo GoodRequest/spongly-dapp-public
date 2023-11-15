@@ -5,10 +5,11 @@ import { useAccount, useNetwork, useProvider, useSigner, useSwitchNetwork } from
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next-translate-routes'
 import { useDispatch } from 'react-redux'
-import { change, destroy, initialize } from 'redux-form'
+import { change } from 'redux-form'
 
 // utils
-import { MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE, STABLE_COIN } from '@/utils/constants'
+import { includes } from 'lodash'
+import { MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE } from '@/utils/constants'
 import { getWalletImage } from '@/utils/images'
 import { hasEthereumInjected, NETWORK_SWITCHER_SUPPORTED_NETWORKS } from '@/utils/network'
 import networkConnector, { NetworkId } from '@/utils/networkConnector'
@@ -58,9 +59,10 @@ const ConnectButton = () => {
 		dispatch({ type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_INIT, payload: { data: [{ id: 1, matches: [], copied: false }] } })
 		dispatch(change(FORM.BET_TICKET, 'matches', []))
 		dispatch({ type: ACTIVE_TICKET_ID.SET, payload: 1 })
-		// dispatch(change(FORM.BET_TICKET, 'selectedStablecoin', chain?.id === NETWORK_IDS.OPTIMISM ? STABLE_COIN.S_USD : STABLE_COIN.USDC))
 		// NOTE: prevent for detail pages (if user is on detail and then change network detail is not the same for every network and throw error)
-		router.push(`/${PAGES.DASHBOARD}`)
+		if (includes([`/${PAGES.TIPSTER_DETAIL}`, `/${PAGES.TICKET_DETAIL}`, `/${PAGES.MATCH_DETAIL}`], router.pathname)) {
+			router.push(`/${PAGES.DASHBOARD}`)
+		}
 	}, [signer, provider, chain?.id])
 
 	const handleSwitchNetwork = async (network: any) => {
@@ -76,6 +78,7 @@ const ConnectButton = () => {
 				} else {
 					switchNetwork?.(network.networkId)
 				}
+
 				setIsModalVisible(false)
 			} else {
 				showNotifications(

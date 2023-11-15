@@ -194,7 +194,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 
 			<SC.CenterRowContent md={{ span: 3, order: 3 }} xs={{ span: 8, order: 3 }}>
 				<>
-					<SC.ColumnValueText>{roundPrice(ticket?.sUSDPaid, true, chain?.id || NETWORK_IDS.OPTIMISM)}</SC.ColumnValueText>
+					<SC.ColumnValueText>{roundPrice(ticket?.sUSDPaid, true)}</SC.ColumnValueText>
 					<SC.ColumnNameText>{t('Buy-in')}</SC.ColumnNameText>
 				</>
 			</SC.CenterRowContent>

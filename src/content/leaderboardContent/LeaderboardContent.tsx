@@ -225,9 +225,7 @@ const LeaderboardContent = () => {
 								</Col>
 								<Col span={12} md={5}>
 									<SC.Title>
-										<SC.Value>{`${markedValue(
-											roundPrice(Number(item.pnl), false, chain?.id || NETWORK_IDS.OPTIMISM) as string
-										)} $`}</SC.Value>
+										<SC.Value>{`${markedValue(roundPrice(Number(item.pnl), false) as string)} $`}</SC.Value>
 										<SC.Description>{t('Profits')}</SC.Description>
 									</SC.Title>
 								</Col>

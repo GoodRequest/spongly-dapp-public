@@ -151,7 +151,7 @@ const TicketStatisticRow = () => {
 						<StatisticCard
 							showMobileInColumn={true}
 							isLoading={isLoading}
-							value={roundPrice(ticketData?.sUSDPaid, true, chain?.id || NETWORK_IDS.OPTIMISM)}
+							value={roundPrice(ticketData?.sUSDPaid, true)}
 							title={t('Buy-in')}
 							addMobileBackground={true}
 						/>
