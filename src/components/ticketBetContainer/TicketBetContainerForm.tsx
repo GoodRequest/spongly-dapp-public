@@ -21,6 +21,7 @@ import SummaryCol from './components/summaryCol/SummaryCol'
 // utils
 import {
 	CRYPTO_CURRENCY,
+	CRYPTO_CURRENCY_OPTIONS,
 	FORM_ERROR_TYPE,
 	MAX_BUY_IN,
 	MAX_SELECTED_ALLOWANCE,
@@ -100,7 +101,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 				return 'unknown'
 		}
 	}
-	const stableCoinsOptions = CRYPTO_CURRENCY.map((item) => ({
+	const stableCoinsOptions = CRYPTO_CURRENCY_OPTIONS.map((item) => ({
 		label: (
 			<SCS.FlexItemCenterWrapper>
 				<SC.StableCoinIcon size={24} style={{ marginRight: 6 }} src={getActualStableCoinIcon(item)} />

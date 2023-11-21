@@ -21,6 +21,8 @@ import { BET_OPTIONS, DoubleChanceMarketType, FORM, RESOLUTIONS } from '@/utils/
 import { sportsMarketContract } from '@/utils/contracts/sportsMarketContract'
 import {
 	ADDITIONAL_SLIPPAGE,
+	Coins,
+	CRYPTO_CURRENCY_MAP,
 	GAS_ESTIMATION_BUFFER,
 	MAX_ALLOWANCE,
 	MAX_BUY_IN,
@@ -41,8 +43,13 @@ import { getParlayMarketsAMMQuoteMethod } from '@/utils/parlayAmm'
 import { floorNumberToDecimals, roundNumberToDecimals } from '@/utils/formatters/number'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import {
+	coinParser,
 	getBetOptionAndAddressFromMatch,
 	getBetOptionFromMatchBetOption,
+	getCollateral,
+	getCollateralAddress,
+	getCollateralIndex,
+	getDefaultCollateral,
 	getDividerByNetworkId,
 	getOddByBetType,
 	getSelectedCoinIndex,
@@ -119,10 +126,23 @@ const TicketBetContainer = () => {
 	const unsubmittedTickets = useSelector((state: RootState) => state.betTickets.unsubmittedBetTickets.data)
 	const parlayAmmDataQuery = useParlayAmmDataQuery(chain?.id || NETWORK_IDS.OPTIMISM)
 	const available = multipleCollateralBalance?.[(activeTicketValues?.selectedStablecoin as keyof typeof multipleCollateralBalance) ?? STABLE_COIN.S_USD] ?? 0
-
 	const availablePerPositionQuery = useAvailablePerPositionQuery(getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses[0], {
 		enabled: activeTicketValues?.matches?.length === 1
 	})
+
+	// default collateral
+	const defaultCollateral = getDefaultCollateral(chain?.id || NETWORK_IDS.OPTIMISM)
+	const selectedCollateral = getCollateral(chain?.id || NETWORK_IDS.OPTIMISM, getSelectedCoinIndex(activeTicketValues?.selectedStablecoin))
+	const isDefaultCollateral = selectedCollateral === defaultCollateral
+
+	// collateral address
+	const isEth = selectedCollateral === CRYPTO_CURRENCY_MAP.ETH
+	const collateralAddress = getCollateralAddress(
+		chain?.id || NETWORK_IDS.OPTIMISM,
+		isEth
+			? getCollateralIndex(chain?.id || NETWORK_IDS.OPTIMISM, CRYPTO_CURRENCY_MAP.WETH as Coins)
+			: getSelectedCoinIndex(activeTicketValues?.selectedStablecoin)
+	)
 
 	useEffect(() => {
 		if (availablePerPositionQuery.isSuccess && availablePerPositionQuery.data) {
@@ -209,24 +229,40 @@ const TicketBetContainer = () => {
 	}, [activeTicketID, parlayAmmData])
 
 	const fetchParlayAmmQuote = useCallback(
-		async (susdAmountForQuote: number) => {
-			const { parlayMarketsAMMContract } = networkConnector
+		async (collateralAmountForQuote: number) => {
+			const { parlayMarketsAMMContract, multiCollateralOnOffRampContract } = networkConnector
 			if (parlayMarketsAMMContract && parlayAmmData?.minUsdAmount) {
 				const marketsAddresses = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses
 				const betOptions = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).betTypes
-				const minUsdAmount =
-					susdAmountForQuote < parlayAmmData?.minUsdAmount
-						? parlayAmmData?.minUsdAmount // deafult value for qoute info
-						: susdAmountForQuote
-				const susdPaid = ethers.utils.parseUnits(roundNumberToDecimals(minUsdAmount).toString())
+
+				const [minimumReceivedForCollateralAmount, minimumNeededForMinUsdAmountValue] = await Promise.all([
+					isDefaultCollateral
+						? 0
+						: multiCollateralOnOffRampContract?.getMinimumReceived(
+								collateralAddress,
+								coinParser(collateralAmountForQuote.toString(), chain?.id || NETWORK_IDS.OPTIMISM, selectedCollateral)
+						  ),
+					// TODO: pre multiple collateral support treba ratat aj s minimumNeededForMinUsdAmountValue
+					isDefaultCollateral
+						? 0
+						: multiCollateralOnOffRampContract?.getMinimumNeeded(
+								collateralAddress,
+								coinParser(collateralAmountForQuote.toString(), chain?.id || NETWORK_IDS.OPTIMISM)
+						  )
+				])
+
+				const usdPaid = isDefaultCollateral
+					? coinParser(collateralAmountForQuote.toString(), chain?.id || NETWORK_IDS.OPTIMISM)
+					: minimumReceivedForCollateralAmount
+
 				try {
 					const parlayAmmQuote = await getParlayMarketsAMMQuoteMethod(
-						getSelectedCoinIndex(activeTicketValues.selectedStablecoin),
-						chain?.id || NETWORK_IDS.OPTIMISM,
+						collateralAddress,
+						isDefaultCollateral,
 						parlayMarketsAMMContract,
 						marketsAddresses,
 						betOptions,
-						susdPaid
+						usdPaid
 					)
 					return parlayAmmQuote
 				} catch (e: any) {
@@ -261,8 +297,8 @@ const TicketBetContainer = () => {
 
 					try {
 						const sportsAmmQuote = await getSportsAMMQuoteMethod(
-							getSelectedCoinIndex(activeTicketValues.selectedStablecoin),
-							chain?.id || NETWORK_IDS.OPTIMISM,
+							collateralAddress,
+							isDefaultCollateral,
 							sportsAMMContract,
 							marketAddress,
 							selectBetOption,
@@ -366,6 +402,7 @@ const TicketBetContainer = () => {
 			)
 			const singlesAmmMaximumUSDAmountQuote = await fetchSinglesAmmQuote(roundedMaxAmount)
 			const singlesAmmQuote = await fetchSinglesAmmQuote(activeTicketValues?.buyIn)
+
 			if (singlesAmmQuote !== null) {
 				const amountOfTokens =
 					fetchAmountOfTokensForXsUSDAmount(

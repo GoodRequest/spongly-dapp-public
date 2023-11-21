@@ -9,6 +9,7 @@ import {
 	ARBITRUM_DIVISOR,
 	BASE_DIVISOR,
 	CLOSED_TICKET_TYPE,
+	Coins,
 	COLLATERALS,
 	ETHERSCAN_TX_URL_ARBITRUM,
 	ETHERSCAN_TX_URL_OPTIMISM,
@@ -68,10 +69,12 @@ import OptimismIcon from '@/assets/icons/optimism-icon.svg'
 import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
 
 import { formatParlayQuote, formatPositionOdds, formatQuote, formattedCombinedTypeMatch } from './formatters/quote'
-import { roundToTwoDecimals } from './formatters/number'
+import { floorNumberToDecimals, roundToTwoDecimals } from './formatters/number'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
 import { roundPrice } from './formatters/currency'
 import { showNotifications } from './tsxHelpers'
+import multipleCollateral from '@/utils/contracts/multiCollateralContract'
+import { getDefaultDecimalsForNetwork } from '@/utils/network'
 
 export const getCurrentBiweeklyPeriod = () => {
 	const startOfPeriod = dayjs(START_OF_BIWEEKLY_PERIOD)
@@ -800,21 +803,29 @@ export const convertSGPContractDataToSGPItemType = (sgpContractData: SGPContract
 
 	return finalSGPItems
 }
-
+// TODO: doplnit export type SupportedNetwork = Exclude<Network, Network.Mainnet | Network.PolygonMainnet>;
+export const getDefaultCollateral = (networkId: any) => COLLATERALS[networkId][0]
 export const getSelectedCoinIndex = (selectedCoin?: string): number => {
-	switch (selectedCoin) {
-		case STABLE_COIN.S_USD:
-			return 0
-		case STABLE_COIN.DAI:
-			return 1
-		case STABLE_COIN.USDC:
-			return 2
-		case STABLE_COIN.USDT:
-			return 3
-		default:
-			throw new Error('Invalid stable coin')
+	if (selectedCoin) {
+		switch (selectedCoin) {
+			case STABLE_COIN.S_USD:
+				return 0
+			case STABLE_COIN.DAI:
+				return 1
+			case STABLE_COIN.USDC:
+				return 2
+			case STABLE_COIN.USDT:
+				return 3
+			default:
+				throw new Error('Invalid stable coin')
+		}
 	}
 }
+export const getCollateral = (networkId: Network, index: number) => COLLATERALS[networkId][index]
+// @ts-ignore
+export const getCollateralAddress = (networkId: any, index: number) => multipleCollateral[getCollateral(networkId, index)]?.addresses[networkId]
+
+export const getCollateralIndex = (networkId: any, currencyKey: Coins) => COLLATERALS[networkId].indexOf(currencyKey)
 
 export const getOddByBetType = (market: IMatch, oddType: OddsType, customBetOption?: BET_OPTIONS) => {
 	// customBetOption is used for override match betOption (using in MatchListContent where we need to return odds based on type of odds in dropdown)
@@ -1060,9 +1071,13 @@ export const getDividerByNetworkId = (networkId: Network) => {
 	}
 }
 
-export const getCollateral = (networkId: Network, index: number) => COLLATERALS[networkId][index]
-
 export const getStablecoinDecimals = (networkId: Network, stableIndex: number) => STABLE_DECIMALS[getCollateral(networkId, stableIndex)]
+
+export const coinParser = (value: string, networkId: number, currency?: Coins) => {
+	const decimals = currency ? STABLE_DECIMALS[currency] : getDefaultDecimalsForNetwork(networkId)
+
+	return ethers.utils.parseUnits(floorNumberToDecimals(Number(value), decimals).toString(), decimals)
+}
 
 export const getCombinedPositionText = (positions: Position[]): CombinedMarketsPositionName | null => {
 	const firstPositionBetType = Number(positions[0]?.market?.betType) as BetType
