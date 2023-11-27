@@ -29,7 +29,7 @@ const TicketListItemHeader: FC<ITicketContent> = ({ ticket }) => {
 
 	return (
 		<SC.TicketItemRow>
-			<SC.TicketItemTipsterWrapper onClick={() => router.push(`/${PAGES.LEADERBOARD}/?id=${account}`)}>
+			<SC.TicketItemTipsterWrapper onClick={() => router.push(`/${PAGES.TIPSTER_DETAIL}/?id=${account}`)}>
 				<Col md={{ order: 0, span: 2 }} xs={{ span: 8, order: 1 }}>
 					<TicketIcon imageSrc={getWalletImage(account)} />
 				</Col>

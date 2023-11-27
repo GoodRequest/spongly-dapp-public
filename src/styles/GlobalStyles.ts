@@ -1,6 +1,6 @@
 import styled, { createGlobalStyle, css, keyframes } from 'styled-components'
 import { Row, Typography, Empty as AntdEmpty } from 'antd'
-import { HeadingXSMedium, TextMDMedium, TextMDRegular, TextSMMedium, TextSorter } from '@/styles/typography'
+import { HeadingXSMedium, TextMDMedium, TextMDRegular, TextSMMedium, TextSorter, TextXSMedium } from '@/styles/typography'
 import worldFlag from '@/assets/icons/world-flag.png'
 import CheckIcon from '@/assets/icons/checked-select-icon.svg'
 import { decodeSorter } from '@/utils/helpers'
@@ -294,6 +294,10 @@ export const EllipsisText = styled(Paragraph)`
 	${TextMDMedium};
 	margin-bottom: 0 !important;
 	color: ${({ theme }) => theme['color-base-content-top']};
+	@media (max-width: ${breakpoints.md}px) {
+		${TextXSMedium};
+		color: ${({ theme }) => theme['color-base-content-top']};
+	}
 `
 export const Empty = styled(AntdEmpty)`
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
@@ -319,6 +323,25 @@ export const LeagueIcon = styled.i<{ xlSize?: number; mdSize?: number }>`
 	font-style: normal;
 	@media (max-width: ${breakpoints.md}px) {
 		font-size: ${({ mdSize }) => (mdSize ? `${mdSize}px` : '60px')};
+	}
+`
+
+export const MatchIcon = styled.div`
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	height: 40px;
+	width: 40px;
+	border-radius: 999px;
+	background: ${({ theme }) => theme['color-base-surface-quaternary']};
+	border: 2px solid ${({ theme }) => theme['color-base-surface-secondary']};
+	&:last-of-type {
+		margin-left: -14px;
+	}
+	img {
+		padding: 4px;
+		width: 36px;
+		height: 36px;
 	}
 `
 

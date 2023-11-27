@@ -63,3 +63,6 @@ export const Glow = styled.div<{ $color: string }>`
 	background-color: ${({ $color }) => $color};
 	filter: blur(40px);
 `
+export const StatImage = styled.img`
+	position: relative;
+`

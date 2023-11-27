@@ -24,6 +24,7 @@ import * as SCG from '@/styles/GlobalStyles'
 
 // assets
 import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
+import OptimismIcon from '@/assets/icons/optimism-icon.svg'
 
 const ConnectButton = () => {
 	const { t } = useTranslation()
@@ -143,7 +144,8 @@ const ConnectButton = () => {
 											<SC.WalletRow justify={'space-between'}>
 												{/* empty alt text for decorative img */}
 												<Col flex={'auto'} style={{ padding: '0px 0px 0px 8px' }}>
-													{chain?.hasIcon && <SC.Logo alt={''} src={chain?.iconUrl} />}
+													{/* // TODO: if next network will be added need to be conditionaly rendered icon */}
+													<SC.Logo alt={'optimism'} src={OptimismIcon} />
 												</Col>
 												<Col flex={'24px'}>
 													<SC.ArrowLogo src={ArrowDownIcon} />
