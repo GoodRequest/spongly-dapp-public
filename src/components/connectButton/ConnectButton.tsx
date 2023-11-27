@@ -79,6 +79,8 @@ const ConnectButton = () => {
 					switchNetwork?.(network.networkId)
 				}
 
+				// switchNetwork?.(network.networkId)
+
 				setIsModalVisible(false)
 			} else {
 				showNotifications(

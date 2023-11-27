@@ -287,6 +287,7 @@ const TicketBetContainer = () => {
 
 	const fetchSinglesAmmQuote = useCallback(
 		async (susdAmountForQuote: number) => {
+			console.log('susdAmountForQuote', susdAmountForQuote)
 			const { sportsAMMContract } = networkConnector
 			if (activeTicketValues?.matches?.length === 1) {
 				if (sportsAMMContract && parlayAmmData?.minUsdAmount && susdAmountForQuote) {
@@ -294,7 +295,7 @@ const TicketBetContainer = () => {
 
 					const marketAddress = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses[0]
 					const selectBetOption = getBetOptionFromMatchBetOption(activeTicketValues?.matches[0].betOption)
-
+					console.log('input ', [collateralAddress, isDefaultCollateral, sportsAMMContract, marketAddress, selectBetOption, parsedAmount])
 					try {
 						const sportsAmmQuote = await getSportsAMMQuoteMethod(
 							collateralAddress,
@@ -304,6 +305,7 @@ const TicketBetContainer = () => {
 							selectBetOption,
 							parsedAmount
 						)
+						console.log('return', sportsAmmQuote)
 						return sportsAmmQuote
 					} catch (err) {
 						showNotifications(
@@ -413,10 +415,13 @@ const TicketBetContainer = () => {
 						bigNumberFormatter(ammBalanceForSelectedPosition)
 					) || 0
 				const flooredAmountOfTokens = floorNumberToDecimals(amountOfTokens)
+				console.log('singlesAmmQuote', singlesAmmQuote)
 				const parsedQuote = singlesAmmQuote / divider
+				console.log('parsedQuote', parsedQuote)
 				const recalculatedTokenAmount = roundNumberToDecimals((amountOfTokens * Number(activeTicketValues?.buyIn)) / parsedQuote)
 
 				const maxAvailableTokenAmount = recalculatedTokenAmount > flooredAmountOfTokens ? flooredAmountOfTokens : recalculatedTokenAmount
+				console.log('maxAvailableTokenAmount', maxAvailableTokenAmount)
 				const payout = roundNumberToDecimals(maxAvailableTokenAmount ?? 0)
 				const potentionalProfit = Number(maxAvailableTokenAmount) - Number(activeTicketValues.buyIn)
 				const skew = 0
@@ -471,8 +476,8 @@ const TicketBetContainer = () => {
 			const { parlayMarketsAMMContract, signer, sportsAMMContract } = networkConnector
 			const parlayMarketsAMMContractWithSigner = parlayMarketsAMMContract?.connect(signer as any)
 			const sportsMarketsAMMContractWithSigner = sportsAMMContract?.connect(signer as any)
-
-			const sUSDPaid = ethers.utils.parseUnits((values.buyIn || 0).toString(), 'ether')
+			const sUSDPaid = coinParser((values.buyIn || 0).toString(), chain?.id || NETWORK_IDS.OPTIMISM)
+			// const sUSDPaid = ethers.utils.parseUnits((values.buyIn || 0).toString(), 'ether')
 			const additionalSlippage = ethers.utils.parseEther(ADDITIONAL_SLIPPAGE)
 			const expectedPayout = ethers.utils.parseEther(roundNumberToDecimals(Number(activeTicketValues.payout)).toString())
 			let data
@@ -482,46 +487,77 @@ const TicketBetContainer = () => {
 				getBetOptionAndAddressFromMatch(values?.matches).betTypes?.length === 1 &&
 				!isCombined(values?.matches?.[0].betOption)
 			) {
+				if (isDefaultCollateral) {
+					const reqData = [
+						getBetOptionAndAddressFromMatch(values?.matches).addresses[0],
+						getBetOptionAndAddressFromMatch(values?.matches).betTypes[0],
+						expectedPayout,
+						sUSDPaid,
+						additionalSlippage,
+						REFERRER_WALLET
+					]
+					const estimationGas = await sportsMarketsAMMContractWithSigner?.estimateGas.buyFromAMMWithReferrer(...reqData)
+
+					const finalEstimation = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
+
+					data = (await sportsMarketsAMMContractWithSigner?.buyFromAMMWithReferrer(...reqData, {
+						gasLimit: chain?.id ? finalEstimation : undefined
+					})) as ethers.ContractTransaction
+					// TODO: bude sa riesit aj with diffrent eth
+				} else {
+					const reqData = [
+						getBetOptionAndAddressFromMatch(values?.matches).addresses[0],
+						getBetOptionAndAddressFromMatch(values?.matches).betTypes[0],
+						expectedPayout,
+						sUSDPaid,
+						additionalSlippage,
+						collateralAddress,
+						REFERRER_WALLET
+					]
+					const estimationGas = await sportsMarketsAMMContractWithSigner?.estimateGas.buyFromAMMWithDifferentCollateralAndReferrer(...reqData)
+
+					const finalEstimation = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
+
+					data = (await sportsMarketsAMMContractWithSigner?.buyFromAMMWithDifferentCollateralAndReferrer(...reqData, {
+						gasLimit: chain?.id ? finalEstimation : undefined
+					})) as ethers.ContractTransaction
+				}
+				// PARLAY
+			} else if (isDefaultCollateral) {
 				const reqData = [
-					getBetOptionAndAddressFromMatch(values?.matches).addresses[0],
-					getBetOptionAndAddressFromMatch(values?.matches).betTypes[0],
-					expectedPayout,
+					getBetOptionAndAddressFromMatch(values?.matches).addresses,
+					getBetOptionAndAddressFromMatch(values?.matches).betTypes,
 					sUSDPaid,
 					additionalSlippage,
+					expectedPayout,
+					ZERO_ADDRESS,
 					REFERRER_WALLET
 				]
-				const estimationGas = await sportsMarketsAMMContractWithSigner?.estimateGas.buyFromAMMWithReferrer(...reqData)
+				const estimationGas = await parlayMarketsAMMContractWithSigner?.estimateGas.buyFromParlayWithReferrer(...reqData)
 
 				const finalEstimation = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
-				data = (await sportsMarketsAMMContractWithSigner?.buyFromAMMWithReferrer(...reqData, {
-					gasLimit: chain?.id ? finalEstimation : undefined
+
+				data = (await parlayMarketsAMMContractWithSigner?.buyFromParlayWithReferrer(...reqData, {
+					gasLimit: finalEstimation
 				})) as ethers.ContractTransaction
 			} else {
-				// PARLAY
-				const estimationGas = await parlayMarketsAMMContractWithSigner?.estimateGas.buyFromParlayWithReferrer(
+				const reqData = [
 					getBetOptionAndAddressFromMatch(values?.matches).addresses,
 					getBetOptionAndAddressFromMatch(values?.matches).betTypes,
 					sUSDPaid,
 					additionalSlippage,
 					expectedPayout,
-					ZERO_ADDRESS,
+					collateralAddress,
 					REFERRER_WALLET
-				)
-
+				]
+				console.log('reqData', reqData)
+				const estimationGas = await parlayMarketsAMMContractWithSigner?.estimateGas.buyFromParlayWithDifferentCollateralAndReferrer(...reqData)
+				console.log('called 1')
 				const finalEstimation = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
-
-				data = (await parlayMarketsAMMContractWithSigner?.buyFromParlayWithReferrer(
-					getBetOptionAndAddressFromMatch(values?.matches).addresses,
-					getBetOptionAndAddressFromMatch(values?.matches).betTypes,
-					sUSDPaid,
-					additionalSlippage,
-					expectedPayout,
-					ZERO_ADDRESS,
-					REFERRER_WALLET,
-					{
-						gasLimit: finalEstimation
-					}
-				)) as ethers.ContractTransaction
+				console.log('called 2')
+				data = (await parlayMarketsAMMContractWithSigner?.buyFromParlayWithDifferentCollateralAndReferrer(...reqData, {
+					gasLimit: finalEstimation
+				})) as ethers.ContractTransaction
 			}
 			await data?.wait().then(() => {
 				handleRemoveTicket(Number(values.id))
