@@ -31,7 +31,6 @@ export const formatParlayQuote = (quote: number | undefined, oddType?: OddsType)
 	if (!quote) return ''
 	// AMM odds.
 	const ammOdds = quote / OPTIMISM_DIVISOR
-
 	return formatQuote(oddType || OddsType.DECIMAL, ammOdds)
 }
 
