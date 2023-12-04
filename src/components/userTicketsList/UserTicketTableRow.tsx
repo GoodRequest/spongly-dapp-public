@@ -111,7 +111,6 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 		// TODO: ongoing is not good because it is isOpen and isResolved at the same time
 		(item) => item?.market?.isOpen && !item?.market?.isPaused && !item?.market?.isCanceled && !item?.market?.isResolved
 	)
-
 	const userTicketType = getUserTicketType(ticket)
 
 	const isParlay = ticket?.positions?.length > 1

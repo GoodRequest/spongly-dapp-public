@@ -30,6 +30,7 @@ const PositionsList = ({ positionsWithCombinedAttrs, marketQuotes, ticketData, i
 		if (item?.isCombined && item?.odds) {
 			return item.odds
 		}
+
 		if (isParlay) {
 			return formatParlayQuote(Number(marketQuotes?.[index]))
 		}
