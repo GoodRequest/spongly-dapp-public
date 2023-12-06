@@ -176,14 +176,13 @@ export const TicketCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 	}
 `
 
-export const ColapsePanel = styled(Panel)`
+export const CollapsePanel = styled(Panel)<{ isExpanded: boolean }>`
 	padding: 0px 8px 0px 8px !important;
 	.ant-collapse-header {
-		padding: 0 !important;
+		display: block !important;
+		border-bottom: 1px solid ${({ theme, isExpanded }) => (isExpanded ? theme['color-base-surface-quaternary'] : 'none')} !important;
 		@media (max-width: ${breakpoints.md}px) {
-			padding-bottom: 44px !important;
-			padding-left: 0 !important;
-			padding-right: 0 !important;
+			border-bottom: none !important;
 		}
 	}
 	.ant-collapse-content {

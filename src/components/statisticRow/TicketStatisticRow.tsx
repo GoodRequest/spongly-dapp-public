@@ -74,24 +74,24 @@ const TicketStatisticRow = () => {
 			if (isParlay) {
 				const { data } = await fetchParlayDetail({
 					variables: { id: router.query.ticketId },
-					context: { chainId: chain?.id }
+					context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM }
 				})
 				userTicket = parseParlayToUserTicket(data?.parlayMarket)
 			} else {
 				const { data: positionDetailData } = await fetchPositionDetail({
 					variables: { id: router.query.ticketId },
-					context: { chainId: chain?.id }
+					context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM }
 				})
 				userTicket = parsePositionBalanceToUserTicket(positionDetailData?.positionBalance)
 
 				const { data: marketTransactionsData } = await fetchPositionBalanceMarketTransactions({
 					variables: { id: userTicket.id },
-					context: { chainId: chain?.id }
+					context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM }
 				})
 				marketData = marketTransactionsData.marketTransactions
 			}
 
-			assignOtherAttrsToUserTicket([userTicket], marketData, chain?.id, signer).then((ticketsWithOtherAttrs) => {
+			assignOtherAttrsToUserTicket([userTicket], marketData, chain?.id || NETWORK_IDS.OPTIMISM, signer).then((ticketsWithOtherAttrs) => {
 				// NOTE: always just one ticket
 				const orderedPositions = orderPositionsAsSportMarkets(ticketsWithOtherAttrs?.[0])
 
@@ -144,7 +144,7 @@ const TicketStatisticRow = () => {
 							value={ticketData?.txHash}
 							title={t('Txn hash')}
 							addMobileBackground={true}
-							onClick={() => handleTxHashRedirect(t, ticketData?.txHash, chain?.id)}
+							onClick={() => handleTxHashRedirect(t, ticketData?.txHash, chain?.id || NETWORK_IDS.OPTIMISM)}
 						/>
 					</Col>
 					<Col lg={4} md={12} sm={12} xs={12}>

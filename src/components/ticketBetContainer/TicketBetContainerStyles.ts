@@ -2,16 +2,17 @@ import styled from 'styled-components'
 import { Col, Spin } from 'antd'
 
 import infoIconPurple from '@/assets/icons/info-circle.svg'
-import { TextMDMedium, TextXSMedium, TextSMMedium, HeadingSMMedium, HeadingXSMedium } from '@/styles/typography'
+import { TextMDMedium, TextXSMedium, HeadingSMMedium, HeadingXSMedium, TextMDRegular, TextXSRegular, TextSMRegular } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 import { SCROLL_DIRECTION } from '@/utils/enums'
+import { FORM_ERROR_TYPE } from '@/utils/constants'
 
 export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
 	position: sticky;
 	top: 24px;
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	border-radius: 12px;
-	padding: 16px;
+	padding: 24px 24px 16px 24px;
 	@media (max-height: 930px) {
 		padding: 16px;
 	}
@@ -52,28 +53,32 @@ export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
 	${TextMDMedium}
 `
 
-export const InfoBox = styled.div`
+export const InfoBox = styled.div<{ type: FORM_ERROR_TYPE | null }>`
 	position: relative;
 	display: flex;
 	flex-direction: row;
-	background: ${({ theme }) => theme['color-base-state-error-bg']};
+	background: ${({ theme, type }) => (type === FORM_ERROR_TYPE.ERROR ? theme['color-base-state-error-bg'] : theme['color-base-state-info-bg'])};
 	width: 100%;
-	padding: 6px 12px;
+	padding: 8px 12px;
 	border-radius: 8px;
 	margin-bottom: 16px;
 `
 
-export const InfoBoxIcon = styled.div`
+export const InfoBoxIcon = styled.div<{ type: FORM_ERROR_TYPE | null }>`
 	width: 24px;
 	height: 24px;
+	filter: ${({ type }) =>
+		type === FORM_ERROR_TYPE.ERROR
+			? 'invert(54%) sepia(91%) saturate(2587%) hue-rotate(327deg) brightness(106%) contrast(103%)'
+			: 'invert(50%) sepia(93%) saturate(3485%) hue-rotate(217deg) brightness(100%) contrast(104%)'};
 	background-image: url('${infoIconPurple}');
-	margin-right: 12px;
+	margin-right: 8px;
 `
 
-export const InfoBoxContent = styled.div`
-	${TextMDMedium};
+export const InfoBoxContent = styled.div<{ type: FORM_ERROR_TYPE | null }>`
+	${TextSMRegular};
 	width: calc(100% - 64px);
-	color: #ff6759;
+	color: ${({ theme, type }) => (type === FORM_ERROR_TYPE.ERROR ? theme['color-base-state-error-fg'] : theme['color-base-content-top'])};
 `
 
 export const Highlight = styled.span`
@@ -150,12 +155,16 @@ export const TicketChips = styled.div<{ selected?: boolean; icon?: boolean; dire
 		background: ${({ selected, theme }) => (selected ? theme['color-base-action-primary-default'] : theme['color-base-surface-quintarny'])};
 	}
 	background: ${({ selected, theme }) => (selected ? theme['color-base-action-primary-default'] : theme['color-base-surface-quaternary'])};
-	${TextSMMedium};
-	font-weight: 700;
+	${({ selected }) => (selected ? `${TextMDMedium}` : `${TextMDRegular}`)}
 	cursor: pointer;
 	border-radius: 8px;
 	display: flex;
 	align-items: center;
+`
+
+export const TicketChipsCount = styled.div`
+	margin-left: 8px;
+	${TextXSRegular}
 `
 
 export const CloseIcon = styled.div<{ src: string }>`
@@ -233,7 +242,8 @@ export const Fade = styled.div<{ show: boolean; direction: 'above' | 'under' }>`
 export const TicketMatchesFaded = styled.div`
 	position: relative;
 `
-export const FormWrapper = styled.form`
+export const FormWrapper = styled.form<{ $rolledUp?: boolean }>`
+	display: ${({ $rolledUp }) => ($rolledUp ? 'block' : 'none')};
 	overflow: auto;
 	margin-top: 16px;
 	max-height: calc(100vh - 216px);
@@ -266,4 +276,9 @@ export const MatchContainerRow = styled(Col)`
 	margin-bottom: 32px;
 	overflow: auto;
 	background: linear-gradient(360deg, #1d2046 0%, rgba(29, 32, 70, 0) 100%);
+`
+
+export const StableCoinIcon = styled.img<{ size?: number }>`
+	width: ${({ size }) => size || 16}px;
+	height: ${({ size }) => size || 16}px;
 `
