@@ -28,7 +28,7 @@ import {
 	PARLAY_LEADERBOARD_OPTIMISM_REWARDS_TOP_10,
 	PARLAY_LEADERBOARD_OPTIMISM_REWARDS_TOP_20,
 	SGPCombinationsFromContractOrderMapping,
-	STABLE_COIN,
+	STABLE_COINS,
 	STABLE_DECIMALS,
 	START_OF_BIWEEKLY_PERIOD,
 	TICKET_TYPE,
@@ -819,23 +819,15 @@ export const convertSGPContractDataToSGPItemType = (sgpContractData: SGPContract
 }
 // TODO: doplnit export type SupportedNetwork = Exclude<Network, Network.Mainnet | Network.PolygonMainnet>;
 export const getDefaultCollateral = (networkId: any) => COLLATERALS[networkId][0]
-export const getSelectedCoinIndex = (selectedCoin?: string): number => {
-	if (selectedCoin) {
-		switch (selectedCoin) {
-			case STABLE_COIN.S_USD:
-				return 0
-			case STABLE_COIN.DAI:
-				return 1
-			case STABLE_COIN.USDC:
-				return 2
-			case STABLE_COIN.USDT:
-				return 3
-			default:
-				throw new Error('Invalid stable coin')
-		}
-	}
-}
+
 export const getCollateral = (networkId: Network, index: number) => COLLATERALS[networkId][index]
+
+export const getCollaterals = (networkId: any) => COLLATERALS[networkId]
+
+export const isStableCurrency = (currencyKey: Coins) => {
+	return STABLE_COINS.includes(currencyKey)
+}
+
 // @ts-ignore
 export const getCollateralAddress = (networkId: any, index: number) => multipleCollateral[getCollateral(networkId, index)]?.addresses[networkId]
 

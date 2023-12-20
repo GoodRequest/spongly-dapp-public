@@ -4,13 +4,12 @@ import { NetworkId } from './networkConnector'
 import { ContractSGPOrder } from '@/utils/enums'
 import { BetType } from '@/utils/tags'
 
+// general
 export enum ENVIROMENT {
 	PRODUCTION = 'production',
 	DEVELOPMENT = 'development'
 }
 
-// NOTE: if more tags are added, the tag from match.winnerTypeMatch.match[0] must be added
-export const TOTAL_WINNER_TAGS = ['109121', '9445', '9497'] // Golf, motosport, formula
 export enum MSG_TYPE {
 	INFO = 'INFO',
 	ERROR = 'ERROR',
@@ -29,29 +28,6 @@ export enum NOTIFICATION_TYPE {
 	MODAL = 'MODAL',
 	NOTIFICATION = 'NOTIFICATION'
 }
-
-export enum TICKET_TYPE {
-	OPEN_TICKET = 'OPEN_TICKET',
-	ONGOING_TICKET = 'ONGOING_TICKET',
-	CLOSED_TICKET = 'CLOSED_TICKET',
-	HOT_TICKET = 'HOT_TICKET'
-}
-
-export enum CLOSED_TICKET_TYPE {
-	SUCCESS = 'SUCCESS',
-	MISS = 'MISS',
-	CANCELLED = 'CANCELLED'
-}
-
-export enum MATCH_STATUS {
-	SUCCESS = 'SUCCESS',
-	MISS = 'MISS',
-	CANCELED = 'CANCELED',
-	OPEN = 'OPEN',
-	PAUSED = 'PAUSED',
-	ONGOING = 'ONGOING'
-}
-
 export const SPACE_GROTESK_FONT_VARIABLE = 'var(--space-grotesk-font)'
 
 export const START_OF_BIWEEKLY_PERIOD = new Date(2023, 2, 1, 0, 0, 0)
@@ -76,6 +52,32 @@ export enum TICKET_SORTING {
 	MATCHES = 'matchesCount'
 }
 
+// Tickets and matches
+export enum TICKET_TYPE {
+	OPEN_TICKET = 'OPEN_TICKET',
+	ONGOING_TICKET = 'ONGOING_TICKET',
+	CLOSED_TICKET = 'CLOSED_TICKET',
+	HOT_TICKET = 'HOT_TICKET'
+}
+
+export enum CLOSED_TICKET_TYPE {
+	SUCCESS = 'SUCCESS',
+	MISS = 'MISS',
+	CANCELLED = 'CANCELLED'
+}
+
+export enum MATCH_STATUS {
+	SUCCESS = 'SUCCESS',
+	MISS = 'MISS',
+	CANCELED = 'CANCELED',
+	OPEN = 'OPEN',
+	PAUSED = 'PAUSED',
+	ONGOING = 'ONGOING'
+}
+
+// NOTE: if more tags are added, the tag from match.winnerTypeMatch.match[0] must be added
+export const TOTAL_WINNER_TAGS = ['109121', '9445', '9497'] // Golf, motosport, formula
+
 export const MIN_ODD_TRESHOLD = '1'
 
 export enum ORDER_DIRECTION {
@@ -84,13 +86,13 @@ export enum ORDER_DIRECTION {
 }
 export const ADDITIONAL_SLIPPAGE = '0.02'
 
-export const NETWORK_IDS = {
-	OPTIMISM: 10,
-	OPTIMISM_GOERLI: 420,
-	GOERLI: 5,
-	ARBITRUM: 42161,
-	BASE: 8453
+export const FIELD_HEIGHT = {
+	small: '40px',
+	middle: '48px',
+	large: '56px',
+	extraLarge: '60px'
 }
+
 export const MAX_TOTAL_QUOTE = 100
 
 export const MIN_BUY_IN_PARLAY = 3
@@ -101,17 +103,28 @@ export const MAX_BUY_IN = 1000
 
 export const MAX_SELECTED_ALLOWANCE = 100000000
 export const NO_TEAM_IMAGE_FALLBACK = '/logos/defaultTeamLogo.webp'
-// PLACEHOLDER TO DO
 export const INFURA_ID = 'fcf608e4430142f38338b55efef2c7e5' // '6052c0bd83aa437b8cf98c47d3b12cc7'
 
 export type Coins = 'sUSD' | 'DAI' | 'USDCe' | 'USDC' | 'USDT' | 'OP' | 'WETH' | 'ETH' | 'ARB'
 
-export const REVALIDATE = {
-	MINUTE: 60,
-	FIVE_MINUTES: 300,
-	HALF_HOUR: 1800,
-	HOUR: 3600
+// Coins and Collaterals
+export const NETWORK_IDS = {
+	OPTIMISM: 10,
+	OPTIMISM_GOERLI: 420,
+	GOERLI: 5,
+	ARBITRUM: 42161,
+	BASE: 8453
 }
+
+export enum Network {
+	Mainnet = 1,
+	OptimismMainnet = 10,
+	PolygonMainnet = 137,
+	OptimismGoerli = 420,
+	Base = 8453,
+	ArbitrumOne = 42161
+}
+
 export const STABLE_DECIMALS: Record<Coins, number> = {
 	sUSD: 18,
 	DAI: 18,
@@ -127,34 +140,15 @@ export const STABLE_COIN = {
 	S_USD: 'sUSD',
 	DAI: 'DAI',
 	USDC: 'USDC',
-	USDT: 'USDT'
-}
-
-export enum COLLATERALS_INDEX {
-	'sUSD' = 0,
-	'DAI' = 1,
-	'USDC' = 2,
-	'USDT' = 3
+	USDT: 'USDT',
+	USDCe: 'USDCe'
 }
 
 export const CRYPTO_CURRENCY_OPTIONS = [STABLE_COIN.S_USD, STABLE_COIN.DAI, STABLE_COIN.USDC, STABLE_COIN.USDT]
 export const CRYPTO_CURRENCY = ['sUSD', 'DAI', 'USDCe', 'USDC', 'USDT', 'OP', 'WETH', 'ETH', 'ARB']
-
-export const FIELD_HEIGHT = {
-	small: '40px',
-	middle: '48px',
-	large: '56px',
-	extraLarge: '60px'
-}
-
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY)
 
-export enum Network {
-	OptimismMainnet = 10,
-	OptimismGoerli = 420,
-	ArbitrumOne = 42161,
-	Base = 8453
-}
+export const STABLE_COINS = [CRYPTO_CURRENCY_MAP.sUSD, CRYPTO_CURRENCY_MAP.DAI, CRYPTO_CURRENCY_MAP.USDCe, CRYPTO_CURRENCY_MAP.USDC, CRYPTO_CURRENCY_MAP.USDT]
 
 export const COLLATERALS: Record<NetworkId, Coins[]> = {
 	[Network.OptimismMainnet]: [
@@ -169,9 +163,8 @@ export const COLLATERALS: Record<NetworkId, Coins[]> = {
 	[Network.OptimismGoerli]: [CRYPTO_CURRENCY_MAP.sUSD as Coins],
 	[Network.ArbitrumOne]: [
 		CRYPTO_CURRENCY_MAP.USDCe as Coins,
-		CRYPTO_CURRENCY_MAP.DAI as Coins,
-		// TODO: move manually from 2th index to 3rd (check when multiple Coin logic will be implementing)
 		CRYPTO_CURRENCY_MAP.USDC as Coins,
+		CRYPTO_CURRENCY_MAP.DAI as Coins,
 		CRYPTO_CURRENCY_MAP.USDT as Coins,
 		CRYPTO_CURRENCY_MAP.ARB as Coins,
 		CRYPTO_CURRENCY_MAP.WETH as Coins,
@@ -191,6 +184,7 @@ export const MATCHES_OFFSET_MOBILE = 3
 export const MAX_TICKET_MATCHES = 10
 export const MAX_TICKETS = 5
 
+// Urls, links
 export const SOCIAL_LINKS = {
 	DISCORD: 'https://discord.gg/PBegHeVA5c',
 	TWITTER: 'https://twitter.com/sponglyio',

@@ -10,6 +10,7 @@ import parlayMarketsAMMContract from './contracts/parleyMarketsAMMContract'
 import sportsAMMContract from '@/utils/contracts/sportsAMMContract'
 import copyableParlayAMM from '@/utils/contracts/copyableParlayAMM'
 import multiCollateralOnOffRampContract from '@/utils/contracts/multiCollateralOnOffRampContract'
+import priceFeedContract from '@/utils/contracts/priceFeedContract'
 
 export type NetworkId = typeof NETWORK_IDS[keyof typeof NETWORK_IDS]
 
@@ -25,6 +26,7 @@ type NetworkConnector = {
 	multipleCollateral?: Array<ethers.Contract | undefined>
 	parlayMarketDataContract?: ethers.Contract
 	parlayMarketsAMMContract?: ethers.Contract
+	priceFeedContract?: ethers.Contract
 	copyableParlayAMM?: ethers.Contract
 	multiCollateralOnOffRampContract?: ethers.Contract
 }
@@ -50,6 +52,7 @@ const networkConnector: NetworkConnector = {
 		this.sportsAMMContract = initializeContract(sportsAMMContract, networkSettings)
 		this.copyableParlayAMM = initializeContract(copyableParlayAMM, networkSettings)
 		this.multiCollateralOnOffRampContract = initializeContract(multiCollateralOnOffRampContract, networkSettings)
+		this.priceFeedContract = initializeContract(priceFeedContract, networkSettings);
 		this.multipleCollateral = [
 			initializeContract(multipleCollateralContract.sUSD, networkSettings),
 			initializeContract(multipleCollateralContract.DAI, networkSettings),

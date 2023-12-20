@@ -77,7 +77,10 @@ const QUERY_KEYS = {
 		UserTransactions: (networkId: NetworkId, liquidityPoolType: LiquidityPoolType) => ['liquidityPool', 'userTransactions', liquidityPoolType, networkId]
 	},
 	SGPFees: (networkId: NetworkId) => ['sgpFees', networkId],
-	CheckPausedAMM: (networkId: NetworkId) => ['checkPausedAMM', networkId]
+	CheckPausedAMM: (networkId: NetworkId) => ['checkPausedAMM', networkId],
+	Rates: {
+		ExchangeRates: (networkId: Network) => ['rates', 'exchangeRates', networkId]
+	}
 }
 
 export default QUERY_KEYS
