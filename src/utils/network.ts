@@ -1,6 +1,6 @@
 import { Chain } from 'wagmi'
 import { NetworkId } from './networkConnector'
-import { NETWORK_IDS, Network, COLLATERAL_DECIMALS } from '@/utils/constants'
+import { NETWORK_IDS, Network } from '@/utils/constants'
 import OptimismIcon from '@/assets/icons/optimism-icon.svg'
 import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
 import BaseIcon from '@/assets/icons/base-icon.svg'

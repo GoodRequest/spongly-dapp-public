@@ -8,7 +8,7 @@ import { Col } from 'antd'
 import { useTheme } from 'styled-components'
 
 import { formatTicketPositionsForStatistics, getUserTicketType } from '@/utils/helpers'
-import { NETWORK_IDS, USER_TICKET_TYPE } from '@/utils/constants'
+import { USER_TICKET_TYPE } from '@/utils/constants'
 import { PAGES } from '@/utils/enums'
 import { GET_USERS_STATISTICS } from '@/utils/queries'
 import { useIsMounted } from '@/hooks/useIsMounted'

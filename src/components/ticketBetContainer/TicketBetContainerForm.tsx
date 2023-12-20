@@ -20,7 +20,6 @@ import SummaryCol from './components/summaryCol/SummaryCol'
 
 // utils
 import {
-	CRYPTO_CURRENCY,
 	CRYPTO_CURRENCY_OPTIONS,
 	FORM,
 	FORM_ERROR_TYPE,
