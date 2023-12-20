@@ -29,6 +29,7 @@ import {
 	MIN_BUY_IN_DEFAULT,
 	MIN_BUY_IN_PARLAY,
 	MIN_BUY_IN_SINGLE,
+	MIN_TOKEN_AMOUNT,
 	MSG_TYPE,
 	NETWORK_IDS,
 	NOTIFICATION_TYPE,
@@ -43,6 +44,7 @@ import { getParlayMarketsAMMQuoteMethod } from '@/utils/parlayAmm'
 import { floorNumberToDecimals, roundNumberToDecimals } from '@/utils/formatters/number'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import {
+	coinFormatter,
 	coinParser,
 	getBetOptionAndAddressFromMatch,
 	getBetOptionFromMatchBetOption,
@@ -105,7 +107,7 @@ const TicketBetContainer = () => {
 	const isProcessing = useSelector((state: RootState) => state.betTickets.isProcessing)
 	const activeTicketID = useSelector((state: RootState) => state.betTickets.activeTicketID)
 	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) || OddsType.DECIMAL : OddsType.DECIMAL
-
+	const isVoucherSelected = false // TODO: currently not supporting vouchers
 	const networkId = chain?.id || NETWORK_IDS.OPTIMISM
 	const [availablePerPosition, setAvailablePerPosition] = useState<any>({
 		[PositionNumber.HOME]: {
@@ -118,7 +120,6 @@ const TicketBetContainer = () => {
 			available: 0
 		}
 	})
-
 	const isSubmitting = useSelector((state: RootState) => state.betTickets.isSubmitting)
 	const isApproving = useSelector((state: RootState) => state.betTickets.isApproving)
 
@@ -269,7 +270,7 @@ const TicketBetContainer = () => {
 						? 0
 						: multiCollateralOnOffRampContract?.getMinimumReceived(
 								collateralAddress,
-								coinParser(collateralAmountForQuote.toString(), chain?.id || NETWORK_IDS.OPTIMISM, selectedCollateral)
+								coinParser(collateralAmountForQuote.toString(), chain?.id || NETWORK_IDS.OPTIMISM, selectedCollateral as any)
 						  ),
 					// TODO: pre multiple collateral support treba ratat aj s minimumNeededForMinUsdAmountValue
 					isDefaultCollateral
@@ -315,8 +316,8 @@ const TicketBetContainer = () => {
 	)
 
 	const fetchSinglesAmmQuote = useCallback(
-		async (susdAmountForQuote: number) => {
-			console.log('susdAmountForQuote', susdAmountForQuote)
+		async (susdAmountForQuote: number, getExtendedQuote?: boolean) => {
+			// console.log('susdAmountForQuote', susdAmountForQuote)
 			const { sportsAMMContract } = networkConnector
 			if (activeTicketValues?.matches?.length === 1) {
 				if (sportsAMMContract && parlayAmmData?.minUsdAmount && susdAmountForQuote) {
@@ -334,7 +335,13 @@ const TicketBetContainer = () => {
 							parsedAmount
 						)
 						console.log('return', sportsAmmQuote)
-						return sportsAmmQuote
+						return isDefaultCollateral
+							? getExtendedQuote
+								? [sportsAmmQuote, sportsAmmQuote]
+								: sportsAmmQuote
+							: getExtendedQuote
+							? sportsAmmQuote
+							: sportsAmmQuote[0]
 					} catch (err) {
 						showNotifications(
 							[{ type: MSG_TYPE.ERROR, message: t('An error occurred while SingleAMMQuote fetch') }],
@@ -417,40 +424,44 @@ const TicketBetContainer = () => {
 	const fetchSinglesTicketData = async () => {
 		try {
 			const { signer, sportsAMMContract } = networkConnector
-			// TODO: divier based on network not COIN
-			// const divider = Number(`1e${getStablecoinDecimals(chain?.id || NETWORK_IDS.OPTIMISM, getSelectedCoinIndex(activeTicketValues.selectedStablecoin))}`)
-			// const divider = 1000000
-			const divider = getDividerByNetworkId(chain?.id || NETWORK_IDS.OPTIMISM)
 			if (!activeTicketValues?.buyIn || Number(activeTicketValues.buyIn) < minBuyIn || activeTicketValues?.matches?.length === 0 || !signer)
 				return { ...activeTicketValues, totalQuote: 0, payout: 0, skew: 0, potentionalProfit: 0, totalBonus: 0 }
+
+			const coin = isVoucherSelected ? undefined : selectedCollateral
 			const currentAddress = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses[0]
 			const contract = new ethers.Contract(currentAddress || '', sportsMarketContract.abi, signer)
-			const ammBalances = await contract.balancesOf(sportsAMMContract?.address)
-			const ammBalanceForSelectedPosition = ammBalances[getBetOptionAndAddressFromMatch(activeTicketValues.matches).betTypes[0]]
 			const roundedMaxAmount = floorNumberToDecimals(
 				availablePerPosition[getBetOptionFromMatchBetOption(activeTicketValues?.matches?.[0].betOption as any)].available || 0
 			)
-			const singlesAmmMaximumUSDAmountQuote = await fetchSinglesAmmQuote(roundedMaxAmount)
-			const singlesAmmQuote = await fetchSinglesAmmQuote(activeTicketValues?.buyIn)
+			if (roundedMaxAmount) {
+				const [collateralToSpendForMaxAmount, collateralToSpendForMinAmount, ammBalances] = await Promise.all([
+					fetchSinglesAmmQuote(roundedMaxAmount),
+					fetchSinglesAmmQuote(MIN_TOKEN_AMOUNT),
+					contract.balancesOf(sportsAMMContract?.address)
+				])
 
-			if (singlesAmmQuote !== null) {
+				const ammBalanceForSelectedPosition = ammBalances[getBetOptionAndAddressFromMatch(activeTicketValues.matches).betTypes[0]]
+
 				const amountOfTokens =
 					fetchAmountOfTokensForXsUSDAmount(
 						Number(activeTicketValues?.buyIn),
-						getOddByBetType(activeTicketValues?.matches?.[0] as any, actualOddType).rawOdd as any,
-						singlesAmmMaximumUSDAmountQuote / divider,
+						coinFormatter(collateralToSpendForMinAmount, networkId, coin as Coins),
+						coinFormatter(collateralToSpendForMaxAmount, networkId, coin as Coins),
 						availablePerPosition[getBetOptionFromMatchBetOption(activeTicketValues?.matches?.[0].betOption as any)].available || 0,
-						bigNumberFormatter(ammBalanceForSelectedPosition)
+						coinFormatter(ammBalanceForSelectedPosition, networkId, coin as Coins)
 					) || 0
-				const flooredAmountOfTokens = floorNumberToDecimals(amountOfTokens)
-				const parsedQuote = singlesAmmQuote / divider
-				const recalculatedTokenAmount = roundNumberToDecimals((amountOfTokens * Number(activeTicketValues?.buyIn)) / parsedQuote)
 
+				const flooredAmountOfTokens = floorNumberToDecimals(amountOfTokens)
+				const quote = await fetchSinglesAmmQuote(flooredAmountOfTokens)
+				const parsedQuote = coinFormatter(quote, networkId, coin as Coins)
+
+				const recalculatedTokenAmount = roundNumberToDecimals((amountOfTokens * Number(activeTicketValues?.buyIn)) / parsedQuote)
 				const maxAvailableTokenAmount = recalculatedTokenAmount > flooredAmountOfTokens ? flooredAmountOfTokens : recalculatedTokenAmount
 				const payout = roundNumberToDecimals(maxAvailableTokenAmount ?? 0)
 				const potentionalProfit = Number(maxAvailableTokenAmount) - Number(activeTicketValues.buyIn)
 				const skew = 0
 				// TODO: calculate number from bonus?
+				// TODO: zistit ci sa neda zredukovat kod a zmazat getOdds
 				const totalBonus = getOddByBetType(activeTicketValues?.matches?.[0] as any, actualOddType).rawBonus
 					? round(Number(getOddByBetType(activeTicketValues?.matches?.[0] as any, actualOddType).rawBonus), 2).toFixed(2)
 					: null

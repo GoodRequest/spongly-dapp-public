@@ -94,7 +94,7 @@ export const FIELD_HEIGHT = {
 }
 
 export const MAX_TOTAL_QUOTE = 100
-
+export const MIN_TOKEN_AMOUNT = 1
 export const MIN_BUY_IN_PARLAY = 3
 export const MIN_BUY_IN_SINGLE = 1
 export const MIN_BUY_IN_DEFAULT = 5
@@ -125,7 +125,7 @@ export enum Network {
 	ArbitrumOne = 42161
 }
 
-export const STABLE_DECIMALS: Record<Coins, number> = {
+export const COLLATERAL_DECIMALS: Record<Coins, number> = {
 	sUSD: 18,
 	DAI: 18,
 	USDCe: 6,

@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import networkConnector from '@/utils/networkConnector'
-import { CRYPTO_CURRENCY_MAP, Network, STABLE_DECIMALS } from '@/utils/constants'
+import { CRYPTO_CURRENCY_MAP, Network, COLLATERAL_DECIMALS } from '@/utils/constants'
 import QUERY_KEYS from '@/utils/queryKeys'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 
@@ -37,15 +37,15 @@ const useMultipleCollateralBalanceQuery = (walletAddress: string, networkId: Net
 					multipleCollateral ? multipleCollateral[CRYPTO_CURRENCY_MAP.ARB as any]?.balanceOf(walletAddress) : undefined
 				])
 				return {
-					sUSD: sUSDBalance ? bigNumberFormatter(sUSDBalance, STABLE_DECIMALS.sUSD) : 0,
-					DAI: DAIBalance ? bigNumberFormatter(DAIBalance, STABLE_DECIMALS.DAI) : 0,
-					USDC: USDCBalance ? bigNumberFormatter(USDCBalance, STABLE_DECIMALS.USDC) : 0,
-					USDCe: USDCeBalance ? bigNumberFormatter(USDCeBalance, STABLE_DECIMALS.USDCe) : 0,
-					USDT: USDTBalance ? bigNumberFormatter(USDTBalance, STABLE_DECIMALS.USDT) : 0,
-					OP: OPBalance ? bigNumberFormatter(OPBalance, STABLE_DECIMALS.OP) : 0,
-					WETH: WETHBalance ? bigNumberFormatter(WETHBalance, STABLE_DECIMALS.WETH) : 0,
-					ETH: ETHBalance ? bigNumberFormatter(ETHBalance, STABLE_DECIMALS.ETH) : 0,
-					ARB: ARBBalance ? bigNumberFormatter(ARBBalance, STABLE_DECIMALS.ARB) : 0
+					sUSD: sUSDBalance ? bigNumberFormatter(sUSDBalance, COLLATERAL_DECIMALS.sUSD) : 0,
+					DAI: DAIBalance ? bigNumberFormatter(DAIBalance, COLLATERAL_DECIMALS.DAI) : 0,
+					USDC: USDCBalance ? bigNumberFormatter(USDCBalance, COLLATERAL_DECIMALS.USDC) : 0,
+					USDCe: USDCeBalance ? bigNumberFormatter(USDCeBalance, COLLATERAL_DECIMALS.USDCe) : 0,
+					USDT: USDTBalance ? bigNumberFormatter(USDTBalance, COLLATERAL_DECIMALS.USDT) : 0,
+					OP: OPBalance ? bigNumberFormatter(OPBalance, COLLATERAL_DECIMALS.OP) : 0,
+					WETH: WETHBalance ? bigNumberFormatter(WETHBalance, COLLATERAL_DECIMALS.WETH) : 0,
+					ETH: ETHBalance ? bigNumberFormatter(ETHBalance, COLLATERAL_DECIMALS.ETH) : 0,
+					ARB: ARBBalance ? bigNumberFormatter(ARBBalance, COLLATERAL_DECIMALS.ARB) : 0
 				}
 			} catch (e) {
 				return {

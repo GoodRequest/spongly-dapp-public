@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import Router from 'next/router'
 import { floor, groupBy, max, toNumber, toPairs } from 'lodash'
 import { AnyAction, Dispatch } from 'redux'
-import { ethers } from 'ethers'
+import { BigNumberish, ethers } from 'ethers'
 import { IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 
 import {
@@ -29,7 +29,7 @@ import {
 	PARLAY_LEADERBOARD_OPTIMISM_REWARDS_TOP_20,
 	SGPCombinationsFromContractOrderMapping,
 	STABLE_COINS,
-	STABLE_DECIMALS,
+	COLLATERAL_DECIMALS,
 	START_OF_BIWEEKLY_PERIOD,
 	TICKET_TYPE,
 	TOTAL_WINNER_TAGS,
@@ -1077,12 +1077,18 @@ export const getDividerByNetworkId = (networkId: Network) => {
 	}
 }
 
-export const getStablecoinDecimals = (networkId: Network, stableIndex: number) => STABLE_DECIMALS[getCollateral(networkId, stableIndex)]
+export const getStablecoinDecimals = (networkId: Network, stableIndex: number) => COLLATERAL_DECIMALS[getCollateral(networkId, stableIndex)]
 
 export const coinParser = (value: string, networkId: number, currency?: Coins) => {
-	const decimals = currency ? STABLE_DECIMALS[currency] : getDefaultDecimalsForNetwork(networkId)
+	const decimals = currency ? COLLATERAL_DECIMALS[currency] : getDefaultDecimalsForNetwork(networkId)
 
 	return ethers.utils.parseUnits(floorNumberToDecimals(Number(value), decimals).toString(), decimals)
+}
+
+export const coinFormatter = (value: BigNumberish, networkId: number, currency?: Coins) => {
+	const decimals = currency ? COLLATERAL_DECIMALS[currency] : getDefaultDecimalsForNetwork(networkId)
+
+	return Number(ethers.utils.formatUnits(value, decimals))
 }
 
 export const getCombinedPositionText = (positions: Position[]): CombinedMarketsPositionName | null => {

@@ -1,5 +1,5 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
-import { Network, STABLE_DECIMALS } from '@/utils/constants'
+import { Network, COLLATERAL_DECIMALS } from '@/utils/constants'
 import networkConnector from '../utils/networkConnector'
 import QUERY_KEYS from '@/utils/queryKeys'
 import { getDefaultDecimalsForNetwork } from '@/utils/network'
