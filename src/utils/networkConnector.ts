@@ -2,7 +2,7 @@
 import { ethers, Signer } from 'ethers'
 import sUSDContract from './contracts/sUSDContract'
 import multipleCollateralContract from './contracts/multiCollateralContract'
-import { NETWORK_IDS } from './constants'
+import { Coins, NETWORK_IDS } from './constants'
 import sportPositionalMarketDataContract from './contracts/sportPositionalMarketDataContract'
 import sportMarketManagerContract from './contracts/sportMarketManagerContract'
 import parlayMarketDataContract from './contracts/parlayMarketDataContract'
@@ -23,7 +23,7 @@ type NetworkConnector = {
 	sportPositionalMarketDataContract?: ethers.Contract
 	sportMarketManagerContract?: ethers.Contract
 	sportsAMMContract?: ethers.Contract
-	multipleCollateral?: Array<ethers.Contract | undefined>
+	multipleCollateral?: Record<Coins, ethers.Contract | undefined>;
 	parlayMarketDataContract?: ethers.Contract
 	parlayMarketsAMMContract?: ethers.Contract
 	priceFeedContract?: ethers.Contract
@@ -53,12 +53,17 @@ const networkConnector: NetworkConnector = {
 		this.copyableParlayAMM = initializeContract(copyableParlayAMM, networkSettings)
 		this.multiCollateralOnOffRampContract = initializeContract(multiCollateralOnOffRampContract, networkSettings)
 		this.priceFeedContract = initializeContract(priceFeedContract, networkSettings);
-		this.multipleCollateral = [
-			initializeContract(multipleCollateralContract.sUSD, networkSettings),
-			initializeContract(multipleCollateralContract.DAI, networkSettings),
-			initializeContract(multipleCollateralContract.USDC, networkSettings),
-			initializeContract(multipleCollateralContract.USDT, networkSettings)
-		]
+		this.multipleCollateral = {
+			sUSD: initializeContract(multipleCollateralContract.sUSD, networkSettings),
+			DAI: initializeContract(multipleCollateralContract.DAI, networkSettings),
+			USDC: initializeContract(multipleCollateralContract.USDC, networkSettings),
+			USDCe: initializeContract(multipleCollateralContract.USDCe, networkSettings),
+			USDT: initializeContract(multipleCollateralContract.USDT, networkSettings),
+			OP: initializeContract(multipleCollateralContract.OP, networkSettings),
+			WETH: initializeContract(multipleCollateralContract.WETH, networkSettings),
+			ETH: initializeContract(multipleCollateralContract.ETH, networkSettings),
+			ARB: initializeContract(multipleCollateralContract.ARB, networkSettings),
+		};
 	}
 }
 

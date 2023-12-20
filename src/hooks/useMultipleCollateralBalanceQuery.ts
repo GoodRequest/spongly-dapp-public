@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import networkConnector from '@/utils/networkConnector'
-import { CRYPTO_CURRENCY_MAP, Network, COLLATERAL_DECIMALS } from '@/utils/constants'
+import { CRYPTO_CURRENCY_MAP, Network, COLLATERAL_DECIMALS, Coins } from '@/utils/constants'
 import QUERY_KEYS from '@/utils/queryKeys'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 
@@ -26,16 +26,17 @@ const useMultipleCollateralBalanceQuery = (walletAddress: string, networkId: Net
 				}
 
 				const [sUSDBalance, DAIBalance, USDCBalance, USDCeBalance, USDTBalance, OPBalance, WETHBalance, ETHBalance, ARBBalance] = await Promise.all([
-					multipleCollateral ? multipleCollateral[CRYPTO_CURRENCY_MAP.sUSD as any]?.balanceOf(walletAddress) : undefined,
-					multipleCollateral ? multipleCollateral[CRYPTO_CURRENCY_MAP.DAI as any]?.balanceOf(walletAddress) : undefined,
-					multipleCollateral ? multipleCollateral[CRYPTO_CURRENCY_MAP.USDC as any]?.balanceOf(walletAddress) : undefined,
-					multipleCollateral ? multipleCollateral[CRYPTO_CURRENCY_MAP.USDCe as any]?.balanceOf(walletAddress) : undefined,
-					multipleCollateral ? multipleCollateral[CRYPTO_CURRENCY_MAP.USDT as any]?.balanceOf(walletAddress) : undefined,
-					multipleCollateral ? multipleCollateral[CRYPTO_CURRENCY_MAP.OP as any]?.balanceOf(walletAddress) : undefined,
-					multipleCollateral ? multipleCollateral[CRYPTO_CURRENCY_MAP.WETH as any]?.balanceOf(walletAddress) : undefined,
+					multipleCollateral ? multipleCollateral[CRYPTO_CURRENCY_MAP.sUSD as Coins]?.balanceOf(walletAddress) : undefined,
+					multipleCollateral ? multipleCollateral[CRYPTO_CURRENCY_MAP.DAI as Coins]?.balanceOf(walletAddress) : undefined,
+					multipleCollateral ? multipleCollateral[CRYPTO_CURRENCY_MAP.USDC as Coins]?.balanceOf(walletAddress) : undefined,
+					multipleCollateral ? multipleCollateral[CRYPTO_CURRENCY_MAP.USDCe as Coins]?.balanceOf(walletAddress) : undefined,
+					multipleCollateral ? multipleCollateral[CRYPTO_CURRENCY_MAP.USDT as Coins]?.balanceOf(walletAddress) : undefined,
+					multipleCollateral ? multipleCollateral[CRYPTO_CURRENCY_MAP.OP as Coins]?.balanceOf(walletAddress) : undefined,
+					multipleCollateral ? multipleCollateral[CRYPTO_CURRENCY_MAP.WETH as Coins]?.balanceOf(walletAddress) : undefined,
 					networkConnector.provider ? networkConnector.provider.getBalance(walletAddress) : undefined,
-					multipleCollateral ? multipleCollateral[CRYPTO_CURRENCY_MAP.ARB as any]?.balanceOf(walletAddress) : undefined
+					multipleCollateral ? multipleCollateral[CRYPTO_CURRENCY_MAP.ARB as Coins]?.balanceOf(walletAddress) : undefined
 				])
+
 				return {
 					sUSD: sUSDBalance ? bigNumberFormatter(sUSDBalance, COLLATERAL_DECIMALS.sUSD) : 0,
 					DAI: DAIBalance ? bigNumberFormatter(DAIBalance, COLLATERAL_DECIMALS.DAI) : 0,

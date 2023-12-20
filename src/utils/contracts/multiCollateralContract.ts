@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/no-cycle
-import { Network, ZERO_ADDRESS } from '../constants'
+import { Network, ZERO_ADDRESS } from '@/utils/constants'
 
 const abi = [
 	{ inputs: [], stateMutability: 'nonpayable', type: 'constructor' },

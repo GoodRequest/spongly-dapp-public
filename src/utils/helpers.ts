@@ -817,21 +817,20 @@ export const convertSGPContractDataToSGPItemType = (sgpContractData: SGPContract
 
 	return finalSGPItems
 }
-// TODO: doplnit export type SupportedNetwork = Exclude<Network, Network.Mainnet | Network.PolygonMainnet>;
-export const getDefaultCollateral = (networkId: any) => COLLATERALS[networkId][0]
+export const getDefaultCollateral = (networkId: Network) => COLLATERALS[networkId][0]
 
 export const getCollateral = (networkId: Network, index: number) => COLLATERALS[networkId][index]
 
-export const getCollaterals = (networkId: any) => COLLATERALS[networkId]
+export const getCollaterals = (networkId: Network) => COLLATERALS[networkId]
 
 export const isStableCurrency = (currencyKey: Coins) => {
 	return STABLE_COINS.includes(currencyKey)
 }
 
 // @ts-ignore
-export const getCollateralAddress = (networkId: any, index: number) => multipleCollateral[getCollateral(networkId, index)]?.addresses[networkId]
+export const getCollateralAddress = (networkId: Network, index: number) => multipleCollateral[getCollateral(networkId, index)]?.addresses[networkId]
 
-export const getCollateralIndex = (networkId: any, currencyKey: Coins) => COLLATERALS[networkId].indexOf(currencyKey)
+export const getCollateralIndex = (networkId: Network, currencyKey: Coins) => COLLATERALS[networkId].indexOf(currencyKey)
 
 export const getOddByBetType = (market: IMatch, oddType: OddsType, customBetOption?: BET_OPTIONS) => {
 	// customBetOption is used for override match betOption (using in MatchListContent where we need to return odds based on type of odds in dropdown)
@@ -1077,15 +1076,13 @@ export const getDividerByNetworkId = (networkId: Network) => {
 	}
 }
 
-export const getStablecoinDecimals = (networkId: Network, stableIndex: number) => COLLATERAL_DECIMALS[getCollateral(networkId, stableIndex)]
-
-export const coinParser = (value: string, networkId: number, currency?: Coins) => {
+export const coinParser = (value: string, networkId: Network, currency?: Coins) => {
 	const decimals = currency ? COLLATERAL_DECIMALS[currency] : getDefaultDecimalsForNetwork(networkId)
 
 	return ethers.utils.parseUnits(floorNumberToDecimals(Number(value), decimals).toString(), decimals)
 }
 
-export const coinFormatter = (value: BigNumberish, networkId: number, currency?: Coins) => {
+export const coinFormatter = (value: BigNumberish, networkId: Network, currency?: Coins) => {
 	const decimals = currency ? COLLATERAL_DECIMALS[currency] : getDefaultDecimalsForNetwork(networkId)
 
 	return Number(ethers.utils.formatUnits(value, decimals))
@@ -1483,7 +1480,7 @@ export const formatTicketPositionsForStatistics = (data: { parlayMarkets: Parlay
 	}
 }
 
-export const getUserTicketClaimValue = (ticket: UserTicket | undefined, userTicketType: USER_TICKET_TYPE | undefined, networkId: number) => {
+export const getUserTicketClaimValue = (ticket: UserTicket | undefined, userTicketType: USER_TICKET_TYPE | undefined, networkId: Network) => {
 	if (!ticket || !userTicketType) return '0 $'
 
 	if (userTicketType === USER_TICKET_TYPE.MISS) return `0 $`

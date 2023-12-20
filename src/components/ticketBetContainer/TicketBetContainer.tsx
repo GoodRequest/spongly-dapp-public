@@ -17,12 +17,13 @@ import { useMedia } from '@/hooks/useMedia'
 import useAvailablePerPositionQuery from '@/hooks/useAvailablePerPositionQuery'
 
 // utils
-import { BET_OPTIONS, DoubleChanceMarketType, FORM, RESOLUTIONS } from '@/utils/enums'
+import { BET_OPTIONS, DoubleChanceMarketType, RESOLUTIONS } from '@/utils/enums'
 import { sportsMarketContract } from '@/utils/contracts/sportsMarketContract'
 import {
 	ADDITIONAL_SLIPPAGE,
 	Coins,
 	CRYPTO_CURRENCY_MAP,
+	FORM,
 	GAS_ESTIMATION_BUFFER,
 	MAX_ALLOWANCE,
 	MAX_BUY_IN,
@@ -52,7 +53,6 @@ import {
 	getCollateralIndex,
 	getCollaterals,
 	getDefaultCollateral,
-	getDividerByNetworkId,
 	getOddByBetType,
 	isBellowOrEqualResolution,
 	isCombined,
@@ -98,17 +98,20 @@ const TicketBetContainer = () => {
 	const { t } = useTranslation()
 	const { chain } = useNetwork()
 	const { address } = useAccount()
-	const [rolledUp, setRolledUp] = useState(false)
-	const multipleCollateralBalance = useMultipleCollateralBalanceQuery(address || '', chain?.id || NETWORK_IDS.OPTIMISM)?.data
 	const isMounted = useIsMounted()
-	const [isSwitchedTicket, setIsSwitchedTicket] = useState(false)
 	const size = useMedia()
-	const [deleteModal, setDeleteModal] = useState({ visible: false, id: 0 })
+	const networkId = chain?.id || NETWORK_IDS.OPTIMISM
+
 	const isProcessing = useSelector((state: RootState) => state.betTickets.isProcessing)
 	const activeTicketID = useSelector((state: RootState) => state.betTickets.activeTicketID)
-	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) || OddsType.DECIMAL : OddsType.DECIMAL
-	const isVoucherSelected = false // TODO: currently not supporting vouchers
-	const networkId = chain?.id || NETWORK_IDS.OPTIMISM
+	const isSubmitting = useSelector((state: RootState) => state.betTickets.isSubmitting)
+	const isApproving = useSelector((state: RootState) => state.betTickets.isApproving)
+	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
+	const unsubmittedTickets = useSelector((state: RootState) => state.betTickets.unsubmittedBetTickets.data)
+
+	const [rolledUp, setRolledUp] = useState(false)
+	const [isSwitchedTicket, setIsSwitchedTicket] = useState(false)
+	const [deleteModal, setDeleteModal] = useState({ visible: false, id: 0 })
 	const [availablePerPosition, setAvailablePerPosition] = useState<any>({
 		[PositionNumber.HOME]: {
 			available: 0
@@ -120,38 +123,39 @@ const TicketBetContainer = () => {
 			available: 0
 		}
 	})
-	const isSubmitting = useSelector((state: RootState) => state.betTickets.isSubmitting)
-	const isApproving = useSelector((state: RootState) => state.betTickets.isApproving)
 
-	const activeTicketValues = useSelector((state) => getFormValues(FORM.BET_TICKET)(state as IUnsubmittedBetTicket)) as IUnsubmittedBetTicket
 	const activeTicketMatchesCount = activeTicketValues?.matches?.length || 0
 	const minBuyIn = activeTicketMatchesCount === 1 ? MIN_BUY_IN_SINGLE : MIN_BUY_IN_PARLAY
-	const unsubmittedTickets = useSelector((state: RootState) => state.betTickets.unsubmittedBetTickets.data)
-	const parlayAmmDataQuery = useParlayAmmDataQuery(chain?.id || NETWORK_IDS.OPTIMISM)
+	const parlayAmmDataQuery = useParlayAmmDataQuery(networkId)
+	const multipleCollateralBalance = useMultipleCollateralBalanceQuery(address || '', networkId)?.data
 	const available = multipleCollateralBalance?.[(activeTicketValues?.selectedStablecoin as keyof typeof multipleCollateralBalance) ?? STABLE_COIN.S_USD] ?? 0
 	const availablePerPositionQuery = useAvailablePerPositionQuery(getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses[0], {
 		enabled: activeTicketValues?.matches?.length === 1
 	})
+	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) || OddsType.DECIMAL : OddsType.DECIMAL
+	const isVoucherSelected = false // TODO: currently not supporting vouchers
 	const isWalletConnected = isMounted && address && chain
-
-	// default collateral
-	const defaultCollateral = getDefaultCollateral(chain?.id || NETWORK_IDS.OPTIMISM)
-	// const selectedCollateral = getCollateral(chain?.id || NETWORK_IDS.OPTIMISM, getSelectedCoinIndex(activeTicketValues?.selectedStablecoin))
+	const defaultCollateral = getDefaultCollateral(networkId)
 	const selectedCollateral = activeTicketValues?.selectedStablecoin
 	const isDefaultCollateral = selectedCollateral === defaultCollateral
-
 	const isEth = selectedCollateral === CRYPTO_CURRENCY_MAP.ETH
+	const isDetailedView = true // TODO: what does it mean? (copied from Thales)
 
 	const multipleCollateralBalances = useMultipleCollateralBalanceQuery(address as string, networkId, {
 		enabled: !!isWalletConnected
 	})
 
-	const isDetailedView = true // TODO: opytat sa co to je
-
 	const exchangeRatesQuery = useExchangeRatesQuery(networkId, {
 		enabled: !!networkId
 	})
 	const exchangeRates: Rates | null = exchangeRatesQuery.isSuccess && exchangeRatesQuery.data ? exchangeRatesQuery.data : null
+
+	const parlayAmmData = useMemo(() => {
+		if (parlayAmmDataQuery.isSuccess && parlayAmmDataQuery.data) {
+			return parlayAmmDataQuery.data
+		}
+		return undefined
+	}, [parlayAmmDataQuery.isSuccess, parlayAmmDataQuery.data])
 
 	const getUSDForCollateral = useCallback(
 		(collateral: Coins) =>
@@ -162,32 +166,20 @@ const TicketBetContainer = () => {
 	)
 
 	const collateralsDetailsSorted = useMemo(() => {
-		const mappedCollaterals = getCollaterals(chain?.id || NETWORK_IDS.OPTIMISM).map((collateral, index) => ({ name: collateral as Coins, index }))
+		const mappedCollaterals = getCollaterals(networkId).map((collateral, index) => ({ name: collateral as Coins, index }))
 		if (!isDetailedView) {
 			return mappedCollaterals
 		}
 		return mappedCollaterals.sort((collateralA, collateralB) => getUSDForCollateral(collateralB.name) - getUSDForCollateral(collateralA.name))
-	}, [chain?.id, getUSDForCollateral, isDetailedView])
+	}, [getUSDForCollateral, isDetailedView, networkId])
 
+	// TODO: set index to form and pick from formValues
 	const selectedCollateralIndex = collateralsDetailsSorted?.find((collateral) => collateral.name === selectedCollateral)?.index
 
 	const collateralAddress = useMemo(
 		() => getCollateralAddress(networkId, isEth ? getCollateralIndex(networkId, CRYPTO_CURRENCY_MAP.WETH as Coins) : selectedCollateralIndex || 0),
 		[networkId, selectedCollateralIndex, isEth]
 	)
-
-	useEffect(() => {
-		if (availablePerPositionQuery.isSuccess && availablePerPositionQuery.data) {
-			setAvailablePerPosition(availablePerPositionQuery.data)
-		}
-	}, [availablePerPositionQuery.isSuccess, availablePerPositionQuery.data])
-
-	const parlayAmmData = useMemo(() => {
-		if (parlayAmmDataQuery.isSuccess && parlayAmmDataQuery.data) {
-			return parlayAmmDataQuery.data
-		}
-		return undefined
-	}, [parlayAmmDataQuery.isSuccess, parlayAmmDataQuery.data])
 
 	const handleSetActiveTicket = async (ticket: IUnsubmittedBetTicket) => {
 		dispatch({ type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_UPDATE, payload: { data: unsubmittedTickets } })
@@ -215,6 +207,11 @@ const TicketBetContainer = () => {
 		}
 		// TODO: scroll to first item (if remove 10th ticket then select 1st ticket but need to be also scrolled left)
 	}
+	useEffect(() => {
+		if (availablePerPositionQuery.isSuccess && availablePerPositionQuery.data) {
+			setAvailablePerPosition(availablePerPositionQuery.data)
+		}
+	}, [availablePerPositionQuery.isSuccess, availablePerPositionQuery.data])
 
 	useEffect(() => {
 		if (!unsubmittedTickets || unsubmittedTickets?.length === 0) {
@@ -270,23 +267,18 @@ const TicketBetContainer = () => {
 						? 0
 						: multiCollateralOnOffRampContract?.getMinimumReceived(
 								collateralAddress,
-								coinParser(collateralAmountForQuote.toString(), chain?.id || NETWORK_IDS.OPTIMISM, selectedCollateral as any)
+								coinParser(collateralAmountForQuote.toString(), networkId, selectedCollateral as any)
 						  ),
 					// TODO: pre multiple collateral support treba ratat aj s minimumNeededForMinUsdAmountValue
 					isDefaultCollateral
 						? 0
-						: multiCollateralOnOffRampContract?.getMinimumNeeded(
-								collateralAddress,
-								coinParser(collateralAmountForQuote.toString(), chain?.id || NETWORK_IDS.OPTIMISM)
-						  )
+						: multiCollateralOnOffRampContract?.getMinimumNeeded(collateralAddress, coinParser(collateralAmountForQuote.toString(), networkId))
 				])
 
-				const usdPaid = isDefaultCollateral
-					? coinParser(collateralAmountForQuote.toString(), chain?.id || NETWORK_IDS.OPTIMISM)
-					: minimumReceivedForCollateralAmount
+				const usdPaid = isDefaultCollateral ? coinParser(collateralAmountForQuote.toString(), networkId) : minimumReceivedForCollateralAmount
 
 				try {
-					const parlayAmmQuote = await getParlayMarketsAMMQuoteMethod(
+					return getParlayMarketsAMMQuoteMethod(
 						collateralAddress,
 						isDefaultCollateral,
 						parlayMarketsAMMContract,
@@ -294,7 +286,6 @@ const TicketBetContainer = () => {
 						betOptions,
 						usdPaid
 					)
-					return parlayAmmQuote
 				} catch (e: any) {
 					showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while ParlayAmmQuote fetch') }], NOTIFICATION_TYPE.NOTIFICATION)
 					const errorMessage = e?.reason
@@ -312,19 +303,17 @@ const TicketBetContainer = () => {
 			return undefined
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[chain?.id, activeTicketValues?.selectedStablecoin, activeTicketValues?.matches, activeTicketValues?.buyIn]
+		[networkId, activeTicketValues?.selectedStablecoin, activeTicketValues?.matches, activeTicketValues?.buyIn]
 	)
 
 	const fetchSinglesAmmQuote = useCallback(
 		async (susdAmountForQuote: number, getExtendedQuote?: boolean) => {
-			// console.log('susdAmountForQuote', susdAmountForQuote)
 			const { sportsAMMContract } = networkConnector
 			if (activeTicketValues?.matches?.length === 1) {
 				if (sportsAMMContract && parlayAmmData?.minUsdAmount && susdAmountForQuote) {
 					const parsedAmount = ethers.utils.parseEther(roundNumberToDecimals(susdAmountForQuote).toString())
 					const marketAddress = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses[0]
 					const selectBetOption = getBetOptionFromMatchBetOption(activeTicketValues?.matches[0].betOption)
-					console.log('input ', [collateralAddress, isDefaultCollateral, sportsAMMContract, marketAddress, selectBetOption, parsedAmount])
 					try {
 						const sportsAmmQuote = await getSportsAMMQuoteMethod(
 							collateralAddress,
@@ -334,7 +323,6 @@ const TicketBetContainer = () => {
 							selectBetOption,
 							parsedAmount
 						)
-						console.log('return', sportsAmmQuote)
 						return isDefaultCollateral
 							? getExtendedQuote
 								? [sportsAmmQuote, sportsAmmQuote]
@@ -354,7 +342,7 @@ const TicketBetContainer = () => {
 			return undefined
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[chain?.id, activeTicketValues?.selectedStablecoin, activeTicketValues?.matches, activeTicketValues?.buyIn]
+		[networkId, activeTicketValues?.selectedStablecoin, activeTicketValues?.matches, activeTicketValues?.buyIn]
 	)
 
 	const getAllowance = async () => {
@@ -512,8 +500,7 @@ const TicketBetContainer = () => {
 			const { parlayMarketsAMMContract, signer, sportsAMMContract } = networkConnector
 			const parlayMarketsAMMContractWithSigner = parlayMarketsAMMContract?.connect(signer as any)
 			const sportsMarketsAMMContractWithSigner = sportsAMMContract?.connect(signer as any)
-			const sUSDPaid = coinParser((values.buyIn || 0).toString(), chain?.id || NETWORK_IDS.OPTIMISM)
-			// const sUSDPaid = ethers.utils.parseUnits((values.buyIn || 0).toString(), 'ether')
+			const sUSDPaid = coinParser((values.buyIn || 0).toString(), networkId)
 			const additionalSlippage = ethers.utils.parseEther(ADDITIONAL_SLIPPAGE)
 			const expectedPayout = ethers.utils.parseEther(roundNumberToDecimals(Number(activeTicketValues.payout)).toString())
 			let data

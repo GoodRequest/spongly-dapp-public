@@ -9,7 +9,7 @@ import Select from '@/atoms/select/Select'
 import Search from '@/atoms/search/Search'
 import ParlayLeaderboardTableRow from '@/components/parlayLeaderboardTableRow/ParlayLeaderboardTableRow'
 import ParlayLeaderboardUserRow from '@/components/parlayLeaderboardTableRow/ParlayLeaderboardUserRow'
-import { ENDPOINTS, MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE, OddsType, ORDER_DIRECTION, PARLAY_LEADERBOARD_SORTING } from '@/utils/constants'
+import { ENDPOINTS, NETWORK_IDS, OddsType, ORDER_DIRECTION, PARLAY_LEADERBOARD_SORTING } from '@/utils/constants'
 import { getReq } from '@/utils/requests'
 import { decodeSorter, getCurrentBiweeklyPeriod, getPeriodEndsText, getReward, isWindowReady, setSort } from '@/utils/helpers'
 import { useIsMounted } from '@/hooks/useIsMounted'
@@ -21,7 +21,6 @@ import WarningIcon from '@/assets/icons/warning-icon.svg'
 import * as SC from './ParlayLeaderboardContentStyles'
 import * as SCS from '@/styles/GlobalStyles'
 import { formatQuote } from '@/utils/formatters/quote'
-import { showNotifications } from '@/utils/tsxHelpers'
 import { PAGES } from '@/utils/enums'
 import Sorter from '@/components/Sorter'
 import ArrowIcon from '@/assets/icons/arrow-down.svg'
@@ -167,7 +166,9 @@ const ParlayLeaderboardContent = () => {
 			const { direction, property } = decodeSorter()
 			setParlayLeaderboardData(sortData(newParlayData, property as PARLAY_LEADERBOARD_SORTING, direction as ORDER_DIRECTION))
 		} catch (e) {
-			showNotifications([{ type: MSG_TYPE.ERROR, message: t('Could not load table data') }], NOTIFICATION_TYPE.NOTIFICATION)
+			// eslint-disable-next-line no-console
+			console.error(e)
+			setParlayLeaderboardData([])
 		} finally {
 			setIsLoading(false)
 		}

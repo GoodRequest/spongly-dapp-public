@@ -9,13 +9,13 @@ import { change } from 'redux-form'
 
 // utils
 import { includes } from 'lodash'
-import { MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE } from '@/utils/constants'
+import { FORM, MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE } from '@/utils/constants'
 import { getWalletImage } from '@/utils/images'
 import { hasEthereumInjected, NETWORK_SWITCHER_SUPPORTED_NETWORKS } from '@/utils/network'
 import networkConnector, { NetworkId } from '@/utils/networkConnector'
 import { showNotifications } from '@/utils/tsxHelpers'
 import { formatAddress } from '@/utils/formatters/string'
-import { FORM, PAGES } from '@/utils/enums'
+import { PAGES } from '@/utils/enums'
 
 // components
 import Modal from '@/components/modal/Modal'

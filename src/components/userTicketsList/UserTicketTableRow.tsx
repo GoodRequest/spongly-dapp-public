@@ -27,10 +27,10 @@ import {
 	isWindowReady,
 	orderPositionsAsSportMarkets
 } from '@/utils/helpers'
-import { GAS_ESTIMATION_BUFFER, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE, OddsType, STABLE_COIN, USER_TICKET_TYPE } from '@/utils/constants'
+import { FORM, GAS_ESTIMATION_BUFFER, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE, OddsType, STABLE_COIN, USER_TICKET_TYPE } from '@/utils/constants'
 import networkConnector from '@/utils/networkConnector'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
-import { FORM, PAGES } from '@/utils/enums'
+import { PAGES } from '@/utils/enums'
 import { roundPrice } from '@/utils/formatters/currency'
 
 // types

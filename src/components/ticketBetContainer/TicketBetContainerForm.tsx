@@ -22,6 +22,7 @@ import SummaryCol from './components/summaryCol/SummaryCol'
 import {
 	CRYPTO_CURRENCY,
 	CRYPTO_CURRENCY_OPTIONS,
+	FORM,
 	FORM_ERROR_TYPE,
 	MAX_BUY_IN,
 	MAX_SELECTED_ALLOWANCE,
@@ -32,7 +33,6 @@ import {
 	NETWORK_IDS,
 	STABLE_COIN
 } from '@/utils/constants'
-import { FORM } from '@/utils/enums'
 import handleOnchangeForm from './helpers/changeBetContainer'
 
 // types
@@ -88,6 +88,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	const minBuyIn = matches.length === 1 ? MIN_BUY_IN_SINGLE : MIN_BUY_IN_PARLAY
 
 	const getActualStableCoinIcon = (actualStableCoin?: string) => {
+		// TODO: add other icons when implemented
 		switch (actualStableCoin || formValues?.selectedStablecoin) {
 			case STABLE_COIN.S_USD:
 				return SUSDIcon
