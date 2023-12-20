@@ -399,7 +399,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 								</Row>
 							</Spin>
 						</Col>
-						{error && (
+						{error.error && (
 							<SC.InfoBox type={error.type}>
 								<SC.InfoBoxIcon type={error.type} />
 								<SC.InfoBoxContent type={error.type}>{error.error}</SC.InfoBoxContent>

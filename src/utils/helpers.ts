@@ -696,15 +696,29 @@ export const isCombined = (betOption: any) => {
 export const orderPositionsAsSportMarkets = (ticket: UserTicket | ITicket) => {
 	if (ticket.positions.length === 1) return ticket.positions
 
-	if (!ticket.sportMarkets) return ticket.positions
+	if (!ticket.sportMarketsFromContract && !ticket.sportMarkets) return ticket.positions
 
-	const orderedPositions = ticket.sportMarkets.map((item) => {
-		// def has positions if conditions above are correct.
-		// @ts-ignore
-		return ticket.positions.find((position) => position.market.gameId === item.gameId && item.address === position.market.address)
-	})
+	if (!ticket.sportMarketsFromContract && ticket.sportMarkets) {
+		const orderedPositions = ticket.sportMarkets.map((item) => {
+			// def has positions if conditions above are correct.
+			// @ts-ignore
+			return ticket.positions.find((position) => position.market.gameId === item.gameId && item.address === position.market.address)
+		})
 
-	return orderedPositions
+		return orderedPositions
+	}
+
+	if (ticket.sportMarketsFromContract) {
+		const orderedPositions = ticket?.sportMarketsFromContract?.map((item) => {
+			// def has positions if conditions above are correct.
+			// @ts-ignore
+			return ticket.positions.find((position) => position?.marketAddress === item)
+		})
+
+		return orderedPositions
+	}
+	// NOTE: does not happen, just so function doesnt ever return undef
+	return []
 }
 
 export const getHandicapValue = (number: number, type: BET_OPTIONS.HANDICAP_AWAY | BET_OPTIONS.HANDICAP_HOME) => {
