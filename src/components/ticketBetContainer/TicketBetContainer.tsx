@@ -346,18 +346,21 @@ const TicketBetContainer = () => {
 	)
 
 	const getAllowance = async () => {
-		const { signer, sUSDContract, parlayMarketsAMMContract, sportsAMMContract } = networkConnector
+		const { signer, sUSDContract, parlayMarketsAMMContract, multipleCollateral, sportsAMMContract } = networkConnector
 		try {
-			if (signer && sUSDContract && isWalletConnected) {
-				const sUSDContractWithSigner = sUSDContract?.connect(signer)
+			if (signer && sUSDContract && isWalletConnected && multipleCollateral) {
+				const collateralContractWithSigner = isDefaultCollateral
+					? sUSDContract?.connect(signer)
+					: multipleCollateral[activeTicketValues.selectedStablecoin]?.connect(signer)
+
 				// TODO: Add logic when user switch coin type
 				let allowance = BigInt(0)
 				if (activeTicketMatchesCount === 0) {
 					allowance = BigInt(0)
 				} else if (activeTicketMatchesCount === 1 && !isCombined(activeTicketValues?.matches?.[0].betOption)) {
-					allowance = await sUSDContractWithSigner.allowance(address, sportsAMMContract?.address)
+					allowance = await collateralContractWithSigner.allowance(address, sportsAMMContract?.address)
 				} else if (activeTicketMatchesCount > 1 || isCombined(activeTicketValues?.matches?.[0].betOption)) {
-					allowance = await sUSDContractWithSigner.allowance(address, parlayMarketsAMMContract?.address)
+					allowance = await collateralContractWithSigner.allowance(address, parlayMarketsAMMContract?.address)
 				}
 				return Number(ethers.utils.formatEther(allowance))
 			}
@@ -365,6 +368,48 @@ const TicketBetContainer = () => {
 		} catch (e) {
 			showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while getting the allowance') }], NOTIFICATION_TYPE.NOTIFICATION)
 			return 0
+		}
+	}
+
+	const handleApproveAllowance = async () => {
+		dispatch({ type: ACTIVE_TICKET_APPROVING.SET, payload: true })
+		const { signer, sUSDContract, parlayMarketsAMMContract, multipleCollateral, sportsAMMContract } = networkConnector
+		if (signer && sUSDContract && multipleCollateral) {
+			const collateralContractWithSigner = isDefaultCollateral
+				? sUSDContract?.connect(signer)
+				: multipleCollateral[activeTicketValues.selectedStablecoin]?.connect(signer)
+
+			try {
+				// const sUSDContractWithSigner = sUSDContract.connect(signer)
+				const approveAmount = ethers.BigNumber.from(MAX_ALLOWANCE)
+				const estimationGas = await collateralContractWithSigner.estimateGas.approve(
+					activeTicketMatchesCount === 1 ? sportsAMMContract?.address : parlayMarketsAMMContract?.address,
+					approveAmount
+				)
+				const finalEstimation = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
+
+				const tx = (await collateralContractWithSigner.approve(
+					activeTicketMatchesCount === 1 ? sportsAMMContract?.address : parlayMarketsAMMContract?.address,
+					approveAmount,
+					{
+						gasLimit: chain?.id ? finalEstimation : undefined
+					}
+				)) as ethers.ContractTransaction
+				await tx.wait().then(async () => {
+					showNotifications([{ type: MSG_TYPE.SUCCESS, message: t('Your allowance was approved') }], NOTIFICATION_TYPE.NOTIFICATION)
+					const newAllowence = await getAllowance()
+					dispatch(change(FORM.BET_TICKET, 'allowance', newAllowence))
+				})
+			} catch (e) {
+				const err: any = e
+				if (err?.code === 'ACTION_REJECTED') {
+					showNotifications([{ type: MSG_TYPE.INFO, message: t('User rejected transaction') }], NOTIFICATION_TYPE.NOTIFICATION)
+				} else {
+					showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while approving') }], NOTIFICATION_TYPE.NOTIFICATION)
+				}
+			} finally {
+				dispatch({ type: ACTIVE_TICKET_APPROVING.SET, payload: false })
+			}
 		}
 	}
 
@@ -537,6 +582,7 @@ const TicketBetContainer = () => {
 						collateralAddress,
 						REFERRER_WALLET
 					]
+					console.log('called else single', reqData)
 					const estimationGas = await sportsMarketsAMMContractWithSigner?.estimateGas.buyFromAMMWithDifferentCollateralAndReferrer(...reqData)
 
 					const finalEstimation = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
@@ -587,6 +633,7 @@ const TicketBetContainer = () => {
 				showNotifications([{ type: MSG_TYPE.SUCCESS, message: t('The ticket was successfully submitted') }], NOTIFICATION_TYPE.NOTIFICATION)
 			})
 		} catch (e) {
+			console.log('error', { e })
 			const err: any = e
 			if (err?.code === 'ACTION_REJECTED') {
 				showNotifications([{ type: MSG_TYPE.INFO, message: t('User rejected transaction') }], NOTIFICATION_TYPE.NOTIFICATION)
@@ -595,44 +642,6 @@ const TicketBetContainer = () => {
 			}
 		} finally {
 			dispatch({ type: ACTIVE_TICKET_SUBMITTING.SET, payload: false })
-		}
-	}
-
-	const handleApproveAllowance = async () => {
-		dispatch({ type: ACTIVE_TICKET_APPROVING.SET, payload: true })
-		const { signer, sUSDContract, parlayMarketsAMMContract, sportsAMMContract } = networkConnector
-		if (signer && sUSDContract) {
-			try {
-				const sUSDContractWithSigner = sUSDContract.connect(signer)
-				const approveAmount = ethers.BigNumber.from(MAX_ALLOWANCE)
-				const estimationGas = await sUSDContractWithSigner.estimateGas.approve(
-					activeTicketMatchesCount === 1 ? sportsAMMContract?.address : parlayMarketsAMMContract?.address,
-					approveAmount
-				)
-				const finalEstimation = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
-
-				const tx = (await sUSDContractWithSigner.approve(
-					activeTicketMatchesCount === 1 ? sportsAMMContract?.address : parlayMarketsAMMContract?.address,
-					approveAmount,
-					{
-						gasLimit: chain?.id ? finalEstimation : undefined
-					}
-				)) as ethers.ContractTransaction
-				await tx.wait().then(async () => {
-					showNotifications([{ type: MSG_TYPE.SUCCESS, message: t('Your allowance was approved') }], NOTIFICATION_TYPE.NOTIFICATION)
-					const newAllowence = await getAllowance()
-					dispatch(change(FORM.BET_TICKET, 'allowance', newAllowence))
-				})
-			} catch (e) {
-				const err: any = e
-				if (err?.code === 'ACTION_REJECTED') {
-					showNotifications([{ type: MSG_TYPE.INFO, message: t('User rejected transaction') }], NOTIFICATION_TYPE.NOTIFICATION)
-				} else {
-					showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while approving') }], NOTIFICATION_TYPE.NOTIFICATION)
-				}
-			} finally {
-				dispatch({ type: ACTIVE_TICKET_APPROVING.SET, payload: false })
-			}
 		}
 	}
 
