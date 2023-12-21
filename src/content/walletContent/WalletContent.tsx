@@ -51,7 +51,7 @@ const MyWalletContent = () => {
 
 	const [isLoading, setIsLoading] = useState(true)
 
-	const id = '0xbB3d0C6168ef0056ed6586bFCf5717A7db0c866f'.toLocaleLowerCase() //  isMyWallet ? address?.toLocaleLowerCase() : String(router.query.id).toLowerCase()
+	const id = isMyWallet ? address?.toLocaleLowerCase() : String(router.query.id).toLowerCase()
 
 	const fetchStatistics = () => {
 		setIsLoading(true)

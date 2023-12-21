@@ -11,7 +11,7 @@ export const getStaticProps: GetStaticProps<{ page: IPage<{}> }> = async () => {
 		shareTags: {
 			title: 'Parlay Superstars - Elevate Your Game with Decentralized Ticket Replication',
 			description:
-				'Discover the power of the spongly.eth.limo Parlay Superstars, where top-performing players with exceptional success rates shine. Compare, analyze, and seamlessly copy their tickets in the decentralized sports market. Join now to revolutionize your sports engagement and amplify your chances of success!'
+				'Discover the power of the spongly.eth.limo Parlay Superstars, where top-performing players with exceptional win rates shine. Compare, analyze, and seamlessly copy their tickets in the decentralized sports market. Join now to revolutionize your sports engagement and amplify your chances of success!'
 		}
 	}
 	if (!page) return { notFound: true }

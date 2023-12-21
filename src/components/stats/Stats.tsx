@@ -121,7 +121,7 @@ const Stats = () => {
 							</Col>
 							<Col span={12} xs={6} md={12} xl={6}>
 								<SBox
-									title={t('Success rate')}
+									title={t('Win rate')}
 									value={statistics.successRate ? `${statistics.successRate} %` : '-'}
 									extraContent={
 										<div>

@@ -44,9 +44,12 @@ const TicketListItemHeader: FC<ITicketContent> = ({ ticket }) => {
 						<Spin indicator={<LoadingOutlined spin />} />
 					</SC.ColContent>
 				) : (
-					<SC.ColContent>{ticket.successRate}%</SC.ColContent>
+					<SC.ColContent style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+						<span>{ticket.successRate}% /</span>
+						<SC.ColHeader>&nbsp;{t('last month')}</SC.ColHeader>
+					</SC.ColContent>
 				)}
-				<SC.ColHeader>{t('Success rate')}</SC.ColHeader>
+				<SC.ColHeader>{t('Win rate')}</SC.ColHeader>
 			</Col>
 			<Col md={{ span: 4, order: 3 }} xs={{ span: 24, order: ticketType === TICKET_TYPE.OPEN_TICKET ? 3 : 0 }}>
 				{ticketType === TICKET_TYPE.OPEN_TICKET ? (

@@ -182,7 +182,7 @@ const LeaderboardContent = () => {
 						<Sorter title={t('Wallet')} />
 					</Col>
 					<Col span={5}>
-						<Sorter disabled={true} title={t('Success rate')} name={LEADERBOARD_SORTING.SUCCESS_RATE} />
+						<Sorter disabled={true} title={t('Win rate')} name={LEADERBOARD_SORTING.SUCCESS_RATE} />
 					</Col>
 					<Col span={5}>
 						<Sorter title={t('Profits')} name={LEADERBOARD_SORTING.PROFITS} />
@@ -218,7 +218,7 @@ const LeaderboardContent = () => {
 								<Col span={12} md={5}>
 									<SC.Title>
 										<SC.Value>{item.successRate}</SC.Value>
-										<SC.Description>{t('Success rate')}</SC.Description>
+										<SC.Description>{t('Win rate')}</SC.Description>
 									</SC.Title>
 								</Col>
 								<Col span={24} md={0}>

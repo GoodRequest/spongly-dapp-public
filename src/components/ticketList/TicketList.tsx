@@ -83,11 +83,11 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 	}
 	const sortOptions = [
 		{
-			label: t('The highest success rate'),
+			label: t('The highest win rate'),
 			value: `${TICKET_SORTING.SUCCESS_RATE}:${ORDER_DIRECTION.DESCENDENT}`
 		},
 		{
-			label: t('The lowest success rate'),
+			label: t('The lowest win rate'),
 			value: `${TICKET_SORTING.SUCCESS_RATE}:${ORDER_DIRECTION.ASCENDENT}`
 		},
 		{
@@ -168,7 +168,7 @@ const TicketList: FC<ITicketList> = ({ type = TICKET_TYPE.OPEN_TICKET, list = []
 											<Sorter title={t('Wallet')} />
 										</Col>
 										<Col span={8}>
-											<Sorter title={t('Success rate')} name={TICKET_SORTING.SUCCESS_RATE} />
+											<Sorter title={t('Win rate')} name={TICKET_SORTING.SUCCESS_RATE} />
 										</Col>
 										<Col span={3}>
 											<Sorter title={t('Buy-in')} name={TICKET_SORTING.BUY_IN} />
