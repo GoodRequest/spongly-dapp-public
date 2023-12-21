@@ -25,16 +25,16 @@ const TabContent: React.FC<TabContentProps> = ({ ticketCount, successRate, profi
 					<SC.IconWrapper>
 						<img src={TicketsIcon} alt={'ticket-count-icon'} />
 					</SC.IconWrapper>
-					<SC.LeftSideWrapper>
+					<SC.RightSideWrapper>
 						{isLoading ? (
 							<Spin indicator={<LoadingOutlined spin />} />
 						) : (
 							<>
-								<SC.ValueText>{ticketCount}</SC.ValueText>
+								<SC.ValueText>{ticketCount || 0}</SC.ValueText>
 								<SC.ValueTitle>{t('Tickets')}</SC.ValueTitle>
 							</>
 						)}
-					</SC.LeftSideWrapper>
+					</SC.RightSideWrapper>
 				</SC.Wrapper>
 			</Col>
 			<Col>
@@ -42,16 +42,16 @@ const TabContent: React.FC<TabContentProps> = ({ ticketCount, successRate, profi
 					<SC.IconWrapper>
 						<img src={SuccessRateIcon} alt={'success-rate-icon'} />
 					</SC.IconWrapper>
-					<SC.LeftSideWrapper>
+					<SC.RightSideWrapper>
 						{isLoading ? (
 							<Spin indicator={<LoadingOutlined spin />} />
 						) : (
 							<>
-								<SC.ValueText>{successRate} %</SC.ValueText>
+								<SC.ValueText>{successRate || 0} %</SC.ValueText>
 								<SC.ValueTitle>{t('Win rate')}</SC.ValueTitle>
 							</>
 						)}
-					</SC.LeftSideWrapper>
+					</SC.RightSideWrapper>
 				</SC.Wrapper>
 			</Col>
 			<Col>
@@ -59,16 +59,16 @@ const TabContent: React.FC<TabContentProps> = ({ ticketCount, successRate, profi
 					<SC.IconWrapper>
 						<img src={ProfitsTicketsIcon} alt={'profits-icon'} />
 					</SC.IconWrapper>
-					<SC.LeftSideWrapper>
+					<SC.RightSideWrapper>
 						{isLoading ? (
 							<Spin indicator={<LoadingOutlined spin />} />
 						) : (
 							<>
-								<SC.ValueText>{profits} $</SC.ValueText>
+								<SC.ValueText>{profits || 0} $</SC.ValueText>
 								<SC.ValueTitle>{t('Profits')}</SC.ValueTitle>
 							</>
 						)}
-					</SC.LeftSideWrapper>
+					</SC.RightSideWrapper>
 				</SC.Wrapper>
 			</Col>
 		</Row>

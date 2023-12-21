@@ -2,26 +2,16 @@ import { useTranslation } from 'next-export-i18n'
 import { Row, Col } from 'antd'
 import { useAccount } from 'wagmi'
 import { useRouter } from 'next-translate-routes'
-
-import { includes } from 'lodash'
-import StatisticCard from '@/atoms/statisticCard/StatisticCard'
 import { useIsMounted } from '@/hooks/useIsMounted'
 import { User } from '@/typescript/types'
-import { getWalletImage } from '@/utils/images'
-import { roundPrice } from '@/utils/formatters/currency'
 import { useMedia } from '@/hooks/useMedia'
-
-// import SuccessRateIcon from '@/assets/icons/stat-successrate-icon.svg'
-// import ProfitsTicketsIcon from '@/assets/icons/stat-profits-icon.svg'
-// import TicketsIcon from '@/assets/icons/stat-balance-icon.svg'
-import WalletIcon from '@/assets/icons/walletIcons/WalletIcon.svg'
-import WalletIconSmall from '@/assets/icons/walletIcons/WalletIconSmall.svg'
-
 import * as SC from './UserStatisticRowStyles'
 import Tabs, { TabItem } from '@/atoms/tabs/Tabs'
 import { RESOLUTIONS } from '@/utils/enums'
 import TabContent from './TabContent/TabContent'
 import { isBellowOrEqualResolution } from '@/utils/helpers'
+import WalletIcon from '@/assets/icons/walletIcons/WalletIcon.svg'
+import WalletSmallIcon from '@/assets/icons/walletIcons/WalletIconSmall.svg'
 
 type Props = {
 	isLoading: boolean
@@ -84,9 +74,10 @@ const UserStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 			</SC.ValuesContainer>
 			<SC.WalletImageWrapper>
 				{isBellowOrEqualResolution(size, RESOLUTIONS.LG) ? (
-					<SC.WalletIcon imageSrc={getWalletImage(address as string)} />
+					<SC.WalletIcon imageSrc={WalletSmallIcon.src} />
 				) : (
-					<SC.WalletIcon imageSrc={getWalletImage(address as string)} />
+					<SC.WalletIcon imageSrc={WalletIcon.src} />
+					// <SC.WalletIcon imageSrc={getWalletImage(address as string)} />
 				)}
 			</SC.WalletImageWrapper>
 		</SC.StatisticsWrapper>

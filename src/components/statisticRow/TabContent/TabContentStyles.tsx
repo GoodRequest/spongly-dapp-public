@@ -23,11 +23,11 @@ export const IconWrapper = styled.div`
 	align-items: center;
 `
 
-export const LeftSideWrapper = styled(Col)`
+export const RightSideWrapper = styled(Col)`
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	align-items: center;
+	align-items: start;
 `
 
 export const ValueText = styled.span`

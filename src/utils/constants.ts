@@ -215,7 +215,6 @@ export const THALES_URL_OPTIMISM_GOERLI = 'https://api.thegraph.com/subgraphs/na
 
 export const ENDPOINTS = {
 	GET_PARLAY_LEADERBOARD: (networkID: number, period: number) => `https://api.thalesmarket.io/parlay-leaderboard/${networkID}/${period}`,
-	GET_SUCCESS_RATE: () => 'https://ipfs.synthetix.io/ipns/k2k4r8oeszqrv8tnl0k3bvo8j9f63sci60mp4rms8iy77o9vq96gad29',
 	GET_MONTHLY_BASE_TIPSTER: () => 'https://ipfs.synthetix.io/ipns/k2k4r8jwpiyedp0cq2vit524ab75e15lauc4ubwi88tsnq4wapj437bj/baseMainnet.json',
 	GET_MONTHLY_OPTIMISM_TIPSTER: () => 'https://ipfs.synthetix.io/ipns/k2k4r8jwpiyedp0cq2vit524ab75e15lauc4ubwi88tsnq4wapj437bj/optimisticEthereum.json',
 	GET_MONTHLY_ARBITRUM_TIPSTER: () => 'https://ipfs.synthetix.io/ipns/k2k4r8jwpiyedp0cq2vit524ab75e15lauc4ubwi88tsnq4wapj437bj/arbitrumOne.json'
