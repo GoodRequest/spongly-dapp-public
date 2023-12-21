@@ -3,18 +3,25 @@ import { Row, Col } from 'antd'
 import { useAccount } from 'wagmi'
 import { useRouter } from 'next-translate-routes'
 
+import { includes } from 'lodash'
 import StatisticCard from '@/atoms/statisticCard/StatisticCard'
 import { useIsMounted } from '@/hooks/useIsMounted'
 import { User } from '@/typescript/types'
 import { getWalletImage } from '@/utils/images'
 import { roundPrice } from '@/utils/formatters/currency'
+import { useMedia } from '@/hooks/useMedia'
 
-import SuccessRateIcon from '@/assets/icons/stat-successrate-icon.svg'
-import ProfitsTicketsIcon from '@/assets/icons/stat-profits-icon.svg'
-import TicketsIcon from '@/assets/icons/stat-balance-icon.svg'
+// import SuccessRateIcon from '@/assets/icons/stat-successrate-icon.svg'
+// import ProfitsTicketsIcon from '@/assets/icons/stat-profits-icon.svg'
+// import TicketsIcon from '@/assets/icons/stat-balance-icon.svg'
 import WalletIcon from '@/assets/icons/walletIcons/WalletIcon.svg'
+import WalletIconSmall from '@/assets/icons/walletIcons/WalletIconSmall.svg'
 
 import * as SC from './UserStatisticRowStyles'
+import Tabs, { TabItem } from '@/atoms/tabs/Tabs'
+import { RESOLUTIONS } from '@/utils/enums'
+import TabContent from './TabContent/TabContent'
+import { isBellowOrEqualResolution } from '@/utils/helpers'
 
 type Props = {
 	isLoading: boolean
@@ -28,17 +35,33 @@ const UserStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 	const isMounted = useIsMounted()
 	const router = useRouter()
 
-	// https://ipfs.synthetix.io/ipns/k2k4r8jwpiyedp0cq2vit524ab75e15lauc4ubwi88tsnq4wapj437bj/baseMainnet.json
-	// https://ipfs.synthetix.io/ipns/k2k4r8jwpiyedp0cq2vit524ab75e15lauc4ubwi88tsnq4wapj437bj/optimisticEthereum.json
-	// https://ipfs.synthetix.io/ipns/k2k4r8jwpiyedp0cq2vit524ab75e15lauc4ubwi88tsnq4wapj437bj/arbitrumOne.json
+	const size = useMedia()
+
+	const tabItems: TabItem[] = [
+		{
+			key: 'overall',
+			label: `${t('Overall')}`,
+			children: (
+				<TabContent successRate={user?.overAll?.successRate} ticketCount={user?.overAll?.trades} profits={user?.overAll?.pnl} isLoading={isLoading} />
+			)
+		},
+		{
+			key: 'last-months',
+			label: `${t('Last months')}`,
+			children: (
+				<TabContent successRate={user?.monthly?.successRate} ticketCount={user?.monthly?.trades} profits={user?.overAll?.pnl} isLoading={isLoading} />
+			)
+		}
+	]
+
 	return (
 		<SC.StatisticsWrapper justify={'space-between'}>
-			<Col span={8} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+			<SC.ValuesContainer flex={'auto'}>
 				<Row>
 					<Col span={24}>
-						<SC.MyWalletText>{t('My Wallet')}</SC.MyWalletText>
+						<SC.MyWalletText>{isMyWallet ? t('My Wallet') : t('Tipster')}</SC.MyWalletText>
 					</Col>
-					<Col span={24}>
+					<Col md={24}>
 						{isMounted && (
 							<SC.AddressContainer>
 								<SC.FirstAddressPart>
@@ -54,59 +77,19 @@ const UserStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 				</Row>
 				<Row>
 					<Col span={24}>
-						<SC.MyWalletText>{t('TODO TABS')}</SC.MyWalletText>
+						<Tabs items={tabItems} />
 					</Col>
 				</Row>
-			</Col>
-			<Col style={{ display: 'flex', alignItems: 'center' }}>
-				<img src={WalletIcon} alt='wallet-icon' width={275} height={275} />
-			</Col>
+			</SC.ValuesContainer>
+			<SC.WalletImageWrapper>
+				{isBellowOrEqualResolution(size, RESOLUTIONS.LG) ? (
+					<SC.WalletIcon imageSrc={getWalletImage(address as string)} />
+				) : (
+					<SC.WalletIcon imageSrc={getWalletImage(address as string)} />
+				)}
+			</SC.WalletImageWrapper>
 		</SC.StatisticsWrapper>
 	)
-
-	// return (
-	// 	<Row gutter={[0, 32]}>
-	// 		<>
-	// 			<Col lg={6} md={24} sm={24} xs={24}>
-	// 				<StatisticCard
-	// 					img={getWalletImage(address as string)}
-	// 					filled={true}
-	// 					isAddress={true}
-	// 					value={isMounted ? (isMyWallet ? address : String(router.query.id) || '') : ''}
-	// 					title={isMyWallet ? t('My wallet') : t('Wallet')}
-	// 					isMyWallet={isMyWallet}
-	// 				/>
-	// 			</Col>
-	// 			<Col lg={6} md={8} sm={8} xs={8}>
-	// 				<StatisticCard
-	// 					showMobileInColumn={true}
-	// 					isLoading={isLoading}
-	// 					img={SuccessRateIcon}
-	// 					value={isMounted ? `${user?.successRate ? user.successRate : 0} %` : ''}
-	// 					title={t('Success rate')}
-	// 				/>
-	// 			</Col>
-	// 			<Col lg={6} md={8} sm={8} xs={8}>
-	// 				<StatisticCard
-	// 					isLoading={isLoading}
-	// 					showMobileInColumn={true}
-	// 					img={ProfitsTicketsIcon}
-	// 					value={isMounted ? `${user?.pnl && user?.pnl > 0 ? '+' : ''}${roundPrice(user?.pnl)} $` : ''}
-	// 					title={t('Profits')}
-	// 				/>
-	// 			</Col>
-	// 			<Col lg={6} md={8} sm={8} xs={8}>
-	// 				<StatisticCard
-	// 					isLoading={isLoading}
-	// 					showMobileInColumn={true}
-	// 					img={TicketsIcon}
-	// 					value={isMounted ? (user?.trades ? user.trades : 0) : 0}
-	// 					title={t('Tickets')}
-	// 				/>
-	// 			</Col>
-	// 		</>
-	// 	</Row>
-	// )
 }
 
 export default UserStatisticRow

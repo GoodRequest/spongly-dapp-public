@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import Router from 'next/router'
-import { floor, groupBy, max, toNumber, toPairs } from 'lodash'
+import { floor, groupBy, max, round, toNumber, toPairs } from 'lodash'
 import { AnyAction, Dispatch } from 'redux'
 import { ethers } from 'ethers'
 import { IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
@@ -1451,4 +1451,18 @@ export const handleTxHashRedirect = (t: any, txHash?: string, chainId?: number) 
 		link.click()
 		document.body.removeChild(link)
 	}
+}
+
+export const getProfit = (wonTickets: UserTicket[], lostTickets: UserTicket[]) => {
+	let profit = 0
+	wonTickets?.forEach((ticket) => {
+		if (ticket?.claimed === true) {
+			profit += ticket.amount - ticket.sUSDPaid
+		}
+	})
+	lostTickets?.forEach((ticket) => {
+		profit -= ticket.sUSDPaid
+	})
+
+	return round(profit / OPTIMISM_DIVISOR, 2).toFixed(2)
 }
