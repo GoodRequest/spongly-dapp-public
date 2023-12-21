@@ -10,17 +10,12 @@ import { GET_PARLAY_DETAIL, GET_POSITION_BALANCE_DETAIL, GET_POSITION_BALANCE_TR
 import {
 	assignOtherAttrsToUserTicket,
 	getPositionsWithMergedCombinedPositions,
-	getTicketHistoricQuote,
-	getUserTicketClaimValue,
-	getUserTicketType,
-	isWindowReady,
 	orderPositionsAsSportMarkets,
 	parseParlayToUserTicket,
 	parsePositionBalanceToUserTicket
 } from '@/utils/helpers'
 import networkConnector from '@/utils/networkConnector'
-import { roundPrice } from '@/utils/formatters/currency'
-import { MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE, OddsType, USER_TICKET_TYPE } from '@/utils/constants'
+import { MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE } from '@/utils/constants'
 
 // hooks
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
@@ -29,7 +24,6 @@ import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 import { SGPItem, UserTicket } from '@/typescript/types'
 
 // components
-import TicketStatisticRow from '@/components/statisticRow/TicketStatisticRow'
 import PositionsList from '@/components/positionsList/PositionsList'
 import Custom404 from '@/pages/404'
 import { showNotifications } from '@/utils/tsxHelpers'
@@ -48,12 +42,9 @@ const TicketDetailContent = () => {
 
 	const [positionsData, setPositionsData] = useState<any>()
 	const [ticketData, setTicketData] = useState<UserTicket>()
-	const [userTicketType, setUserTicketType] = useState<USER_TICKET_TYPE | undefined>(undefined)
 	const [isLoading, setIsLoading] = useState(true)
 	const [sgpFees, setSgpFees] = useState<SGPItem[]>()
 	const [error, setError] = useState(false)
-
-	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL
 
 	const sgpFeesRaw = useSGPFeesQuery((chain?.id as Network) || NETWORK_IDS.OPTIMISM, {
 		enabled: true
@@ -103,7 +94,6 @@ const TicketDetailContent = () => {
 
 				const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions, ticketsWithOtherAttrs?.[0], sgpFees)
 				setTicketData(ticketsWithOtherAttrs?.[0])
-				setUserTicketType(getUserTicketType(ticketsWithOtherAttrs?.[0]))
 				setPositionsData(positionsWithMergedCombinedPositions)
 			})
 		} catch (e) {
@@ -148,33 +138,16 @@ const TicketDetailContent = () => {
 			positionsData &&
 			ticketData &&
 			!isLoading && (
-				<>
-					<Row gutter={[0, 16]}>
-						<Col span={24}>
-							<TicketStatisticRow
-								isLoading={isLoading}
-								tipsterAddress={ticketData?.account || ''}
-								buyIn={roundPrice(ticketData?.sUSDPaid, true)}
-								userTicketType={userTicketType}
-								claim={getUserTicketClaimValue(ticketData, userTicketType)}
-								quote={getTicketHistoricQuote(positionsData, actualOddType, ticketData?.marketQuotes)}
-								matches={positionsData?.length}
-								txHash={ticketData?.txHash}
-								isMyWallet={isMyWallet}
-							/>
-						</Col>
-					</Row>
-					<Row style={{ marginTop: '32px' }}>
-						<Col span={24}>
-							<PositionsList
-								isMyWallet={isMyWallet}
-								ticketData={ticketData}
-								positionsWithCombinedAttrs={positionsData}
-								marketQuotes={ticketData?.marketQuotes}
-							/>
-						</Col>
-					</Row>
-				</>
+				<Row>
+					<Col span={24}>
+						<PositionsList
+							isMyWallet={isMyWallet}
+							ticketData={ticketData}
+							positionsWithCombinedAttrs={positionsData}
+							marketQuotes={ticketData?.marketQuotes}
+						/>
+					</Col>
+				</Row>
 			)
 		)
 

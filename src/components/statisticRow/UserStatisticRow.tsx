@@ -73,12 +73,7 @@ const UserStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 				</Row>
 			</SC.ValuesContainer>
 			<SC.WalletImageWrapper>
-				{isBellowOrEqualResolution(size, RESOLUTIONS.LG) ? (
-					<SC.WalletIcon imageSrc={WalletSmallIcon.src} />
-				) : (
-					<SC.WalletIcon imageSrc={WalletIcon.src} />
-					// <SC.WalletIcon imageSrc={getWalletImage(address as string)} />
-				)}
+				{isBellowOrEqualResolution(size, RESOLUTIONS.LG) ? <SC.WalletIcon imageSrc={WalletSmallIcon} /> : <SC.WalletIcon imageSrc={WalletIcon} />}
 			</SC.WalletImageWrapper>
 		</SC.StatisticsWrapper>
 	)

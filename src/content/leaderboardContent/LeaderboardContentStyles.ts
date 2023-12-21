@@ -8,6 +8,9 @@ export const LeaderboardContentRow = styled(Row)`
 	border-radius: 12px;
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	margin-bottom: 16px;
+	@media (max-width: ${breakpoints.md}px) {
+		padding: 16px;
+	}
 `
 
 export const WalletIcon = styled.div<{ imageSrc: number }>`
@@ -63,8 +66,8 @@ export const RowSkeleton = styled(Skeleton)`
 
 export const LeaderboardDivider = styled(Divider)`
 	display: none;
-	margin-left: -24px;
-	width: calc(100% + 24px + 24px);
+	margin-left: -16px;
+	width: calc(100% + 16px + 16px);
 	margin-top: 0;
 	margin-bottom: 0;
 	@media (max-width: ${breakpoints.md}px) {

@@ -34,7 +34,7 @@ const StatisticCard = ({
 }: Props) => (
 	<SC.ColorWrapper filled={filled} onClick={onClick}>
 		<SC.StatisticCard filled={filled} showMobileInColumn={showMobileInColumn} addMobileBackground={addMobileBackground}>
-			{img && <SC.Image filled={filled} src={img} />}
+			{img && <SC.Image filled={filled} src={img} isAddress={isAddress} />}
 			<SC.StatisticWrapper isTxnHash={isTxnHash} isAddress={isAddress}>
 				{isMyWallet && <SC.Title>{title}</SC.Title>}
 				{isAddress ? (

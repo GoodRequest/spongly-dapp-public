@@ -7,7 +7,6 @@ import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit'
 import { Col, Row } from 'antd'
 
 // components
-import UserStatisticRow from '@/components/statisticRow/UserStatisticRow'
 import Button from '@/atoms/button/Button'
 import UserTicketsList from '@/components/userTicketsList/UserTicketsList'
 import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
@@ -23,11 +22,10 @@ import {
 	parseParlayToUserTicket,
 	parsePositionBalanceToUserTicket
 } from '@/utils/helpers'
-import { MSG_TYPE, NOTIFICATION_TYPE, USER_TICKET_TYPE, NETWORK_IDS, ENDPOINTS } from '@/utils/constants'
+import { MSG_TYPE, NOTIFICATION_TYPE, USER_TICKET_TYPE, NETWORK_IDS } from '@/utils/constants'
 import { showNotifications } from '@/utils/tsxHelpers'
 
 // hooks
-import { useIsMounted } from '@/hooks/useIsMounted'
 
 // types
 import { UserStatistic, UserTicket } from '@/typescript/types'
@@ -35,6 +33,8 @@ import { ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
 
 // styles
 import * as SCS from '@/styles/GlobalStyles'
+import Custom404 from '@/pages/404'
+import UserStatisticRow from '@/components/statisticRow/UserStatisticRow'
 
 const MyWalletContent = () => {
 	const { t } = useTranslation()
@@ -44,9 +44,8 @@ const MyWalletContent = () => {
 	const isMyWallet = !router.query.id
 	const [fetchUserStatistic] = useLazyQuery(GET_USERS_STATISTICS)
 	const { signer } = networkConnector
-	const isMounted = useIsMounted()
 	const [fetchUserMarketTransactions] = useLazyQuery(GET_USERS_TRANSACTIONS)
-
+	const [error, setError] = useState(false)
 	const [userStatistic, setUserStatistic] = useState<undefined | UserStatistic>(undefined)
 
 	const [isLoading, setIsLoading] = useState(true)
@@ -103,6 +102,7 @@ const MyWalletContent = () => {
 					})
 				})
 				.catch((e) => {
+					setError(true)
 					// eslint-disable-next-line no-console
 					console.error(e)
 					showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while loading user statistics') }], NOTIFICATION_TYPE.NOTIFICATION)
@@ -129,35 +129,39 @@ const MyWalletContent = () => {
 	return (
 		<Row gutter={[0, 16]}>
 			<Col span={24}>
-				<RainbowConnectButton.Custom>
-					{({ account, chain, openConnectModal, mounted }) => {
-						const connected = mounted && account && chain
+				{error ? (
+					<Custom404 />
+				) : (
+					<RainbowConnectButton.Custom>
+						{({ account, chain, openConnectModal, mounted }) => {
+							const connected = mounted && account && chain
 
-						if (!connected && isMyWallet) {
+							if (!connected && isMyWallet) {
+								return (
+									<SCS.Empty
+										image={EmptyStateImage}
+										description={
+											<div>
+												<p>{t('You do not have connected wallet. Please connect your wallet.')}</p>
+												<Button btnStyle={'primary'} onClick={() => openConnectModal()} content={t('Connect Wallet')} />
+											</div>
+										}
+									/>
+								)
+							}
 							return (
-								<SCS.Empty
-									image={EmptyStateImage}
-									description={
-										<div>
-											<p>{t('You do not have connected wallet. Please connect your wallet.')}</p>
-											<Button btnStyle={'primary'} onClick={() => openConnectModal()} content={t('Connect Wallet')} />
-										</div>
-									}
-								/>
+								<Row gutter={[0, 16]}>
+									<Col span={24}>
+										<UserStatisticRow isMyWallet={isMyWallet} isLoading={isLoading} user={userStatistic?.user} />
+									</Col>
+									<Col span={24}>
+										<UserTicketsList refetch={refetch} isMyWallet={isMyWallet} isLoading={isLoading} tickets={userStatistic?.tickets} />
+									</Col>
+								</Row>
 							)
-						}
-						return (
-							<Row gutter={[0, 16]}>
-								<Col span={24}>
-									{isMounted && <UserStatisticRow isMyWallet={isMyWallet} isLoading={isLoading} user={userStatistic?.user} />}
-								</Col>
-								<Col span={24}>
-									<UserTicketsList refetch={refetch} isMyWallet={isMyWallet} isLoading={isLoading} tickets={userStatistic?.tickets} />
-								</Col>
-							</Row>
-						)
-					}}
-				</RainbowConnectButton.Custom>
+						}}
+					</RainbowConnectButton.Custom>
+				)}
 			</Col>
 		</Row>
 	)

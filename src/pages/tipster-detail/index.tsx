@@ -1,8 +1,9 @@
 import { GetStaticProps } from 'next'
+import React from 'react'
 import Layout from '@/layout/layout/Layout'
-import SEOHelmet from '@/components/SEOHelmet'
 import { IPage } from '@/typescript/types'
-import TicketDetailContent from '@/content/ticketDetailContent/TicketDetailContent'
+import MyWalletContent from '@/content/walletContent/WalletContent'
+import SEOHelmet from '@/components/SEOHelmet'
 
 export const getStaticProps: GetStaticProps<{ page: IPage<{}> }> = async () => {
 	const page = {
@@ -24,9 +25,9 @@ export const getStaticProps: GetStaticProps<{ page: IPage<{}> }> = async () => {
 	}
 }
 
-const TicketDetailPage = (props: any) => <TicketDetailContent {...props} />
+const TipsterDetailPage = (props: any) => <MyWalletContent {...props} />
 
-TicketDetailPage.getLayout = function getLayout(page: any) {
+TipsterDetailPage.getLayout = function getLayout(page: any) {
 	return (
 		<>
 			<SEOHelmet shareTags={page.props?.page?.shareTags} />
@@ -35,4 +36,4 @@ TicketDetailPage.getLayout = function getLayout(page: any) {
 	)
 }
 
-export default TicketDetailPage
+export default TipsterDetailPage

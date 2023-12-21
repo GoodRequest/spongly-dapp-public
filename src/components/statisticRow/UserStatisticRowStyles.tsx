@@ -32,7 +32,7 @@ export const WalletIcon = styled.div<{ imageSrc: number }>`
 	border-radius: 50%;
 	background: url(${({ imageSrc }) => imageSrc});
 	background-size: 75%;
-	background-color: ${({ theme }) => theme['color-base-surface-quaternary']};
+	/* background-color: ${({ theme }) => theme['color-base-surface-quaternary']}; */
 	background-repeat: no-repeat;
 	background-position: center;
 

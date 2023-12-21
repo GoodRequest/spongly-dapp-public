@@ -1,7 +1,7 @@
 import { GetStaticProps } from 'next'
 import React from 'react'
 import Layout from '@/layout/layout/Layout'
-import SEOHelmet from '@/atoms/SEOHelmet'
+import SEOHelmet from '@/components/SEOHelmet'
 import { IPage } from '@/typescript/types'
 import MatchDetailContent from '@/content/matchesContent/MatchDetailContent'
 

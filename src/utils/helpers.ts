@@ -1300,8 +1300,19 @@ export const assignOtherAttrsToUserTicket = async (
 		const lastMaturityDate = maturityDates.sort((a, b) => (a.maturityDate < b.maturityDate ? 1 : -1))[0]
 		if (chainId) {
 			const contract = new ethers.Contract(lastMaturityDate.id, sportsMarketContract.abi, signer)
-
-			const contractData = await contract.times()
+			let contractData
+			try {
+				contractData = await contract.times()
+			} catch (error) {
+				// eslint-disable-next-line
+				console.log(`no times in contract for ${lastMaturityDate.id}`)
+				return {
+					...item,
+					isClaimable: false,
+					ticketType: ticketTypeToWalletType(userTicketType),
+					timestamp
+				}
+			}
 			const expiryDate = contractData?.expiry?.toString()
 			const now = dayjs()
 			return {

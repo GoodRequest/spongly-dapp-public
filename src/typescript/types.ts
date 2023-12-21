@@ -4,7 +4,7 @@ import { CLOSED_TICKET_TYPE, MSG_TYPE, ORDER_DIRECTION, PositionNumber, TICKET_T
 import { BetType, DoubleChanceMarketType } from '@/utils/tags'
 import { BET_OPTIONS, WALLET_TICKETS } from '@/utils/enums'
 
-import { IShareTags } from '@/atoms/SEOHelmet'
+import { IShareTags } from '@/components/SEOHelmet'
 
 export type TagInfo = {
 	id: number
