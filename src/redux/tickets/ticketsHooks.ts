@@ -13,10 +13,18 @@ import { ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
 
 // utils
 import { GET_TICKETS } from '@/utils/queries'
-import { getClosedTicketType, getTicketTotalQuote, getTicketType, isWindowReady, removeDuplicatesByGameId, removeDuplicateSubstring } from '@/utils/helpers'
+import {
+	fetchSuccessRate,
+	getClosedTicketType,
+	getTicketTotalQuote,
+	getTicketType,
+	isWindowReady,
+	removeDuplicatesByGameId,
+	removeDuplicateSubstring
+} from '@/utils/helpers'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
-import { ISuccessRateData, ITicket } from '@/typescript/types'
-import { ENDPOINTS, OddsType } from '@/utils/constants'
+import { ITicket } from '@/typescript/types'
+import { OddsType } from '@/utils/constants'
 
 export interface IDefaultProps {
 	loading: boolean
@@ -34,16 +42,7 @@ const useFetchTickets = () => {
 	const [fetchTicketsData1] = useLazyQuery(GET_TICKETS)
 	const [fetchTicketsData2] = useLazyQuery(GET_TICKETS)
 	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) || OddsType.DECIMAL : OddsType.DECIMAL
-	const fetchSuccessRateData = async (): Promise<ISuccessRateData> => {
-		try {
-			const response = await fetch(ENDPOINTS.GET_SUCCESS_RATE())
-			return await response.json()
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.error(error)
-			throw error
-		}
-	}
+
 	const mapTicketsData = async (data: (ParlayMarket | PositionBalance)[], successRateMap: Map<string, number>) =>
 		data.map((ticket) => {
 			return {
@@ -110,7 +109,7 @@ const useFetchTickets = () => {
 				},
 				context: { chainId: chain?.id }
 			}),
-			fetchSuccessRateData()
+			fetchSuccessRate(chain?.id)
 		])
 			.then((values) => {
 				const allTickets = [
@@ -122,7 +121,7 @@ const useFetchTickets = () => {
 					...values[2].data.positionBalances
 				]
 
-				const successRateMap = new Map(values[3].stats.map((obj) => [obj.ac, obj.sr]))
+				const successRateMap = new Map(values[3].map((obj) => [obj.ac, obj.sr]))
 
 				mapTicketsData(allTickets, successRateMap).then((data) => {
 					dispatch({

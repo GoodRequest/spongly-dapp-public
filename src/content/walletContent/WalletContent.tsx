@@ -15,7 +15,14 @@ import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
 // utils
 import { GET_USERS_STATISTICS, GET_USERS_TRANSACTIONS } from '@/utils/queries'
 import networkConnector from '@/utils/networkConnector'
-import { assignOtherAttrsToUserTicket, getProfit, getUserTicketType, parseParlayToUserTicket, parsePositionBalanceToUserTicket } from '@/utils/helpers'
+import {
+	assignOtherAttrsToUserTicket,
+	fetchSuccessRate,
+	getProfit,
+	getUserTicketType,
+	parseParlayToUserTicket,
+	parsePositionBalanceToUserTicket
+} from '@/utils/helpers'
 import { MSG_TYPE, NOTIFICATION_TYPE, USER_TICKET_TYPE, NETWORK_IDS, ENDPOINTS } from '@/utils/constants'
 import { showNotifications } from '@/utils/tsxHelpers'
 
@@ -46,45 +53,13 @@ const MyWalletContent = () => {
 
 	const id = '0xbB3d0C6168ef0056ed6586bFCf5717A7db0c866f'.toLocaleLowerCase() //  isMyWallet ? address?.toLocaleLowerCase() : String(router.query.id).toLowerCase()
 
-	const getMonthlyStats = async () => {
-		if (chain?.id === NETWORK_IDS.ARBITRUM) {
-			try {
-				const response = await fetch(ENDPOINTS.GET_MONTHLY_ARBITRUM_TIPSTER())
-				const res = await response.json()
-				const userStats = res?.stats?.find((item: any) => item?.ac === id)
-				return userStats
-			} catch {
-				return undefined
-			}
-		}
-		if (chain?.id === NETWORK_IDS.BASE) {
-			try {
-				const response = await fetch(ENDPOINTS.GET_MONTHLY_BASE_TIPSTER())
-				const res = await response.json()
-				const userStats = res?.stats?.find((item: any) => item?.ac === id)
-				return userStats
-			} catch {
-				return undefined
-			}
-		} else {
-			try {
-				const response = await fetch(ENDPOINTS.GET_MONTHLY_OPTIMISM_TIPSTER())
-				const res = await response.json()
-				const userStats = res?.stats?.find((item: any) => item?.ac === id)
-				return userStats
-			} catch {
-				return undefined
-			}
-		}
-	}
-
 	const fetchStatistics = () => {
 		setIsLoading(true)
 		setTimeout(() => {
 			Promise.all([
 				fetchUserStatistic({ variables: { id }, context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM } }),
 				fetchUserMarketTransactions({ variables: { account: id }, context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM } }),
-				getMonthlyStats()
+				fetchSuccessRate(chain?.id)
 			])
 				.then(async (values) => {
 					const marketData: { timestamp: string; id: string }[] = values?.[1]?.data?.marketTransactions?.map((item: any) => {
@@ -105,19 +80,23 @@ const MyWalletContent = () => {
 
 					const wonTickets = [...parlayTickets, ...positionTickets]?.filter((item) => getUserTicketType(item) === USER_TICKET_TYPE.SUCCESS)
 					const lostTickets = [...parlayTickets, ...positionTickets]?.filter((item) => getUserTicketType(item) === USER_TICKET_TYPE.MISS)
+					const cancelledTickets = [...parlayData, ...positionTickets]?.filter((item) => getUserTicketType(item) === USER_TICKET_TYPE.CANCELED)
+
 					const numberOfAttempts = wonTickets.length + lostTickets.length
 					let successRate = 0.0
 					if (wonTickets.length !== 0) {
 						successRate = Number(((wonTickets.length / numberOfAttempts) * 100).toFixed(2))
 					}
 
-					const profit = getProfit(wonTickets, lostTickets)
+					const profit = getProfit(wonTickets, lostTickets, cancelledTickets)
+
+					const userMonthlyStats = values?.[2]?.find((item: any) => item?.ac === id)
 
 					assignOtherAttrsToUserTicket([...parlayTickets, ...positionTickets], marketData, chain?.id, signer).then((ticketsWithOtherAttrs) => {
 						setUserStatistic({
 							user: {
 								overAll: { ...values?.[0]?.data?.user, pnl: Number(profit), successRate },
-								monthly: { pnl: 0, trades: values?.[2]?.tt, successRate: values?.[2].sr }
+								monthly: { pnl: 0, trades: userMonthlyStats?.tt, successRate: userMonthlyStats?.sr }
 							},
 							tickets: ticketsWithOtherAttrs.sort((a, b) => (Number(a.timestamp) < Number(b.timestamp) ? 1 : -1))
 						})

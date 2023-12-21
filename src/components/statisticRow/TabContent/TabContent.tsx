@@ -47,7 +47,7 @@ const TabContent: React.FC<TabContentProps> = ({ ticketCount, successRate, profi
 							<Spin indicator={<LoadingOutlined spin />} />
 						) : (
 							<>
-								<SC.ValueText>{successRate}</SC.ValueText>
+								<SC.ValueText>{successRate} %</SC.ValueText>
 								<SC.ValueTitle>{t('Win rate')}</SC.ValueTitle>
 							</>
 						)}
@@ -64,7 +64,7 @@ const TabContent: React.FC<TabContentProps> = ({ ticketCount, successRate, profi
 							<Spin indicator={<LoadingOutlined spin />} />
 						) : (
 							<>
-								<SC.ValueText>{profits}</SC.ValueText>
+								<SC.ValueText>{profits} $</SC.ValueText>
 								<SC.ValueTitle>{t('Profits')}</SC.ValueTitle>
 							</>
 						)}

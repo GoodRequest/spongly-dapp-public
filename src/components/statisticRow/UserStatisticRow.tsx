@@ -46,9 +46,10 @@ const UserStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 			)
 		},
 		{
-			key: 'last-months',
-			label: `${t('Last months')}`,
+			key: 'last-month',
+			label: `${t('Last month')}`,
 			children: (
+				// TODO: pln z jsonu
 				<TabContent successRate={user?.monthly?.successRate} ticketCount={user?.monthly?.trades} profits={user?.overAll?.pnl} isLoading={isLoading} />
 			)
 		}

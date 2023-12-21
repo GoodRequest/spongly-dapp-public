@@ -252,15 +252,9 @@ export interface IMatch extends SportMarket, IBonus {
 }
 
 export interface ISuccessRateData {
-	context: {
-		network: string
-		ticketsCount: number
-		uniqueUsersCount: number
-	}
-	processStart: string
-	stats: {
-		ac: string
-		sr: number
-		tt: number
-	}[]
+	ac: string
+	sr: number
+	tt: number
+	// TODO
+	// profit: number
 }
