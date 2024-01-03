@@ -214,10 +214,10 @@ export type LeaderboardUser = ResolverUser & {
 }
 
 export type Statistic = {
-	pnl: number | null | undefined
-	trades: number | null | undefined
-	volume?: number | null | undefined
-	successRate: number | null | undefined
+	pnl?: number | null
+	trades?: number | null
+	volume?: number | null
+	successRate?: number | null
 }
 
 export type User = {

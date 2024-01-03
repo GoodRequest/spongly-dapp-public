@@ -1,4 +1,4 @@
-import { Col, Row, Spin } from 'antd'
+import { Col, Spin } from 'antd'
 import React from 'react'
 import { useTranslation } from 'next-export-i18n'
 import { LoadingOutlined } from '@ant-design/icons'
@@ -19,11 +19,11 @@ const TabContent: React.FC<TabContentProps> = ({ ticketCount, successRate, profi
 	const { t } = useTranslation()
 
 	return (
-		<Row style={{ marginLeft: '-16px' }} gutter={16}>
+		<SC.TabsRow gutter={16}>
 			<Col>
 				<SC.Wrapper>
 					<SC.IconWrapper>
-						<img src={TicketsIcon} alt={'ticket-count-icon'} />
+						<img src={TicketsIcon} alt={t('ticket count icon')} />
 					</SC.IconWrapper>
 					<SC.RightSideWrapper>
 						{isLoading ? (
@@ -40,7 +40,7 @@ const TabContent: React.FC<TabContentProps> = ({ ticketCount, successRate, profi
 			<Col>
 				<SC.Wrapper>
 					<SC.IconWrapper>
-						<img src={SuccessRateIcon} alt={'success-rate-icon'} />
+						<img src={SuccessRateIcon} alt={t('success rate icon')} />
 					</SC.IconWrapper>
 					<SC.RightSideWrapper>
 						{isLoading ? (
@@ -57,7 +57,7 @@ const TabContent: React.FC<TabContentProps> = ({ ticketCount, successRate, profi
 			<Col>
 				<SC.Wrapper>
 					<SC.IconWrapper>
-						<img src={ProfitsTicketsIcon} alt={'profits-icon'} />
+						<img src={ProfitsTicketsIcon} alt={t('profits icon')} />
 					</SC.IconWrapper>
 					<SC.RightSideWrapper>
 						{isLoading ? (
@@ -71,7 +71,7 @@ const TabContent: React.FC<TabContentProps> = ({ ticketCount, successRate, profi
 					</SC.RightSideWrapper>
 				</SC.Wrapper>
 			</Col>
-		</Row>
+		</SC.TabsRow>
 	)
 }
 

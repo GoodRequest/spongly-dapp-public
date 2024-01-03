@@ -6,7 +6,7 @@ import { useIsMounted } from '@/hooks/useIsMounted'
 import { User } from '@/typescript/types'
 import { useMedia } from '@/hooks/useMedia'
 import * as SC from './UserStatisticRowStyles'
-import Tabs, { TabItem } from '@/atoms/tabs/Tabs'
+import Tabs from '@/components/tabs/Tabs'
 import { RESOLUTIONS } from '@/utils/enums'
 import TabContent from './TabContent/TabContent'
 import { isBellowOrEqualResolution } from '@/utils/helpers'
@@ -27,17 +27,17 @@ const UserStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 
 	const size = useMedia()
 
-	const tabItems: TabItem[] = [
+	const tabItems = [
 		{
 			key: 'overall',
-			label: `${t('Overall')}`,
+			label: t('Overall'),
 			children: (
 				<TabContent successRate={user?.overAll?.successRate} ticketCount={user?.overAll?.trades} profits={user?.overAll?.pnl} isLoading={isLoading} />
 			)
 		},
 		{
 			key: 'last-month',
-			label: `${t('Last month')}`,
+			label: t('Last month'),
 			children: (
 				// TODO: pln z jsonu
 				<TabContent successRate={user?.monthly?.successRate} ticketCount={user?.monthly?.trades} profits={user?.overAll?.pnl} isLoading={isLoading} />

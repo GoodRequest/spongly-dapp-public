@@ -15,6 +15,8 @@ import {
 	MATCH_STATUS,
 	MSG_TYPE,
 	Network,
+	NetworkFile,
+	NetworkFileFromNetworkIds,
 	NETWORK_IDS,
 	NOTIFICATION_TYPE,
 	OddsType,
@@ -1485,36 +1487,13 @@ export const getProfit = (wonTickets: UserTicket[], lostTickets: UserTicket[], c
 }
 
 export const fetchSuccessRate = async (networkId: number | undefined): Promise<ISuccessRateData[]> => {
-	if (networkId === NETWORK_IDS.ARBITRUM) {
-		try {
-			const response = await fetch(ENDPOINTS.GET_MONTHLY_ARBITRUM_TIPSTER())
-			const responseJson = await response.json()
-			return responseJson?.stats
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.error(error)
-			throw error
-		}
-	}
-	if (networkId === NETWORK_IDS.BASE) {
-		try {
-			const response = await fetch(ENDPOINTS.GET_MONTHLY_BASE_TIPSTER())
-			const responseJson = await response.json()
-			return responseJson?.stats
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.error(error)
-			throw error
-		}
-	} else {
-		try {
-			const response = await fetch(ENDPOINTS.GET_MONTHLY_OPTIMISM_TIPSTER())
-			const responseJson = await response.json()
-			return responseJson?.stats
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.error(error)
-			throw error
-		}
+	try {
+		const response = await fetch(ENDPOINTS.GET_MONTHLY_TIPSTER(NetworkFileFromNetworkIds[(networkId || NETWORK_IDS.OPTIMISM) as Network]))
+		const responseJson = await response.json()
+		return responseJson?.stats
+	} catch (error) {
+		// eslint-disable-next-line no-console
+		console.error(error)
+		throw error
 	}
 }

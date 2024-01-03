@@ -1,17 +1,21 @@
-import { Col } from 'antd'
+import { Col, Row } from 'antd'
 import styled from 'styled-components'
 import { HeadingXSSemibold, TextSMMedium, TextXSMedium, TextLGMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
+export const TabsRow = styled(Row)`
+	margin-left: -16px;
+`
+
 export const Wrapper = styled.div`
 	display: flex;
-	flex-direction: row;
 	height: 100%;
-	gap: 8px;
+	flex-direction: column;
+	gap: 0;
 
-	@media (max-width: ${breakpoints.md}px) {
-		flex-direction: column;
-		gap: 0;
+	@media (min-width: ${breakpoints.md}px) {
+		flex-direction: row;
+		gap: 8px;
 	}
 `
 
@@ -31,19 +35,19 @@ export const RightSideWrapper = styled(Col)`
 `
 
 export const ValueText = styled.span`
-	${HeadingXSSemibold};
+	${TextLGMedium};
 
-	@media (max-width: ${breakpoints.md}px) {
-		${TextLGMedium};
+	@media (min-width: ${breakpoints.md}px) {
+		${HeadingXSSemibold};
 	}
 `
 
 export const ValueTitle = styled.span`
-	${TextSMMedium};
+	${TextXSMedium};
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
 
-	@media (max-width: ${breakpoints.md}px) {
-		${TextXSMedium};
+	@media (min-width: ${breakpoints.md}px) {
+		${TextSMMedium};
 		color: ${({ theme }) => theme['color-base-content-quaternary']};
 	}
 `
