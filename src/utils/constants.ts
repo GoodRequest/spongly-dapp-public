@@ -147,6 +147,7 @@ export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY)
 
 export enum Network {
 	OptimismMainnet = 10,
+	OptimismGoerli = 420,
 	ArbitrumOne = 42161,
 	BaseNet = 8453
 }
@@ -211,7 +212,8 @@ export enum NetworkFile {
 export const NetworkFileFromNetworkIds: Record<Network, NetworkFile> = {
 	[Network.ArbitrumOne]: NetworkFile.Arbitrum,
 	[Network.BaseNet]: NetworkFile.Base,
-	[Network.OptimismMainnet]: NetworkFile.Optimism
+	[Network.OptimismMainnet]: NetworkFile.Optimism,
+	[Network.OptimismGoerli]: NetworkFile.Optimism
 }
 
 export const MATCHES_OFFSET = 5
@@ -233,9 +235,6 @@ export const THALES_URL_OPTIMISM_GOERLI = 'https://api.thegraph.com/subgraphs/na
 export const ENDPOINTS = {
 	GET_PARLAY_LEADERBOARD: (networkID: number, period: number) => `https://api.thalesmarket.io/parlay-leaderboard/${networkID}/${period}`,
 	GET_MONTHLY_TIPSTER: (networkFile: string) => `https://ipfs.synthetix.io/ipns/k2k4r8jwpiyedp0cq2vit524ab75e15lauc4ubwi88tsnq4wapj437bj/${networkFile}`
-	// GET_MONTHLY_BASE_TIPSTER: () => 'https://ipfs.synthetix.io/ipns/k2k4r8jwpiyedp0cq2vit524ab75e15lauc4ubwi88tsnq4wapj437bj/baseMainnet.json',
-	// GET_MONTHLY_OPTIMISM_TIPSTER: () => 'https://ipfs.synthetix.io/ipns/k2k4r8jwpiyedp0cq2vit524ab75e15lauc4ubwi88tsnq4wapj437bj/optimisticEthereum.json',
-	// GET_MONTHLY_ARBITRUM_TIPSTER: () => 'https://ipfs.synthetix.io/ipns/k2k4r8jwpiyedp0cq2vit524ab75e15lauc4ubwi88tsnq4wapj437bj/arbitrumOne.json'
 }
 
 export const EXTERNAL_SCRIPTS = {
