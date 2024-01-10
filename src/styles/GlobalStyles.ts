@@ -27,11 +27,10 @@ export const GlobalStyle = createGlobalStyle`
 	}
 
 	.ant-select-dropdown {
-		padding: 16px;
-		background-color: ${({ theme }) => theme['color-base-surface-quaternary']}; !important;
+		padding: 8px;
+		background-color: ${({ theme }) => theme['color-base-surface-quaternary']} !important;
 		.ant-select-item-option {
-			margin-bottom: 4px;
-			padding: 12px;
+			padding: 8px;
 			${TextMDRegular};
 			:hover {
 				background-color: ${({ theme }) => theme['color-base-surface-secondary']} !important;

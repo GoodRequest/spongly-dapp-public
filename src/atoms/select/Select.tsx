@@ -8,6 +8,7 @@ import { breakpoints } from '@/styles/theme'
 type Props = SelectProps & {
 	onChange?: (value: any) => void
 	useSelectContainer?: boolean
+	title?: string
 }
 
 const Select = ({
@@ -56,7 +57,7 @@ const Select = ({
 				placeholder={placeholder}
 				onChange={onChange}
 				className={className}
-				open={open}
+				open={true}
 				onDropdownVisibleChange={handleDropdownOpenChange}
 				defaultValue={defaultValue}
 				allowClear={allowClear}
