@@ -28,9 +28,10 @@ export const GlobalStyle = createGlobalStyle`
 
 	.ant-select-dropdown {
 		padding: 8px;
-		background-color: ${({ theme }) => theme['color-base-surface-quaternary']} !important;
+		background-color: ${({ theme }) => theme['color-base-surface-quaternary']};
 		.ant-select-item-option {
-			padding: 8px;
+			padding-top: 8px;
+			padding-bottom: 8px;
 			${TextMDRegular};
 			:hover {
 				background-color: ${({ theme }) => theme['color-base-surface-secondary']} !important;
@@ -44,7 +45,7 @@ export const GlobalStyle = createGlobalStyle`
 					display: inline-block;
 					width: 24px;
 					height: 24px;
-						background: url(${CheckIcon});
+					background: url(${CheckIcon});
 					background-size: cover;
 					margin-right: 8px;
 				}
