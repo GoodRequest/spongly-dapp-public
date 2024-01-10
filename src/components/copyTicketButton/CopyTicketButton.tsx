@@ -169,7 +169,7 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 				</>
 			)}
 			<SC.ModalDescriptionWarning>{t('Odds might slightly differ')}</SC.ModalDescriptionWarning>
-			<Row>
+			<Row gutter={[16, 0]}>
 				<SC.MatchContainerRow span={24}>
 					{matchesWithChildMarkets?.map((match: any, key: any) => (
 						<MatchRow readOnly key={`matchRow-${key}`} match={match} />
