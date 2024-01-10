@@ -140,19 +140,19 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 						return {
 							...marketOdds,
 							// NOTE: every bet is different game.
-							betOption: activeMatches?.find((activeMatch) => activeMatch.gameId === marketOdds.gameId)?.betOption
+							betOption: filteredActiveMatches?.find((activeMatch) => activeMatch.gameId === marketOdds.gameId)?.betOption
 						}
 					})
 					setTempMatches(formattedMarketOddsFromContract)
 				} catch (err) {
-					setTempMatches(activeMatches)
+					setTempMatches(filteredActiveMatches)
 				} finally {
 					setCopyModal({ visible: true, onlyCopy })
 					setIsLoading(false)
 				}
 			})
 			.catch(() => {
-				setTempMatches(activeMatches)
+				setTempMatches(filteredActiveMatches)
 				setCopyModal({ visible: true, onlyCopy })
 				setIsLoading(false)
 			})
