@@ -45,11 +45,10 @@ const TicketListItemHeader: FC<ITicketContent> = ({ ticket }) => {
 					</SC.ColContent>
 				) : (
 					<SC.ColContentFlex>
-						<span>{ticket.successRate}% /</span>
-						<SC.ColHeader>&nbsp;{t('last month')}</SC.ColHeader>
+						<span>{ticket.successRate}%</span>
 					</SC.ColContentFlex>
 				)}
-				<SC.ColHeader>{t('Win rate')}</SC.ColHeader>
+				<SC.ColHeader>{t('Last month win rate')}</SC.ColHeader>
 			</Col>
 			<Col md={{ span: 4, order: 3 }} xs={{ span: 24, order: ticketType === TICKET_TYPE.OPEN_TICKET ? 3 : 0 }}>
 				{ticketType === TICKET_TYPE.OPEN_TICKET ? (
