@@ -12,6 +12,7 @@ import TabContent from './TabContent/TabContent'
 import { isBellowOrEqualResolution } from '@/utils/helpers'
 import WalletIcon from '@/assets/icons/walletIcons/WalletIcon.svg'
 import WalletSmallIcon from '@/assets/icons/walletIcons/WalletIconSmall.svg'
+import { getWalletImage } from '@/utils/images'
 
 type Props = {
 	isLoading: boolean
@@ -39,8 +40,7 @@ const UserStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 			key: 'last-month',
 			label: t('Last month'),
 			children: (
-				// TODO: pln z jsonu
-				<TabContent successRate={user?.monthly?.successRate} ticketCount={user?.monthly?.trades} profits={user?.overAll?.pnl} isLoading={isLoading} />
+				<TabContent successRate={user?.monthly?.successRate} ticketCount={user?.monthly?.trades} profits={user?.monthly?.pnl} isLoading={isLoading} />
 			)
 		}
 	]
@@ -73,7 +73,8 @@ const UserStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 				</Row>
 			</SC.ValuesContainer>
 			<SC.WalletImageWrapper>
-				{isBellowOrEqualResolution(size, RESOLUTIONS.LG) ? <SC.WalletIcon imageSrc={WalletSmallIcon} /> : <SC.WalletIcon imageSrc={WalletIcon} />}
+				<SC.WalletIcon imageSrc={getWalletImage(address || '-')} />
+				{/* {isBellowOrEqualResolution(size, RESOLUTIONS.LG) ? <SC.WalletIcon imageSrc={WalletSmallIcon} /> : <SC.WalletIcon imageSrc={WalletIcon} />} */}
 			</SC.WalletImageWrapper>
 		</SC.StatisticsWrapper>
 	)

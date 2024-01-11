@@ -26,13 +26,14 @@ export const WalletImageWrapper = styled(Col)`
 `
 
 export const WalletIcon = styled.div<{ imageSrc: number }>`
-	// TODO: od peta vadsi image
-	height: 180px;
-	width: 180px;
+	/* height: 180px;
+	width: 180px; */
+	height: 140px;
+	width: 140px;
 	border-radius: 50%;
 	background: url(${({ imageSrc }) => imageSrc});
 	background-size: 75%;
-	/* background-color: ${({ theme }) => theme['color-base-surface-quaternary']}; */
+	background-color: ${({ theme }) => theme['color-base-surface-quaternary']};
 	background-repeat: no-repeat;
 	background-position: center;
 

@@ -255,6 +255,5 @@ export interface ISuccessRateData {
 	ac: string
 	sr: number
 	tt: number
-	// TODO
-	// profit: number
+	pnl: number
 }

@@ -50,7 +50,7 @@ const MyWalletContent = () => {
 
 	const [isLoading, setIsLoading] = useState(true)
 
-	const id = isMyWallet ? address?.toLocaleLowerCase() : String(router.query.id).toLowerCase()
+	const id = '0xbB3d0C6168ef0056ed6586bFCf5717A7db0c866f'.toLowerCase() // isMyWallet ? address?.toLocaleLowerCase() : String(router.query.id).toLowerCase()
 
 	const fetchStatistics = () => {
 		setIsLoading(true)
@@ -95,7 +95,7 @@ const MyWalletContent = () => {
 						setUserStatistic({
 							user: {
 								overAll: { ...values?.[0]?.data?.user, pnl: Number(profit), successRate },
-								monthly: { pnl: 0, trades: userMonthlyStats?.tt, successRate: userMonthlyStats?.sr }
+								monthly: { pnl: userMonthlyStats?.pnl, trades: userMonthlyStats?.tt, successRate: userMonthlyStats?.sr }
 							},
 							tickets: ticketsWithOtherAttrs.sort((a, b) => (Number(a.timestamp) < Number(b.timestamp) ? 1 : -1))
 						})
