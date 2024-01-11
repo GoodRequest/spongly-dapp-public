@@ -1497,6 +1497,7 @@ export const getProfit = (wonTickets: UserTicket[], lostTickets: UserTicket[], c
 		profit += Number(getCanceledClaimAmount(ticket)) - ticket.sUSDPaid
 	})
 
+	// TODO: add multi coin support (for base and arbitrum)
 	return round(profit / OPTIMISM_DIVISOR, 2).toFixed(2)
 }
 
