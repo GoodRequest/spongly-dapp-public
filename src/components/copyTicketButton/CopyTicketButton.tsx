@@ -123,8 +123,9 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 		setIsLoading(true)
 		const filteredActiveMatches = activeMatches?.filter((item) => !!item?.betOption)
 
-		if (filteredActiveMatches?.length !== 0) {
+		if (filteredActiveMatches?.length === 0) {
 			showNotifications([{ type: MSG_TYPE.ERROR, message: t('None of the bets can be copied') }], NOTIFICATION_TYPE.NOTIFICATION)
+			setIsLoading(false)
 			return
 		}
 
