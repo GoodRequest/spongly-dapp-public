@@ -26,10 +26,8 @@ export const WalletImageWrapper = styled(Col)`
 `
 
 export const WalletIcon = styled.div<{ imageSrc: number }>`
-	/* height: 180px;
-	width: 180px; */
-	height: 140px;
-	width: 140px;
+	height: 180px;
+	width: 180px;
 	border-radius: 50%;
 	background: url(${({ imageSrc }) => imageSrc});
 	background-size: 75%;
