@@ -309,6 +309,7 @@ export const Empty = styled(AntdEmpty)`
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	border-radius: 12px;
 	padding: 52px;
+	margin-inline: unset;
 	.ant-empty-description {
 		div {
 			margin-top: 28px;

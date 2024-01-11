@@ -52,6 +52,19 @@ export const ColContent = styled.div`
 	}
 `
 
+export const ColContentFlex = styled.div`
+	${TextLGMedium};
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	.ant-spin {
+		span {
+			color: ${({ theme }) => theme['color-base-content-top']};
+			font-size: 18px;
+		}
+	}
+`
+
 export const TicketIcon = styled.div<{ imageSrc: number }>`
 	height: 48px;
 	width: 48px;

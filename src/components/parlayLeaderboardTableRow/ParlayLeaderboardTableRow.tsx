@@ -30,6 +30,7 @@ const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, 
 					{isLoading ? (
 						skeletonPreset(120)
 					) : (
+						// eslint-disable-next-line
 						<div
 							role={'button'}
 							style={{ minWidth: '80px', cursor: 'pointer' }}

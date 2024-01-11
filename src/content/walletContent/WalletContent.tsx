@@ -14,7 +14,14 @@ import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
 // utils
 import { GET_USERS_STATISTICS, GET_USERS_TRANSACTIONS } from '@/utils/queries'
 import networkConnector from '@/utils/networkConnector'
-import { assignOtherAttrsToUserTicket, getUserTicketType, parseParlayToUserTicket, parsePositionBalanceToUserTicket } from '@/utils/helpers'
+import {
+	assignOtherAttrsToUserTicket,
+	fetchSuccessRate,
+	getProfit,
+	getUserTicketType,
+	parseParlayToUserTicket,
+	parsePositionBalanceToUserTicket
+} from '@/utils/helpers'
 import { MSG_TYPE, NOTIFICATION_TYPE, USER_TICKET_TYPE, NETWORK_IDS } from '@/utils/constants'
 import { showNotifications } from '@/utils/tsxHelpers'
 
@@ -27,6 +34,7 @@ import { ParlayMarket, PositionBalance } from '@/__generated__/resolvers-types'
 // styles
 import * as SCS from '@/styles/GlobalStyles'
 import Custom404 from '@/pages/404'
+import UserStatisticRow from '@/components/statisticRow/UserStatisticRow'
 
 const MyWalletContent = () => {
 	const { t } = useTranslation()
@@ -42,13 +50,15 @@ const MyWalletContent = () => {
 
 	const [isLoading, setIsLoading] = useState(true)
 
+	const id = isMyWallet ? address?.toLocaleLowerCase() : String(router.query.id).toLowerCase()
+
 	const fetchStatistics = () => {
 		setIsLoading(true)
-		const id = isMyWallet ? address?.toLocaleLowerCase() : String(router.query.id).toLowerCase()
 		setTimeout(() => {
 			Promise.all([
 				fetchUserStatistic({ variables: { id }, context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM } }),
-				fetchUserMarketTransactions({ variables: { account: id }, context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM } })
+				fetchUserMarketTransactions({ variables: { account: id }, context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM } }),
+				fetchSuccessRate(chain?.id)
 			])
 				.then(async (values) => {
 					const marketData: { timestamp: string; id: string }[] = values?.[1]?.data?.marketTransactions?.map((item: any) => {
@@ -69,6 +79,7 @@ const MyWalletContent = () => {
 
 					const wonTickets = [...parlayTickets, ...positionTickets]?.filter((item) => getUserTicketType(item) === USER_TICKET_TYPE.SUCCESS)
 					const lostTickets = [...parlayTickets, ...positionTickets]?.filter((item) => getUserTicketType(item) === USER_TICKET_TYPE.MISS)
+					const cancelledTickets = [...parlayData, ...positionTickets]?.filter((item) => getUserTicketType(item) === USER_TICKET_TYPE.CANCELED)
 
 					const numberOfAttempts = wonTickets.length + lostTickets.length
 					let successRate = 0.0
@@ -76,9 +87,16 @@ const MyWalletContent = () => {
 						successRate = Number(((wonTickets.length / numberOfAttempts) * 100).toFixed(2))
 					}
 
+					const profit = getProfit(wonTickets, lostTickets, cancelledTickets)
+
+					const userMonthlyStats = values?.[2]?.find((item: any) => item?.ac === id)
+
 					assignOtherAttrsToUserTicket([...parlayTickets, ...positionTickets], marketData, chain?.id, signer).then((ticketsWithOtherAttrs) => {
 						setUserStatistic({
-							user: { ...values?.[0]?.data?.user, successRate },
+							user: {
+								overAll: { ...values?.[0]?.data?.user, pnl: Number(profit), successRate },
+								monthly: { pnl: userMonthlyStats?.pnl, trades: userMonthlyStats?.tt, successRate: userMonthlyStats?.sr }
+							},
 							tickets: ticketsWithOtherAttrs.sort((a, b) => (Number(a.timestamp) < Number(b.timestamp) ? 1 : -1))
 						})
 					})
@@ -133,6 +151,9 @@ const MyWalletContent = () => {
 							}
 							return (
 								<Row gutter={[0, 16]}>
+									<Col span={24}>
+										<UserStatisticRow isMyWallet={isMyWallet} isLoading={isLoading} user={userStatistic?.user} />
+									</Col>
 									<Col span={24}>
 										<UserTicketsList refetch={refetch} isMyWallet={isMyWallet} isLoading={isLoading} tickets={userStatistic?.tickets} />
 									</Col>
