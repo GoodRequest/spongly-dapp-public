@@ -4,14 +4,9 @@ import { useAccount } from 'wagmi'
 import { useRouter } from 'next-translate-routes'
 import { useIsMounted } from '@/hooks/useIsMounted'
 import { User } from '@/typescript/types'
-import { useMedia } from '@/hooks/useMedia'
 import * as SC from './UserStatisticRowStyles'
 import Tabs from '@/components/tabs/Tabs'
-import { RESOLUTIONS } from '@/utils/enums'
 import TabContent from './TabContent/TabContent'
-import { isBellowOrEqualResolution } from '@/utils/helpers'
-import WalletIcon from '@/assets/icons/walletIcons/WalletIcon.svg'
-import WalletSmallIcon from '@/assets/icons/walletIcons/WalletIconSmall.svg'
 import { getWalletImage } from '@/utils/images'
 
 type Props = {
@@ -25,8 +20,6 @@ const UserStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 	const { address } = useAccount()
 	const isMounted = useIsMounted()
 	const router = useRouter()
-
-	const size = useMedia()
 
 	const tabItems = [
 		{
@@ -73,8 +66,8 @@ const UserStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 				</Row>
 			</SC.ValuesContainer>
 			<SC.WalletImageWrapper>
+				{/* TODO zamenit za vadsi obrazok */}
 				<SC.WalletIcon imageSrc={getWalletImage(address || '-')} />
-				{/* {isBellowOrEqualResolution(size, RESOLUTIONS.LG) ? <SC.WalletIcon imageSrc={WalletSmallIcon} /> : <SC.WalletIcon imageSrc={WalletIcon} />} */}
 			</SC.WalletImageWrapper>
 		</SC.StatisticsWrapper>
 	)
