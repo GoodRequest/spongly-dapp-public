@@ -8,6 +8,7 @@ import { breakpoints } from '@/styles/theme'
 type Props = SelectProps & {
 	onChange?: (value: any) => void
 	useSelectContainer?: boolean
+	title?: string
 }
 
 const Select = ({
