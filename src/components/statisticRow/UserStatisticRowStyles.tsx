@@ -91,6 +91,7 @@ export const StatisticsWrapper = styled(Row)`
 	height: 315px;
 	border: 1px;
 	padding: 40px;
+	border-radius: 8px;
 	box-shadow: ${({ theme }) => theme['drop-shadow-xs']};
 	background: ${({ theme }) => theme['color-spongly-cool-gray-700']};
 

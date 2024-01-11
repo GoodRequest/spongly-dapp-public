@@ -11,11 +11,11 @@ import * as SC from './TabContentStyles'
 type TabContentProps = {
 	ticketCount?: number | null
 	successRate?: number | null
-	profits?: number | null
+	profit?: number | null
 	isLoading: boolean
 }
 
-const TabContent: React.FC<TabContentProps> = ({ ticketCount, successRate, profits, isLoading }) => {
+const TabContent: React.FC<TabContentProps> = ({ ticketCount, successRate, profit, isLoading }) => {
 	const { t } = useTranslation()
 
 	return (
@@ -64,7 +64,7 @@ const TabContent: React.FC<TabContentProps> = ({ ticketCount, successRate, profi
 							<Spin indicator={<LoadingOutlined spin />} />
 						) : (
 							<>
-								<SC.ValueText>{profits || 0} $</SC.ValueText>
+								<SC.ValueText>{(profit || 0) > 0 ? `+${profit}` : profit || 0} $</SC.ValueText>
 								<SC.ValueTitle>{t('Profits')}</SC.ValueTitle>
 							</>
 						)}

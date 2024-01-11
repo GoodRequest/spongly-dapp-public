@@ -26,14 +26,14 @@ const UserStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 			key: 'overall',
 			label: t('Overall'),
 			children: (
-				<TabContent successRate={user?.overAll?.successRate} ticketCount={user?.overAll?.trades} profits={user?.overAll?.pnl} isLoading={isLoading} />
+				<TabContent successRate={user?.overAll?.successRate} ticketCount={user?.overAll?.trades} profit={user?.overAll?.pnl} isLoading={isLoading} />
 			)
 		},
 		{
 			key: 'last-month',
 			label: t('Last month'),
 			children: (
-				<TabContent successRate={user?.monthly?.successRate} ticketCount={user?.monthly?.trades} profits={user?.monthly?.pnl} isLoading={isLoading} />
+				<TabContent successRate={user?.monthly?.successRate} ticketCount={user?.monthly?.trades} profit={user?.monthly?.pnl} isLoading={isLoading} />
 			)
 		}
 	]
@@ -66,7 +66,6 @@ const UserStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 				</Row>
 			</SC.ValuesContainer>
 			<SC.WalletImageWrapper>
-				{/* TODO zamenit za vadsi obrazok */}
 				<SC.WalletIcon imageSrc={getWalletImage(address || '-')} />
 			</SC.WalletImageWrapper>
 		</SC.StatisticsWrapper>
