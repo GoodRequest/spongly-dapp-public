@@ -9,12 +9,15 @@ export const TabsRow = styled(Row)`
 
 export const Wrapper = styled.div`
 	display: flex;
-	height: 100%;
+	height: 106px;
 	flex-direction: column;
 	gap: 0;
+	min-width: 78px;
 
 	@media (min-width: ${breakpoints.md}px) {
 		flex-direction: row;
+		height: 68px;
+		min-width: 140px;
 		gap: 8px;
 	}
 `

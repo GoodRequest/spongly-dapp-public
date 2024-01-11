@@ -21,6 +21,8 @@ const UserStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 	const isMounted = useIsMounted()
 	const router = useRouter()
 
+	const userAddress = isMyWallet ? address : String(router.query.id)
+
 	const tabItems = [
 		{
 			key: 'overall',
@@ -66,7 +68,7 @@ const UserStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 				</Row>
 			</SC.ValuesContainer>
 			<SC.WalletImageWrapper>
-				<SC.WalletIcon imageSrc={getWalletImage(address || '-')} />
+				<SC.WalletIcon imageSrc={getWalletImage(userAddress || '-')} />
 			</SC.WalletImageWrapper>
 		</SC.StatisticsWrapper>
 	)
