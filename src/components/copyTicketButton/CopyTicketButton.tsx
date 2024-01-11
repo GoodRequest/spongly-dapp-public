@@ -16,13 +16,14 @@ import { GET_SPORT_MARKETS_FOR_GAME } from '@/utils/queries'
 import Modal from '@/components/modal/Modal'
 import * as SC from './CopyTicketButtonStyles'
 import MatchRow from '@/components/ticketBetContainer/components/matchRow/MatchRow'
-import { MAX_TICKETS, Network, NETWORK_IDS } from '@/utils/constants'
+import { MAX_TICKETS, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE } from '@/utils/constants'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import { copyTicketToUnsubmittedTickets, getPositionsWithMergedCombinedPositions, orderPositionsAsSportMarkets } from '@/utils/helpers'
 import { SGPItem } from '@/typescript/types'
 import networkConnector from '@/utils/networkConnector'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 import { useMatchesWithChildMarkets } from '@/hooks/useMatchesWithChildMarkets'
+import { showNotifications } from '@/utils/tsxHelpers'
 
 type Props = {
 	ticket: any
@@ -120,7 +121,14 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 
 	const handleSetTempMatches = async (onlyCopy: boolean) => {
 		setIsLoading(true)
-		const gameIDQuery = activeMatches?.map((item) => item?.gameId)
+		const filteredActiveMatches = activeMatches?.filter((item) => !!item?.betOption)
+
+		if (filteredActiveMatches?.length !== 0) {
+			showNotifications([{ type: MSG_TYPE.ERROR, message: t('None of the bets can be copied') }], NOTIFICATION_TYPE.NOTIFICATION)
+			return
+		}
+
+		const gameIDQuery = filteredActiveMatches?.map((item) => item?.gameId)
 
 		// NOTE: fetch rest of the available betOptions
 		fetchMarketsForGame({ variables: { gameId_in: gameIDQuery }, context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM } })
@@ -132,19 +140,19 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 						return {
 							...marketOdds,
 							// NOTE: every bet is different game.
-							betOption: activeMatches?.find((activeMatch) => activeMatch.gameId === marketOdds.gameId)?.betOption
+							betOption: filteredActiveMatches?.find((activeMatch) => activeMatch.gameId === marketOdds.gameId)?.betOption
 						}
 					})
 					setTempMatches(formattedMarketOddsFromContract)
 				} catch (err) {
-					setTempMatches(activeMatches)
+					setTempMatches(filteredActiveMatches)
 				} finally {
 					setCopyModal({ visible: true, onlyCopy })
 					setIsLoading(false)
 				}
 			})
 			.catch(() => {
-				setTempMatches(activeMatches)
+				setTempMatches(filteredActiveMatches)
 				setCopyModal({ visible: true, onlyCopy })
 				setIsLoading(false)
 			})

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { toNumber } from 'lodash'
-import { Col, Row, Spin } from 'antd'
+import { Col, Row, Spin, Tooltip } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import { LoadingOutlined } from '@ant-design/icons'
 
@@ -148,7 +148,14 @@ const TicketItem = ({ match, oddsInfo }: Props) => {
 					)}
 				</Col>
 				<SC.OddsWrapper xxl={8} xl={8} lg={9} md={5} sm={6} xs={24}>
-					<SC.BetTypeText>{`${oddsSymbol} ${betInfoValues()}`}</SC.BetTypeText>
+					{oddsSymbol ? (
+						<SC.BetTypeText>{`${oddsSymbol} ${betInfoValues()}`}</SC.BetTypeText>
+					) : (
+						<Tooltip title={t('Unknown bet type - this bet will not be copied.')}>
+							<SC.BetTypeText>{`-`}</SC.BetTypeText>
+						</Tooltip>
+					)}
+
 					{oddsDataFromContract ? (
 						<SCS.FlexColumn>
 							<SC.OddText>{getOdds()}</SC.OddText>
