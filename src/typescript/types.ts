@@ -69,6 +69,7 @@ export type ParlayLeaderboardTableItem = {
 		value: number
 	}
 	isLoading?: boolean
+	marketQuotes?: number[]
 }
 
 export type Option = {

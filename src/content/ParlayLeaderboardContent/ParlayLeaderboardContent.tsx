@@ -153,7 +153,8 @@ const ParlayLeaderboardContent = () => {
 					position: item?.numberOfPositions,
 					quote: item?.totalQuote ? item?.totalQuote : 0,
 					paid: item?.sUSDPaid ? item?.sUSDPaid : 0,
-					won: item?.totalAmount ? item?.totalAmount : 0
+					won: item?.totalAmount ? item?.totalAmount : 0,
+					marketQuotes: item?.marketQuotes
 				}
 				return newItem
 			})
@@ -220,6 +221,20 @@ const ParlayLeaderboardContent = () => {
 		})
 	}
 
+	const countQuoteToCheck = (marketQuotes?: number[]) => {
+		let countedQuote = 0
+		if (!marketQuotes) return countedQuote
+
+		marketQuotes.forEach((quote) => {
+			if (countedQuote === 0) {
+				countedQuote = Number(formatQuote(actualOddType, quote))
+			} else {
+				countedQuote *= Number(formatQuote(actualOddType, quote))
+			}
+		})
+		return countedQuote.toFixed(2)
+	}
+
 	const parlayLeaderBoard = () => {
 		if (isLoading) {
 			return (
@@ -249,20 +264,19 @@ const ParlayLeaderboardContent = () => {
 			)
 		}
 
-		return shownData
-			?.slice(0, Number(filters?.page) * 15)
-			.map((data, index) => (
-				<ParlayLeaderboardTableRow
-					key={index}
-					rank={data.rank}
-					address={data.address}
-					position={data.position}
-					paid={data.paid ? round(Number(data?.paid), 2).toFixed(2) : 0}
-					quote={data.quote ? formatQuote(actualOddType, data?.quote) : 0}
-					won={data.won ? round(Number(data?.won), 2).toFixed(2) : 0}
-					reward={getReward(data?.rank ? data.rank - 1 : undefined, chain?.id)}
-				/>
-			))
+		return shownData?.slice(0, Number(filters?.page) * 15).map((data, index) => (
+			<ParlayLeaderboardTableRow
+				key={index}
+				rank={data.rank}
+				address={data.address}
+				position={data.position}
+				paid={data.paid ? round(Number(data?.paid), 2).toFixed(2) : 0}
+				// quote={data.quote ? formatQuote(actualOddType, data?.quote) : 0}
+				quote={countQuoteToCheck(data?.marketQuotes)}
+				won={data.won ? round(Number(data?.won), 2).toFixed(2) : 0}
+				reward={getReward(data?.rank ? data.rank - 1 : undefined, chain?.id)}
+			/>
+		))
 	}
 
 	const hasMoreData = () => {
