@@ -20,7 +20,7 @@ import WarningIcon from '@/assets/icons/warning-icon.svg'
 
 import * as SC from './ParlayLeaderboardContentStyles'
 import * as SCS from '@/styles/GlobalStyles'
-import { formatQuote } from '@/utils/formatters/quote'
+import { formatDecimalQuote, formatQuote } from '@/utils/formatters/quote'
 import { showNotifications } from '@/utils/tsxHelpers'
 import { PAGES } from '@/utils/enums'
 import Sorter from '@/components/Sorter'
@@ -248,7 +248,6 @@ const ParlayLeaderboardContent = () => {
 				/>
 			)
 		}
-
 		return shownData
 			?.slice(0, Number(filters?.page) * 15)
 			.map((data, index) => (
@@ -258,7 +257,7 @@ const ParlayLeaderboardContent = () => {
 					address={data.address}
 					position={data.position}
 					paid={data.paid ? round(Number(data?.paid), 2).toFixed(2) : 0}
-					quote={data.quote ? formatQuote(actualOddType, data?.quote) : 0}
+					quote={data.won && data.paid ? formatDecimalQuote(actualOddType, round(Number(data.won) / Number(data.paid), 2)) : 0}
 					won={data.won ? round(Number(data?.won), 2).toFixed(2) : 0}
 					reward={getReward(data?.rank ? data.rank - 1 : undefined, chain?.id)}
 				/>
