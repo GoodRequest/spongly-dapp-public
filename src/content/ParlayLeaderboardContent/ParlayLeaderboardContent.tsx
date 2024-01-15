@@ -20,7 +20,7 @@ import WarningIcon from '@/assets/icons/warning-icon.svg'
 
 import * as SC from './ParlayLeaderboardContentStyles'
 import * as SCS from '@/styles/GlobalStyles'
-import { formatDecimalQuote, formatQuote } from '@/utils/formatters/quote'
+import { formatDecimalQuote } from '@/utils/formatters/quote'
 import { showNotifications } from '@/utils/tsxHelpers'
 import { PAGES } from '@/utils/enums'
 import Sorter from '@/components/Sorter'
