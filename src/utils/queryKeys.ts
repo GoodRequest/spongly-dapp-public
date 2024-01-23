@@ -1,7 +1,7 @@
 import { LiquidityPoolType } from '@/typescript/liquidityPool'
 import { GlobalFiltersEnum } from './markets'
 import { NetworkId } from './networkConnector'
-import { PositionNumber } from './constants'
+import { Network, PositionNumber } from './constants'
 
 const QUERY_KEYS = {
 	ParlayMarkets: (networkId: NetworkId, account: string) => ['parlayMarkets', networkId, account],
