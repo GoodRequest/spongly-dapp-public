@@ -18,7 +18,6 @@ import {
 	MATCH_STATUS,
 	MSG_TYPE,
 	Network,
-	NetworkFile,
 	NetworkFileFromNetworkIds,
 	NETWORK_IDS,
 	NOTIFICATION_TYPE,

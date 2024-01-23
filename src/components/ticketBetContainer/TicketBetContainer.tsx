@@ -262,7 +262,7 @@ const TicketBetContainer = () => {
 				const marketsAddresses = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses
 				const betOptions = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).betTypes
 
-				const [minimumReceivedForCollateralAmount, minimumNeededForMinUsdAmountValue] = await Promise.all([
+				const [minimumReceivedForCollateralAmount, _minimumNeededForMinUsdAmountValue] = await Promise.all([
 					isDefaultCollateral
 						? 0
 						: multiCollateralOnOffRampContract?.getMinimumReceived(
@@ -348,19 +348,19 @@ const TicketBetContainer = () => {
 	const getAllowance = async () => {
 		const { signer, sUSDContract, parlayMarketsAMMContract, multipleCollateral, sportsAMMContract } = networkConnector
 		try {
-			if (signer && sUSDContract && isWalletConnected && multipleCollateral) {
+			if (signer && sUSDContract && isWalletConnected && multipleCollateral && activeTicketValues.selectedStablecoin) {
 				const collateralContractWithSigner = isDefaultCollateral
 					? sUSDContract?.connect(signer)
-					: multipleCollateral[activeTicketValues.selectedStablecoin]?.connect(signer)
+					: multipleCollateral[activeTicketValues?.selectedStablecoin as Coins]?.connect(signer)
 
 				// TODO: Add logic when user switch coin type
 				let allowance = BigInt(0)
 				if (activeTicketMatchesCount === 0) {
 					allowance = BigInt(0)
 				} else if (activeTicketMatchesCount === 1 && !isCombined(activeTicketValues?.matches?.[0].betOption)) {
-					allowance = await collateralContractWithSigner.allowance(address, sportsAMMContract?.address)
+					allowance = await collateralContractWithSigner?.allowance(address, sportsAMMContract?.address)
 				} else if (activeTicketMatchesCount > 1 || isCombined(activeTicketValues?.matches?.[0].betOption)) {
-					allowance = await collateralContractWithSigner.allowance(address, parlayMarketsAMMContract?.address)
+					allowance = await collateralContractWithSigner?.allowance(address, parlayMarketsAMMContract?.address)
 				}
 				return Number(ethers.utils.formatEther(allowance))
 			}
@@ -377,18 +377,18 @@ const TicketBetContainer = () => {
 		if (signer && sUSDContract && multipleCollateral) {
 			const collateralContractWithSigner = isDefaultCollateral
 				? sUSDContract?.connect(signer)
-				: multipleCollateral[activeTicketValues.selectedStablecoin]?.connect(signer)
+				: multipleCollateral[activeTicketValues?.selectedStablecoin as Coins]?.connect(signer)
 
 			try {
 				// const sUSDContractWithSigner = sUSDContract.connect(signer)
 				const approveAmount = ethers.BigNumber.from(MAX_ALLOWANCE)
-				const estimationGas = await collateralContractWithSigner.estimateGas.approve(
+				const estimationGas = await collateralContractWithSigner?.estimateGas?.approve(
 					activeTicketMatchesCount === 1 ? sportsAMMContract?.address : parlayMarketsAMMContract?.address,
 					approveAmount
 				)
 				const finalEstimation = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
 
-				const tx = (await collateralContractWithSigner.approve(
+				const tx = (await collateralContractWithSigner?.approve(
 					activeTicketMatchesCount === 1 ? sportsAMMContract?.address : parlayMarketsAMMContract?.address,
 					approveAmount,
 					{
@@ -582,7 +582,6 @@ const TicketBetContainer = () => {
 						collateralAddress,
 						REFERRER_WALLET
 					]
-					console.log('called else single', reqData)
 					const estimationGas = await sportsMarketsAMMContractWithSigner?.estimateGas.buyFromAMMWithDifferentCollateralAndReferrer(...reqData)
 
 					const finalEstimation = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
@@ -619,11 +618,8 @@ const TicketBetContainer = () => {
 					collateralAddress,
 					REFERRER_WALLET
 				]
-				console.log('reqData', reqData)
 				const estimationGas = await parlayMarketsAMMContractWithSigner?.estimateGas.buyFromParlayWithDifferentCollateralAndReferrer(...reqData)
-				console.log('called 1')
 				const finalEstimation = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
-				console.log('called 2')
 				data = (await parlayMarketsAMMContractWithSigner?.buyFromParlayWithDifferentCollateralAndReferrer(...reqData, {
 					gasLimit: finalEstimation
 				})) as ethers.ContractTransaction
@@ -633,7 +629,6 @@ const TicketBetContainer = () => {
 				showNotifications([{ type: MSG_TYPE.SUCCESS, message: t('The ticket was successfully submitted') }], NOTIFICATION_TYPE.NOTIFICATION)
 			})
 		} catch (e) {
-			console.log('error', { e })
 			const err: any = e
 			if (err?.code === 'ACTION_REJECTED') {
 				showNotifications([{ type: MSG_TYPE.INFO, message: t('User rejected transaction') }], NOTIFICATION_TYPE.NOTIFICATION)
