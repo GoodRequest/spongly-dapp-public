@@ -52,6 +52,19 @@ export const ColContent = styled.div`
 	}
 `
 
+export const ColContentFlex = styled.div`
+	${TextLGMedium};
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	.ant-spin {
+		span {
+			color: ${({ theme }) => theme['color-base-content-top']};
+			font-size: 18px;
+		}
+	}
+`
+
 export const TicketIcon = styled.div<{ imageSrc: number }>`
 	height: 48px;
 	width: 48px;
@@ -142,7 +155,7 @@ export const TicketCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 		border-radius: 12px;
 		padding: 16px;
 		right: 16px;
-		top: 16px;
+		top: 32px;
 		padding-inline-end: 0 !important;
 		padding-inline-start: 14px !important;
 		background: ${({ theme }) => theme['color-base-surface-quaternary']};
@@ -182,7 +195,7 @@ export const CollapsePanel = styled(Panel)<{ isExpanded: boolean }>`
 		display: block !important;
 		border-bottom: 1px solid ${({ theme, isExpanded }) => (isExpanded ? theme['color-base-surface-quaternary'] : 'none')} !important;
 		@media (max-width: ${breakpoints.md}px) {
-			border-bottom: none !important;
+			padding-bottom: 44px !important;
 		}
 	}
 	.ant-collapse-content {

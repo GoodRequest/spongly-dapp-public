@@ -1,127 +1,76 @@
 import { useTranslation } from 'next-export-i18n'
 import { Row, Col } from 'antd'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { useRouter } from 'next-translate-routes'
-
-import { useEffect, useState } from 'react'
-import { useLazyQuery } from '@apollo/client'
-import { includes } from 'lodash'
-import StatisticCard from '@/atoms/statisticCard/StatisticCard'
 import { useIsMounted } from '@/hooks/useIsMounted'
+import { User } from '@/typescript/types'
+import * as SC from './UserStatisticRowStyles'
+import Tabs from '@/components/tabs/Tabs'
+import TabContent from './TabContent/TabContent'
 import { getWalletImage } from '@/utils/images'
-import { roundPrice } from '@/utils/formatters/currency'
 
-import SuccessRateIcon from '@/assets/icons/stat-successrate-icon.svg'
-import ProfitsTicketsIcon from '@/assets/icons/stat-profits-icon.svg'
-import TicketsIcon from '@/assets/icons/stat-balance-icon.svg'
-import { PAGES } from '@/utils/enums'
-import { formatTicketPositionsForStatistics, getUserTicketType } from '@/utils/helpers'
-import { MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE, USER_TICKET_TYPE } from '@/utils/constants'
-import { GET_USERS_STATISTICS } from '@/utils/queries'
-import { showNotifications } from '@/utils/tsxHelpers'
-
-interface IStatistics {
-	successRate: number
-	trades: number
-	pnl: number
+type Props = {
+	isLoading: boolean
+	user: User | undefined
+	isMyWallet?: boolean
 }
 
-const UserStatisticRow = () => {
+const UserStatisticRow = ({ isLoading, user, isMyWallet }: Props) => {
 	const { t } = useTranslation()
-	const { chain } = useNetwork()
 	const { address } = useAccount()
 	const isMounted = useIsMounted()
 	const router = useRouter()
-	const [fetchUserStatistic] = useLazyQuery(GET_USERS_STATISTICS)
-	const userStatistics = [`/${PAGES.MY_WALLET}`, `/${PAGES.TIPSTER_DETAIL}`]
-	const isMyWallet = !router.query.id
-	const [statistics, setStatistics] = useState<IStatistics>()
-	const [isLoading, setIsLoading] = useState(false)
-	const id = isMyWallet ? address?.toLocaleLowerCase() : String(router.query.id).toLowerCase()
 
-	const fetchStats = async () => {
-		try {
-			setIsLoading(true)
-			const { data } = await fetchUserStatistic({ variables: { id }, context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM } })
-			const formattedTicketData = formatTicketPositionsForStatistics({ parlayMarkets: data.parlayMarkets, positionBalances: data.positionBalances })
-			const wonTickets = [...formattedTicketData.parlayTickets, ...formattedTicketData.positionTickets]?.filter(
-				(item) => getUserTicketType(item) === USER_TICKET_TYPE.SUCCESS
-			)
-			const lostTickets = [...formattedTicketData.parlayTickets, ...formattedTicketData.positionTickets]?.filter(
-				(item) => getUserTicketType(item) === USER_TICKET_TYPE.MISS
-			)
-			const numberOfAttempts = wonTickets.length + lostTickets.length
-			let successRate = 0.0
-			if (wonTickets.length !== 0) {
-				successRate = Number(((wonTickets.length / numberOfAttempts) * 100).toFixed(2))
-			}
-			setStatistics({ ...data.user, successRate })
-			setIsLoading(false)
-		} catch (e) {
-			showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while loading detail of tipster') }], NOTIFICATION_TYPE.NOTIFICATION)
-			setIsLoading(false)
-			// eslint-disable-next-line no-console
-			console.error(e)
-		}
-	}
-	const showUserStatistics = () => {
-		if (chain?.id) return true
-		if (!chain?.id && isMyWallet) return false
-		if (!chain?.id && !isMyWallet) return true
-		return false
-	}
+	const userAddress = isMyWallet ? address : String(router.query.id)
 
-	useEffect(() => {
-		if (router.isReady && isMounted && showUserStatistics()) {
-			fetchStats()
+	const tabItems = [
+		{
+			key: 'overall',
+			label: t('Overall'),
+			children: (
+				<TabContent successRate={user?.overAll?.successRate} ticketCount={user?.overAll?.trades} profit={user?.overAll?.pnl} isLoading={isLoading} />
+			)
+		},
+		{
+			key: 'last-month',
+			label: t('Last month'),
+			children: (
+				<TabContent successRate={user?.monthly?.successRate} ticketCount={user?.monthly?.trades} profit={user?.monthly?.pnl} isLoading={isLoading} />
+			)
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [router.isReady, isMounted, chain?.id, id])
+	]
 
 	return (
-		<Row gutter={[0, 32]}>
-			{includes(userStatistics, router.pathname) && showUserStatistics() ? (
-				<>
-					<Col lg={6} md={24} sm={24} xs={24}>
-						<StatisticCard
-							img={getWalletImage(address as string)}
-							filled={true}
-							isAddress={true}
-							value={isMounted ? (isMyWallet ? address : String(router.query.id) || '') : ''}
-							title={isMyWallet ? t('My wallet') : t('Wallet')}
-							isMyWallet={isMyWallet}
-						/>
+		<SC.StatisticsWrapper justify={'space-between'}>
+			<SC.ValuesContainer flex={'auto'}>
+				<Row>
+					<Col span={24}>
+						<SC.MyWalletText>{isMyWallet ? t('My Wallet') : t('Tipster')}</SC.MyWalletText>
 					</Col>
-					<Col lg={6} md={8} sm={8} xs={8}>
-						<StatisticCard
-							showMobileInColumn={true}
-							isLoading={isLoading}
-							img={SuccessRateIcon}
-							value={isMounted ? `${statistics?.successRate ? statistics.successRate : 0} %` : ''}
-							title={t('Success rate')}
-						/>
+					<Col md={24}>
+						{isMounted && (
+							<SC.AddressContainer>
+								<SC.FirstAddressPart>
+									{String(isMyWallet ? address : String(router.query.id) || '')?.substring(
+										0,
+										String(isMyWallet ? address : String(router.query.id) || '').length - 3
+									)}
+								</SC.FirstAddressPart>
+								<SC.SecondAddressPart>{String(isMyWallet ? address : String(router.query.id) || '')?.slice(-3)}</SC.SecondAddressPart>
+							</SC.AddressContainer>
+						)}
 					</Col>
-					<Col lg={6} md={8} sm={8} xs={8}>
-						<StatisticCard
-							isLoading={isLoading}
-							showMobileInColumn={true}
-							img={ProfitsTicketsIcon}
-							value={isMounted ? `${statistics?.pnl && statistics?.pnl > 0 ? '+' : ''}${roundPrice(statistics?.pnl, false)} $` : ''}
-							title={t('Profits')}
-						/>
+				</Row>
+				<Row>
+					<Col span={24}>
+						<Tabs items={tabItems} />
 					</Col>
-					<Col lg={6} md={8} sm={8} xs={8}>
-						<StatisticCard
-							isLoading={isLoading}
-							showMobileInColumn={true}
-							img={TicketsIcon}
-							value={isMounted ? (statistics?.trades ? statistics.trades : 0) : 0}
-							title={t('Tickets')}
-						/>
-					</Col>
-				</>
-			) : null}
-		</Row>
+				</Row>
+			</SC.ValuesContainer>
+			<SC.WalletImageWrapper>
+				<SC.WalletIcon imageSrc={getWalletImage(userAddress || '-')} />
+			</SC.WalletImageWrapper>
+		</SC.StatisticsWrapper>
 	)
 }
 

@@ -231,7 +231,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 					}
 				/>
 			</SC.ClaimColContent>
-			<SC.TicketDivider showClaimed={ticket.isClaimable} />
+			<SC.TicketDivider />
 		</SC.UserTicketTableRow>
 	)
 

@@ -15,7 +15,7 @@ import { GET_SPORT_MARKETS_FOR_GAME } from '@/utils/queries'
 import Modal from '@/components/modal/Modal'
 import * as SC from './CopyTicketButtonStyles'
 import MatchRow from '@/components/ticketBetContainer/components/matchRow/MatchRow'
-import { FORM, MAX_TICKETS, Network, NETWORK_IDS } from '@/utils/constants'
+import { FORM, MAX_TICKETS, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE } from '@/utils/constants'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import { copyTicketToUnsubmittedTickets, getPositionsWithMergedCombinedPositions, orderPositionsAsSportMarkets } from '@/utils/helpers'
 import { SGPItem } from '@/typescript/types'
@@ -23,6 +23,7 @@ import networkConnector from '@/utils/networkConnector'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 import { useMatchesWithChildMarkets } from '@/hooks/useMatchesWithChildMarkets'
 import { getDefaultDecimalsForNetwork } from '@/utils/network'
+import { showNotifications } from '@/utils/tsxHelpers'
 
 type Props = {
 	ticket: any
@@ -54,7 +55,7 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 
-	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions, ticket, sgpFees)
+	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions as any, ticket, sgpFees)
 
 	const formatMatchesToTicket = async () => {
 		const decimals = getDefaultDecimalsForNetwork(chain?.id || NETWORK_IDS.OPTIMISM)
@@ -121,7 +122,15 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 
 	const handleSetTempMatches = async (onlyCopy: boolean) => {
 		setIsLoading(true)
-		const gameIDQuery = activeMatches?.map((item) => item?.gameId)
+		const filteredActiveMatches = activeMatches?.filter((item) => !!item?.betOption)
+
+		if (filteredActiveMatches?.length === 0) {
+			showNotifications([{ type: MSG_TYPE.ERROR, message: t('None of the bets can be copied') }], NOTIFICATION_TYPE.NOTIFICATION)
+			setIsLoading(false)
+			return
+		}
+
+		const gameIDQuery = filteredActiveMatches?.map((item) => item?.gameId)
 
 		// NOTE: fetch rest of the available betOptions
 		fetchMarketsForGame({ variables: { gameId_in: gameIDQuery }, context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM } })
@@ -133,19 +142,19 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 						return {
 							...marketOdds,
 							// NOTE: every bet is different game.
-							betOption: activeMatches?.find((activeMatch) => activeMatch.gameId === marketOdds.gameId)?.betOption
+							betOption: filteredActiveMatches?.find((activeMatch) => activeMatch.gameId === marketOdds.gameId)?.betOption
 						}
 					})
 					setTempMatches(formattedMarketOddsFromContract)
 				} catch (err) {
-					setTempMatches(activeMatches)
+					setTempMatches(filteredActiveMatches)
 				} finally {
 					setCopyModal({ visible: true, onlyCopy })
 					setIsLoading(false)
 				}
 			})
 			.catch(() => {
-				setTempMatches(activeMatches)
+				setTempMatches(filteredActiveMatches)
 				setCopyModal({ visible: true, onlyCopy })
 				setIsLoading(false)
 			})
@@ -170,7 +179,7 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 				</>
 			)}
 			<SC.ModalDescriptionWarning>{t('Odds might slightly differ')}</SC.ModalDescriptionWarning>
-			<Row>
+			<Row gutter={[16, 0]}>
 				<SC.MatchContainerRow span={24}>
 					{matchesWithChildMarkets?.map((match: any, key: any) => (
 						<MatchRow readOnly key={`matchRow-${key}`} match={match} />

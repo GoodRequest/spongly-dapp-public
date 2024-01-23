@@ -116,15 +116,6 @@ export const NETWORK_IDS = {
 	BASE: 8453
 }
 
-export enum Network {
-	Mainnet = 1,
-	OptimismMainnet = 10,
-	PolygonMainnet = 137,
-	OptimismGoerli = 420,
-	Base = 8453,
-	ArbitrumOne = 42161
-}
-
 export const COLLATERAL_DECIMALS: Record<Coins, number> = {
 	sUSD: 18,
 	DAI: 18,
@@ -150,15 +141,25 @@ export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY)
 
 export const STABLE_COINS = [CRYPTO_CURRENCY_MAP.sUSD, CRYPTO_CURRENCY_MAP.DAI, CRYPTO_CURRENCY_MAP.USDCe, CRYPTO_CURRENCY_MAP.USDC, CRYPTO_CURRENCY_MAP.USDT]
 
+export enum Network {
+	OptimismMainnet = 10,
+	OptimismGoerli = 420,
+	ArbitrumOne = 42161,
+	Base = 8453
+}
+
 export const COLLATERALS: Record<NetworkId, Coins[]> = {
-	[Network.OptimismMainnet]: [
+	[NETWORK_IDS.OPTIMISM]: [
 		CRYPTO_CURRENCY_MAP.sUSD as Coins,
 		CRYPTO_CURRENCY_MAP.DAI as Coins,
 		CRYPTO_CURRENCY_MAP.USDC as Coins,
-		CRYPTO_CURRENCY_MAP.USDT as Coins,
-		CRYPTO_CURRENCY_MAP.OP as Coins,
-		CRYPTO_CURRENCY_MAP.WETH as Coins,
-		CRYPTO_CURRENCY_MAP.ETH as Coins
+		CRYPTO_CURRENCY_MAP.USDT as Coins
+	],
+	[NETWORK_IDS.OPTIMISM_GOERLI]: [
+		CRYPTO_CURRENCY_MAP.sUSD as Coins,
+		CRYPTO_CURRENCY_MAP.DAI as Coins,
+		CRYPTO_CURRENCY_MAP.USDC as Coins,
+		CRYPTO_CURRENCY_MAP.USDT as Coins
 	],
 	[Network.OptimismGoerli]: [CRYPTO_CURRENCY_MAP.sUSD as Coins],
 	[Network.ArbitrumOne]: [
@@ -177,6 +178,19 @@ export const SGPCombinationsFromContractOrderMapping: Record<ContractSGPOrder, B
 	[ContractSGPOrder.MONEYLINETOTALS]: [0, 10002],
 	[ContractSGPOrder.MONEYLINESPREAD]: [0, 10001],
 	[ContractSGPOrder.SPREADTOTALS]: [10001, 10002]
+}
+
+export enum NetworkFile {
+	Base = 'baseMainnet.json',
+	Optimism = 'optimisticEthereum.json',
+	Arbitrum = 'arbitrumOne.json'
+}
+
+export const NetworkFileFromNetworkIds: Record<Network, NetworkFile> = {
+	[Network.ArbitrumOne]: NetworkFile.Arbitrum,
+	[Network.Base]: NetworkFile.Base,
+	[Network.OptimismMainnet]: NetworkFile.Optimism,
+	[Network.OptimismGoerli]: NetworkFile.Optimism
 }
 
 export const MATCHES_OFFSET = 5
@@ -199,7 +213,7 @@ export const THALES_URL_BASE = ' https://api.studio.thegraph.com/query/11948/ove
 
 export const ENDPOINTS = {
 	GET_PARLAY_LEADERBOARD: (networkID: number, period: number) => `https://api.thalesmarket.io/parlay-leaderboard/${networkID}/${period}`,
-	GET_SUCCESS_RATE: () => 'https://ipfs.synthetix.io/ipns/k2k4r8oeszqrv8tnl0k3bvo8j9f63sci60mp4rms8iy77o9vq96gad29'
+	GET_MONTHLY_TIPSTER: (networkFile: string) => `https://ipfs.synthetix.io/ipns/k2k4r8jwpiyedp0cq2vit524ab75e15lauc4ubwi88tsnq4wapj437bj/${networkFile}`
 }
 
 export const EXTERNAL_SCRIPTS = {

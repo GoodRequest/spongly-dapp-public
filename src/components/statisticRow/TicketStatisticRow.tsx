@@ -131,7 +131,7 @@ const TicketStatisticRow = () => {
 							isAddress={true}
 							isLoading={isLoading}
 							onClick={() => router.push(`/${PAGES.TIPSTER_DETAIL}/?id=${ticketData?.account}`)}
-							value={ticketData?.account}
+							value={ticketData?.account || ''}
 							title={isMyWallet ? t('My wallet') : t('Wallet')}
 							isMyWallet={isMyWallet}
 						/>

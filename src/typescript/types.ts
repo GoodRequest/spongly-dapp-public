@@ -213,11 +213,16 @@ export type LeaderboardUser = ResolverUser & {
 	successRate: string
 }
 
+export type Statistic = {
+	pnl?: number | null
+	trades?: number | null
+	volume?: number | null
+	successRate?: number | null
+}
+
 export type User = {
-	pnl: number | null | undefined
-	trades: number | null | undefined
-	volume: number | null | undefined
-	successRate: number
+	overAll: Statistic
+	monthly: Statistic
 }
 
 export type UserStatistic = {
@@ -247,15 +252,8 @@ export interface IMatch extends SportMarket, IBonus {
 }
 
 export interface ISuccessRateData {
-	context: {
-		network: string
-		ticketsCount: number
-		uniqueUsersCount: number
-	}
-	processStart: string
-	stats: {
-		ac: string
-		sr: number
-		tt: number
-	}[]
+	ac: string
+	sr: number
+	tt: number
+	pnl: number
 }
