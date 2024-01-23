@@ -1,4 +1,4 @@
-import { floor } from 'lodash'
+import { floor, round } from 'lodash'
 import { IMatch } from '@/typescript/types'
 import { Position, PositionType } from '@/__generated__/resolvers-types'
 import { OddsType, OPTIMISM_DIVISOR } from '../constants'
@@ -24,6 +24,22 @@ export const formatQuote = (oddsType: OddsType, quote: number | undefined | null
 		case OddsType.AMM:
 		default:
 			return `${formatCurrency(quote, quote < 0.1 ? 4 : 2)}`
+	}
+}
+
+export const formatDecimalQuote = (oddsType: OddsType, decimalQuote: number) => {
+	switch (oddsType) {
+		case OddsType.DECIMAL:
+			return decimalQuote
+		case OddsType.AMERICAN:
+			if (decimalQuote >= 2) {
+				return `+${formatCurrency((decimalQuote - 1) * 100, 0)}`
+			}
+			return `-${formatCurrency(100 / (decimalQuote - 1), 0)}`
+		case OddsType.AMM:
+			return round(1 / decimalQuote, 1 / decimalQuote < 0.1 ? 4 : 2)
+		default:
+			return decimalQuote
 	}
 }
 

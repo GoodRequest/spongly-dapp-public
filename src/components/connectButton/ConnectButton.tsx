@@ -100,53 +100,7 @@ const ConnectButton = () => {
 			console.error(e)
 		}
 	}
-	// TODO: delete this code
-	// const handleSwitchNetwork = async (network: any) => {
-	// 	console.log('network', network)
-	// 	if (chain?.id !== network.networkId) {
-	// 		if (hasEthereumInjected()) {
-	// 			try {
-	// 				await (window.ethereum as any).request({
-	// 					method: 'wallet_switchEthereumChain',
-	// 					params: [{ chainId: network.networkId }]
-	// 				})
-	// 				switchNetwork?.(network.networkId)
-	// 				setIsModalVisible(false)
-	// 			} catch (switchError: any) {
-	// 				// NOTE: the requested chain hasn't been added
-	// 				if (switchError.code === 4902) {
-	// 					try {
-	// 						await (window.ethereum as any).request({
-	// 							method: 'wallet_addEthereumChain',
-	// 							params: [SUPPORTED_NETWORKS_DESCRIPTIONS[+network.chainId]]
-	// 						})
-	// 						await (window.ethereum as any).request({
-	// 							method: 'wallet_switchEthereumChain',
-	// 							params: [{ chainId: network.networkId }]
-	// 						})
-	// 					} catch (addError) {
-	// 						// eslint-disable-next-line no-console
-	// 						console.log(addError)
-	// 						showNotifications(
-	// 							[{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to connect your wallet') }],
-	// 							NOTIFICATION_TYPE.NOTIFICATION
-	// 						)
-	// 					}
-	// 				} else {
-	// 					// eslint-disable-next-line no-console
-	// 					console.log(switchError)
-	// 					showNotifications(
-	// 						[{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to connect your wallet') }],
-	// 						NOTIFICATION_TYPE.NOTIFICATION
-	// 					)
-	// 				}
-	// 			}
-	// 		} else {
-	// 			switchNetwork?.(network.networkId)
-	// 			setIsModalVisible(false)
-	// 		}
-	// 	}
-	// }
+
 	const getActualNetworkIcon = () => {
 		if (chain?.id === NETWORK_IDS.OPTIMISM) {
 			return OptimismIcon
