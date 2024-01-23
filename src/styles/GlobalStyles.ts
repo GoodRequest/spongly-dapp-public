@@ -259,11 +259,12 @@ export const SelectSorters = styled.div`
 `
 
 export const FlagWorld = styled.div`
-	height: 20px;
-	width: 20px;
+	height: 24px;
+	width: 24px !important;
 	margin-right: 12px;
+	object-fit: cover;
+	border-radius: 999px;
 	background: url(${worldFlag});
-	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: center;
 `

@@ -9,16 +9,6 @@ export const LayoutWrapper = styled.div`
 	min-height: 100vh;
 `
 
-export const PanelHeader = styled.div`
-	display: inline-flex;
-	align-items: center;
-`
-
-export const FlagWrapper = styled.div`
-	width: 28px;
-	margin-right: 12px;
-`
-
 export const ErrorStateNoData = styled.div`
 	h3 {
 		${TextXLBold}
