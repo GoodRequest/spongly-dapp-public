@@ -4,16 +4,17 @@ import networkConnector from './networkConnector'
 
 // types
 import { CombinedMarketsPositionName, MarketData, SportMarketInfo } from '@/typescript/types'
-import { OddsType, PositionNumber, STABLE_DECIMALS } from './constants'
+import { NETWORK_IDS, OddsType, PositionNumber } from './constants'
 import { BetType, DoubleChanceMarketType } from './tags'
 import { PositionType, SportMarket } from '@/__generated__/resolvers-types'
 import { BET_OPTIONS, BONUS_PROPERTY, ODDS_PROPERTY } from './enums'
 import { TicketPosition } from '@/redux/betTickets/betTicketTypes'
 
 // helpers
-import { bigNumberFormatter, bigNumberFormmaterWithDecimals } from './formatters/ethers'
+import { bigNumberFormatter } from './formatters/ethers'
 import { formatQuote } from './formatters/quote'
 import { removeDuplicateSubstring } from '@/utils/helpers'
+import { getDefaultDecimalsForNetwork } from '@/utils/network'
 
 export const isMarketAvailable = (market: SportMarket) => {
 	return !!(
@@ -224,10 +225,10 @@ export const formatMarketOdds = (oddsType: OddsType, market?: SportMarketInfo) =
 
 export const convertPriceImpactToBonus = (priceImpact: number): number => -((priceImpact / (1 + priceImpact)) * 100)
 
-export const getMarketOddsFromContract = async (markets: SportMarket[]) => {
+export const getMarketOddsFromContract = async (markets: SportMarket[], networkID: any) => {
 	const { sportPositionalMarketDataContract, sportMarketManagerContract } = networkConnector
 	const numberOfActiveMarkets = await sportMarketManagerContract?.numActiveMarkets()
-
+	const decimals = getDefaultDecimalsForNetwork(networkID || NETWORK_IDS.OPTIMISM)
 	const numberOfBatches = Math.trunc(numberOfActiveMarkets / 100) + 1
 
 	const promisesOdds: Contract[] = []
@@ -250,14 +251,14 @@ export const getMarketOddsFromContract = async (markets: SportMarket[]) => {
 				...market,
 				homeTeam: removeDuplicateSubstring(market.homeTeam),
 				awayTeam: removeDuplicateSubstring(market.awayTeam),
-				homeOdds: oddsItem ? bigNumberFormmaterWithDecimals(oddsItem.odds[0], STABLE_DECIMALS.sUSD) : market.homeOdds,
-				awayOdds: oddsItem ? bigNumberFormmaterWithDecimals(oddsItem.odds[1], STABLE_DECIMALS.sUSD) : market.awayOdds,
-				drawOdds: oddsItem && oddsItem.odds[2] ? bigNumberFormmaterWithDecimals(oddsItem.odds[2], STABLE_DECIMALS.sUSD) : undefined,
-				homeBonus: priceImpactItem ? convertPriceImpactToBonus(bigNumberFormmaterWithDecimals(priceImpactItem.priceImpact[0])) : undefined,
-				awayBonus: priceImpactItem ? convertPriceImpactToBonus(bigNumberFormmaterWithDecimals(priceImpactItem.priceImpact[1])) : undefined,
+				homeOdds: oddsItem ? bigNumberFormatter(oddsItem.odds[0], decimals) : market.homeOdds,
+				awayOdds: oddsItem ? bigNumberFormatter(oddsItem.odds[1], decimals) : market.awayOdds,
+				drawOdds: oddsItem && oddsItem.odds[2] ? bigNumberFormatter(oddsItem.odds[2], decimals) : undefined,
+				homeBonus: priceImpactItem ? convertPriceImpactToBonus(bigNumberFormatter(priceImpactItem.priceImpact[0])) : undefined,
+				awayBonus: priceImpactItem ? convertPriceImpactToBonus(bigNumberFormatter(priceImpactItem.priceImpact[1])) : undefined,
 				drawBonus:
 					priceImpactItem && priceImpactItem.priceImpact[2]
-						? convertPriceImpactToBonus(bigNumberFormmaterWithDecimals(priceImpactItem.priceImpact[2]))
+						? convertPriceImpactToBonus(bigNumberFormatter(priceImpactItem.priceImpact[2]))
 						: undefined
 			}
 		}
@@ -265,9 +266,9 @@ export const getMarketOddsFromContract = async (markets: SportMarket[]) => {
 			...market,
 			homeTeam: removeDuplicateSubstring(market.homeTeam),
 			awayTeam: removeDuplicateSubstring(market.awayTeam),
-			homeOdds: bigNumberFormmaterWithDecimals(market.homeOdds),
-			awayOdds: bigNumberFormmaterWithDecimals(market.awayOdds),
-			drawOdds: market.drawOdds ? bigNumberFormmaterWithDecimals(market.drawOdds) : undefined
+			homeOdds: bigNumberFormatter(market.homeOdds),
+			awayOdds: bigNumberFormatter(market.awayOdds),
+			drawOdds: market.drawOdds ? bigNumberFormatter(market.drawOdds) : undefined
 		}
 	})
 }

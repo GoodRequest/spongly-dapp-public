@@ -6,6 +6,7 @@ import { useNetwork } from 'wagmi'
 import { GET_ALL_SPORT_MARKETS } from '@/utils/queries'
 import { getMarketOddsFromContract } from '@/utils/markets'
 import { MATCHES_LIST } from './matchesTypes'
+import { NETWORK_IDS } from '@/utils/constants'
 
 export const useFetchAllMatches = () => {
 	const dispatch = useDispatch()
@@ -18,12 +19,10 @@ export const useFetchAllMatches = () => {
 
 	const contractOddsAllMatches = async (values: any) => {
 		try {
-			const marketOddsFromContract = await getMarketOddsFromContract([
-				...values[0].data.sportMarkets,
-				...values[1].data.sportMarkets,
-				...values[2].data.sportMarkets,
-				...values[3].data.sportMarkets
-			])
+			const marketOddsFromContract = await getMarketOddsFromContract(
+				[...values[0].data.sportMarkets, ...values[1].data.sportMarkets, ...values[2].data.sportMarkets, ...values[3].data.sportMarkets],
+				chain?.id || NETWORK_IDS.OPTIMISM
+			)
 
 			dispatch({ type: MATCHES_LIST.MATCHES_LIST_LOAD_DONE, payload: { data: marketOddsFromContract } })
 		} catch (err) {

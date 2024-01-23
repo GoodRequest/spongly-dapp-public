@@ -1,8 +1,7 @@
 import { change } from 'redux-form'
 import { ThunkResult } from '../rootReducer'
 import { TicketPosition } from './betTicketTypes'
-import { FORM } from '@/utils/enums'
-import { MAX_TICKET_MATCHES } from '@/utils/constants'
+import { FORM, MAX_TICKET_MATCHES } from '@/utils/constants'
 
 export const updateActiveTicketMatches =
 	(match: TicketPosition, activeMatches?: TicketPosition[]): ThunkResult<any> =>

@@ -110,7 +110,7 @@ const Stats = () => {
 							<Col span={12} xs={6} md={12} xl={6}>
 								<SBox
 									title={t('Profits')}
-									value={`${roundPrice(statistics?.pnl)} $`}
+									value={roundPrice(statistics?.pnl, true)}
 									extraContent={
 										<div>
 											<SC.Glow $color={theme['color-base-state-success-fg']} />

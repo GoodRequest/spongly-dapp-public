@@ -27,10 +27,10 @@ import {
 	isWindowReady,
 	orderPositionsAsSportMarkets
 } from '@/utils/helpers'
-import { GAS_ESTIMATION_BUFFER, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE, OddsType, STABLE_COIN, USER_TICKET_TYPE } from '@/utils/constants'
+import { FORM, GAS_ESTIMATION_BUFFER, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE, OddsType, STABLE_COIN, USER_TICKET_TYPE } from '@/utils/constants'
 import networkConnector from '@/utils/networkConnector'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
-import { FORM, PAGES } from '@/utils/enums'
+import { PAGES } from '@/utils/enums'
 import { roundPrice } from '@/utils/formatters/currency'
 
 // types
@@ -195,7 +195,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 			<SC.CenterRowContent md={{ span: 3, order: 3 }} xs={{ span: 8, order: 3 }}>
 				<>
 					<SC.ColumnValueText>{roundPrice(ticket?.sUSDPaid, true)}</SC.ColumnValueText>
-					<SC.ColumnNameText>{t('Buy in')}</SC.ColumnNameText>
+					<SC.ColumnNameText>{t('Buy-in')}</SC.ColumnNameText>
 				</>
 			</SC.CenterRowContent>
 			<SC.CenterRowContent md={{ span: 3, order: 3 }} xs={{ span: 8, order: 3 }}>
@@ -207,7 +207,9 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 				</>
 			</SC.CenterRowContent>
 			<SC.CenterRowContent md={{ span: 5, order: 4 }} xs={{ span: 8, order: 4 }}>
-				<SC.ClaimValueText userTicketType={userTicketType}>{getUserTicketClaimValue(ticket, userTicketType)}</SC.ClaimValueText>
+				<SC.ClaimValueText userTicketType={userTicketType}>
+					{getUserTicketClaimValue(ticket, userTicketType, chain?.id || NETWORK_IDS.OPTIMISM)}
+				</SC.ClaimValueText>
 				<SC.ColumnNameText>{t('Claim')}</SC.ColumnNameText>
 			</SC.CenterRowContent>
 			<SC.ClaimColContent show={!!(isMyWallet && userTicketType === USER_TICKET_TYPE.SUCCESS)} md={{ span: 4, order: 5 }} xs={{ span: 24, order: 5 }}>

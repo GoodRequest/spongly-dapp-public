@@ -9,20 +9,20 @@ import { Col, Row } from 'antd'
 
 import { ACTIVE_TICKET_ID, IUnsubmittedBetTicket, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 import { RootState } from '@/redux/rootReducer'
-import { FORM } from '@/utils/enums'
 import Button from '@/atoms/button/Button'
 import { convertPositionNameToPosition, getMarketOddsFromContract, getSymbolText } from '@/utils/markets'
 import { GET_SPORT_MARKETS_FOR_GAME } from '@/utils/queries'
 import Modal from '@/components/modal/Modal'
 import * as SC from './CopyTicketButtonStyles'
 import MatchRow from '@/components/ticketBetContainer/components/matchRow/MatchRow'
-import { MAX_TICKETS, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE } from '@/utils/constants'
+import { FORM, MAX_TICKETS, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE } from '@/utils/constants'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import { copyTicketToUnsubmittedTickets, getPositionsWithMergedCombinedPositions, orderPositionsAsSportMarkets } from '@/utils/helpers'
 import { SGPItem } from '@/typescript/types'
 import networkConnector from '@/utils/networkConnector'
 import useSGPFeesQuery from '@/hooks/useSGPFeesQuery'
 import { useMatchesWithChildMarkets } from '@/hooks/useMatchesWithChildMarkets'
+import { getDefaultDecimalsForNetwork } from '@/utils/network'
 import { showNotifications } from '@/utils/tsxHelpers'
 
 type Props = {
@@ -55,9 +55,10 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
 
-	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions, ticket, sgpFees)
+	const positionsWithMergedCombinedPositions = getPositionsWithMergedCombinedPositions(orderedPositions as any, ticket, sgpFees)
 
 	const formatMatchesToTicket = async () => {
+		const decimals = getDefaultDecimalsForNetwork(chain?.id || NETWORK_IDS.OPTIMISM)
 		return Promise.all(
 			positionsWithMergedCombinedPositions
 				?.filter((item) => item.market.isOpen)
@@ -66,9 +67,9 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 					return {
 						...item.market,
 						gameId: item.market.gameId,
-						homeOdds: bigNumberFormatter(data?.[0] || 0),
-						awayOdds: bigNumberFormatter(data?.[1] || 0),
-						drawOdds: bigNumberFormatter(data?.[2] || 0),
+						homeOdds: bigNumberFormatter(data?.[0] || 0, decimals),
+						awayOdds: bigNumberFormatter(data?.[1] || 0, decimals),
+						drawOdds: bigNumberFormatter(data?.[2] || 0, decimals),
 						betOption: item?.isCombined ? item?.combinedPositionsText : getSymbolText(convertPositionNameToPosition(item.side), item.market)
 					}
 				})
@@ -135,7 +136,7 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 		fetchMarketsForGame({ variables: { gameId_in: gameIDQuery }, context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM } })
 			.then(async (values) => {
 				try {
-					const marketOddsFromContract = await getMarketOddsFromContract([...values.data.sportMarkets])
+					const marketOddsFromContract = await getMarketOddsFromContract([...values.data.sportMarkets], chain?.id || NETWORK_IDS.OPTIMISM)
 
 					const formattedMarketOddsFromContract = marketOddsFromContract.map((marketOdds) => {
 						return {

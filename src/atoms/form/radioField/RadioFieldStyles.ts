@@ -35,6 +35,7 @@ export const RadioGroup = styled(Radio.Group)`
 
 	.ant-radio-button-wrapper-disabled {
 		opacity: 0.4 !important;
+		color: ${({ theme }) => theme['color-base-content-top']};
 		&:hover {
 			border: ${({ theme }) => `2px solid ${theme['color-base-surface-quaternary']}`} !important;
 		}

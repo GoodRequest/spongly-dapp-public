@@ -1,3 +1,5 @@
+import { Network, ZERO_ADDRESS } from '@/utils/constants'
+
 const abi = [
 	{ inputs: [], stateMutability: 'nonpayable', type: 'constructor' },
 	{
@@ -597,48 +599,85 @@ const abi = [
 	}
 ]
 
-export const multipleCollateral = {
+const multipleCollateral = {
 	sUSD: {
 		addresses: {
-			5: '0x2851715A8d25e176413A77b495762435D5dDBd0d', // eUSD
-			10: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9', // sUSD
-			42: '0x5d7e13023a6f2245D7Af1eaE97dFF2EF1057F5b9',
-			69: '',
-			420: '0xE1ceaa829525a08C1d39A5CEBe4b42aF58d77198',
-			42161: ''
+			[Network.OptimismMainnet]: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9', // sUSD
+			[Network.OptimismGoerli]: '0xE1ceaa829525a08C1d39A5CEBe4b42aF58d77198', // exoticSUSD
+			[Network.ArbitrumOne]: '',
+			[Network.Base]: ''
 		},
 		abi
 	},
 	DAI: {
 		addresses: {
-			5: '0x11fe4b6ae13d2a6055c8d9cf65c55bac32b5d844',
-			10: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-			42: '',
-			69: '',
-			420: '',
-			42161: ''
+			[Network.OptimismMainnet]: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+			[Network.OptimismGoerli]: '',
+			[Network.ArbitrumOne]: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1',
+			[Network.Base]: ''
+		},
+		abi
+	},
+	USDCe: {
+		addresses: {
+			[Network.OptimismMainnet]: '',
+			[Network.OptimismGoerli]: '',
+			[Network.ArbitrumOne]: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
+			[Network.Base]: ''
 		},
 		abi
 	},
 	USDC: {
 		addresses: {
-			5: '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
-			10: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
-			42: '',
-			69: '',
-			420: '',
-			42161: '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8'
+			[Network.OptimismMainnet]: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+			[Network.OptimismGoerli]: '',
+			[Network.ArbitrumOne]: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+			[Network.Base]: '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA'
 		},
 		abi
 	},
 	USDT: {
 		addresses: {
-			5: '',
-			10: '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
-			42: '',
-			69: '',
-			420: '',
-			42161: ''
+			[Network.OptimismMainnet]: '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
+			[Network.OptimismGoerli]: '',
+			[Network.ArbitrumOne]: '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9',
+			[Network.Base]: ''
+		},
+		abi
+	},
+	OP: {
+		addresses: {
+			[Network.OptimismMainnet]: '0x4200000000000000000000000000000000000042',
+			[Network.OptimismGoerli]: '',
+			[Network.ArbitrumOne]: '',
+			[Network.Base]: ''
+		},
+		abi
+	},
+	ARB: {
+		addresses: {
+			[Network.OptimismMainnet]: '',
+			[Network.OptimismGoerli]: '',
+			[Network.ArbitrumOne]: '0x912CE59144191C1204E64559FE8253a0e49E6548',
+			[Network.Base]: ''
+		},
+		abi
+	},
+	WETH: {
+		addresses: {
+			[Network.OptimismMainnet]: '0x4200000000000000000000000000000000000006',
+			[Network.OptimismGoerli]: '',
+			[Network.ArbitrumOne]: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+			[Network.Base]: '0x4200000000000000000000000000000000000006'
+		},
+		abi
+	},
+	ETH: {
+		addresses: {
+			[Network.OptimismMainnet]: ZERO_ADDRESS,
+			[Network.OptimismGoerli]: ZERO_ADDRESS,
+			[Network.ArbitrumOne]: ZERO_ADDRESS,
+			[Network.Base]: ZERO_ADDRESS
 		},
 		abi
 	}

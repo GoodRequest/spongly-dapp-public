@@ -48,6 +48,7 @@ import useWidgetBotScript from '@/hooks/useWidgetBotScript'
 
 import '../styles/fonts.css'
 import '../styles/league-icons.css'
+import { base } from '@/utils/network'
 
 const spageGroteskFont = Space_Grotesk({ subsets: ['latin', 'latin-ext'], variable: '--space-grotesk-font' })
 const overtimeIcons = CustomFont({
@@ -55,7 +56,7 @@ const overtimeIcons = CustomFont({
 	variable: '--overtime-icon-font'
 })
 
-const { chains, provider } = configureChains([optimism, arbitrum, optimismGoerli], [infuraProvider({ apiKey: INFURA_ID }), publicProvider()])
+const { chains, provider } = configureChains([optimism, arbitrum, optimismGoerli, base], [infuraProvider({ apiKey: INFURA_ID }), publicProvider()])
 const projectId = process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID || ''
 const connectors = connectorsForWallets([
 	{
