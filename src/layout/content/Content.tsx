@@ -15,7 +15,6 @@ import { useIsMounted } from '@/hooks/useIsMounted'
 
 // styles
 import * as SC from './ContentStyles'
-import UserStatisticRow from '@/components/statisticRow/UserStatisticRow'
 import TicketStatisticRow from '@/components/statisticRow/TicketStatisticRow'
 
 interface ILayout {
@@ -33,7 +32,6 @@ const Content: FC<ILayout> = ({ children }) => {
 			{/* // Dashboard's and detail's stats */}
 			{isMounted && (
 				<>
-					{(router.pathname === `/${PAGES.TIPSTER_DETAIL}` || router.pathname === `/${PAGES.MY_WALLET}`) && <UserStatisticRow />}
 					{router.pathname === `/${PAGES.DASHBOARD}` && <Stats />}
 					{router.pathname === `/${PAGES.TICKET_DETAIL}` && <TicketStatisticRow />}
 				</>

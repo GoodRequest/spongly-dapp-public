@@ -144,8 +144,8 @@ const LeaderboardContent = () => {
 			const formattedNewData = (data?.users || []).map((user: LeaderboardUser) => {
 				// const successRate = successRateMap.get(user.id)
 				return {
-					...user,
-					successRate: 'N/A'
+					...user
+					// successRate: 'N/A'
 				}
 			})
 			setTipstersData((prevData) => [...prevData, ...formattedNewData])
@@ -175,13 +175,13 @@ const LeaderboardContent = () => {
 			<h1>{t('Leaderboard')}</h1>
 			<SCS.SorterRow>
 				<SCS.HorizontalSorters>
-					<Col span={6}>
+					<Col span={8}>
 						<Sorter title={t('Wallet')} />
 					</Col>
-					<Col span={5}>
+					{/* <Col span={5}>
 						<Sorter disabled={true} title={t('Success rate')} name={LEADERBOARD_SORTING.SUCCESS_RATE} />
-					</Col>
-					<Col span={5}>
+					</Col> */}
+					<Col span={6}>
 						<Sorter title={t('Profits')} name={LEADERBOARD_SORTING.PROFITS} />
 					</Col>
 					<Col span={3}>
@@ -203,7 +203,7 @@ const LeaderboardContent = () => {
 					{tipstersData.map((item) => {
 						return (
 							<SC.LeaderboardContentRow align={'middle'} gutter={[0, 16]}>
-								<Col span={12} md={6}>
+								<Col span={12} md={8}>
 									<SC.Wallet onClick={() => router.push(`/${PAGES.TIPSTER_DETAIL}/?id=${item.id}`)}>
 										<SC.WalletIcon imageSrc={getWalletImage(item.id)} />
 										<SC.Title>
@@ -212,16 +212,16 @@ const LeaderboardContent = () => {
 										</SC.Title>
 									</SC.Wallet>
 								</Col>
-								<Col span={12} md={5}>
+								{/* <Col span={12} md={5}>
 									<SC.Title>
 										<SC.Value>{item.successRate}</SC.Value>
-										<SC.Description>{t('Success rate')}</SC.Description>
+										<SC.Description>{t('Win rate')}</SC.Description>
 									</SC.Title>
-								</Col>
+								</Col> */}
 								<Col span={24} md={0}>
 									<SC.LeaderboardDivider />
 								</Col>
-								<Col span={12} md={5}>
+								<Col span={12} md={6}>
 									<SC.Title>
 										<SC.Value>{`${markedValue(roundPrice(Number(item.pnl)) as string)} $`}</SC.Value>
 										<SC.Description>{t('Profits')}</SC.Description>
@@ -233,7 +233,7 @@ const LeaderboardContent = () => {
 										<SC.Description>{item.trades === 1 ? t('Ticket') : t('Tickets')}</SC.Description>
 									</SC.Title>
 								</Col>
-								<Col span={24} md={5}>
+								<Col span={24} md={7}>
 									<SCS.LoadMore onClick={() => router.push(`/${PAGES.TIPSTER_DETAIL}/?id=${item.id}`)}>{t('Show detail')}</SCS.LoadMore>
 								</Col>
 							</SC.LeaderboardContentRow>

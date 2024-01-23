@@ -221,7 +221,7 @@ export const TicketTypeTag = styled.div<{ ticketType: USER_TICKET_TYPE }>`
 	}
 `
 
-export const TicketDivider = styled(Divider)<{ showClaimed: boolean }>`
+export const TicketDivider = styled(Divider)`
 	display: none;
 
 	@media (max-width: ${breakpoints.md}px) {

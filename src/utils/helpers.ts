@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import Router from 'next/router'
-import { floor, groupBy, max, toNumber, toPairs } from 'lodash'
+import { floor, groupBy, max, round, toNumber, toPairs } from 'lodash'
 import { AnyAction, Dispatch } from 'redux'
 import { ethers } from 'ethers'
 import { IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
@@ -8,12 +8,15 @@ import { IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '
 import {
 	CLOSED_TICKET_TYPE,
 	COLLATERALS,
+	ENDPOINTS,
 	ETHERSCAN_TX_URL_ARBITRUM,
 	ETHERSCAN_TX_URL_OPTIMISM,
 	ETHERSCAN_TX_URL_OPTIMISM_GOERLI,
 	MATCH_STATUS,
 	MSG_TYPE,
 	Network,
+	NetworkFile,
+	NetworkFileFromNetworkIds,
 	NETWORK_IDS,
 	NOTIFICATION_TYPE,
 	OddsType,
@@ -49,6 +52,7 @@ import { ParlayMarket, Position, PositionBalance, PositionType, SportMarket } fr
 import {
 	CombinedMarketsPositionName,
 	IMatch,
+	ISuccessRateData,
 	ITicket,
 	PositionWithCombinedAttrs,
 	SGPContractData,
@@ -1475,5 +1479,36 @@ export const handleTxHashRedirect = (t: any, txHash?: string, chainId?: number) 
 		document.body.appendChild(link)
 		link.click()
 		document.body.removeChild(link)
+	}
+}
+
+export const getProfit = (wonTickets: UserTicket[], lostTickets: UserTicket[], cancelledTickets: UserTicket[]) => {
+	let profit = 0
+
+	wonTickets?.forEach((ticket) => {
+		profit += ticket.amount - ticket.sUSDPaid
+	})
+
+	lostTickets?.forEach((ticket) => {
+		profit -= ticket.sUSDPaid
+	})
+
+	cancelledTickets?.forEach((ticket) => {
+		profit += Number(getCanceledClaimAmount(ticket)) - ticket.sUSDPaid
+	})
+
+	// TODO: add multi coin support (for base and arbitrum)
+	return round(profit / OPTIMISM_DIVISOR, 2).toFixed(2)
+}
+
+export const fetchSuccessRate = async (networkId: number | undefined): Promise<ISuccessRateData[]> => {
+	try {
+		const response = await fetch(ENDPOINTS.GET_MONTHLY_TIPSTER(NetworkFileFromNetworkIds[(networkId || NETWORK_IDS.OPTIMISM) as Network]))
+		const responseJson = await response.json()
+		return responseJson?.stats
+	} catch (error) {
+		// eslint-disable-next-line no-console
+		console.error(error)
+		throw error
 	}
 }

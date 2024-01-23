@@ -27,11 +27,11 @@ export const GlobalStyle = createGlobalStyle`
 	}
 
 	.ant-select-dropdown {
-		padding: 16px;
-		background-color: ${({ theme }) => theme['color-base-surface-quaternary']}; !important;
+		padding: 8px;
+		background-color: ${({ theme }) => theme['color-base-surface-quaternary']};
 		.ant-select-item-option {
-			margin-bottom: 4px;
-			padding: 12px;
+			padding-top: 8px;
+			padding-bottom: 8px;
 			${TextMDRegular};
 			:hover {
 				background-color: ${({ theme }) => theme['color-base-surface-secondary']} !important;
@@ -45,7 +45,7 @@ export const GlobalStyle = createGlobalStyle`
 					display: inline-block;
 					width: 24px;
 					height: 24px;
-						background: url(${CheckIcon});
+					background: url(${CheckIcon});
 					background-size: cover;
 					margin-right: 8px;
 				}
@@ -309,6 +309,7 @@ export const Empty = styled(AntdEmpty)`
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	border-radius: 12px;
 	padding: 52px;
+	margin-inline: unset;
 	.ant-empty-description {
 		div {
 			margin-top: 28px;
