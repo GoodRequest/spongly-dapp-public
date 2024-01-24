@@ -17,7 +17,6 @@ import SBox from '@/components/sBox/SBox'
 import SuccessIcon from '@/assets/icons/stat-successrate-icon.svg'
 import ProfitsIcon from '@/assets/icons/stat-profits-icon.svg'
 import BalanceIcon from '@/assets/icons/stat-balance-icon.svg'
-import { roundPrice } from '@/utils/formatters/currency'
 import Button from '@/atoms/button/Button'
 
 interface IStatistics {

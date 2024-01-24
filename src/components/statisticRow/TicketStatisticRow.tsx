@@ -44,7 +44,7 @@ const TicketStatisticRow = () => {
 	const [fetchPositionBalanceMarketTransactions] = useLazyQuery(GET_POSITION_BALANCE_TRANSACTION)
 	const [positionsData, setPositionsData] = useState<any>()
 	const [ticketData, setTicketData] = useState<UserTicket>()
-	const claim = getUserTicketClaimValue(ticketData, userTicketType, chain?.id || NETWORK_IDS.OPTIMISM)
+	const claim = getUserTicketClaimValue(ticketData, userTicketType)
 	const [error, setError] = useState(false)
 
 	const actualOddType = isWindowReady() ? (localStorage.getItem('oddType') as OddsType) : OddsType.DECIMAL

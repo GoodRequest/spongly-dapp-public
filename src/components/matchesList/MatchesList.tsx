@@ -3,7 +3,6 @@ import { Col, Row } from 'antd'
 import { includes, map, slice } from 'lodash'
 import { useTranslation } from 'next-export-i18n'
 import { useNetwork } from 'wagmi'
-import Flag from 'react-world-flags'
 
 // types
 import { SportMarket } from '@/__generated__/resolvers-types'

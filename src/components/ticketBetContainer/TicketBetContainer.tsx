@@ -261,7 +261,7 @@ const TicketBetContainer = () => {
 			if (parlayMarketsAMMContract && parlayAmmData?.minUsdAmount) {
 				const marketsAddresses = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).addresses
 				const betOptions = getBetOptionAndAddressFromMatch(activeTicketValues?.matches).betTypes
-
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				const [minimumReceivedForCollateralAmount, _minimumNeededForMinUsdAmountValue] = await Promise.all([
 					isDefaultCollateral
 						? 0

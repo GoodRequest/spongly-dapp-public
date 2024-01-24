@@ -1483,7 +1483,7 @@ export const formatTicketPositionsForStatistics = (data: { parlayMarkets: Parlay
 	}
 }
 
-export const getUserTicketClaimValue = (ticket: UserTicket | undefined, userTicketType: USER_TICKET_TYPE | undefined, networkId: Network) => {
+export const getUserTicketClaimValue = (ticket: UserTicket | undefined, userTicketType: USER_TICKET_TYPE | undefined) => {
 	if (!ticket || !userTicketType) return '0 $'
 
 	if (userTicketType === USER_TICKET_TYPE.MISS) return `0 $`
