@@ -1,10 +1,11 @@
+import { Network } from '@/utils/constants'
+
 export const sportPositionalMarketManagerContract = {
 	addresses: {
-		5: '0x7465c5d60d3d095443CF9991Da03304A30D42Eae',
-		10: '0xFBffEbfA2bF2cF84fdCf77917b358fC59Ff5771e',
-		42: '0x95a38B4cA5C9187eCfbDFB501Ef61D46755BC075',
-		420: '0xae56177e405929c95E5d4b04C0C87E428cB6432B',
-		42161: '0x72ca0765d4bE0529377d656c9645600606214610'
+		[Network.OptimismMainnet]: '0xFBffEbfA2bF2cF84fdCf77917b358fC59Ff5771e',
+		[Network.OptimismGoerli]: '0xae56177e405929c95E5d4b04C0C87E428cB6432B',
+		[Network.ArbitrumOne]: '0x72ca0765d4bE0529377d656c9645600606214610',
+		[Network.Base]: '0xB0EE5C967F209f24f7eF30c2C6Da38346a87E089'
 	},
 	abi: [
 		{

@@ -1,5 +1,5 @@
 import { BigNumberish, ethers } from 'ethers'
+import { COLLATERAL_DECIMALS } from '@/utils/constants'
 
-export const bigNumberFormatter = (value: BigNumberish) => Number(ethers.utils.formatEther(value))
-
-export const bigNumberFormmaterWithDecimals = (value: string, decimals?: number) => Number(ethers.utils.formatUnits(value, decimals ?? 18))
+export const bigNumberFormatter = (value: BigNumberish, decimals?: number) =>
+	Number(ethers.utils.formatUnits(value, decimals !== undefined ? decimals : COLLATERAL_DECIMALS.sUSD))

@@ -1,7 +1,8 @@
 import { isEqual } from 'lodash'
 import { change } from 'redux-form'
 import { ACTIVE_TICKET_PROCESSING } from '@/redux/betTickets/betTicketTypes'
-import { FORM } from '@/utils/enums'
+
+import { FORM } from '@/utils/constants'
 
 const handleOnchangeForm = async (values: any, dispatch: any, props: any, prevValues: any) => {
 	const valueOptions = values.matches.map((match: any) => match.betOption)

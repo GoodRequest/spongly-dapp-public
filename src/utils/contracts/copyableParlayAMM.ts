@@ -1,10 +1,12 @@
+import { Network } from '@/utils/constants'
+
 const copyableParlayAMM = {
+	// TODO: Miso posle adresy pre siete ked dorobi
 	addresses: {
-		5: '',
-		10: '',
-		42: '',
-		420: '0x407085F8a5C4B9ED06d4b18e7A14d266b3C64EaB',
-		42161: ''
+		[Network.OptimismMainnet]: '',
+		[Network.OptimismGoerli]: '0x407085F8a5C4B9ED06d4b18e7A14d266b3C64EaB',
+		[Network.ArbitrumOne]: '',
+		[Network.Base]: ''
 	},
 	abi: [
 		{

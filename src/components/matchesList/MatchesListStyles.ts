@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components'
 import { Col, Collapse, Divider, Radio, Row, Skeleton } from 'antd'
+import Flag from 'react-world-flags'
 import Ticket from '@/assets/images/empty_state_ticket.png'
 import { HeadingXSMedium, HeadingXXSMedium, TextMDMedium, TextMDRegular, TextSMMedium, TextSMRegular, TextXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
@@ -128,9 +129,13 @@ export const LeagueHeader = styled.div`
 		width: 28px;
 	}
 `
-export const FlagWrapper = styled.div`
-	width: 28px;
+
+export const FlagWrapper = styled(Flag)`
+	width: 24px;
+	height: 24px;
 	margin-right: 12px;
+	object-fit: cover;
+	border-radius: 999px;
 `
 
 export const ExtendedMatchContentWrapper = styled.div`

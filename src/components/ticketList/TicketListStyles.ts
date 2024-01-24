@@ -19,7 +19,6 @@ export const TicketItemRow = styled(Row)`
 	border-radius: 12px;
 	overflow: auto;
 	margin-bottom: 0;
-	padding: 16px;
 	${TextSMMedium};
 	@media (max-width: ${breakpoints.md}px) {
 		padding: 0;
@@ -138,7 +137,10 @@ export const TicketCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 	border-radius: 12px;
 	margin-bottom: 24px;
 	border: none;
-
+	padding: 16px 24px !important;
+	.ant-collapse-header {
+		padding: 0 !important;
+	}
 	.ant-collapse-item {
 		border-bottom: none;
 		border: 2px solid transparent;
@@ -154,8 +156,8 @@ export const TicketCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 		width: 48px;
 		border-radius: 12px;
 		padding: 16px;
-		right: 16px;
-		top: 32px;
+		right: 0;
+		top: 0;
 		padding-inline-end: 0 !important;
 		padding-inline-start: 14px !important;
 		background: ${({ theme }) => theme['color-base-surface-quaternary']};
@@ -193,6 +195,7 @@ export const CollapsePanel = styled(Panel)<{ isExpanded: boolean }>`
 	padding: 0px 8px 0px 8px !important;
 	.ant-collapse-header {
 		display: block !important;
+		border-radius: 0 !important;
 		border-bottom: 1px solid ${({ theme, isExpanded }) => (isExpanded ? theme['color-base-surface-quaternary'] : 'none')} !important;
 		@media (max-width: ${breakpoints.md}px) {
 			padding-bottom: 44px !important;
@@ -203,13 +206,20 @@ export const CollapsePanel = styled(Panel)<{ isExpanded: boolean }>`
 		border-top: none;
 	}
 	.ant-collapse-content-box {
+		padding: 0 !important;
 		background: ${({ theme }) => theme['color-base-surface-secondary']};
 		border-radius: 12px;
 		@media (max-width: ${breakpoints.md}px) {
 			padding: 0 !important;
 		}
 	}
-
+	@media (min-width: ${breakpoints.md}px) {
+		&.ant-collapse-item-active {
+			.ant-collapse-header {
+				padding-bottom: 16px !important;
+			}
+		}
+	}
 	@media (max-width: ${breakpoints.md}px) {
 		padding: 0 !important;
 	}
