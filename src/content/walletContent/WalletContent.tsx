@@ -90,7 +90,6 @@ const MyWalletContent = () => {
 					const profit = getProfit(wonTickets, lostTickets, cancelledTickets)
 
 					const userMonthlyStats = values?.[2]?.find((item: any) => item?.ac === id)
-
 					assignOtherAttrsToUserTicket([...parlayTickets, ...positionTickets], marketData, chain?.id, signer).then((ticketsWithOtherAttrs) => {
 						setUserStatistic({
 							user: {
