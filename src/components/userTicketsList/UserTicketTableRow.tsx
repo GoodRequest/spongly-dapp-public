@@ -207,9 +207,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 				</>
 			</SC.CenterRowContent>
 			<SC.CenterRowContent md={{ span: 5, order: 4 }} xs={{ span: 8, order: 4 }}>
-				<SC.ClaimValueText userTicketType={userTicketType}>
-					{getUserTicketClaimValue(ticket, userTicketType, chain?.id || NETWORK_IDS.OPTIMISM)}
-				</SC.ClaimValueText>
+				<SC.ClaimValueText userTicketType={userTicketType}>{getUserTicketClaimValue(ticket, userTicketType)}</SC.ClaimValueText>
 				<SC.ColumnNameText>{t('Claim')}</SC.ColumnNameText>
 			</SC.CenterRowContent>
 			<SC.ClaimColContent show={!!(isMyWallet && userTicketType === USER_TICKET_TYPE.SUCCESS)} md={{ span: 4, order: 5 }} xs={{ span: 24, order: 5 }}>

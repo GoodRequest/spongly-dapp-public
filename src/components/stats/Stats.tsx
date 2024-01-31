@@ -7,7 +7,7 @@ import { useRouter } from 'next-translate-routes'
 import { Col } from 'antd'
 import { useTheme } from 'styled-components'
 
-import { formatTicketPositionsForStatistics, getUserTicketType } from '@/utils/helpers'
+import { formatTicketPositionsForStatistics, getProfit, getUserTicketType } from '@/utils/helpers'
 import { USER_TICKET_TYPE } from '@/utils/constants'
 import { PAGES } from '@/utils/enums'
 import { GET_USERS_STATISTICS } from '@/utils/queries'
@@ -17,7 +17,6 @@ import SBox from '@/components/sBox/SBox'
 import SuccessIcon from '@/assets/icons/stat-successrate-icon.svg'
 import ProfitsIcon from '@/assets/icons/stat-profits-icon.svg'
 import BalanceIcon from '@/assets/icons/stat-balance-icon.svg'
-import { roundPrice } from '@/utils/formatters/currency'
 import Button from '@/atoms/button/Button'
 
 interface IStatistics {
@@ -52,12 +51,16 @@ const Stats = () => {
 			const lostTickets = [...formattedTicketData.parlayTickets, ...formattedTicketData.positionTickets]?.filter(
 				(item) => getUserTicketType(item) === USER_TICKET_TYPE.MISS
 			)
+			const cancelledTickets = [...formattedTicketData.parlayTickets, ...formattedTicketData.positionTickets]?.filter(
+				(item) => getUserTicketType(item) === USER_TICKET_TYPE.CANCELED
+			)
 			const numberOfAttempts = wonTickets.length + lostTickets.length
 			let successRate = 0.0
 			if (wonTickets.length !== 0) {
 				successRate = Number(((wonTickets.length / numberOfAttempts) * 100).toFixed(2))
 			}
-			setStatistics({ ...data.user, successRate })
+			const profit = getProfit(wonTickets, lostTickets, cancelledTickets)
+			setStatistics({ ...data.user, pnl: Number(profit), successRate })
 			setIsLoading(false)
 		} catch (e) {
 			setIsLoading(false)
@@ -110,7 +113,7 @@ const Stats = () => {
 							<Col span={12} xs={6} md={12} xl={6}>
 								<SBox
 									title={t('Profits')}
-									value={roundPrice(statistics?.pnl, true)}
+									value={`${(statistics.pnl || 0) > 0 ? '+' : ''}${statistics.pnl} $`}
 									extraContent={
 										<div>
 											<SC.Glow $color={theme['color-base-state-success-fg']} />

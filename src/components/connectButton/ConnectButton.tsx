@@ -63,6 +63,7 @@ const ConnectButton = () => {
 		if (includes([`/${PAGES.TIPSTER_DETAIL}`, `/${PAGES.TICKET_DETAIL}`, `/${PAGES.MATCH_DETAIL}`], router.pathname)) {
 			router.push(`/${PAGES.DASHBOARD}`)
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [signer, provider, chain?.id])
 
 	const handleSwitchNetwork = async (network: any) => {
