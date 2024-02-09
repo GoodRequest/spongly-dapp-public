@@ -1,7 +1,7 @@
 import { ElementRef, FC, useEffect, useRef, useState } from 'react'
 import { Col, Row, Spin } from 'antd'
 import { Field, getFormValues, InjectedFormProps, reduxForm } from 'redux-form'
-import { Chain } from 'wagmi'
+import { Chain, useNetwork } from 'wagmi'
 import { useTranslation } from 'next-export-i18n'
 import { useSelector } from 'react-redux'
 import { debounce, round } from 'lodash'
@@ -20,7 +20,8 @@ import SummaryCol from './components/summaryCol/SummaryCol'
 
 // utils
 import {
-	CRYPTO_CURRENCY,
+	CRYPTO_CURRENCY_OPTIONS,
+	FORM,
 	FORM_ERROR_TYPE,
 	MAX_BUY_IN,
 	MAX_SELECTED_ALLOWANCE,
@@ -28,9 +29,9 @@ import {
 	MAX_TOTAL_QUOTE,
 	MIN_BUY_IN_PARLAY,
 	MIN_BUY_IN_SINGLE,
+	NETWORK_IDS,
 	STABLE_COIN
 } from '@/utils/constants'
-import { FORM } from '@/utils/enums'
 import handleOnchangeForm from './helpers/changeBetContainer'
 
 // types
@@ -72,6 +73,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 		error: null,
 		type: null
 	})
+	const { chain } = useNetwork()
 	const matches = formValues?.matches ?? []
 	const hasAtLeastOneMatch = matches.length > 0
 	const { openConnectModal } = useConnectModal()
@@ -85,6 +87,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 	const minBuyIn = matches.length === 1 ? MIN_BUY_IN_SINGLE : MIN_BUY_IN_PARLAY
 
 	const getActualStableCoinIcon = (actualStableCoin?: string) => {
+		// TODO: add other icons when implemented
 		switch (actualStableCoin || formValues?.selectedStablecoin) {
 			case STABLE_COIN.S_USD:
 				return SUSDIcon
@@ -98,7 +101,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 				return 'unknown'
 		}
 	}
-	const stableCoinsOptions = CRYPTO_CURRENCY.map((item) => ({
+	const stableCoinsOptions = CRYPTO_CURRENCY_OPTIONS.map((item) => ({
 		label: (
 			<SCS.FlexItemCenterWrapper>
 				<SC.StableCoinIcon size={24} style={{ marginRight: 6 }} src={getActualStableCoinIcon(item)} />
@@ -106,7 +109,10 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 			</SCS.FlexItemCenterWrapper>
 		),
 		value: item,
-		disabled: item === STABLE_COIN.DAI || item === STABLE_COIN.USDC || item === STABLE_COIN.USDT
+		disabled:
+			chain?.id === NETWORK_IDS.OPTIMISM
+				? item === STABLE_COIN.DAI || item === STABLE_COIN.USDC || item === STABLE_COIN.USDT
+				: item === STABLE_COIN.DAI || item === STABLE_COIN.S_USD || item === STABLE_COIN.USDT
 	}))
 	const getErrorContent = async () => {
 		if (!isWalletConnected) {

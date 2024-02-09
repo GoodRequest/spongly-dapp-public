@@ -24,7 +24,8 @@ import {
 } from '@/utils/helpers'
 import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import { ITicket } from '@/typescript/types'
-import { OddsType } from '@/utils/constants'
+import { NETWORK_IDS, OddsType } from '@/utils/constants'
+import { getDefaultDecimalsForNetwork } from '@/utils/network'
 
 export interface IDefaultProps {
 	loading: boolean
@@ -45,12 +46,13 @@ const useFetchTickets = () => {
 
 	const mapTicketsData = async (data: (ParlayMarket | PositionBalance)[], successRateMap: Map<string, number>) =>
 		data.map((ticket) => {
+			const decimals = getDefaultDecimalsForNetwork(chain?.id || NETWORK_IDS.OPTIMISM)
 			return {
 				ticket: {
 					...ticket,
 					ticketType: getTicketType(ticket),
 					closedTicketType: getClosedTicketType(ticket),
-					buyIn: ticket?.sUSDPaid ? Number(bigNumberFormatter(ticket.sUSDPaid as string)) : 0,
+					buyIn: ticket?.sUSDPaid ? Number(bigNumberFormatter(ticket.sUSDPaid as string, decimals)) : 0,
 					matchesCount: 'positions' in ticket ? removeDuplicatesByGameId(ticket.positions) : 1,
 					positions:
 						'positions' in ticket
@@ -91,7 +93,7 @@ const useFetchTickets = () => {
 					skipSingle: INITIAL_BATCH_SIZE,
 					firstSingle: BATCH_SIZE - INITIAL_BATCH_SIZE
 				},
-				context: { chainId: chain?.id }
+				context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM }
 			}),
 			fetchTicketsData1({
 				variables: {
@@ -99,7 +101,7 @@ const useFetchTickets = () => {
 					skipParlay: 1 * BATCH_SIZE,
 					skipSingle: 1 * BATCH_SIZE
 				},
-				context: { chainId: chain?.id }
+				context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM }
 			}),
 			fetchTicketsData2({
 				variables: {
@@ -107,7 +109,7 @@ const useFetchTickets = () => {
 					skipParlay: 2 * BATCH_SIZE,
 					skipSingle: 2 * BATCH_SIZE
 				},
-				context: { chainId: chain?.id }
+				context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM }
 			}),
 			fetchSuccessRate(chain?.id)
 		])

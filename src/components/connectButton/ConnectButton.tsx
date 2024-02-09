@@ -3,14 +3,19 @@ import { Col, Row } from 'antd'
 import { useTranslation } from 'next-export-i18n'
 import { useAccount, useNetwork, useProvider, useSigner, useSwitchNetwork } from 'wagmi'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next-translate-routes'
+import { useDispatch } from 'react-redux'
+import { change } from 'redux-form'
 
 // utils
-import { MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE } from '@/utils/constants'
+import { includes } from 'lodash'
+import { FORM, MSG_TYPE, NETWORK_IDS, NOTIFICATION_TYPE } from '@/utils/constants'
 import { getWalletImage } from '@/utils/images'
-import { hasEthereumInjected, NETWORK_SWITCHER_SUPPORTED_NETWORKS, SUPPORTED_NETWORKS_DESCRIPTIONS } from '@/utils/network'
+import { hasEthereumInjected, NETWORK_SWITCHER_SUPPORTED_NETWORKS } from '@/utils/network'
 import networkConnector, { NetworkId } from '@/utils/networkConnector'
 import { showNotifications } from '@/utils/tsxHelpers'
 import { formatAddress } from '@/utils/formatters/string'
+import { PAGES } from '@/utils/enums'
 
 // components
 import Modal from '@/components/modal/Modal'
@@ -25,6 +30,9 @@ import * as SCG from '@/styles/GlobalStyles'
 // assets
 import ArrowDownIcon from '@/assets/icons/arrow-down-2.svg'
 import OptimismIcon from '@/assets/icons/optimism-icon.svg'
+import BaseIcon from '@/assets/icons/base-icon.svg'
+import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
+import { ACTIVE_TICKET_ID, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 
 const ConnectButton = () => {
 	const { t } = useTranslation()
@@ -34,6 +42,9 @@ const ConnectButton = () => {
 	const { chain } = useNetwork()
 	const { data: signer } = useSigner()
 	const provider = useProvider({ chainId: chain?.id || NETWORK_IDS.OPTIMISM })
+	const router = useRouter()
+	const dispatch = useDispatch()
+
 	const { switchNetwork } = useSwitchNetwork()
 
 	const [isModalVisible, setIsModalVisible] = useState(false)
@@ -44,54 +55,65 @@ const ConnectButton = () => {
 			provider,
 			signer: signer || undefined
 		})
+		// Reset bet container form
+		dispatch({ type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_INIT, payload: { data: [{ id: 1, matches: [], copied: false }] } })
+		dispatch(change(FORM.BET_TICKET, 'matches', []))
+		dispatch({ type: ACTIVE_TICKET_ID.SET, payload: 1 })
+		// NOTE: prevent for detail pages (if user is on detail and then change network detail is not the same for every network and throw error)
+		if (includes([`/${PAGES.TIPSTER_DETAIL}`, `/${PAGES.TICKET_DETAIL}`, `/${PAGES.MATCH_DETAIL}`], router.pathname)) {
+			router.push(`/${PAGES.DASHBOARD}`)
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [signer, provider, chain?.id])
 
 	const handleSwitchNetwork = async (network: any) => {
-		if (chain?.id !== network.networkId) {
-			if (hasEthereumInjected()) {
-				try {
+		try {
+			if (chain?.id !== network.chainId) {
+				if (hasEthereumInjected()) {
 					await (window.ethereum as any).request({
+						// TODO: zisti preco nefunguje ak je zapnuty coinbase extension v Chrome
 						method: 'wallet_switchEthereumChain',
 						params: [{ chainId: network.networkId }]
 					})
 					switchNetwork?.(network.networkId)
-					setIsModalVisible(false)
-				} catch (switchError: any) {
-					// NOTE: the requested chain hasn't been added
-					if (switchError.code === 4902) {
-						try {
-							await (window.ethereum as any).request({
-								method: 'wallet_addEthereumChain',
-								params: [SUPPORTED_NETWORKS_DESCRIPTIONS[+network.chainId]]
-							})
-							await (window.ethereum as any).request({
-								method: 'wallet_switchEthereumChain',
-								params: [{ chainId: network.networkId }]
-							})
-						} catch (addError) {
-							// eslint-disable-next-line no-console
-							console.log(addError)
-							showNotifications(
-								[{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to connect your wallet') }],
-								NOTIFICATION_TYPE.NOTIFICATION
-							)
-						}
-					} else {
-						// eslint-disable-next-line no-console
-						console.log(switchError)
-						showNotifications(
-							[{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to connect your wallet') }],
-							NOTIFICATION_TYPE.NOTIFICATION
-						)
-					}
+				} else {
+					switchNetwork?.(network.networkId)
 				}
-			} else {
-				switchNetwork?.(network.networkId)
+
+				// switchNetwork?.(network.networkId)
+
 				setIsModalVisible(false)
+			} else {
+				showNotifications(
+					[{ type: MSG_TYPE.INFO, message: t('Already on {{ networkName }} network', { networkName: network.shortChainName }) }],
+					NOTIFICATION_TYPE.NOTIFICATION
+				)
 			}
+		} catch (e) {
+			const err: any = e
+			// NOTE: 4001 = rejected request
+			if (err?.code === 4001) {
+				showNotifications([{ type: MSG_TYPE.INFO, message: err?.message }], NOTIFICATION_TYPE.NOTIFICATION)
+			} else {
+				showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to switch network') }], NOTIFICATION_TYPE.NOTIFICATION)
+			}
+			// eslint-disable-next-line no-console
+			console.error(e)
 		}
 	}
 
+	const getActualNetworkIcon = () => {
+		if (chain?.id === NETWORK_IDS.OPTIMISM) {
+			return OptimismIcon
+		}
+		if (chain?.id === NETWORK_IDS.BASE) {
+			return BaseIcon
+		}
+		if (chain?.id === NETWORK_IDS.ARBITRUM) {
+			return ArbitrumIcon
+		}
+		return OptimismIcon
+	}
 	return (
 		<>
 			<Modal open={isModalVisible} onCancel={() => setIsModalVisible(false)} centered>
@@ -144,8 +166,7 @@ const ConnectButton = () => {
 											<SC.WalletRow justify={'space-between'}>
 												{/* empty alt text for decorative img */}
 												<Col flex={'auto'} style={{ padding: '0px 0px 0px 8px' }}>
-													{/* // TODO: if next network will be added need to be conditionaly rendered icon */}
-													<SC.Logo alt={'optimism'} src={OptimismIcon} />
+													<SC.Logo alt={'optimism'} src={getActualNetworkIcon()} />
 												</Col>
 												<Col flex={'24px'}>
 													<SC.ArrowLogo src={ArrowDownIcon} />

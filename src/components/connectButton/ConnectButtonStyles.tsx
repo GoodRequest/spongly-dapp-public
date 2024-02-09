@@ -120,9 +120,11 @@ export const ChainOptions = styled.div`
 export const ChainRow = styled(Row)`
 	padding: 12px;
 	align-items: center;
+	margin-top: 8px;
 	background: ${({ theme }) => theme['color-base-action-secondary-default']};
 	border-radius: 8px;
 	:hover {
+		cursor: pointer;
 		background: ${({ theme }) => theme['color-base-action-secondary-hover']};
 	}
 `

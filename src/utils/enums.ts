@@ -46,10 +46,6 @@ export const LIST_TYPE = {
 	MATCHES: 'MATCHES'
 }
 
-export const FORM = {
-	BET_TICKET: 'BET_TICKET'
-}
-
 export enum ODDS_PROPERTY {
 	HOME = 'homeOdds',
 	AWAY = 'awayOdds',

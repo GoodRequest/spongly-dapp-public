@@ -71,7 +71,7 @@ const TicketDetailContent = () => {
 			if (isParlay) {
 				const { data } = await fetchParlayDetail({
 					variables: { id: router.query.ticketId },
-					context: { chainId: chain?.id }
+					context: { chainId: chain?.id || NETWORK_IDS.OPTIMISM }
 				})
 				userTicket = parseParlayToUserTicket(data?.parlayMarket)
 			} else {

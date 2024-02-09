@@ -2,11 +2,14 @@ import dayjs from 'dayjs'
 import Router from 'next/router'
 import { floor, groupBy, max, round, toNumber, toPairs } from 'lodash'
 import { AnyAction, Dispatch } from 'redux'
-import { ethers } from 'ethers'
+import { BigNumberish, ethers } from 'ethers'
 import { IUnsubmittedBetTicket, TicketPosition, UNSUBMITTED_BET_TICKETS } from '@/redux/betTickets/betTicketTypes'
 
 import {
+	ARBITRUM_DIVISOR,
+	BASE_DIVISOR,
 	CLOSED_TICKET_TYPE,
+	Coins,
 	COLLATERALS,
 	ENDPOINTS,
 	ETHERSCAN_TX_URL_ARBITRUM,
@@ -15,7 +18,6 @@ import {
 	MATCH_STATUS,
 	MSG_TYPE,
 	Network,
-	NetworkFile,
 	NetworkFileFromNetworkIds,
 	NETWORK_IDS,
 	NOTIFICATION_TYPE,
@@ -28,8 +30,8 @@ import {
 	PARLAY_LEADERBOARD_OPTIMISM_REWARDS_TOP_10,
 	PARLAY_LEADERBOARD_OPTIMISM_REWARDS_TOP_20,
 	SGPCombinationsFromContractOrderMapping,
-	STABLE_COIN,
-	STABLE_DECIMALS,
+	STABLE_COINS,
+	COLLATERAL_DECIMALS,
 	START_OF_BIWEEKLY_PERIOD,
 	TICKET_TYPE,
 	TOTAL_WINNER_TAGS,
@@ -62,7 +64,7 @@ import {
 	UserTicket
 } from '@/typescript/types'
 
-import { bigNumberFormatter, bigNumberFormmaterWithDecimals } from '@/utils/formatters/ethers'
+import { bigNumberFormatter } from '@/utils/formatters/ethers'
 import { getFormattedBonus, convertPositionNameToPosition } from '@/utils/markets'
 import { BetType } from '@/utils/tags'
 
@@ -70,10 +72,12 @@ import OptimismIcon from '@/assets/icons/optimism-icon.svg'
 import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
 
 import { formatParlayQuote, formatPositionOdds, formatQuote, formattedCombinedTypeMatch } from './formatters/quote'
-import { roundToTwoDecimals } from './formatters/number'
+import { floorNumberToDecimals, roundToTwoDecimals } from './formatters/number'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
 import { roundPrice } from './formatters/currency'
 import { showNotifications } from './tsxHelpers'
+import multipleCollateral from '@/utils/contracts/multiCollateralContract'
+import { getDefaultDecimalsForNetwork } from '@/utils/network'
 
 export const getCurrentBiweeklyPeriod = () => {
 	const startOfPeriod = dayjs(START_OF_BIWEEKLY_PERIOD)
@@ -803,12 +807,12 @@ export const convertSGPContractDataToSGPItemType = (sgpContractData: SGPContract
 	sgpContractData.forEach((item) => {
 		const sgpFees = [item[1], item[2], item[3]]
 		sgpFees.forEach((sgpContractItem, sgpIndex) => {
-			if (bigNumberFormmaterWithDecimals(sgpContractItem.toString()) !== 0) {
+			if (bigNumberFormatter(sgpContractItem.toString()) !== 0) {
 				const marketTypeCombination = SGPCombinationsFromContractOrderMapping[sgpIndex as ContractSGPOrder]
 				finalSGPItems.push({
 					tags: [Number(item[0])],
 					combination: marketTypeCombination,
-					SGPFee: bigNumberFormmaterWithDecimals(sgpContractItem.toString())
+					SGPFee: bigNumberFormatter(sgpContractItem.toString())
 				})
 			}
 		})
@@ -816,21 +820,20 @@ export const convertSGPContractDataToSGPItemType = (sgpContractData: SGPContract
 
 	return finalSGPItems
 }
+export const getDefaultCollateral = (networkId: Network) => COLLATERALS[networkId][0]
 
-export const getSelectedCoinIndex = (selectedCoin?: string): number => {
-	switch (selectedCoin) {
-		case STABLE_COIN.S_USD:
-			return 0
-		case STABLE_COIN.DAI:
-			return 1
-		case STABLE_COIN.USDC:
-			return 2
-		case STABLE_COIN.USDT:
-			return 3
-		default:
-			throw new Error('Invalid stable coin')
-	}
+export const getCollateral = (networkId: Network, index: number) => COLLATERALS[networkId][index]
+
+export const getCollaterals = (networkId: Network) => COLLATERALS[networkId]
+
+export const isStableCurrency = (currencyKey: Coins) => {
+	return STABLE_COINS.includes(currencyKey)
 }
+
+// @ts-ignore
+export const getCollateralAddress = (networkId: Network, index: number) => multipleCollateral[getCollateral(networkId, index)]?.addresses[networkId]
+
+export const getCollateralIndex = (networkId: Network, currencyKey: Coins) => COLLATERALS[networkId].indexOf(currencyKey)
 
 export const getOddByBetType = (market: IMatch, oddType: OddsType, customBetOption?: BET_OPTIONS) => {
 	// customBetOption is used for override match betOption (using in MatchListContent where we need to return odds based on type of odds in dropdown)
@@ -1058,9 +1061,35 @@ export const isBellowOrEqualResolution = (currentResolution: RESOLUTIONS, resolu
 			return true
 	}
 }
-export const getCollateral = (networkId: Network, index: number) => COLLATERALS[networkId][index]
 
-export const getStablecoinDecimals = (networkId: Network, stableIndex: number) => STABLE_DECIMALS[getCollateral(networkId, stableIndex)]
+export const getDividerByNetworkId = (networkId: Network) => {
+	switch (networkId) {
+		case NETWORK_IDS.OPTIMISM:
+			return OPTIMISM_DIVISOR
+		case NETWORK_IDS.OPTIMISM_GOERLI:
+			return OPTIMISM_DIVISOR
+		case NETWORK_IDS.ARBITRUM:
+			return ARBITRUM_DIVISOR
+		case NETWORK_IDS.BASE:
+			return BASE_DIVISOR
+		default:
+			// eslint-disable-next-line no-console
+			console.error('Error occured durring getDividerByNetworkId()')
+			return 0
+	}
+}
+
+export const coinParser = (value: string, networkId: Network, currency?: Coins) => {
+	const decimals = currency ? COLLATERAL_DECIMALS[currency] : getDefaultDecimalsForNetwork(networkId)
+
+	return ethers.utils.parseUnits(floorNumberToDecimals(Number(value), decimals).toString(), decimals)
+}
+
+export const coinFormatter = (value: BigNumberish, networkId: Network, currency?: Coins) => {
+	const decimals = currency ? COLLATERAL_DECIMALS[currency] : getDefaultDecimalsForNetwork(networkId)
+
+	return Number(ethers.utils.formatUnits(value, decimals))
+}
 
 export const getCombinedPositionText = (positions: Position[]): CombinedMarketsPositionName | null => {
 	const firstPositionBetType = Number(positions[0]?.market?.betType) as BetType

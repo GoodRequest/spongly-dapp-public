@@ -3,7 +3,7 @@ import { useAccount, useNetwork } from 'wagmi'
 import { ethers } from 'ethers'
 import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
-import { map } from 'lodash'
+import { map, round } from 'lodash'
 import { Col, Row } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { change, getFormValues } from 'redux-form'
@@ -27,10 +27,10 @@ import {
 	isWindowReady,
 	orderPositionsAsSportMarkets
 } from '@/utils/helpers'
-import { GAS_ESTIMATION_BUFFER, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE, OddsType, STABLE_COIN, USER_TICKET_TYPE } from '@/utils/constants'
+import { FORM, GAS_ESTIMATION_BUFFER, MSG_TYPE, Network, NETWORK_IDS, NOTIFICATION_TYPE, OddsType, STABLE_COIN, USER_TICKET_TYPE } from '@/utils/constants'
 import networkConnector from '@/utils/networkConnector'
 import sportsMarketContract from '@/utils/contracts/sportsMarketContract'
-import { FORM, PAGES } from '@/utils/enums'
+import { PAGES } from '@/utils/enums'
 import { roundPrice } from '@/utils/formatters/currency'
 
 // types
@@ -194,8 +194,8 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 
 			<SC.CenterRowContent md={{ span: 3, order: 3 }} xs={{ span: 8, order: 3 }}>
 				<>
-					<SC.ColumnValueText>{roundPrice(ticket?.sUSDPaid, true)}</SC.ColumnValueText>
-					<SC.ColumnNameText>{t('Buy in')}</SC.ColumnNameText>
+					<SC.ColumnValueText>{roundPrice(ticket?.sUSDPaid, true, chain?.id)}</SC.ColumnValueText>
+					<SC.ColumnNameText>{t('Buy-in')}</SC.ColumnNameText>
 				</>
 			</SC.CenterRowContent>
 			<SC.CenterRowContent md={{ span: 3, order: 3 }} xs={{ span: 8, order: 3 }}>

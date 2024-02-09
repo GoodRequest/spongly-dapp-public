@@ -9,9 +9,9 @@ import { updateActiveTicketMatches } from '@/redux/betTickets/betTicketsActions'
 import { IUnsubmittedBetTicket, TicketPosition } from '@/redux/betTickets/betTicketTypes'
 
 // utils
-import { BET_OPTIONS, FORM } from '@/utils/enums'
+import { BET_OPTIONS } from '@/utils/enums'
 import { checkTeamExistInBet, checkTotalWinnerBetExist, getOddByBetType, isWindowReady, updateUnsubmittedTicketMatches } from '@/utils/helpers'
-import { MATCH_STATUS, MAX_TICKET_MATCHES, MIN_ODD_TRESHOLD, OddsType } from '@/utils/constants'
+import { FORM, MATCH_STATUS, MAX_TICKET_MATCHES, MIN_ODD_TRESHOLD, OddsType } from '@/utils/constants'
 import { formatQuote } from '@/utils/formatters/quote'
 
 // styled

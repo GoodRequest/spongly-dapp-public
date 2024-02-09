@@ -3,7 +3,6 @@ import { Col, Row } from 'antd'
 import { includes, map, slice } from 'lodash'
 import { useTranslation } from 'next-export-i18n'
 import { useNetwork } from 'wagmi'
-import Flag from 'react-world-flags'
 
 // types
 import { SportMarket } from '@/__generated__/resolvers-types'
@@ -115,12 +114,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, item }) => {
 				<Col span={24}>
 					{/* NOTE: if has no items, should be filtered out, so renderList list must be loading. */}
 					<SC.LeagueHeader>
-						{item?.country && item?.country !== STATIC.WORLD && (
-							<SC.FlagWrapper>
-								<Flag code={item.country} />
-							</SC.FlagWrapper>
-						)}
-
+						{item?.country && item?.country !== STATIC.WORLD && <SC.FlagWrapper code={item.country} />}
 						{item?.country && item?.country === STATIC.WORLD && <FlagWorld />}
 						{item?.label}
 					</SC.LeagueHeader>
