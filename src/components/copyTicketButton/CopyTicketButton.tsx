@@ -79,6 +79,7 @@ const CopyTicketButton = ({ ticket, isPosition }: Props) => {
 	useEffect(() => {
 		const filterOngoingMatches = async () => {
 			const matches = await formatMatchesToTicket()
+			// TODO: add logig that check if bet type is not supported with BetType enum
 			const filterOngoingMatches = matches.filter((match) => !(match.awayOdds === 0 && match.homeOdds === 0 && match.awayOdds === 0))
 			setActiveMatches(filterOngoingMatches)
 		}

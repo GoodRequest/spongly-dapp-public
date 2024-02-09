@@ -3,7 +3,7 @@ import { useAccount, useNetwork } from 'wagmi'
 import { ethers } from 'ethers'
 import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
-import { map } from 'lodash'
+import { map, round } from 'lodash'
 import { Col, Row } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { change, getFormValues } from 'redux-form'
@@ -194,7 +194,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 
 			<SC.CenterRowContent md={{ span: 3, order: 3 }} xs={{ span: 8, order: 3 }}>
 				<>
-					<SC.ColumnValueText>{roundPrice(ticket?.sUSDPaid, true)}</SC.ColumnValueText>
+					<SC.ColumnValueText>{roundPrice(ticket?.sUSDPaid, true, chain?.id)}</SC.ColumnValueText>
 					<SC.ColumnNameText>{t('Buy-in')}</SC.ColumnNameText>
 				</>
 			</SC.CenterRowContent>

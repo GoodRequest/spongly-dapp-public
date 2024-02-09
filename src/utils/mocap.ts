@@ -2,6 +2,17 @@ export const presentationSliderData = [
 	{
 		text: '',
 		textColor: '#ffffff',
+		image: '/banners/arbitrum_base_support.png',
+		mobileImage: '/banners/arbitrum_base_support_mobile.png',
+		button: {
+			title: 'Create ticket',
+			redirectUrl: '/matches',
+			isPageRedirect: true
+		}
+	},
+	{
+		text: '',
+		textColor: '#ffffff',
 		image: '/banners/Join-discord.webp',
 		mobileImage: '/banners/Join-discord_mobile.webp',
 		button: {
