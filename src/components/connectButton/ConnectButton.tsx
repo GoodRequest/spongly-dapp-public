@@ -48,6 +48,7 @@ const ConnectButton = () => {
 	const { switchNetwork } = useSwitchNetwork()
 
 	const [isModalVisible, setIsModalVisible] = useState(false)
+	const [chainId, setChainId] = useState<number | undefined>(chain?.id)
 
 	useEffect(() => {
 		networkConnector.setNetworkSettings({
@@ -55,14 +56,18 @@ const ConnectButton = () => {
 			provider,
 			signer: signer || undefined
 		})
+		if (chain?.id !== chainId) {
+			// NOTE: prevent for detail pages (if user is on detail and then change network detail is not the same for every network and throw error)
+			if (includes([`/${PAGES.TIPSTER_DETAIL}`, `/${PAGES.TICKET_DETAIL}`, `/${PAGES.MATCH_DETAIL}`], router.pathname)) {
+				router.push(`/${PAGES.DASHBOARD}`)
+			}
+			setChainId(chain?.id)
+		}
+
 		// Reset bet container form
 		dispatch({ type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_INIT, payload: { data: [{ id: 1, matches: [], copied: false }] } })
 		dispatch(change(FORM.BET_TICKET, 'matches', []))
 		dispatch({ type: ACTIVE_TICKET_ID.SET, payload: 1 })
-		// NOTE: prevent for detail pages (if user is on detail and then change network detail is not the same for every network and throw error)
-		if (includes([`/${PAGES.TIPSTER_DETAIL}`, `/${PAGES.TICKET_DETAIL}`, `/${PAGES.MATCH_DETAIL}`], router.pathname)) {
-			router.push(`/${PAGES.DASHBOARD}`)
-		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [signer, provider, chain?.id])
 
