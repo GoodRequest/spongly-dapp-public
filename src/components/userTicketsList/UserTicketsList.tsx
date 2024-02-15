@@ -91,35 +91,37 @@ const UserTicketsList = ({ tickets, isLoading, refetch, isMyWallet }: Props) => 
 
 	useEffect(() => {
 		setShownTickets(sortedTickets?.slice(0, pagination.page * 10))
-		if (router.query.id) {
-			router.replace(
-				{
-					pathname: `/${PAGES.TIPSTER_DETAIL}`,
-					query: {
-						id: router.query.id,
-						page: pagination?.page,
-						status: filter.status
-					}
-				},
-				undefined,
-				{ scroll: false }
-			)
-		}
-		if (chain?.id && !router.query.id) {
-			router.replace(
-				{
-					pathname: `/${PAGES.MY_WALLET}`,
-					query: {
-						page: pagination?.page,
-						status: filter.status
-					}
-				},
-				undefined,
-				{ scroll: false }
-			)
+		if (router.isReady) {
+			if (router.query.id) {
+				router.replace(
+					{
+						pathname: `/${PAGES.TIPSTER_DETAIL}`,
+						query: {
+							id: router.query.id,
+							page: pagination?.page,
+							status: filter.status
+						}
+					},
+					undefined,
+					{ scroll: false }
+				)
+			}
+			if (chain?.id && !router.query.id) {
+				router.replace(
+					{
+						pathname: `/${PAGES.MY_WALLET}`,
+						query: {
+							page: pagination?.page,
+							status: filter.status
+						}
+					},
+					undefined,
+					{ scroll: false }
+				)
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [pagination, sortedTickets, chain?.id])
+	}, [pagination, sortedTickets, chain?.id, router.isReady])
 
 	useEffect(() => {
 		if (tickets) {
