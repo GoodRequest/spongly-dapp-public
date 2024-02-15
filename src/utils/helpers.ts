@@ -1502,9 +1502,7 @@ export const handleTxHashRedirect = (t: any, txHash?: string, chainId?: number) 
 
 	const link = document.createElement('a')
 	const newHref = getEtherScanTxHash(chainId || NETWORK_IDS.OPTIMISM, txHash || '')
-	console.log(newHref)
-	console.log(chainId)
-	console.log(txHash)
+
 	if (!newHref) {
 		showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to redirect') }], NOTIFICATION_TYPE.NOTIFICATION)
 		document.body?.removeChild(link)
