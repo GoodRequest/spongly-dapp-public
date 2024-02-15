@@ -35,7 +35,8 @@ import {
 	START_OF_BIWEEKLY_PERIOD,
 	TICKET_TYPE,
 	TOTAL_WINNER_TAGS,
-	USER_TICKET_TYPE
+	USER_TICKET_TYPE,
+	ETHERSCAN_TX_URL_BASE
 } from './constants'
 import {
 	BET_OPTIONS,
@@ -508,6 +509,8 @@ export const getEtherScanTxHash = (chainId: number, txHash: string) => {
 			return ETHERSCAN_TX_URL_ARBITRUM + txHash
 		case NETWORK_IDS.OPTIMISM:
 			return ETHERSCAN_TX_URL_OPTIMISM + txHash
+		case NETWORK_IDS.BASE:
+			return ETHERSCAN_TX_URL_BASE + txHash
 		default:
 			return undefined
 	}
@@ -1499,9 +1502,12 @@ export const handleTxHashRedirect = (t: any, txHash?: string, chainId?: number) 
 
 	const link = document.createElement('a')
 	const newHref = getEtherScanTxHash(chainId || NETWORK_IDS.OPTIMISM, txHash || '')
+	console.log(newHref)
+	console.log(chainId)
+	console.log(txHash)
 	if (!newHref) {
 		showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to redirect') }], NOTIFICATION_TYPE.NOTIFICATION)
-		document.body.removeChild(link)
+		document.body?.removeChild(link)
 	} else {
 		link.href = newHref
 		link.setAttribute('target', '_blank')
