@@ -1,4 +1,4 @@
-import { ElementRef, FC, useEffect, useRef, useState } from 'react'
+import { ElementRef, FC, useEffect, useMemo, useRef, useState } from 'react'
 import { Col, Row, Spin } from 'antd'
 import { Field, getFormValues, InjectedFormProps, reduxForm } from 'redux-form'
 import { Chain, useNetwork } from 'wagmi'
@@ -101,19 +101,40 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 				return 'unknown'
 		}
 	}
-	const stableCoinsOptions = CRYPTO_CURRENCY_OPTIONS.map((item) => ({
-		label: (
-			<SCS.FlexItemCenterWrapper>
-				<SC.StableCoinIcon size={24} style={{ marginRight: 6 }} src={getActualStableCoinIcon(item)} />
-				{item}
-			</SCS.FlexItemCenterWrapper>
-		),
-		value: item,
-		disabled:
-			chain?.id === NETWORK_IDS.OPTIMISM
-				? item === STABLE_COIN.DAI || item === STABLE_COIN.USDC || item === STABLE_COIN.USDT
-				: item === STABLE_COIN.DAI || item === STABLE_COIN.S_USD || item === STABLE_COIN.USDT
-	}))
+
+	const stableCoinsOptions = useMemo(
+		() => {
+			const isItemDisabled = (coin: string) => {
+				if (!chain?.id) {
+					return true
+				}
+				if (chain?.id === NETWORK_IDS.OPTIMISM) {
+					if (coin === STABLE_COIN.DAI || coin === STABLE_COIN.USDC || coin === STABLE_COIN.USDT) {
+						return true
+					}
+					return false
+				}
+				if (coin === STABLE_COIN.DAI || coin === STABLE_COIN.S_USD || coin === STABLE_COIN.USDT) {
+					return true
+				}
+				return false
+			}
+
+			return CRYPTO_CURRENCY_OPTIONS.map((item) => ({
+				label: (
+					<SCS.FlexItemCenterWrapper>
+						<SC.StableCoinIcon size={24} style={{ marginRight: 6 }} src={getActualStableCoinIcon(item)} />
+						{item}
+					</SCS.FlexItemCenterWrapper>
+				),
+				value: item,
+				disabled: isItemDisabled(item)
+			}))
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[chain?.id]
+	)
+
 	const getErrorContent = async () => {
 		if (!isWalletConnected) {
 			setError({
