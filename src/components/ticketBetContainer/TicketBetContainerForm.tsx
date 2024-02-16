@@ -109,15 +109,15 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 					return true
 				}
 				if (chain?.id === NETWORK_IDS.OPTIMISM) {
-					if (coin === STABLE_COIN.DAI || coin === STABLE_COIN.USDC || coin === STABLE_COIN.USDT) {
-						return true
+					if (coin === STABLE_COIN.S_USD) {
+						return false
 					}
-					return false
-				}
-				if (coin === STABLE_COIN.DAI || coin === STABLE_COIN.S_USD || coin === STABLE_COIN.USDT) {
 					return true
 				}
-				return false
+				if (coin === STABLE_COIN.USDC) {
+					return false
+				}
+				return true
 			}
 
 			return CRYPTO_CURRENCY_OPTIONS.map((item) => ({
