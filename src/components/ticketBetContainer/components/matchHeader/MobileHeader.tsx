@@ -55,7 +55,7 @@ const MobileHeader: FC<IMobileHeader> = ({ tickets = [], addTicket, setActiveTic
 	}
 
 	return (
-		<SC.MobileHeaderRow rolledUp={rolledUp} justify={'space-between'}>
+		<SC.MobileHeaderRow $rolledUp={rolledUp} justify={'space-between'}>
 			<Col xs={11} sm={9} md={8}>
 				<Select
 					options={options}
@@ -75,7 +75,7 @@ const MobileHeader: FC<IMobileHeader> = ({ tickets = [], addTicket, setActiveTic
 				<SC.HeaderValue>{activeTicket?.matches?.length === 0 ? 0 : activeTicket?.totalQuote || '0'}</SC.HeaderValue>
 			</SC.ShiftedCol>
 			<SC.DropButtonColWrapper xs={3} sm={2} md={2}>
-				<SC.DropButton rolledUp={rolledUp} onClick={() => setRolledUp((current) => !current)}>
+				<SC.DropButton $rolledUp={rolledUp} onClick={() => setRolledUp((current) => !current)}>
 					<ArrowDownIcon />
 				</SC.DropButton>
 			</SC.DropButtonColWrapper>

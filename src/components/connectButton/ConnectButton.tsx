@@ -69,6 +69,7 @@ const ConnectButton = () => {
 		dispatch(change(FORM.BET_TICKET, 'matches', []))
 		dispatch({ type: ACTIVE_TICKET_ID.SET, payload: 1 })
 		// eslint-disable-next-line react-hooks/exhaustive-deps
+		setIsModalVisible(false)
 	}, [signer, provider, chain?.id])
 
 	const handleSwitchNetwork = async (network: any) => {
@@ -85,22 +86,76 @@ const ConnectButton = () => {
 					switchNetwork?.(network.networkId)
 				}
 
-				// switchNetwork?.(network.networkId)
-
 				setIsModalVisible(false)
 			} else {
 				showNotifications(
-					[{ type: MSG_TYPE.INFO, message: t('Already on {{ networkName }} network', { networkName: network.shortChainName }) }],
+					[{ type: MSG_TYPE.INFO, message: t('Already on {{ networkName }} network', { networkName: network.chainName }) }],
 					NOTIFICATION_TYPE.NOTIFICATION
 				)
 			}
 		} catch (e) {
 			const err: any = e
-			// NOTE: 4001 = rejected request
-			if (err?.code === 4001) {
+			if (err.code === 4902) {
+				// Handle MetaMask specific error (if using MetaMask)
+				// This code block will not execute for other wallets like Raby
+				try {
+					if (window.ethereum) {
+						await (window.ethereum as any).request({
+							method: 'wallet_addEthereumChain',
+							params: [
+								{
+									chainId: network.networkId,
+									chainName: network.chainName,
+									rpcUrls: network.rpcUrls,
+									blockExplorerUrls: network.blockExplorerUrls,
+									iconUrls: network.iconUrls,
+									nativeCurrency: {
+										symbol: network.nativeCurrency.symbol,
+										decimals: network.nativeCurrency.decimals
+									}
+								}
+							]
+						})
+					}
+				} catch (addError: any) {
+					if (addError.code === 4001) {
+						showNotifications([{ type: MSG_TYPE.INFO, message: t('User rejected transaction') }], NOTIFICATION_TYPE.NOTIFICATION)
+					} else {
+						showNotifications(
+							[{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to switch network') }],
+							NOTIFICATION_TYPE.NOTIFICATION
+						)
+					}
+					// Handle error adding network
+				}
+			} else if (err.code === 4001) {
+				// Handle error code 4001 (e.g., rejected request)
 				showNotifications([{ type: MSG_TYPE.INFO, message: err?.message }], NOTIFICATION_TYPE.NOTIFICATION)
 			} else {
-				showNotifications([{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to switch network') }], NOTIFICATION_TYPE.NOTIFICATION)
+				// Handle other errors (including errors from Raby or other wallets)
+				// Check if the error message indicates a missing network
+				// eslint-disable-next-line no-lonely-if
+				if (err.message && err.message.includes('network')) {
+					// Display a generic error message indicating the network is missing
+					showNotifications(
+						[
+							{
+								type: MSG_TYPE.WARNING,
+								message: t('Unrecognized chain ID. Please add {{ networkName }} network to your wallet', {
+									networkName: network.chainName
+								})
+							}
+						],
+						NOTIFICATION_TYPE.NOTIFICATION
+					)
+				} else {
+					// Handle other errors not related to missing network or rejected request
+					// Display an appropriate error message or take necessary action
+					showNotifications(
+						[{ type: MSG_TYPE.ERROR, message: t('An error occurred while trying to switch network') }],
+						NOTIFICATION_TYPE.NOTIFICATION
+					)
+				}
 			}
 			// eslint-disable-next-line no-console
 			console.error(e)
@@ -124,10 +179,10 @@ const ConnectButton = () => {
 			<Modal open={isModalVisible} onCancel={() => setIsModalVisible(false)} centered>
 				<SCS.ModalTitle>{t('Switch network')}</SCS.ModalTitle>
 				{NETWORK_SWITCHER_SUPPORTED_NETWORKS.map((network) => (
-					<SC.ChainOptions>
+					<SC.ChainOptions key={network.networkId}>
 						<SC.ChainRow onClick={() => handleSwitchNetwork(network)} justify={'space-between'}>
 							<Col span={12}>
-								<SC.ChainName style={{ marginBottom: '0px' }}>{network.shortChainName}</SC.ChainName>
+								<SC.ChainName style={{ marginBottom: '0px' }}>{network.chainName}</SC.ChainName>
 							</Col>
 							<Col flex={'end'}>
 								<SCG.FlexRow>

@@ -120,6 +120,7 @@ const MatchesList: FC<IMatchesList> = ({ matches, filter, item }) => {
 					</SC.LeagueHeader>
 					{map(renderList, (match, key) => (
 						<MatchListItem
+							key={`match-${match.address}-${key}`}
 							match={match}
 							keyValue={`match-${match.address}-${key}`}
 							filter={filter}
