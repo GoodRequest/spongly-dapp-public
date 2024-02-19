@@ -124,7 +124,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 				label: (
 					<SCS.FlexItemCenterWrapper>
 						<SC.StableCoinIcon size={24} style={{ marginRight: 6 }} src={getActualStableCoinIcon(item)} />
-						{item}
+						{chain?.id === NETWORK_IDS.BASE && item === STABLE_COIN.USDC ? 'USDbC' : item}
 					</SCS.FlexItemCenterWrapper>
 				),
 				value: item,
