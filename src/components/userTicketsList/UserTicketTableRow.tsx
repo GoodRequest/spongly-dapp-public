@@ -3,7 +3,7 @@ import { useAccount, useNetwork } from 'wagmi'
 import { ethers } from 'ethers'
 import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
-import { map, round } from 'lodash'
+import { map } from 'lodash'
 import { Col, Row } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { change, getFormValues } from 'redux-form'
@@ -240,9 +240,9 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 			key={ticket.id}
 			onChange={() => setIsExpanded(!isExpanded)}
 			activeKey={isExpanded ? [ticket.id] : []}
-			isExpanded={isExpanded}
+			$isExpanded={isExpanded}
 		>
-			<SC.CollapsePanel isExpanded={isExpanded} header={ticketHeader} key={ticket.id}>
+			<SC.CollapsePanel $isExpanded={isExpanded} header={ticketHeader} key={ticket.id}>
 				<Row gutter={[16, 16]}>
 					{map(positionsWithMergedCombinedPositions, (item, index) => (
 						<Col key={item?.id} span={24} lg={12}>

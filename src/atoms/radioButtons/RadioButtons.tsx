@@ -23,7 +23,7 @@ const RadioButtons = ({ input, options, defaultValue, onChange, value, minimizeF
 
 	const radioOptions = options?.map((option, index) => {
 		return (
-			<SC.RadioButton {...input} key={option.value} value={option?.value} minimized={minimizeFirstOption && index === 0}>
+			<SC.RadioButton {...input} key={option.value} value={option?.value} $minimized={minimizeFirstOption && index === 0}>
 				<SC.ContentWrapper>
 					{getCountBubble(option.value) && <SC.CountBubble>{getCountBubble(option.value)}</SC.CountBubble>}
 					{option?.label}

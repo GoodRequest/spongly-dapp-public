@@ -7,7 +7,7 @@ import { breakpoints } from '@/styles/theme'
 import { SCROLL_DIRECTION } from '@/utils/enums'
 import { FORM_ERROR_TYPE } from '@/utils/constants'
 
-export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
+export const TicketBetWrapper = styled.div<{ $rolledUp: boolean }>`
 	position: sticky;
 	top: 24px;
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
@@ -19,10 +19,10 @@ export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
 	@media (max-width: ${breakpoints.semixxl}px) {
 		top: unset;
 		display: flex;
-		overflow-y: ${({ rolledUp }) => (rolledUp ? 'auto' : 'hidden')};
+		overflow-y: ${({ $rolledUp }) => ($rolledUp ? 'auto' : 'hidden')};
 		flex-direction: column;
 		transition: height 0.5s;
-		height: ${({ rolledUp }) => (rolledUp ? '100%' : '80px')};
+		height: ${({ $rolledUp }) => ($rolledUp ? '100%' : '80px')};
 		position: fixed;
 		bottom: 0px;
 		background: ${({ theme }) => theme['color-base-surface-top']};
@@ -37,10 +37,10 @@ export const TicketBetWrapper = styled.div<{ rolledUp: boolean }>`
 			border-radius: 12px 12px 0px 0px;
 			right: 60px;
 			overflow: hidden;
-			height: ${({ rolledUp }) => (rolledUp ? 'auto' : '80px')};
+			height: ${({ $rolledUp }) => ($rolledUp ? 'auto' : '80px')};
 			width: 440px;
-			box-shadow: ${({ rolledUp }) =>
-				rolledUp ? '0px -15px 30px -6px rgba(102, 116, 255, 0.04), 0px -25px 50px -12px rgba(102, 116, 255, 0.25);' : 'none'};
+			box-shadow: ${({ $rolledUp }) =>
+				$rolledUp ? '0px -15px 30px -6px rgba(102, 116, 255, 0.04), 0px -25px 50px -12px rgba(102, 116, 255, 0.25);' : 'none'};
 			background: ${({ theme }) => theme['color-base-surface-top']};
 			@media (min-width: ${breakpoints.md}px) and (max-width: ${breakpoints.xl}px) {
 				right: 24px;
