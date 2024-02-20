@@ -28,7 +28,7 @@ import FilterIcon from '@/assets/icons/filter-icon.svg'
 // utils
 import { ORDER_DIRECTION, STATIC, SportFilterEnum, TICKET_SORTING, TICKET_TYPE } from '@/utils/constants'
 import { RESOLUTIONS } from '@/utils/enums'
-import { SPORTS_TAGS_MAP, TAGS_LIST } from '@/utils/tags'
+import { BetType, SPORTS_TAGS_MAP, TAGS_LIST } from '@/utils/tags'
 import { decodeSorter, isBellowOrEqualResolution } from '@/utils/helpers'
 import { breakpoints } from '@/styles/theme'
 import SportFilter from '@/components/sportFilter/SportFilter'
@@ -86,11 +86,16 @@ const TicketsContent = () => {
 		if (!data) return []
 		if (!includes([STATIC.ALL, undefined], filter.sport) || !includes([STATIC.ALL, undefined], filter.league)) {
 			return orderBy(
-				data.filter(
-					(item) =>
+				data.filter((item) => {
+					const hasOtherSupportedBetTypes = item.ticket.positions.some((position) =>
+						[BetType.WINNER, BetType.SPREAD, BetType.TOTAL, BetType.DOUBLE_CHANCE].includes(position.market.betType as any)
+					)
+					console.log('hasOtherSupportedBetTypes', hasOtherSupportedBetTypes)
+					return (
 						item.ticket.ticketType === filter.status &&
 						item.ticket.positions.some((position) => includes([...selectedSport.map((sport) => sport.id.toString())], position.market.tags?.at(0)))
-				),
+					)
+				}),
 				[`ticket.${TICKET_SORTING.SUCCESS_RATE}`],
 				[ORDER_DIRECTION.DESCENDENT]
 			)
