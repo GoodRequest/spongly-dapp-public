@@ -87,7 +87,7 @@ const MyWalletContent = () => {
 						successRate = Number(((wonTickets.length / numberOfAttempts) * 100).toFixed(2))
 					}
 
-					const profit = getProfit(wonTickets, lostTickets, cancelledTickets)
+					const profit = getProfit(wonTickets, lostTickets, cancelledTickets, chain?.id)
 
 					const userMonthlyStats = values?.[2]?.find((item: any) => item?.ac === id)
 					assignOtherAttrsToUserTicket([...parlayTickets, ...positionTickets], marketData, chain?.id, signer).then((ticketsWithOtherAttrs) => {

@@ -1515,23 +1515,24 @@ export const handleTxHashRedirect = (t: any, txHash?: string, chainId?: number) 
 	}
 }
 
-export const getProfit = (wonTickets: UserTicket[], lostTickets: UserTicket[], cancelledTickets: UserTicket[]) => {
-	let profit = 0
+export const getProfit = (wonTickets: UserTicket[], lostTickets: UserTicket[], cancelledTickets: UserTicket[], networkId: Network | undefined) => {
+	if (!networkId) return 0
 
+	let profit = 0
+	// sUSDPaid has its own divisor belonging to each network, amount's divisor does not change.
 	wonTickets?.forEach((ticket) => {
-		profit += ticket.amount - ticket.sUSDPaid
+		profit += ticket.amount / OPTIMISM_DIVISOR - ticket.sUSDPaid / getDividerByNetworkId(networkId)
 	})
 
 	lostTickets?.forEach((ticket) => {
-		profit -= ticket.sUSDPaid
+		profit -= ticket.sUSDPaid / getDividerByNetworkId(networkId)
 	})
 
 	cancelledTickets?.forEach((ticket) => {
-		profit += Number(getCanceledClaimAmount(ticket)) - ticket.sUSDPaid
+		profit += Number(getCanceledClaimAmount(ticket)) - ticket.sUSDPaid / getDividerByNetworkId(networkId)
 	})
 
-	// TODO: add multi coin support (for base and arbitrum)
-	return round(profit / OPTIMISM_DIVISOR, 2).toFixed(2)
+	return round(profit, 2).toFixed(2)
 }
 
 export const fetchSuccessRate = async (networkId: number | undefined): Promise<ISuccessRateData[]> => {
