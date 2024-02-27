@@ -45,14 +45,8 @@ const TicketListItem: FC<ITicketListItem> = ({ index, ticket, loading, type, act
 	}
 
 	return (
-		<SC.TicketCollapse
-			collapsible={'icon'}
-			expandIconPosition={'end'}
-			onChange={(e) => handleCollapseChange(e)}
-			isExpanded={isExpanded}
-			activeKey={activeKeysList}
-		>
-			<SC.CollapsePanel isExpanded={isExpanded} header={<TicketListItemHeader ticket={ticket} />} key={`${ticket.account}-${index}`}>
+		<SC.TicketCollapse collapsible={'icon'} expandIconPosition={'end'} onChange={(e) => handleCollapseChange(e)} activeKey={activeKeysList}>
+			<SC.CollapsePanel $isExpanded={isExpanded} header={<TicketListItemHeader ticket={ticket} />} key={`${ticket.account}-${index}`}>
 				{!loading && isExpanded && (
 					<SC.PanelContent>
 						<SC.StylesRow gutter={[16, 16]}>

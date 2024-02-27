@@ -19,7 +19,7 @@ export const MatchListWrapper = styled.div`
 	}
 `
 
-export const MatchCollapse = styled(Collapse)<{ isExpanded: boolean }>`
+export const MatchCollapse = styled(Collapse)<{ $isExpanded: boolean }>`
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	border-radius: 12px;
 	margin-bottom: 24px;
@@ -66,7 +66,7 @@ export const MatchCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 		}
 	}
 
-	border: ${({ theme, isExpanded }) => (isExpanded ? `2px solid ${theme['color-base-surface-quintarny']}` : '2px solid transparent')};
+	border: ${({ theme, $isExpanded }) => ($isExpanded ? `2px solid ${theme['color-base-surface-quintarny']}` : '2px solid transparent')};
 `
 
 export const OddsWrapper = styled.div`
@@ -404,9 +404,9 @@ export const NoWrapCenterRow = styled(Row)`
 	align-items: center;
 `
 
-export const FlexCol = styled(Col)<{ isTotalWinner?: boolean }>`
+export const FlexCol = styled(Col)<{ $isTotalWinner?: boolean }>`
 	display: flex;
-	width: ${({ isTotalWinner }) => (isTotalWinner ? '80px' : '120px')};
+	width: ${({ $isTotalWinner }) => ($isTotalWinner ? '80px' : '120px')};
 	flex-direction: row;
 `
 

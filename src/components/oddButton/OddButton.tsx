@@ -40,8 +40,8 @@ const OddButton = (props: Props) => {
 	// TODO: refactore TicketPosition type and use Imatch type and remove as any
 	return formatQuote(OddsType.DECIMAL, getOddByBetType(match as any, actualOddType, betOption).rawOdd) > MIN_ODD_TRESHOLD ? (
 		<SC.MatchContentOddButton
-			isHeader={isHeader}
-			isMobilePanel={isMobilePanel}
+			$isHeader={isHeader}
+			$isMobilePanel={isMobilePanel}
 			value={betOption}
 			disabled={
 				disabled ||
@@ -54,7 +54,7 @@ const OddButton = (props: Props) => {
 				match.status === MATCH_STATUS.ONGOING ||
 				match.status === MATCH_STATUS.SUCCESS
 			}
-			active={isMatchInActiveTicket?.betOption === betOption}
+			$active={isMatchInActiveTicket?.betOption === betOption}
 			onClick={() => {
 				// Parlay validations - if matches exist and match is not already in ticket (then do update if user remove match)
 				if (setVisibleParlayValidationModal && activeTicketValues.matches && !activeTicketValues.matches.find((m) => m.gameId === match.gameId)) {

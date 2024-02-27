@@ -196,6 +196,7 @@
     "Total ({{ total }})": "Total ({{ total }})",
     "Txn hash": "Txn hash",
     "Unknown bet type - this bet will not be copied.": "Unknown bet type - this bet will not be copied.",
+    "Unrecognized chain ID. Please add {{ networkName }} network to your wallet": "Unrecognized chain ID. Please add {{ networkName }} network to your wallet",
     "User rejected transaction": "User rejected transaction",
     "Wallet": "Wallet",
     "Warning": "Warning",

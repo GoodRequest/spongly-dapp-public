@@ -118,7 +118,7 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 					) : (
 						<SC.MDWrapper>
 							<Row gutter={16}>
-								<SC.FlexCol isTotalWinner={isTotalWinner}>{images}</SC.FlexCol>
+								<SC.FlexCol $isTotalWinner={isTotalWinner}>{images}</SC.FlexCol>
 								<SC.FlexCenterCol>{teamNames}</SC.FlexCenterCol>
 							</Row>
 						</SC.MDWrapper>
@@ -138,7 +138,7 @@ const MatchListHeader: FC<IMatchListItem> = ({ match, type = MATCHES.OPEN, setVi
 					) : (
 						<SC.MDWrapper>
 							<Row gutter={16}>
-								<SC.FlexCol isTotalWinner={isTotalWinner}>{images}</SC.FlexCol>
+								<SC.FlexCol $isTotalWinner={isTotalWinner}>{images}</SC.FlexCol>
 								<SC.FlexCenterCol>{teamNames}</SC.FlexCenterCol>
 							</Row>
 						</SC.MDWrapper>

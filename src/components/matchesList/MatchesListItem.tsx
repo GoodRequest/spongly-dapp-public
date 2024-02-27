@@ -48,7 +48,7 @@ const MatchListItem: FC<IMatchListItem> = ({ match, keyValue, filter, loading = 
 			activeKey={isExpanded ? [match.maturityDate] : []}
 			collapsible={collapsible ? 'icon' : 'disabled'}
 			expandIconPosition={'end'}
-			isExpanded={isExpanded}
+			$isExpanded={isExpanded}
 			key={keyValue}
 		>
 			<SC.CollapsePanel

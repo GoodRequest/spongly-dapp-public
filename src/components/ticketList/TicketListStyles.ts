@@ -132,7 +132,7 @@ export const LoadMore = styled.div`
 		height: 48px;
 	}
 `
-export const TicketCollapse = styled(Collapse)<{ isExpanded: boolean }>`
+export const TicketCollapse = styled(Collapse)`
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	border-radius: 12px;
 	margin-bottom: 24px;
@@ -191,12 +191,12 @@ export const TicketCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 	}
 `
 
-export const CollapsePanel = styled(Panel)<{ isExpanded: boolean }>`
+export const CollapsePanel = styled(Panel)<{ $isExpanded: boolean }>`
 	padding: 0px 8px 0px 8px !important;
 	.ant-collapse-header {
 		display: block !important;
 		border-radius: 0 !important;
-		border-bottom: 1px solid ${({ theme, isExpanded }) => (isExpanded ? theme['color-base-surface-quaternary'] : 'none')} !important;
+		border-bottom: 1px solid ${({ theme, $isExpanded }) => ($isExpanded ? theme['color-base-surface-quaternary'] : 'none')} !important;
 		@media (max-width: ${breakpoints.md}px) {
 			padding-bottom: 44px !important;
 		}

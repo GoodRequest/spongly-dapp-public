@@ -3,11 +3,11 @@ import { Button } from 'antd'
 import { TextXSMedium } from '@/styles/typography'
 import { breakpoints } from '@/styles/theme'
 
-export const OddButton = styled(Button)<{ active?: boolean; isMobilePanel?: boolean; isHeader?: boolean }>`
+export const OddButton = styled(Button)<{ $active?: boolean; $isMobilePanel?: boolean; $isHeader?: boolean }>`
 	width: 62px;
 	height: 32px;
 	border-radius: 6px;
-	border: 2px solid ${({ theme, active }) => (active ? theme['color-base-action-primary-default'] : theme['color-base-surface-quaternary'])} !important;
+	border: 2px solid ${({ theme, $active }) => ($active ? theme['color-base-action-primary-default'] : theme['color-base-surface-quaternary'])} !important;
 	box-shadow: none;
 	color: white;
 	display: flex;
@@ -16,19 +16,19 @@ export const OddButton = styled(Button)<{ active?: boolean; isMobilePanel?: bool
 	padding: 0;
 	${TextXSMedium};
 	flex: 1;
-	background: ${({ theme, active, isMobilePanel, isHeader }) => {
-		if (isHeader && !active) {
+	background: ${({ theme, $active, $isMobilePanel, $isHeader }) => {
+		if ($isHeader && !$active) {
 			return theme['color-base-surface-quaternary']
 		}
-		if (isMobilePanel && !active) {
+		if ($isMobilePanel && !$active) {
 			return theme['color-base-surface-quaternary'] // Inactive, Mobile Panel
 		}
-		if (!isMobilePanel && !isHeader) {
+		if (!$isMobilePanel && !$isHeader) {
 			// Detail match
 			return theme['color-base-surface-quaternary']
 		}
-		if (active) {
-			if (isHeader) {
+		if ($active) {
+			if ($isHeader) {
 				return theme['color-base-surface-secondary']
 			}
 			return theme['color-base-state-info-bg'] // Active, Desktop Panel
@@ -49,7 +49,7 @@ export const OddButton = styled(Button)<{ active?: boolean; isMobilePanel?: bool
 		background: ${({ theme }) => theme['color-base-surface-secondary']} !important;
 		color: white !important;
 		border-color: ${({ theme }) => theme['color-base-surface-quaternary']};
-		border-color: ${({ theme, active }) => (active ? theme['color-base-action-primary-default'] : theme['color-base-action-primary-default'])};
+		border-color: ${({ theme, $active }) => ($active ? theme['color-base-action-primary-default'] : theme['color-base-action-primary-default'])};
 		&:hover {
 			border-color: ${({ theme }) => theme['color-base-surface-quaternary']} !important;
 		}
@@ -59,7 +59,7 @@ export const OddButton = styled(Button)<{ active?: boolean; isMobilePanel?: bool
 	}
 `
 
-export const MatchContentOddButton = styled(OddButton)<{ isHeader?: boolean }>`
+export const MatchContentOddButton = styled(OddButton)`
 	height: 32px;
 	display: flex;
 	justify-content: center;
