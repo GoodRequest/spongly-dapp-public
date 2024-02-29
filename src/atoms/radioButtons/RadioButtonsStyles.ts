@@ -42,14 +42,14 @@ export const CountBubble = styled.span`
 	justify-content: center;
 `
 
-export const RadioButton = styled(Radio.Button)<{ minimized?: boolean }>`
+export const RadioButton = styled(Radio.Button)<{ $minimized?: boolean }>`
 	${TextLGMedium};
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	text-align: center;
-	width: ${({ minimized }) => (minimized ? 'fit-content' : '100%')};
-	padding: ${({ minimized }) => (minimized ? '0 32px 0 32px' : 'none')};
+	width: ${({ $minimized }) => ($minimized ? 'fit-content' : '100%')};
+	padding: ${({ $minimized }) => ($minimized ? '0 32px 0 32px' : 'none')};
 	height: calc(100% - 4px) !important;
 	flex-direction: row;
 	border-radius: 8px;

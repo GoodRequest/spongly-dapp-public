@@ -5,103 +5,47 @@ import OptimismIcon from '@/assets/icons/optimism-icon.svg'
 import ArbitrumIcon from '@/assets/icons/arbitrum-icon.svg'
 import BaseIcon from '@/assets/icons/base-icon.svg'
 
-type OptimismNetwork = {
-	chainId: string
-	chainName: string
-	rpcUrls: string[]
-	blockExplorerUrls: string[]
-	iconUrls: string[]
-	fraudProofWindow?: number
-	nativeCurrency: {
-		symbol: string
-		decimals: number
-	}
-}
-
 export const NETWORK_SWITCHER_SUPPORTED_NETWORKS = [
 	{
 		chainId: NETWORK_IDS.OPTIMISM,
 		networkId: '0xA',
-		chainName: 'Optimism Mainnet',
-		shortChainName: 'Optimism',
-		chainKey: 'optimism_mainnet',
-		icon: OptimismIcon
+		chainName: 'Optimism',
+		rpcUrls: ['https://mainnet.optimism.io'],
+		blockExplorerUrls: ['https://optimistic.etherscan.io/'],
+		iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+		icon: OptimismIcon,
+		nativeCurrency: {
+			symbol: 'ETH',
+			decimals: 18
+		}
 	},
 	{
 		chainId: NETWORK_IDS.ARBITRUM,
 		networkId: '0xA4B1',
 		chainName: 'Arbitrum One',
-		shortChainName: 'Arbitrum',
-		chainKey: 'arbitrum_mainnet',
-		icon: ArbitrumIcon
+		rpcUrls: ['https://arb1.arbitrum.io/rpc'],
+		blockExplorerUrls: ['https://arbiscan.io/'],
+		iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+		icon: ArbitrumIcon,
+		nativeCurrency: {
+			symbol: 'ETH',
+			decimals: 18
+		}
 	},
 	{
 		chainId: NETWORK_IDS.BASE,
 		networkId: '0x2105',
-		chainName: 'Base Mainnet',
-		shortChainName: 'Base',
-		chainKey: 'base_mainnet',
-		icon: BaseIcon
-	}
-]
-
-export const SUPPORTED_NETWORKS_DESCRIPTIONS: Record<number, OptimismNetwork> = {
-	[Network.OptimismMainnet]: {
-		chainId: '0xA',
-		chainName: 'Optimism',
-		rpcUrls: ['https://mainnet.optimism.io'],
-		blockExplorerUrls: ['https://optimistic.etherscan.io/'],
-		iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
-		nativeCurrency: {
-			symbol: 'ETH',
-			decimals: 18
-		}
-	},
-	[Network.OptimismGoerli]: {
-		chainId: '0x420',
-		chainName: 'Optimism Goerli',
-		rpcUrls: ['https://goerli.optimism.io/'],
-		blockExplorerUrls: ['https://goerli-optimism.etherscan.io/'],
-		iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
-		nativeCurrency: {
-			symbol: 'ETH',
-			decimals: 18
-		}
-	},
-	[Network.Base]: {
-		chainId: '0x2105',
 		chainName: 'Base',
 		rpcUrls: ['https://mainnet.base.org'],
 		blockExplorerUrls: ['https://basescan.org/'],
 		iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
-		nativeCurrency: {
-			symbol: 'ETH',
-			decimals: 18
-		}
-	},
-	[Network.ArbitrumOne]: {
-		chainId: '0xA4B1',
-		chainName: 'Arbitrum One',
-		rpcUrls: ['https://arb1.arbitrum.io/rpc'],
-		blockExplorerUrls: ['https://arbiscan.io/'],
-		iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
-		nativeCurrency: {
-			symbol: 'ETH',
-			decimals: 18
-		}
-	},
-	[Network.Base]: {
-		chainId: '0x2105',
-		chainName: 'Base Mainnet',
-		rpcUrls: ['https://mainnet.base.org'],
-		blockExplorerUrls: ['https://basescan.org/'],
-		iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+		icon: BaseIcon,
 		nativeCurrency: {
 			symbol: 'ETH',
 			decimals: 18
 		}
 	}
-}
+]
 
 export const getDefaultDecimalsForNetwork = (networkId: NetworkId) => {
 	if ([Network.ArbitrumOne, Network.Base].includes(networkId)) return 6

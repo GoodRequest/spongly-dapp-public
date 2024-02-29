@@ -7,7 +7,7 @@ import { flicker } from '@/styles/GlobalStyles'
 
 const { Panel } = Collapse
 
-export const UserCollapse = styled(Collapse)<{ isExpanded: boolean }>`
+export const UserCollapse = styled(Collapse)<{ $isExpanded: boolean }>`
 	background: ${({ theme }) => theme['color-base-surface-secondary']};
 	border-radius: 12px;
 	margin-bottom: 24px;
@@ -52,10 +52,10 @@ export const UserCollapse = styled(Collapse)<{ isExpanded: boolean }>`
 		}
 	}
 
-	border: ${({ theme, isExpanded }) => (isExpanded ? `2px solid ${theme['color-base-surface-quintarny']}` : '2px solid transparent')};
+	border: ${({ theme, $isExpanded }) => ($isExpanded ? `2px solid ${theme['color-base-surface-quintarny']}` : '2px solid transparent')};
 `
 
-export const CollapsePanel = styled(Panel)<{ isExpanded: boolean }>`
+export const CollapsePanel = styled(Panel)<{ $isExpanded: boolean }>`
 	.ant-collapse-content {
 		background: ${({ theme }) => theme['color-base-surface-secondary']};
 		border-top: none;
@@ -68,7 +68,7 @@ export const CollapsePanel = styled(Panel)<{ isExpanded: boolean }>`
 
 	.ant-collapse-header {
 		display: block !important;
-		border-bottom: 1px solid ${({ theme, isExpanded }) => (isExpanded ? theme['color-base-surface-quaternary'] : 'none')} !important;
+		border-bottom: 1px solid ${({ theme, $isExpanded }) => ($isExpanded ? theme['color-base-surface-quaternary'] : 'none')} !important;
 		@media (max-width: ${breakpoints.md}px) {
 			border-bottom: none !important;
 		}

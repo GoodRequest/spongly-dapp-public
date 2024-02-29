@@ -289,7 +289,8 @@ export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export const ETHERSCAN_TX_URL_OPTIMISM_GOERLI = 'https://goerli-optimism.etherscan.io/tx/'
 export const ETHERSCAN_TX_URL_OPTIMISM = 'https://optimistic.etherscan.io/tx/'
-export const ETHERSCAN_TX_URL_ARBITRUM = 'https://arbiscan.io//tx/'
+export const ETHERSCAN_TX_URL_ARBITRUM = 'https://arbiscan.io/tx/'
+export const ETHERSCAN_TX_URL_BASE = 'https://basescan.org/tx/'
 
 export enum USER_TICKET_TYPE {
 	SUCCESS = 'SUCCESS',
