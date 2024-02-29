@@ -3,6 +3,7 @@ import { useRouter } from 'next-translate-routes'
 import { includes } from 'lodash'
 
 // components
+import { useNetwork } from 'wagmi'
 import TicketBetContainer from '@/components/ticketBetContainer/TicketBetContainer'
 import ParlayLeaderboard from '@/components/parlayLeaderboard/ParlayLeaderboard'
 import Stats from '@/components/stats/Stats'
@@ -16,6 +17,7 @@ import { useIsMounted } from '@/hooks/useIsMounted'
 // styles
 import * as SC from './ContentStyles'
 import TicketStatisticRow from '@/components/statisticRow/TicketStatisticRow'
+import { NETWORK_IDS } from '@/utils/constants'
 
 interface ILayout {
 	children: ReactNode
@@ -26,6 +28,7 @@ const Content: FC<ILayout> = ({ children }) => {
 	const { id } = router.query
 	const fullWidthPages = [`/${PAGES.PARLAY_SUPERSTARS}`, `/${PAGES.LEADERBOARD}`]
 	const isMounted = useIsMounted()
+	const { chain } = useNetwork()
 
 	return (
 		<SC.MainContainer>
@@ -47,7 +50,7 @@ const Content: FC<ILayout> = ({ children }) => {
 					<SC.MainContentContainer>{children}</SC.MainContentContainer>
 					{/* // Dashboard's Parlay Leaderboard */}
 					<SC.MobileHiddenCol span={8}>
-						{router.pathname === `/${PAGES.DASHBOARD}` && <ParlayLeaderboard />}
+						{router.pathname === `/${PAGES.DASHBOARD}` && chain?.id !== NETWORK_IDS.BASE && <ParlayLeaderboard />}
 						<TicketBetContainer />
 					</SC.MobileHiddenCol>
 				</SC.ContentWithBetContainerRow>
