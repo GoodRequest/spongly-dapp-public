@@ -59,7 +59,7 @@ const Stats = () => {
 			if (wonTickets.length !== 0) {
 				successRate = Number(((wonTickets.length / numberOfAttempts) * 100).toFixed(2))
 			}
-			const profit = getProfit(wonTickets, lostTickets, cancelledTickets)
+			const profit = getProfit(wonTickets, lostTickets, cancelledTickets, chain?.id)
 			setStatistics({ ...data.user, pnl: Number(profit), successRate })
 			setIsLoading(false)
 		} catch (e) {
