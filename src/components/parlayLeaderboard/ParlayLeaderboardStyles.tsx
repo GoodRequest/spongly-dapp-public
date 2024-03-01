@@ -23,6 +23,8 @@ export const ParlayLeaderboardRow = styled(Row)`
 export const CenterRowContent = styled(Col)`
 	display: flex;
 	justify-content: center;
+	align-items: center;
+	gap: 8px;
 `
 
 export const LeaderboardButton = styled(Button)`

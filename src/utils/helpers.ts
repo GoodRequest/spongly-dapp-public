@@ -83,13 +83,13 @@ import { getDefaultDecimalsForNetwork } from '@/utils/network'
 export const getCurrentBiweeklyPeriod = () => {
 	const startOfPeriod = dayjs(START_OF_BIWEEKLY_PERIOD)
 	const now = dayjs()
-	return Math.trunc(now.diff(startOfPeriod, 'day') / 14)
+	return Math.trunc(now.diff(startOfPeriod, 'day') / 7)
 }
 
 export const getWhenCurrentBiweeklyPeriodEnds = (biWeeklyPeriod: number) => {
 	let endOfPeriod = dayjs(START_OF_BIWEEKLY_PERIOD)
 	const now = dayjs()
-	endOfPeriod = endOfPeriod.add(biWeeklyPeriod * 2, 'week')
+	endOfPeriod = endOfPeriod.add(biWeeklyPeriod, 'week')
 
 	const diffDays = endOfPeriod.diff(now, 'day')
 	endOfPeriod = endOfPeriod.subtract(diffDays, 'day')

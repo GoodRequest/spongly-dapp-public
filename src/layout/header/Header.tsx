@@ -4,6 +4,7 @@ import { Col } from 'antd'
 import { useRouter } from 'next-translate-routes'
 
 // components
+import { useNetwork } from 'wagmi'
 import HeaderLogo from '@/components/headerLogo/HeaderLogo'
 import ConnectButton from '@/components/connectButton/ConnectButton'
 import MobileMenu from '@/components/mobileMenu/MobileMenu'
@@ -15,11 +16,13 @@ import { PAGES } from '@/utils/enums'
 
 // styled
 import * as SC from './HeaderStyles'
+import { NETWORK_IDS } from '@/utils/constants'
 
 const Header = () => {
 	const [selected, setSelected] = useState(PAGES.DASHBOARD)
 	const { t } = useTranslation()
 	const router = useRouter()
+	const { chain } = useNetwork()
 	const [visibleSettingModal, setVisibleSettingModal] = useState(false)
 	const handleSelect = (e: any) => {
 		router.push(`/${e.key}`)
@@ -33,12 +36,12 @@ const Header = () => {
 				<SC.MenuItem key={PAGES.TICKETS}>{t('Tickets')}</SC.MenuItem>
 				<SC.MenuItem key={PAGES.MATCHES}>{t('Matches')}</SC.MenuItem>
 				<SC.MenuItem key={PAGES.LEADERBOARD}>{t('Leaderboard')}</SC.MenuItem>
-				<SC.MenuItem key={PAGES.PARLAY_SUPERSTARS}>{t('Parlay Superstars')}</SC.MenuItem>
+				{chain?.id !== NETWORK_IDS.BASE && <SC.MenuItem key={PAGES.PARLAY_SUPERSTARS}>{t('Parlay Superstars')}</SC.MenuItem>}
 				<SC.MenuItem key={PAGES.MY_WALLET}>{t('My wallet')}</SC.MenuItem>
 			</>
 		),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[]
+		[chain?.id]
 	)
 
 	const chooseSelected = () => {
