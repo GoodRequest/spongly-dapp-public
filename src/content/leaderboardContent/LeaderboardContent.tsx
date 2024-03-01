@@ -64,21 +64,7 @@ const LeaderboardContent = () => {
 			setSort(property, direction as ORDER_DIRECTION)
 		}
 	}
-	// TODO: remove this if successRate will be added to graphQL
-	// const fetchSuccessRateData = async () => {
-	// 	try {
-	// 		const response = await fetch(ENDPOINTS.GET_SUCCESS_RATE())
-	// 		// TODO: Need to add computing success rate to graphQL (asked Thales for this request)
-	// 		// const successRate: ISuccessRateData = await response.json()
-	// 		// const successRateMap = new Map(successRate.stats.map((obj) => [obj.ac, obj.sr]))
-	// 		// setSuccessRateMap(successRateMap)
-	// 		return await response.json()
-	// 	} catch (error) {
-	// 		// eslint-disable-next-line no-console
-	// 		console.error(error)
-	// 		throw error
-	// 	}
-	// }
+
 	const fetchData = async () => {
 		router?.push(
 			{
