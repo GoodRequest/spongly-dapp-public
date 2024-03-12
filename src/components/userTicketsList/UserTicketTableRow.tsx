@@ -49,17 +49,17 @@ import DocumentIcon from '@/assets/icons/document-icon.svg'
 
 type Props = {
 	ticket: UserTicket
-	refetch: () => void
 	isMyWallet?: boolean
 }
 
-const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
+const UserTicketTableRow = ({ ticket, isMyWallet }: Props) => {
 	const { t } = useTranslation()
 	const { chain } = useNetwork()
 	const router = useRouter()
 	const [expiryDate, setExpiryDate] = useState(0)
 	const [isExpanded, setIsExpanded] = useState(false)
 	const [isClaiming, setIsClaiming] = useState(false)
+	const [isClaimed, setIsClaimed] = useState(false)
 	const dispatch = useDispatch()
 	const { address } = useAccount()
 	const orderedPositions = orderPositionsAsSportMarkets(ticket)
@@ -133,7 +133,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 
 				if (txResult && txResult.transactionHash) {
 					showNotifications([{ type: MSG_TYPE.SUCCESS, message: t('Claimed successfully') }], NOTIFICATION_TYPE.NOTIFICATION)
-					refetch()
+					setIsClaimed(true)
 					dispatch(change(FORM.BET_TICKET, 'available', available))
 				}
 			} catch (e) {
@@ -147,13 +147,13 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 				console.error(e)
 			}
 		} else if (ticket.positions?.[0].market.address && signer) {
-			const contract = new ethers.Contract(ticket.positions?.[0].market.address, sportsMarketContract.abi, signer)
-			contract.connect(signer)
-
-			const estimationGas = await contract?.estimateGas.exerciseOptions({})
-			const finalEstimationGas = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
-
 			try {
+				const contract = new ethers.Contract(ticket.positions?.[0].market.address, sportsMarketContract.abi, signer)
+				contract.connect(signer)
+
+				const estimationGas = await contract?.estimateGas.exerciseOptions({})
+				const finalEstimationGas = Math.ceil(Number(estimationGas) * GAS_ESTIMATION_BUFFER)
+
 				const tx = await contract.exerciseOptions({
 					gasLimit: chain?.id ? finalEstimationGas : undefined
 				})
@@ -162,7 +162,7 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 
 				if (txResult && txResult.transactionHash) {
 					showNotifications([{ type: MSG_TYPE.SUCCESS, message: t('Claimed successfully') }], NOTIFICATION_TYPE.NOTIFICATION)
-					refetch()
+					setIsClaimed(true)
 					dispatch(change(FORM.BET_TICKET, 'available', available))
 				}
 			} catch (e) {
@@ -214,11 +214,11 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 				<Button
 					btnStyle={'primary'}
 					onClick={() => handleClaim()}
-					disabled={!ticket.isClaimable || isClaiming}
+					disabled={!ticket.isClaimable || isClaiming || isClaimed}
 					size={'large'}
 					loading={isClaiming}
 					content={
-						!ticket.isClaimable ? (
+						!ticket.isClaimable || isClaimed ? (
 							t('Claimed')
 						) : (
 							<SC.ClaimButtonWrapper>
@@ -270,14 +270,18 @@ const UserTicketTableRow = ({ ticket, isMyWallet, refetch }: Props) => {
 						<Col span={24} md={12}>
 							<Button
 								btnStyle={'primary'}
-								disabled={!ticket.isClaimable}
+								disabled={!ticket.isClaimable || isClaimed || isClaiming}
 								loading={isClaiming}
 								onClick={() => handleClaim()}
 								content={
-									<SC.ClaimButtonWrapper>
-										<SC.ClaimText>{t('Claim')}</SC.ClaimText>
-										<SC.ClaimValue>{claimableUntil}</SC.ClaimValue>
-									</SC.ClaimButtonWrapper>
+									!ticket.isClaimable || isClaimed ? (
+										t('Claimed')
+									) : (
+										<SC.ClaimButtonWrapper>
+											<SC.ClaimText>{t('Claim')}</SC.ClaimText>
+											<SC.ClaimValue>{claimableUntil}</SC.ClaimValue>
+										</SC.ClaimButtonWrapper>
+									)
 								}
 							/>
 						</Col>
