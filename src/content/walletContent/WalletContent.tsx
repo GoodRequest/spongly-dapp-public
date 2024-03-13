@@ -119,12 +119,6 @@ const MyWalletContent = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [address, chain?.id, signer, router.query.id])
 
-	const refetch = () => {
-		if (chain?.id ? signer && address : router.query.id) {
-			fetchStatistics()
-		}
-	}
-
 	return (
 		<Row gutter={[0, 16]}>
 			<Col span={24}>
@@ -154,7 +148,7 @@ const MyWalletContent = () => {
 										<UserStatisticRow isMyWallet={isMyWallet} isLoading={isLoading} user={userStatistic?.user} />
 									</Col>
 									<Col span={24}>
-										<UserTicketsList refetch={refetch} isMyWallet={isMyWallet} isLoading={isLoading} tickets={userStatistic?.tickets} />
+										<UserTicketsList isMyWallet={isMyWallet} isLoading={isLoading} tickets={userStatistic?.tickets} />
 									</Col>
 								</Row>
 							)

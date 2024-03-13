@@ -20,11 +20,10 @@ import ArrowIcon from '@/assets/icons/arrow-down.svg'
 type Props = {
 	tickets: UserTicket[] | undefined
 	isLoading: boolean
-	refetch: () => void
 	isMyWallet?: boolean
 }
 
-const UserTicketsList = ({ tickets, isLoading, refetch, isMyWallet }: Props) => {
+const UserTicketsList = ({ tickets, isLoading, isMyWallet }: Props) => {
 	const { t } = useTranslation()
 	const router = useRouter()
 	const { query, isReady } = useRouter()
@@ -175,7 +174,7 @@ const UserTicketsList = ({ tickets, isLoading, refetch, isMyWallet }: Props) => 
 				/>
 			)
 		}
-		return shownTickets?.map((data) => <UserTicketTableRow isMyWallet={isMyWallet} refetch={refetch} ticket={data} key={data?.id} />)
+		return shownTickets?.map((data) => <UserTicketTableRow isMyWallet={isMyWallet} ticket={data} key={data?.id} />)
 	}
 
 	const hasMoreData = () => {
