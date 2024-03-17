@@ -69,7 +69,6 @@ export const NoWrapDiv = styled.div`
 `
 
 export const NetworkIcon = styled.img`
-	width: 24px;
-	height: 24px;
-	margin-left: 8px;
+	width: 16px;
+	height: 16px;
 `

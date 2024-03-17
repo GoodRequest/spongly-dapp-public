@@ -176,10 +176,9 @@ const ParlayLeaderboardContent = () => {
 
 	const biweeklyPeriodOptions = (): Option[] => {
 		const newOptions: Option[] = []
-
 		for (let i = 0; i <= getCurrentBiweeklyPeriod(); i += 1) {
 			const newOption = {
-				label: `${t('Bi-weekly period')} ${i + 1}`,
+				label: `${t('Weekly period')} ${i + 1}`,
 				value: `${i}`
 			}
 			newOptions.push(newOption)
@@ -243,7 +242,7 @@ const ParlayLeaderboardContent = () => {
 					description={
 						<div>
 							<p>{t('Leaderboard is empty')}</p>
-							<span>{t('Leaderboard is empty for chosen bi-weekly period')}</span>
+							<span>{t('Leaderboard is empty for chosen weekly period')}</span>
 						</div>
 					}
 				/>
@@ -277,7 +276,14 @@ const ParlayLeaderboardContent = () => {
 
 		return false
 	}
-
+	if (chain?.id === NETWORK_IDS.BASE) {
+		return (
+			<Row>
+				<SC.ParlayLeaderboardTitle>{t('Parlay incentives superstars')}</SC.ParlayLeaderboardTitle>
+				<SC.ParlayLeaderboardContext>{t('Parlay incentives superstars are not supported for current network')}</SC.ParlayLeaderboardContext>
+			</Row>
+		)
+	}
 	return (
 		<>
 			<Row>
@@ -285,10 +291,11 @@ const ParlayLeaderboardContent = () => {
 					<SC.ParlayLeaderboardTitle>{t('Parlay incentives superstars')}</SC.ParlayLeaderboardTitle>
 					<SC.ParlayLeaderboardContext>
 						{t(
-							'A total of 1,000 OP will be distributed to the best parlays with minimum 3 games on a bi-weekly basis. The tickets will be ranked based on a total quote, followed by the number of positions on the parlays.'
+							'A total of {{points}} will be distributed to the best parlays with minimum 3 games on a weekly basis. The tickets will be ranked based on a total quote, followed by the number of positions on the parlays.',
+							{ points: chain?.id === NETWORK_IDS.OPTIMISM ? '500 OP' : '2,5000 ARB' }
 						)}
 					</SC.ParlayLeaderboardContext>
-					<SC.ParlayLeaderboardContext>{t('Rewards will be distributed to the TOP 10 parlays every 2 weeks!')}</SC.ParlayLeaderboardContext>
+					<SC.ParlayLeaderboardContext>{t('Rewards will be distributed to the TOP 20 parlays every week!')}</SC.ParlayLeaderboardContext>
 					<SC.ParlayLeaderboardContext style={{ marginBottom: '16px' }}>
 						{t(
 							'If multiple parlays have the same total quote and the number of positions the following will be used as tie-breakers in respective order'

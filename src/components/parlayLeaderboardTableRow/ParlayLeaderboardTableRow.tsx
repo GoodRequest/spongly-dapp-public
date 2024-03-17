@@ -77,7 +77,7 @@ const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, 
 					) : (
 						<>
 							<SC.ColumnNameText>{t('Won')}</SC.ColumnNameText>
-							<SC.ParlayLeaderboardTableText>{won}$</SC.ParlayLeaderboardTableText>
+							<SC.ParlayLeaderboardTableText>{won} $</SC.ParlayLeaderboardTableText>
 						</>
 					)}
 				</Col>
@@ -87,12 +87,10 @@ const ParlayLeaderboardTableRow = ({ rank, address, position, quote, paid, won, 
 						: reward && (
 								<>
 									<SC.ColumnNameText>{t('Reward')}</SC.ColumnNameText>
-									<div style={{ display: 'flex', flexDirection: 'row' }}>
+									<SC.ColumnPoints>
 										<SC.ParlayLeaderboardTableText>{reward?.value}</SC.ParlayLeaderboardTableText>
-										{reward?.iconUrl && (
-											<img src={reward?.iconUrl} style={{ width: '24px', height: '24px', marginLeft: '8px' }} alt={'Network icon'} />
-										)}
-									</div>
+										{reward?.iconUrl && <img src={reward?.iconUrl} alt={'Network icon'} />}
+									</SC.ColumnPoints>
 								</>
 						  )}
 				</Col>

@@ -70,7 +70,7 @@ const ParlayLeaderboard = () => {
 					description={
 						<div>
 							<p>{t('Leaderboard is empty')}</p>
-							<span>{t('Leaderboard is empty for chosen bi-weekly period')}</span>
+							<span>{t('Leaderboard is empty for chosen weekly period')}</span>
 						</div>
 					}
 				/>

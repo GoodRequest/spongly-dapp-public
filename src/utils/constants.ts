@@ -1,5 +1,6 @@
 /* eslint-disable import/no-cycle */
 import { keyBy } from 'lodash'
+import dayjs from 'dayjs'
 import { NetworkId } from './networkConnector'
 import { ContractSGPOrder } from '@/utils/enums'
 import { BetType } from '@/utils/tags'
@@ -30,7 +31,8 @@ export enum NOTIFICATION_TYPE {
 }
 export const SPACE_GROTESK_FONT_VARIABLE = 'var(--space-grotesk-font)'
 
-export const START_OF_BIWEEKLY_PERIOD = new Date(2023, 2, 1, 0, 0, 0)
+// 14.2.2024
+export const START_OF_BIWEEKLY_PERIOD = new Date(dayjs().year(), 1, 14, 0, 0, 0)
 
 export enum PARLAY_LEADERBOARD_SORTING {
 	RANK = 'rank',

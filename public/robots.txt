@@ -1,4 +1,4 @@
 User-agent: *
-Disallow: /
+Allow: /
 
-Sitemap:
+Sitemap: https://spongly.eth.limo/sitemap.xml

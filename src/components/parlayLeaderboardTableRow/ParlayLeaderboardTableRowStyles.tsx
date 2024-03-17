@@ -77,3 +77,13 @@ export const ColumnNameText = styled.span`
 		margin-bottom: 4px;
 	}
 `
+
+export const ColumnPoints = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	img {
+		height: 16px;
+		width: 16px;
+	}
+`

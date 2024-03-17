@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useTranslation } from 'next-export-i18n'
 import { Row, Col } from 'antd'
 import { useRouter } from 'next-translate-routes'
-import { useAccount } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 
 import Button from '@/atoms/button/Button'
 import { PAGES } from '@/utils/enums'
@@ -15,7 +15,7 @@ import CloseMenuIcon from '@/assets/icons/close-icon.svg'
 import LogoImg from '@/assets/icons/header-logo-placeholder.svg'
 
 import * as SC from './MobileMenuStyles'
-import { SOCIAL_LINKS } from '@/utils/constants'
+import { NETWORK_IDS, SOCIAL_LINKS } from '@/utils/constants'
 import TwitterIcon from '@/assets/icons/twitter.svg'
 import DiscordIcon from '@/assets/icons/discord.svg'
 import SettingsIcon from '@/assets/icons/settings-icon.svg'
@@ -28,7 +28,7 @@ type Props = {
 const MobileMenu = ({ selected }: Props) => {
 	const { t } = useTranslation()
 	const router = useRouter()
-
+	const { chain } = useNetwork()
 	const [isOpen, setIsOpen] = useState(false)
 	const { address } = useAccount()
 	const [visibleSettingModal, setVisibleSettingModal] = useState(false)
@@ -64,7 +64,7 @@ const MobileMenu = ({ selected }: Props) => {
 							<SC.MenuItem key={PAGES.TICKETS}>{t('Tickets')}</SC.MenuItem>
 							<SC.MenuItem key={PAGES.MATCHES}>{t('Matches')}</SC.MenuItem>
 							<SC.MenuItem key={PAGES.LEADERBOARD}>{t('Leaderboard')}</SC.MenuItem>
-							<SC.MenuItem key={PAGES.PARLAY_SUPERSTARS}>{t('Parlay Superstars')}</SC.MenuItem>
+							{chain?.id !== NETWORK_IDS.BASE && <SC.MenuItem key={PAGES.PARLAY_SUPERSTARS}>{t('Parlay Superstars')}</SC.MenuItem>}
 							<SC.MenuItem key={PAGES.MY_WALLET}>{t('My wallet')}</SC.MenuItem>
 						</SC.Menu>
 
