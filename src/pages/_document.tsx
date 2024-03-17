@@ -36,11 +36,14 @@ export default class MyDocument extends Document {
 			<Html>
 				<Head>
 					<meta charSet={'utf-8'} />
+					<link rel='icon' type='image/png' sizes='32x32' href={'/favicons/favicon-32x32.png'} />
+					<link rel='icon' type='image/png' sizes='16x16' href={'/favicons/favicon-16x16.png'} />
 					{/* TODO: <link rel={'icon'} href={'/favicon.ico'} /> */}
 				</Head>
 				<body>
 					<Main />
-					<div id='modal-root' /> {/* modal portal */}
+					<div id='modal-root' />
+					{/* modal portal */}
 					<NextScript />
 				</body>
 			</Html>
