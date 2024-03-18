@@ -81,9 +81,9 @@ const ConnectButton = () => {
 						method: 'wallet_switchEthereumChain',
 						params: [{ chainId: network.networkId }]
 					})
-					switchNetwork?.(network.networkId)
+					switchNetwork?.(network.chainId)
 				} else {
-					switchNetwork?.(network.networkId)
+					switchNetwork?.(network.chainId)
 				}
 
 				setIsModalVisible(false)
