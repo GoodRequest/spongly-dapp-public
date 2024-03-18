@@ -73,6 +73,7 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 		error: null,
 		type: null
 	})
+
 	const { chain } = useNetwork()
 	const matches = formValues?.matches ?? []
 	const hasAtLeastOneMatch = matches.length > 0
@@ -327,6 +328,12 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 		}
 	}, [formValues?.matches?.length])
 
+	const getDisabledSubmitState = () => {
+		if (isProcessing) return true
+		if (allowance >= buyIn) return !!error && error.type === FORM_ERROR_TYPE.ERROR
+		return false
+	}
+
 	return (
 		<SC.FormWrapper $rolledUp={rolledUp} onSubmit={handleSubmit}>
 			{hasAtLeastOneMatch ? (
@@ -432,7 +439,8 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 							<Button
 								size={'large'}
 								className={`make-bet-button ${isProcessing && 'isProcessing'}`}
-								disabled={allowance >= buyIn ? !!error && error.type === FORM_ERROR_TYPE.ERROR : false}
+								disabled={getDisabledSubmitState()}
+								loading={isProcessing}
 								onClick={allowance >= buyIn ? handleSubmit : handleApprove}
 								content={allowance >= buyIn ? <span>{t('Submit')}</span> : <span>{t('Approve allowance')}</span>}
 							/>

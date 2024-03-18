@@ -1,6 +1,8 @@
 import { GetStaticProps } from 'next'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useRouter } from 'next-translate-routes'
+import styled from 'styled-components'
+import { Col, Row, Skeleton } from 'antd'
 import Layout from '@/layout/layout/Layout'
 import SEOHelmet from '@/components/SEOHelmet'
 import { IPage } from '@/typescript/types'
@@ -25,15 +27,45 @@ export const getStaticProps: GetStaticProps<{ page: IPage<{}> }> = async () => {
 	}
 }
 
+const RowSkeleton = styled(Skeleton)`
+	.ant-skeleton-content {
+		padding: 40px 60px;
+		background: ${({ theme }) => theme['color-base-surface-secondary']};
+		margin: 16px 0 16px 0;
+		border-radius: 12px;
+		h3,
+		ul li {
+			&::after {
+				background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(0, 0, 0, 0.2) 37%, rgba(255, 255, 255, 0.05) 63%) !important;
+			}
+		}
+	}
+`
+
 const HomePage = () => {
 	const router = useRouter()
 
 	useEffect(() => {
-		router.push('/dashboard')
+		router.push(PAGES.DASHBOARD)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
-
-	return <h1>{PAGES.HOMEPAGE}</h1>
+	// TODO: lading page in a future
+	return (
+		<Row gutter={[16, 16]}>
+			<Col span={24}>
+				<RowSkeleton active loading paragraph={{ rows: 2 }} />
+			</Col>
+			<Col span={24}>
+				<RowSkeleton active loading paragraph={{ rows: 2 }} />
+			</Col>
+			<Col span={24}>
+				<RowSkeleton active loading paragraph={{ rows: 2 }} />
+			</Col>
+			<Col span={24}>
+				<RowSkeleton active loading paragraph={{ rows: 2 }} />
+			</Col>
+		</Row>
+	)
 }
 
 HomePage.getLayout = function getLayout(page: any) {
