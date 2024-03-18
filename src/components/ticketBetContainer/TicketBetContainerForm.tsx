@@ -20,7 +20,6 @@ import SummaryCol from './components/summaryCol/SummaryCol'
 
 // utils
 import {
-	CRYPTO_CURRENCY_OPTIONS,
 	FORM,
 	FORM_ERROR_TYPE,
 	MAX_BUY_IN,
@@ -46,7 +45,10 @@ import SUSDIcon from '@/assets/icons/susd-icon.svg'
 import DAIIcon from '@/assets/icons/dai-icon.svg'
 import USDCIcon from '@/assets/icons/usdc-icon.svg'
 import USDTIcon from '@/assets/icons/usdt-icon.svg'
+import CoinIcon from '@/assets/icons/coin-icon.svg'
+
 import EmptyStateImage from '@/assets/icons/empty_state_ticket.svg'
+import { getCollaterals } from '@/utils/helpers'
 
 interface IComponentProps {
 	handleDeleteItem: (position: TicketPosition) => void
@@ -73,7 +75,6 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 		error: null,
 		type: null
 	})
-
 	const { chain } = useNetwork()
 	const matches = formValues?.matches ?? []
 	const hasAtLeastOneMatch = matches.length > 0
@@ -96,13 +97,15 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 				return DAIIcon
 			case STABLE_COIN.USDC:
 				return USDCIcon
+			case STABLE_COIN.USDCe:
+				return USDCIcon
 			case STABLE_COIN.USDT:
 				return USDTIcon
 			default:
-				return 'unknown'
+				return CoinIcon
 		}
 	}
-
+	// TODO: delete when implemented support for the other stablecoins
 	const stableCoinsOptions = useMemo(
 		() => {
 			const isItemDisabled = (coin: string) => {
@@ -115,17 +118,27 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 					}
 					return true
 				}
-				if (coin === STABLE_COIN.USDC) {
-					return false
+				if (chain?.id === NETWORK_IDS.ARBITRUM) {
+					if (coin === STABLE_COIN.USDC || coin === STABLE_COIN.USDCe) {
+						return false
+					}
+					return true
 				}
+				if (chain?.id === NETWORK_IDS.BASE) {
+					if (coin === STABLE_COIN.USDC || coin === STABLE_COIN.USDbC) {
+						return false
+					}
+					return true
+				}
+
 				return true
 			}
 
-			return CRYPTO_CURRENCY_OPTIONS.map((item) => ({
+			return getCollaterals(chain?.id || NETWORK_IDS.OPTIMISM).map((item) => ({
 				label: (
 					<SCS.FlexItemCenterWrapper>
 						<SC.StableCoinIcon size={24} style={{ marginRight: 6 }} src={getActualStableCoinIcon(item)} />
-						{chain?.id === NETWORK_IDS.BASE && item === STABLE_COIN.USDC ? 'USDbC' : item}
+						{item}
 					</SCS.FlexItemCenterWrapper>
 				),
 				value: item,

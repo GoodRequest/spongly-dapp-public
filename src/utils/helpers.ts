@@ -36,7 +36,8 @@ import {
 	TICKET_TYPE,
 	TOTAL_WINNER_TAGS,
 	USER_TICKET_TYPE,
-	ETHERSCAN_TX_URL_BASE
+	ETHERSCAN_TX_URL_BASE,
+	CRYPTO_CURRENCY_MAP
 } from './constants'
 import {
 	BET_OPTIONS,
@@ -823,7 +824,19 @@ export const convertSGPContractDataToSGPItemType = (sgpContractData: SGPContract
 
 	return finalSGPItems
 }
-export const getDefaultCollateral = (networkId: Network) => COLLATERALS[networkId][0]
+
+export const getDefaultCollateral = (networkId: Network) => {
+	if (networkId === Network.OptimismMainnet) {
+		return CRYPTO_CURRENCY_MAP.sUSD as Coins
+	}
+	if (networkId === Network.ArbitrumOne) {
+		return CRYPTO_CURRENCY_MAP.USDCe as Coins
+	}
+	if (networkId === Network.Base) {
+		return CRYPTO_CURRENCY_MAP.USDbC as Coins
+	}
+	return COLLATERALS[networkId][0]
+}
 
 export const getCollateral = (networkId: Network, index: number) => COLLATERALS[networkId][index]
 
