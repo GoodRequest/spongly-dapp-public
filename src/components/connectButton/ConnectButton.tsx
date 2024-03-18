@@ -68,8 +68,8 @@ const ConnectButton = () => {
 		dispatch({ type: UNSUBMITTED_BET_TICKETS.UNSUBMITTED_BET_TICKETS_INIT, payload: { data: [{ id: 1, matches: [], copied: false }] } })
 		dispatch(change(FORM.BET_TICKET, 'matches', []))
 		dispatch({ type: ACTIVE_TICKET_ID.SET, payload: 1 })
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 		setIsModalVisible(false)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [signer, provider, chain?.id])
 
 	const handleSwitchNetwork = async (network: any) => {
