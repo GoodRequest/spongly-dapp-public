@@ -99,6 +99,8 @@ const TicketBetContainerForm: FC<IComponentProps & InjectedFormProps<{}, ICompon
 				return USDCIcon
 			case STABLE_COIN.USDCe:
 				return USDCIcon
+			case STABLE_COIN.USDbC:
+				return USDCIcon
 			case STABLE_COIN.USDT:
 				return USDTIcon
 			default:

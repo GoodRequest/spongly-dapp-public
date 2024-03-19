@@ -24,13 +24,16 @@ export const Footer = styled.footer`
 	}
 `
 
-export const FooterHead = styled.footer`
+export const FooterHead = styled.div`
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 	padding-bottom: 22px;
+	margin-left: auto;
+	margin-right: auto;
 	width: 100%;
+	max-width: 1480px;
 	img {
 		width: 140px;
 		height: 60px;
@@ -99,12 +102,17 @@ export const CopyrightMobile = styled.div`
 export const FooterDivider = styled.div`
 	height: 1px;
 	width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 1480px;
 	background: ${({ theme }) => theme['color-base-surface-quintarny']};
 `
 
-export const FooterContent = styled.footer`
+export const FooterContent = styled.div`
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 1480px;
 	padding-top: 22px;
-	width: 100%;
 	${TextXSRegular};
 	color: ${({ theme }) => theme['color-base-content-quaternary']};
 `
