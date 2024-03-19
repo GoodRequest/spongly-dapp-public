@@ -133,12 +133,16 @@ export const STABLE_COIN = {
 	S_USD: 'sUSD',
 	DAI: 'DAI',
 	USDC: 'USDC',
+	USDCe: 'USDCe',
 	USDT: 'USDT',
-	USDCe: 'USDCe'
+	OP: 'OP',
+	WETH: 'WETH',
+	ETH: 'ETH',
+	ARB: 'ARB',
+	USDbC: 'USDbC'
 }
 
-export const CRYPTO_CURRENCY_OPTIONS = [STABLE_COIN.S_USD, STABLE_COIN.DAI, STABLE_COIN.USDC, STABLE_COIN.USDT]
-export const CRYPTO_CURRENCY = ['sUSD', 'DAI', 'USDCe', 'USDC', 'USDT', 'OP', 'WETH', 'ETH', 'ARB']
+export const CRYPTO_CURRENCY = ['sUSD', 'DAI', 'USDCe', 'USDC', 'USDT', 'OP', 'WETH', 'ETH', 'ARB', 'USDbC']
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY)
 
 export const STABLE_COINS = [CRYPTO_CURRENCY_MAP.sUSD, CRYPTO_CURRENCY_MAP.DAI, CRYPTO_CURRENCY_MAP.USDCe, CRYPTO_CURRENCY_MAP.USDC, CRYPTO_CURRENCY_MAP.USDT]
@@ -173,7 +177,7 @@ export const COLLATERALS: Record<NetworkId, Coins[]> = {
 		CRYPTO_CURRENCY_MAP.WETH as Coins,
 		CRYPTO_CURRENCY_MAP.ETH as Coins
 	],
-	[Network.Base]: [CRYPTO_CURRENCY_MAP.USDC as Coins, CRYPTO_CURRENCY_MAP.WETH as Coins, CRYPTO_CURRENCY_MAP.ETH as Coins]
+	[Network.Base]: [CRYPTO_CURRENCY_MAP.USDbC as Coins, CRYPTO_CURRENCY_MAP.USDC as Coins, CRYPTO_CURRENCY_MAP.WETH as Coins, CRYPTO_CURRENCY_MAP.ETH as Coins]
 }
 
 export const SGPCombinationsFromContractOrderMapping: Record<ContractSGPOrder, BetType[]> = {
